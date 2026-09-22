@@ -38,9 +38,16 @@
 - 最低部署版本：iPadOS 17，保留 SwiftUI + SwiftData 的直接使用条件。
 - 首发界面：横屏设计和验收；V0 不承诺完整竖屏体验。
 - 设备形态：单台 iPad、单个孩子、本地数据。
-- 工具链：正式创建工程前将 Xcode 15.2 升级至支持 iPadOS 26 SDK 的稳定版本；优先选择 Xcode 26.6，与当前 macOS 26.6.2 和 iPadOS 26 目标匹配。安装后重新记录 Xcode、Swift、SDK 与模拟器状态。
+- 工具链：正式创建工程前将 Xcode 15.2 升级至支持 iPadOS 26 SDK 的稳定版本；使用 Xcode 26.6 或更新的稳定版。安装后重新记录 Xcode、Swift、SDK 与模拟器状态。
 
 Apple 官方 Xcode 系统要求表显示，Xcode 26 系列包含 iOS/iPadOS 26 SDK，并支持 iPadOS 15 及以上设备；当前 Xcode 15.2 只有 iOS 17.2 SDK，不能作为 iPadOS 26 的正式开发基线。
+
+## 落地前检查结论
+
+- 当前激活开发目录：`/Applications/Xcode.app/Contents/Developer`。
+- 当前仅发现一个 Xcode 安装：Xcode 15.2。
+- 当前数据卷可用空间约 156 GiB，未发现明显磁盘空间阻塞。
+- 结论：产品与架构决策已满足开工条件；升级 Xcode 是创建正式工程前的唯一已知阻塞。升级完成后执行 M0-001 的工具链复核，再创建应用壳。
 
 ## 延后复核项
 
