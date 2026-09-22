@@ -5,11 +5,11 @@
 ## 1. 当前状态
 
 - 当前阶段：M0 工程与风险探针
-- 当前任务：`M0-001 建立工程与环境基线`
-- 当前任务状态：`BLOCKED`
-- 下一建议任务：将 Xcode 升级到 26.6 或更新的稳定版，然后重新探测工具链并完成 M0-001
+- 当前任务：`M0-004 本地通知最小探针`
+- 当前任务状态：`TODO`
+- 下一建议任务：实现 2 分钟本地通知开发探针，并在真机验证前台、后台、锁屏、终止和点击唤起
 - 最近更新时间：2026-09-22
-- 代码状态：尚未创建工程，尚未编写产品代码
+- 代码状态：M0 工程壳已创建并通过模拟器构建、测试、静态分析和启动验证；尚未实现任务业务功能
 
 ## 2. 状态定义
 
@@ -25,14 +25,14 @@
 | 阶段 | 目标 | 状态 | 完成数/总数 | 放行条件 |
 |---|---|---:|---:|---|
 | D | 开工决策 | `DONE` | 2/2 | 设备、方向、分发假设有书面结论 |
-| M0 | 工程与风险探针 | `BLOCKED` | 0/5 | 真机安装与本地通知探针通过 |
+| M0 | 工程与风险探针 | `IN_PROGRESS` | 3/5 | 真机安装与本地通知探针通过 |
 | M1 | 数据与规则内核 | `WAITING` | 0/7 | 规则与数据单测通过，无重复实例 |
 | M2 | 孩子闭环 | `WAITING` | 0/7 | 无通知也能完成计时打卡闭环 |
 | M3 | 家长闭环 | `WAITING` | 0/7 | 可完全通过 UI 配置和维护任务 |
 | M4 | 通知闭环 | `WAITING` | 0/8 | 锁屏/终止提醒及更新清理通过 |
 | M5 | 实机收口 | `WAITING` | 0/8 | 无 P0/P1，形成分发结论 |
 
-总计：2/44 个任务完成。
+总计：5/44 个任务完成。
 
 ## 4. 任务索引
 
@@ -40,12 +40,12 @@
 
 | ID | 任务 | 依赖 | 状态 | 验收证据 |
 |---|---|---|---|---|
-| D-001 | 确认目标设备与首发约束 | 无 | `DONE` | 2025 年款；目标 iPadOS 26；横屏；具体型号延后真机复核 |
+| D-001 | 确认目标设备与首发约束 | 无 | `DONE` | 2025 款 iPad（A16）、iPadOS 26.6、横屏 |
 | D-002 | 确认 V0 产品假设 | D-001 | `DONE` | PIN、单孩子、放假行为、稍后提醒和手动完成均已确认 |
-| M0-001 | 建立工程与环境基线 | D-002 | `BLOCKED` | 当前仅有 Xcode 15.2；等待升级 |
-| M0-002 | 建立应用壳与运行配置 | M0-001 | `WAITING` | — |
-| M0-003 | 免费签名真机安装探针 | M0-002 | `WAITING` | — |
-| M0-004 | 本地通知最小探针 | M0-003 | `WAITING` | — |
+| M0-001 | 建立工程与环境基线 | D-002 | `DONE` | Xcode 27.0、Swift 6.4、SDK 27；iOS 17.2/27.0 runtime；配置决策已记录 |
+| M0-002 | 建立应用壳与运行配置 | M0-001 | `DONE` | 工程解析、干净构建、Swift Testing、静态分析、模拟器安装启动均通过 |
+| M0-003 | 免费签名真机安装探针 | M0-002 | `DONE` | iPad（A16）签名安装、冷启动、终止重启、横屏和前后台恢复均通过；到期观察已开始 |
+| M0-004 | 本地通知最小探针 | M0-003 | `TODO` | — |
 | M0-005 | M0 风险结论与技术基线 | M0-004 | `WAITING` | — |
 | M1-001 | 固化领域类型与状态机 | M0-005 | `WAITING` | — |
 | M1-002 | 实现 SwiftData 模型与容器 | M1-001 | `WAITING` | — |
@@ -81,7 +81,7 @@
 | M5-003 | 验收编辑删除与重复重建 | M4-008 | `WAITING` | — |
 | M5-004 | 验收重启、跨午夜与时区变化 | M4-008 | `WAITING` | — |
 | M5-005 | 执行三天家庭试用 | M5-001 至 M5-004 | `WAITING` | — |
-| M5-006 | 完成免费签名到期观察 | M0-003 后等待到期 | `WAITING` | — |
+| M5-006 | 完成免费签名到期观察 | M0-003 后等待到期 | `WAITING` | 观察起点 2026-09-22；当前描述文件预计 2026-09-29 21:27 到期 |
 | M5-007 | 缺陷收口与回归 | M5-005、M5-006 | `WAITING` | — |
 | M5-008 | V0 放行与下一阶段决策 | M5-007 | `WAITING` | — |
 
@@ -98,13 +98,14 @@
 | DEC-007 | 2026-09-22 | 正式创建工程前升级到支持 iPadOS 26 SDK 的 Xcode 26.6 或更新稳定版。 | 工具链 | Apple 官方兼容表与本机环境 |
 | DEC-008 | 2026-09-22 | V0 使用四位家长 PIN、单个孩子、放假默认跳过全部任务但可单日恢复、稍后提醒固定 10 分钟、计时后手动完成。 | 产品、模型、交互 | 用户确认 |
 | DEC-009 | 2026-09-22 | 所有 SwiftUI 编写与评审使用 `swiftui-pro`；项目代码面向 Swift 新手提供规范中文 DocC 注释，并遵循 feature-first、可测试系统边界和原生框架优先原则。 | 全部实现与评审 | 用户确认并指定 skill |
+| DEC-010 | 2026-09-22 | 工程使用 Xcode 27、Swift 6 严格并发、最低 iPadOS 17、仅 iPad 横屏；开发 Bundle ID 暂定 `com.zhangzehua.Habito`，测试与 Preview 使用内存 SwiftData 容器。 | 工程配置 | M0-001 环境核验 |
 
 ## 6. 待确认与阻塞
 
 | ID | 问题 | 当前假设 | 最迟确认点 | 状态 |
 |---|---|---|---|---|
-| Q-001 | 2025 年款 iPad 的具体型号和 iPadOS 小版本？ | 目标 iPadOS 26；M0-003 真机复核 | M0-003 | `DEFERRED` |
-| Q-002 | 是否为孩子专用设备？ | 主要由孩子使用；V0 明确只支持单孩子 | M0-003 | `DEFERRED` |
+| Q-001 | 2025 年款 iPad 的具体型号和 iPadOS 小版本？ | iPad（A16，iPad15,7），iPadOS 26.6 | M0-003 | `RESOLVED` |
+| Q-002 | 是否为孩子专用设备？ | `ASSUMPTION`：主要由孩子使用，家长可配置；V0 只支持单孩子 | M5-005 | `DEFERRED` |
 | Q-003 | 首发支持横屏、竖屏还是两者？ | 横屏 | D-001 | `RESOLVED` |
 | Q-004 | 家长入口用 PIN 还是长按？ | 四位 PIN | D-002 | `RESOLVED` |
 | Q-005 | 放假是否跳过全部任务？ | 默认全部跳过，可单日恢复 | D-002 | `RESOLVED` |
@@ -122,9 +123,79 @@
 | R-004 | 模板修改污染历史或产生重复实例 | 中/高 | M1-005、M1-007 | `OPEN` |
 | R-005 | 锁屏、终止、跨午夜造成计时错误 | 中/高 | M2-004、M5-004 | `OPEN` |
 | R-006 | SwiftUI/SwiftData 学习成本使任务过大 | 中/中 | 每卡控制在半天到一天，超出即拆分 | `OPEN` |
-| R-007 | Xcode 15.2 不包含 iPadOS 26 SDK，且模拟器服务当前不可用 | 高/高 | 升级 Xcode 后在 M0-001 重新探测 | `BLOCKING` |
+| R-007 | Xcode 许可或 SDK 不可用 | 高/高 | Xcode 27.0、Swift 6.4、SDK 27 已核验 | `RESOLVED` |
+| R-008 | 当前未安装 iPadOS 26/27 Simulator Runtime | 中/中 | iOS 27.0 runtime 已安装；iOS 27 模拟器构建与测试通过 | `RESOLVED` |
 
 ## 8. 最近一次交接
+
+### 2026-09-22 22:00：M0-003 完成，M0-004 可开始
+
+- 当前任务：`M0-004 本地通知最小探针`，状态 `TODO`。
+- 已完成：在 2025 款 iPad（A16）/iPadOS 26.6 完成开发者模式、Personal Team 自动签名、开发者信任、安装、首次冷启动、终止进程后重启、横屏显示和前后台恢复验证；将当前 Personal Team 与全屏横屏配置写入工程。
+- 修改文件：`Habito.xcodeproj/project.pbxproj`、`docs/Habito-环境基线.md`、`docs/Habito-V0-执行看板.md`，以及 M0-002 尚未提交的工程壳与测试文件。
+- 验证：真机 Debug 构建无警告；iOS 27 模拟器 Swift Testing 1/1 通过；Xcode 静态分析、`swift-format lint --recursive --strict`、工程 plist 检查和 `git diff --check` 通过。
+- 签名观察：免费描述文件有效期至 2026-09-29 21:27（Asia/Shanghai），M5-006 从 2026-09-22 起观察实际到期行为。
+- 剩余步骤：实现 M0-004 的最小本地通知探针，在真机验证前台、后台、锁屏、App 被终止及点击唤起。
+- 下一条操作：将 M0-004 置为 `IN_PROGRESS`，按 `swiftui-pro` 规则设计通知服务边界与最小探针界面。
+- 新增假设/阻塞：Q-002 延后至家庭试用前确认；当前继续采用“主要由孩子使用、家长可配置”的单孩子假设。
+
+### 2026-09-22 21:53：真机已安装，等待设备端信任开发者
+
+- 当前任务：`M0-003 免费签名真机安装探针`，状态 `BLOCKED`。
+- 已完成：钥匙串授权成功；Personal Team 自动签名构建通过；补齐仅横屏所需的全屏声明并消除真机构建警告；Habito 已安装到 iPad。
+- 验证：Bundle ID、应用签名 Team、描述文件 Team 与目标设备匹配；描述文件有效期至 2026-09-29 21:27（Asia/Shanghai）；iPad 应用清单可读取 Habito 0.1.0（Build 1）。
+- 剩余步骤：用户在 iPad 的“设置 → 通用 → VPN 与设备管理 → 开发者 App”中信任当前开发者；随后执行冷启动、终止后重启和前后台切换。
+- 下一条操作：设备端信任完成后再次运行 `devicectl device process launch`。
+- 新增假设/阻塞：当前启动仅被设备端未信任开发者策略拒绝；签名结构和安装结果均已排除异常。
+
+### 2026-09-22 21:30：自动签名已生成，等待钥匙串授权
+
+- 当前任务：`M0-003 免费签名真机安装探针`，状态 `BLOCKED`。
+- 已完成：复核真机开发者模式已启用；确认 Xcode 当前 Personal Team 与旧证书团队不同，并改用当前团队自动签名；Habito 的免费开发描述文件已经生成。
+- 验证：真机状态为已连接、已配对、可调试；签名构建已进入 `codesign` 步骤。
+- 剩余步骤：用户在 Mac 的钥匙串访问提示中输入登录密码并选择“始终允许”；随后等待当前构建完成，再安装、启动并进行生命周期测试。
+- 下一条操作：恢复构建会话并检查结果；成功后使用 `devicectl` 安装和启动应用。
+- 新增假设/阻塞：`codesign` 正在等待用户授权访问开发私钥；这类安全授权不能由代理代替输入。
+
+### 2026-09-22 20:39：iOS 27 回归通过，真机等待系统级确认
+
+- 当前任务：`M0-003 免费签名真机安装探针`，状态 `BLOCKED`。
+- 已完成：确认 iOS 27.0 Simulator Runtime 可用；在 iPad Pro 13 英寸（M5）模拟器完成构建与 Swift Testing；识别并配对 2025 款 iPad（A16，iPad15,7），确认 iPadOS 26.6；本机 Apple Development 签名身份有效。
+- 修改文件：`docs/Habito-环境基线.md`、`docs/Habito-V0-执行看板.md`。
+- 验证：iOS 27 模拟器 `xcodebuild test` 成功，Swift Testing 1/1 通过；真机有线连接和配对正常。
+- 剩余步骤：用户在 iPad 的“设置 → 隐私与安全性 → 开发者模式”中开启开发者模式并完成重启确认；在 Xcode“设置 → Accounts”中重新登录当前 Apple 账号；随后完成自动签名、真机安装、冷启动与前后台切换，并记录免费签名观察起点。
+- 下一条操作：两个手动步骤完成后运行 `xcrun devicectl device info details` 复核，再执行真机构建安装。
+- 新增假设/阻塞：开发者模式为系统级安全开关，必须由设备持有人手动确认；自动签名发现 Xcode 账号缺少有效登录令牌，需重新登录；Q-002 是否孩子专用仍未确认。
+
+### 2026-09-22 18:50：M0-002 完成，M0-003 等待真机
+
+- 当前任务：`M0-003 免费签名真机安装探针`，状态 `BLOCKED`。
+- 已完成：创建 `Habito.xcodeproj`、SwiftUI App target、Swift Testing target、SwiftData 容器工厂、最小持久化模型、本地化目录、共享 Scheme、格式规则、Git 忽略和项目 README；通过 `swiftui-pro` 规则复核。
+- 修改文件：`.gitignore`、`.swift-format`、`README.md`、`Habito.xcodeproj/`、`Habito/`、`HabitoTests/`、`docs/Habito-环境基线.md`、`docs/Habito-V0-执行看板.md`。
+- 验证：工程解析成功；`swift-format lint --strict`、JSON/XML/plist 校验、`git diff --check`、Xcode 静态分析通过；干净构建无警告；Swift Testing 1/1 通过；iPad Pro 12.9 英寸 iOS 17.2 模拟器安装、启动和横屏截图正常。
+- 剩余步骤：连接目标 iPad；确认具体型号/iPadOS 和是否孩子专用；在 Xcode 选择个人 Apple Team；验证 Bundle ID、免费签名安装、冷启动和前后台切换；记录签名到期观察起点。
+- 下一条操作：目标 iPad 连接后运行 `xcrun devicectl list devices`，再配置 Development Team。
+- 新增假设/阻塞：`com.zhangzehua.Habito` 尚未在个人 Apple Team 下验证可注册；目标 iPad 当前不在场。
+
+### 2026-09-22 18:36：M0-001 完成，进入 M0-002
+
+- 当前任务：`M0-002 建立应用壳与运行配置`，状态 `IN_PROGRESS`。
+- 已完成：确认 Xcode 27.0、Swift 6.4、iOS/iPadOS 27 SDK、首次启动状态和沙箱外模拟器服务；记录最低 iPadOS 17、横屏、Swift 6 严格并发、Bundle ID、测试和本地数据策略。
+- 修改文件：`docs/Habito-环境基线.md`、`docs/Habito-V0-执行看板.md`。
+- 验证：`xcodebuild -version`、`xcrun swift --version`、`xcodebuild -showsdks`、`xcodebuild -checkFirstLaunchStatus` 成功；沙箱外 `simctl` 成功，当前可用 iOS 17.2 iPad 模拟器。
+- 剩余步骤：创建 Xcode 工程、SwiftUI App target、Swift Testing target、SwiftData 容器占位和基础目录；构建并运行测试。
+- 下一条操作：生成 `Habito.xcodeproj` 和最小源文件。
+- 新增假设/阻塞：开发 Bundle ID 暂定 `com.zhangzehua.Habito`；R-008 不阻塞工程壳。
+
+### 2026-09-22 18:32：Xcode 27 已安装，等待用户确认许可协议
+
+- 当前任务：`M0-001 建立工程与环境基线`，状态 `BLOCKED`。
+- 已完成：确认激活的 Xcode 为 27.0（Build 27A266a），数据卷可用约 158 GiB；`swiftui-pro` 已在本回合启用并读取完整规则。
+- 修改文件：`docs/Habito-环境基线.md`、`docs/Habito-V0-执行看板.md`。
+- 验证：`xcode-select -p` 与 `xcodebuild -version` 成功；`xcrun swift --version`、`xcodebuild -showsdks`、`simctl` 被未确认的 Apple 许可协议阻止。
+- 剩余步骤：用户本人确认 Xcode 许可协议并完成首次启动组件安装；复核 Swift、SDK、模拟器；确定 Bundle ID/组织标识；完成 M0-001。
+- 下一条操作：用户处理许可协议后，运行 `xcodebuild -showsdks` 和 `xcrun simctl list runtimes`。
+- 新增假设/阻塞：R-007 更新为许可协议阻塞；不能由代理代替用户接受法律协议。
 
 ### 2026-09-22：安装 swiftui-pro 并强化项目规则
 

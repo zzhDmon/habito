@@ -1,0 +1,28 @@
+{
+  "sourceLanguage" : "zh-Hans",
+  "strings" : {
+    "app.name" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Habito"
+          }
+        }
+      }
+    },
+    "app.placeholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "工程准备好了，下一步开始搭建学习任务。"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}
