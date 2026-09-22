@@ -7,9 +7,18 @@ import SwiftUI
 /// 也应在组合根完成装配，再通过环境或初始化参数传给功能模块，避免页面自行创建依赖。
 @main
 struct HabitoApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+
     private let modelContainer: ModelContainer
+    @State private var notificationProbeModel: NotificationProbeViewModel
 
     init() {
+        _notificationProbeModel = State(
+            initialValue: NotificationProbeViewModel(
+                notificationService: LocalNotificationService()
+            )
+        )
+
         do {
             modelContainer = try AppModelContainer.make()
         } catch {
@@ -21,7 +30,7 @@ struct HabitoApp: App {
 
     var body: some Scene {
         WindowGroup {
-            RootView()
+            RootView(notificationProbeModel: notificationProbeModel)
         }
         .modelContainer(modelContainer)
     }

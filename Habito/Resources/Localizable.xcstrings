@@ -22,6 +22,402 @@
           }
         }
       }
+    },
+    "notificationAuthorizationAuthorized" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已允许"
+          }
+        }
+      }
+    },
+    "notificationAuthorizationDenied" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已拒绝"
+          }
+        }
+      }
+    },
+    "notificationAuthorizationEphemeral" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "临时允许"
+          }
+        }
+      }
+    },
+    "notificationAuthorizationNotDetermined" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "尚未询问"
+          }
+        }
+      }
+    },
+    "notificationAuthorizationProvisional" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "临时授权"
+          }
+        }
+      }
+    },
+    "notificationAuthorizationUnknown" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未知"
+          }
+        }
+      }
+    },
+    "notificationProbeAuthorizationLabel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "通知权限"
+          }
+        }
+      }
+    },
+    "notificationProbeBodyBackground" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "后台场景通知已到达。"
+          }
+        }
+      }
+    },
+    "notificationProbeBodyForeground" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "前台场景通知已到达。"
+          }
+        }
+      }
+    },
+    "notificationProbeBodyLocked" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "锁屏场景通知已到达。"
+          }
+        }
+      }
+    },
+    "notificationProbeBodyTerminated" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "终止场景通知已到达，请点击打开 Habito。"
+          }
+        }
+      }
+    },
+    "notificationProbeCancelButton" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取消测试通知"
+          }
+        }
+      }
+    },
+    "notificationProbeContentTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Habito 通知探针"
+          }
+        }
+      }
+    },
+    "notificationProbeFooter" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每次只保留一条通知；重新安排会覆盖上一次测试。"
+          }
+        }
+      }
+    },
+    "notificationProbeInstructionBackground" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "安排后返回主屏幕，等待两分钟。"
+          }
+        }
+      }
+    },
+    "notificationProbeInstructionForeground" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "安排后保持 Habito 在前台，等待两分钟。"
+          }
+        }
+      }
+    },
+    "notificationProbeInstructionLocked" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "安排后锁定 iPad，等待两分钟。"
+          }
+        }
+      }
+    },
+    "notificationProbeInstructionTerminated" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "安排后从多任务界面结束 Habito；收到后点击通知。"
+          }
+        }
+      }
+    },
+    "notificationProbeScenarioBackground" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "后台"
+          }
+        }
+      }
+    },
+    "notificationProbeScenarioForeground" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "前台"
+          }
+        }
+      }
+    },
+    "notificationProbeScenarioLabel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "测试场景"
+          }
+        }
+      }
+    },
+    "notificationProbeScenarioLocked" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "锁屏"
+          }
+        }
+      }
+    },
+    "notificationProbeScenarioSection" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择场景"
+          }
+        }
+      }
+    },
+    "notificationProbeScenarioTerminated" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已终止"
+          }
+        }
+      }
+    },
+    "notificationProbeScheduleButton" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "安排两分钟测试"
+          }
+        }
+      }
+    },
+    "notificationProbeScheduledTimeEmpty" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "没有待触发通知"
+          }
+        }
+      }
+    },
+    "notificationProbeScheduledTimeLabel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "预计触发"
+          }
+        }
+      }
+    },
+    "notificationProbeStatusCancelled" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "测试通知已取消。"
+          }
+        }
+      }
+    },
+    "notificationProbeStatusDenied" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "通知权限未开启，请到系统设置中允许通知。"
+          }
+        }
+      }
+    },
+    "notificationProbeStatusFailed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "安排失败，请查看系统设置后重试。"
+          }
+        }
+      }
+    },
+    "notificationProbeStatusReady" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请选择场景并安排测试通知。"
+          }
+        }
+      }
+    },
+    "notificationProbeStatusRequesting" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在检查权限并安排通知…"
+          }
+        }
+      }
+    },
+    "notificationProbeStatusScheduled" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "通知已安排，请按所选场景操作。"
+          }
+        }
+      }
+    },
+    "notificationProbeStatusSection" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "系统状态"
+          }
+        }
+      }
+    },
+    "notificationProbeTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "本地通知探针"
+          }
+        }
+      }
+    },
+    "notificationProbeWorking" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在处理"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

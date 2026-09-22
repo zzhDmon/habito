@@ -1,21 +1,20 @@
 import SwiftUI
 
-/// V0 工程壳的根视图。
-///
-/// 当前只用于验证应用、导航和本地化资源能够正常加载；正式的孩子首页将在 M2 阶段接入。
+/// V0 工程壳的根视图和当前开发探针入口。
 struct RootView: View {
+    let notificationProbeModel: NotificationProbeViewModel
+
     var body: some View {
         NavigationStack {
-            ContentUnavailableView {
-                Label("app.name", systemImage: "checkmark.circle")
-            } description: {
-                Text("app.placeholder")
-            }
-            .navigationTitle("app.name")
+            NotificationProbeView(model: notificationProbeModel)
         }
     }
 }
 
 #Preview("iPad 横屏工程壳") {
-    RootView()
+    RootView(
+        notificationProbeModel: NotificationProbeViewModel(
+            notificationService: LocalNotificationService()
+        )
+    )
 }
