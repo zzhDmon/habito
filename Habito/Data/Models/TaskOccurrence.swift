@@ -68,6 +68,15 @@ final class TaskOccurrence {
         TaskOccurrenceStatus(rawValue: statusRawValue)
     }
 
+    /// 将持久化的覆盖标记和来源版本组合为领域来源值。
+    var origin: TaskOccurrenceOrigin {
+        if isDetachedOverride {
+            .detachedOverride
+        } else {
+            .generated(templateRevision: sourceRevision)
+        }
+    }
+
     /// 为 iPadOS 17 不支持复合唯一约束的 SwiftData 生成稳定业务键。
     static func makeUniquenessKey(templateID: UUID, dateKey: String) -> String {
         "\(templateID.uuidString.lowercased())|\(dateKey)"

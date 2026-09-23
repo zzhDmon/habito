@@ -48,4 +48,46 @@ final class ReminderRule {
     var weekdays: Set<Weekday> {
         Set(Weekday.allCases.filter { weekdayMask & (1 << $0.rawValue) != 0 })
     }
+
+    /// 将持久化标量安全还原为经过领域校验的重复规则。
+    ///
+    /// - Returns: 可直接交给 `TaskRecurrenceExpander` 的规则。
+    /// - Throws: 原始类型、日期键或字段组合损坏时抛出 `ReminderRuleDecodingError`。
+    func decodedRecurrence() throws -> TaskRecurrence {
+        guard let scheduleType else {
+            throw ReminderRuleDecodingError.unknownScheduleType(scheduleTypeRawValue)
+        }
+        let startDate = try decodeDateKey(startDateKey, field: "startDateKey")
+        let endDate = try endDateKey.map { try decodeDateKey($0, field: "endDateKey") }
+
+        switch scheduleType {
+        case .once:
+            guard let oneOffDateKey else {
+                throw ReminderRuleDecodingError.missingDateKey(field: "oneOffDateKey")
+            }
+            let oneOffDate = try decodeDateKey(oneOffDateKey, field: "oneOffDateKey")
+            guard startDate == oneOffDate, endDate == oneOffDate else {
+                throw ReminderRuleDecodingError.inconsistentOnceRange
+            }
+            return .once(on: oneOffDate)
+
+        case .weekly:
+            guard oneOffDateKey == nil else {
+                throw ReminderRuleDecodingError.unexpectedOneOffDateForWeekly
+            }
+            do {
+                return try .weekly(on: weekdays, starting: startDate, ending: endDate)
+            } catch let error as TaskRecurrenceError {
+                throw ReminderRuleDecodingError.invalidRecurrence(error)
+            }
+        }
+    }
+
+    private func decodeDateKey(_ value: String, field: String) throws -> LocalDate {
+        do {
+            return try LocalDate(dateKey: value)
+        } catch {
+            throw ReminderRuleDecodingError.invalidDateKey(field: field, value: value)
+        }
+    }
 }

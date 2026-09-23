@@ -69,6 +69,8 @@
 		G10000000000000000000001 /* TaskProgressServiceError.swift in Sources */ = {isa = PBXBuildFile; fileRef = G20000000000000000000001 /* TaskProgressServiceError.swift */; };
 		G10000000000000000000002 /* TaskProgressService.swift in Sources */ = {isa = PBXBuildFile; fileRef = G20000000000000000000002 /* TaskProgressService.swift */; };
 		G10000000000000000000003 /* TaskProgressServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = G20000000000000000000003 /* TaskProgressServiceTests.swift */; };
+		H10000000000000000000001 /* ReminderRuleDecodingError.swift in Sources */ = {isa = PBXBuildFile; fileRef = H20000000000000000000001 /* ReminderRuleDecodingError.swift */; };
+		H10000000000000000000002 /* M1DataKernelIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = H20000000000000000000002 /* M1DataKernelIntegrationTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -146,6 +148,8 @@
 		G20000000000000000000001 /* TaskProgressServiceError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskProgressServiceError.swift; sourceTree = "<group>"; };
 		G20000000000000000000002 /* TaskProgressService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskProgressService.swift; sourceTree = "<group>"; };
 		G20000000000000000000003 /* TaskProgressServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskProgressServiceTests.swift; sourceTree = "<group>"; };
+		H20000000000000000000001 /* ReminderRuleDecodingError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderRuleDecodingError.swift; sourceTree = "<group>"; };
+		H20000000000000000000002 /* M1DataKernelIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = M1DataKernelIntegrationTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -343,6 +347,7 @@
 				D20000000000000000000008 /* DayOverride.swift */,
 				D20000000000000000000009 /* NotificationLink.swift */,
 				D20000000000000000000004 /* ReminderRule.swift */,
+				H20000000000000000000001 /* ReminderRuleDecodingError.swift */,
 				D20000000000000000000005 /* TaskOccurrence.swift */,
 				D20000000000000000000003 /* TaskTemplate.swift */,
 				D20000000000000000000007 /* TimerSession.swift */,
@@ -368,6 +373,7 @@
 			isa = PBXGroup;
 			children = (
 				A20000000000000000000006 /* AppModelContainerTests.swift */,
+				H20000000000000000000002 /* M1DataKernelIntegrationTests.swift */,
 				D2000000000000000000000C /* PersistenceConstraintTests.swift */,
 				D2000000000000000000000D /* PersistenceFixture.swift */,
 				D2000000000000000000000B /* PersistenceRoundTripTests.swift */,
@@ -510,6 +516,7 @@
 				F10000000000000000000001 /* OccurrenceReconciliationError.swift in Sources */,
 				F10000000000000000000002 /* OccurrenceReconciliationReport.swift in Sources */,
 				D10000000000000000000004 /* ReminderRule.swift in Sources */,
+				H10000000000000000000001 /* ReminderRuleDecodingError.swift in Sources */,
 				E10000000000000000000006 /* ResolvedTaskCandidate.swift in Sources */,
 				A10000000000000000000002 /* RootView.swift in Sources */,
 				E10000000000000000000001 /* ScheduledTaskCandidate.swift in Sources */,
@@ -546,6 +553,7 @@
 				C10000000000000000000012 /* DomainStateMachineTests.swift in Sources */,
 				A1000000000000000000000F /* FakeLocalNotificationService.swift in Sources */,
 				C10000000000000000000010 /* LocalDateTests.swift in Sources */,
+				H10000000000000000000002 /* M1DataKernelIntegrationTests.swift in Sources */,
 				A10000000000000000000010 /* NotificationProbeViewModelTests.swift in Sources */,
 				D1000000000000000000000C /* PersistenceConstraintTests.swift in Sources */,
 				D1000000000000000000000D /* PersistenceFixture.swift in Sources */,
