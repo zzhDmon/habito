@@ -14,6 +14,10 @@ nonisolated struct LocalDate: Equatable, Hashable, Comparable, Sendable {
     ///
     /// - Throws: 当年月日无法组成真实公历日期时抛出 `LocalDateError.invalidComponents`。
     init(year: Int, month: Int, day: Int) throws {
+        guard (1...9999).contains(year) else {
+            throw LocalDateError.invalidComponents(year: year, month: month, day: day)
+        }
+
         let calendar = Calendar(identifier: .gregorian)
         let components = DateComponents(
             calendar: calendar,
@@ -84,12 +88,21 @@ nonisolated struct LocalDate: Equatable, Hashable, Comparable, Sendable {
 
     /// 持久化和唯一性判断使用的稳定日期键。
     var dateKey: String {
-        String(format: "%04d-%02d-%02d", year, month, day)
+        [
+            Self.zeroPadded(year, width: 4),
+            Self.zeroPadded(month, width: 2),
+            Self.zeroPadded(day, width: 2),
+        ].joined(separator: "-")
     }
 
     static func < (lhs: LocalDate, rhs: LocalDate) -> Bool {
         if lhs.year != rhs.year { return lhs.year < rhs.year }
         if lhs.month != rhs.month { return lhs.month < rhs.month }
         return lhs.day < rhs.day
+    }
+
+    private static func zeroPadded(_ value: Int, width: Int) -> String {
+        let digits = String(value)
+        return String(repeating: "0", count: max(0, width - digits.count)) + digits
     }
 }

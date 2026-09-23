@@ -4,7 +4,7 @@ import UserNotifications
 /// Habito 关心的本地通知授权状态。
 ///
 /// 该类型隔离系统枚举，避免页面直接依赖 `UserNotifications` 框架的细节。
-enum NotificationAuthorizationState: Equatable, Sendable {
+nonisolated enum NotificationAuthorizationState: String, Equatable, Sendable {
     case notDetermined
     case denied
     case authorized

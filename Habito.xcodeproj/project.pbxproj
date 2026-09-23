@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		A10000000000000000000001 /* HabitoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000001 /* HabitoApp.swift */; };
 		A10000000000000000000002 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000002 /* RootView.swift */; };
-		A10000000000000000000003 /* AppMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000003 /* AppMetadata.swift */; };
 		A10000000000000000000004 /* AppModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000004 /* AppModelContainer.swift */; };
 		A10000000000000000000005 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000005 /* Localizable.xcstrings */; };
 		A10000000000000000000006 /* AppModelContainerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000006 /* AppModelContainerTests.swift */; };
@@ -41,6 +40,19 @@
 		C10000000000000000000010 /* LocalDateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C20000000000000000000010 /* LocalDateTests.swift */; };
 		C10000000000000000000011 /* TaskRecurrenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C20000000000000000000011 /* TaskRecurrenceTests.swift */; };
 		C10000000000000000000012 /* DomainStateMachineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C20000000000000000000012 /* DomainStateMachineTests.swift */; };
+		D10000000000000000000001 /* DayType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000001 /* DayType.swift */; };
+		D10000000000000000000002 /* NotificationKind.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000002 /* NotificationKind.swift */; };
+		D10000000000000000000003 /* TaskTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000003 /* TaskTemplate.swift */; };
+		D10000000000000000000004 /* ReminderRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000004 /* ReminderRule.swift */; };
+		D10000000000000000000005 /* TaskOccurrence.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000005 /* TaskOccurrence.swift */; };
+		D10000000000000000000006 /* CompletionRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000006 /* CompletionRecord.swift */; };
+		D10000000000000000000007 /* TimerSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000007 /* TimerSession.swift */; };
+		D10000000000000000000008 /* DayOverride.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000008 /* DayOverride.swift */; };
+		D10000000000000000000009 /* NotificationLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000009 /* NotificationLink.swift */; };
+		D1000000000000000000000A /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000A /* AppSettings.swift */; };
+		D1000000000000000000000B /* PersistenceRoundTripTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000B /* PersistenceRoundTripTests.swift */; };
+		D1000000000000000000000C /* PersistenceConstraintTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000C /* PersistenceConstraintTests.swift */; };
+		D1000000000000000000000D /* PersistenceFixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000D /* PersistenceFixture.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,7 +68,6 @@
 /* Begin PBXFileReference section */
 		A20000000000000000000001 /* HabitoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitoApp.swift; sourceTree = "<group>"; };
 		A20000000000000000000002 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
-		A20000000000000000000003 /* AppMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppMetadata.swift; sourceTree = "<group>"; };
 		A20000000000000000000004 /* AppModelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModelContainer.swift; sourceTree = "<group>"; };
 		A20000000000000000000005 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		A20000000000000000000006 /* AppModelContainerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModelContainerTests.swift; sourceTree = "<group>"; };
@@ -90,6 +101,19 @@
 		C20000000000000000000010 /* LocalDateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDateTests.swift; sourceTree = "<group>"; };
 		C20000000000000000000011 /* TaskRecurrenceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskRecurrenceTests.swift; sourceTree = "<group>"; };
 		C20000000000000000000012 /* DomainStateMachineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainStateMachineTests.swift; sourceTree = "<group>"; };
+		D20000000000000000000001 /* DayType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayType.swift; sourceTree = "<group>"; };
+		D20000000000000000000002 /* NotificationKind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationKind.swift; sourceTree = "<group>"; };
+		D20000000000000000000003 /* TaskTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskTemplate.swift; sourceTree = "<group>"; };
+		D20000000000000000000004 /* ReminderRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderRule.swift; sourceTree = "<group>"; };
+		D20000000000000000000005 /* TaskOccurrence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskOccurrence.swift; sourceTree = "<group>"; };
+		D20000000000000000000006 /* CompletionRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletionRecord.swift; sourceTree = "<group>"; };
+		D20000000000000000000007 /* TimerSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerSession.swift; sourceTree = "<group>"; };
+		D20000000000000000000008 /* DayOverride.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayOverride.swift; sourceTree = "<group>"; };
+		D20000000000000000000009 /* NotificationLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationLink.swift; sourceTree = "<group>"; };
+		D2000000000000000000000A /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		D2000000000000000000000B /* PersistenceRoundTripTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceRoundTripTests.swift; sourceTree = "<group>"; };
+		D2000000000000000000000C /* PersistenceConstraintTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceConstraintTests.swift; sourceTree = "<group>"; };
+		D2000000000000000000000D /* PersistenceFixture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceFixture.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,6 +169,7 @@
 		A50000000000000000000004 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				D50000000000000000000001 /* Models */,
 				A50000000000000000000005 /* Persistence */,
 			);
 			path = Data;
@@ -154,7 +179,6 @@
 			isa = PBXGroup;
 			children = (
 				A20000000000000000000004 /* AppModelContainer.swift */,
-				A20000000000000000000003 /* AppMetadata.swift */,
 			);
 			path = Persistence;
 			sourceTree = "<group>";
@@ -170,7 +194,7 @@
 		A50000000000000000000007 /* HabitoTests */ = {
 			isa = PBXGroup;
 			children = (
-				A20000000000000000000006 /* AppModelContainerTests.swift */,
+				D50000000000000000000002 /* Data */,
 				C50000000000000000000004 /* Domain */,
 				A20000000000000000000011 /* FakeLocalNotificationService.swift */,
 				A20000000000000000000012 /* NotificationProbeViewModelTests.swift */,
@@ -236,6 +260,7 @@
 		C50000000000000000000002 /* Calendar */ = {
 			isa = PBXGroup;
 			children = (
+				D20000000000000000000001 /* DayType.swift */,
 				C20000000000000000000002 /* LocalDate.swift */,
 				C20000000000000000000001 /* LocalDateError.swift */,
 				C20000000000000000000003 /* Weekday.swift */,
@@ -248,6 +273,7 @@
 			children = (
 				C20000000000000000000004 /* CompletionSource.swift */,
 				C20000000000000000000005 /* DomainStateTransitionError.swift */,
+				D20000000000000000000002 /* NotificationKind.swift */,
 				C20000000000000000000006 /* TaskOccurrenceAction.swift */,
 				C20000000000000000000008 /* TaskOccurrenceOrigin.swift */,
 				C20000000000000000000007 /* TaskOccurrenceStatus.swift */,
@@ -270,6 +296,32 @@
 				C20000000000000000000011 /* TaskRecurrenceTests.swift */,
 			);
 			path = Domain;
+			sourceTree = "<group>";
+		};
+		D50000000000000000000001 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				D2000000000000000000000A /* AppSettings.swift */,
+				D20000000000000000000006 /* CompletionRecord.swift */,
+				D20000000000000000000008 /* DayOverride.swift */,
+				D20000000000000000000009 /* NotificationLink.swift */,
+				D20000000000000000000004 /* ReminderRule.swift */,
+				D20000000000000000000005 /* TaskOccurrence.swift */,
+				D20000000000000000000003 /* TaskTemplate.swift */,
+				D20000000000000000000007 /* TimerSession.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		D50000000000000000000002 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000006 /* AppModelContainerTests.swift */,
+				D2000000000000000000000C /* PersistenceConstraintTests.swift */,
+				D2000000000000000000000D /* PersistenceFixture.swift */,
+				D2000000000000000000000B /* PersistenceRoundTripTests.swift */,
+			);
+			path = Data;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -364,8 +416,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				A10000000000000000000007 /* AppDelegate.swift in Sources */,
+				D1000000000000000000000A /* AppSettings.swift in Sources */,
 				A10000000000000000000001 /* HabitoApp.swift in Sources */,
 				C10000000000000000000004 /* CompletionSource.swift in Sources */,
+				D10000000000000000000006 /* CompletionRecord.swift in Sources */,
+				D10000000000000000000008 /* DayOverride.swift in Sources */,
+				D10000000000000000000001 /* DayType.swift in Sources */,
 				C10000000000000000000005 /* DomainStateTransitionError.swift in Sources */,
 				C10000000000000000000002 /* LocalDate.swift in Sources */,
 				C10000000000000000000001 /* LocalDateError.swift in Sources */,
@@ -376,8 +432,12 @@
 				A1000000000000000000000C /* NotificationProbeScenario.swift in Sources */,
 				A1000000000000000000000E /* NotificationProbeView.swift in Sources */,
 				A1000000000000000000000D /* NotificationProbeViewModel.swift in Sources */,
+				D10000000000000000000002 /* NotificationKind.swift in Sources */,
+				D10000000000000000000009 /* NotificationLink.swift in Sources */,
+				D10000000000000000000004 /* ReminderRule.swift in Sources */,
 				A10000000000000000000002 /* RootView.swift in Sources */,
 				C10000000000000000000006 /* TaskOccurrenceAction.swift in Sources */,
+				D10000000000000000000005 /* TaskOccurrence.swift in Sources */,
 				C10000000000000000000008 /* TaskOccurrenceOrigin.swift in Sources */,
 				C10000000000000000000007 /* TaskOccurrenceStatus.swift in Sources */,
 				C1000000000000000000000B /* TaskRecurrence.swift in Sources */,
@@ -385,10 +445,11 @@
 				C1000000000000000000000A /* TaskRecurrenceKind.swift in Sources */,
 				C1000000000000000000000C /* TaskTemplateLifecycleAction.swift in Sources */,
 				C1000000000000000000000D /* TaskTemplateLifecycleState.swift in Sources */,
+				D10000000000000000000003 /* TaskTemplate.swift in Sources */,
+				D10000000000000000000007 /* TimerSession.swift in Sources */,
 				C1000000000000000000000E /* TimerSessionAction.swift in Sources */,
 				C1000000000000000000000F /* TimerSessionState.swift in Sources */,
 				C10000000000000000000003 /* Weekday.swift in Sources */,
-				A10000000000000000000003 /* AppMetadata.swift in Sources */,
 				A10000000000000000000004 /* AppModelContainer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -402,6 +463,9 @@
 				A1000000000000000000000F /* FakeLocalNotificationService.swift in Sources */,
 				C10000000000000000000010 /* LocalDateTests.swift in Sources */,
 				A10000000000000000000010 /* NotificationProbeViewModelTests.swift in Sources */,
+				D1000000000000000000000C /* PersistenceConstraintTests.swift in Sources */,
+				D1000000000000000000000D /* PersistenceFixture.swift in Sources */,
+				D1000000000000000000000B /* PersistenceRoundTripTests.swift in Sources */,
 				C10000000000000000000011 /* TaskRecurrenceTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
