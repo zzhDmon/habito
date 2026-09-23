@@ -23,6 +23,7 @@ struct TaskSessionLoadedView: View {
                 )
             }
         }
+        .accessibilityIdentifier(HabitoAccessibilityID.sessionScreen)
     }
 }
 
@@ -73,6 +74,7 @@ private struct TaskSessionTimerPanel: View {
                 .contentTransition(.numericText())
                 .accessibilityLabel("taskSession.elapsedTitle")
                 .accessibilityValue(TaskSessionDurationText.spoken(elapsedSeconds))
+                .accessibilityIdentifier(HabitoAccessibilityID.elapsedTime)
 
             ProgressView(value: content.progress(at: now))
                 .tint(HabitoDesign.Palette.accent)
@@ -124,11 +126,26 @@ private struct TaskSessionControlsView: View {
         VStack(spacing: HabitoDesign.Spacing.small) {
             switch primaryAction {
             case .start:
-                primaryButton("taskSession.start", systemImage: "play.fill", action: onStartOrResume)
+                primaryButton(
+                    "taskSession.start",
+                    systemImage: "play.fill",
+                    identifier: HabitoAccessibilityID.startButton,
+                    action: onStartOrResume
+                )
             case .pause:
-                primaryButton("taskSession.pause", systemImage: "pause.fill", action: onPause)
+                primaryButton(
+                    "taskSession.pause",
+                    systemImage: "pause.fill",
+                    identifier: HabitoAccessibilityID.pauseButton,
+                    action: onPause
+                )
             case .resume:
-                primaryButton("taskSession.resume", systemImage: "play.fill", action: onStartOrResume)
+                primaryButton(
+                    "taskSession.resume",
+                    systemImage: "play.fill",
+                    identifier: HabitoAccessibilityID.resumeButton,
+                    action: onStartOrResume
+                )
             case .none:
                 EmptyView()
             }
@@ -142,6 +159,7 @@ private struct TaskSessionControlsView: View {
                 .buttonStyle(.bordered)
                 .tint(HabitoDesign.Palette.success)
                 .controlSize(.large)
+                .accessibilityIdentifier(HabitoAccessibilityID.completeButton)
             }
         }
         .padding(.top, HabitoDesign.Spacing.small)
@@ -150,6 +168,7 @@ private struct TaskSessionControlsView: View {
     private func primaryButton(
         _ titleKey: LocalizedStringKey,
         systemImage: String,
+        identifier: String,
         action: @escaping () -> Void
     ) -> some View {
         Button(action: action) {
@@ -159,6 +178,7 @@ private struct TaskSessionControlsView: View {
         }
         .buttonStyle(.borderedProminent)
         .controlSize(.large)
+        .accessibilityIdentifier(identifier)
     }
 }
 
@@ -200,6 +220,7 @@ private struct TaskCompletionSnapshotView: View {
                 .buttonStyle(.bordered)
                 .controlSize(.large)
                 .padding(.top, HabitoDesign.Spacing.small)
+                .accessibilityIdentifier(HabitoAccessibilityID.undoButton)
             }
         }
         .padding(.top, HabitoDesign.Spacing.small)

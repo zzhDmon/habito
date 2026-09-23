@@ -38,6 +38,7 @@ struct KidTodayView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .accessibilityIdentifier(HabitoAccessibilityID.todayScreen)
         .navigationTitle("kidToday.navigationTitle")
         .background(.background)
     }

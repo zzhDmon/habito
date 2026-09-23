@@ -26,6 +26,20 @@
             buildForRunning = "NO"
             buildForProfiling = "NO"
             buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "N80000000000000000000001"
+               BuildableName = "HabitoUITests.xctest"
+               BlueprintName = "HabitoUITests"
+               ReferencedContainer = "container:Habito.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
@@ -49,6 +63,15 @@
                BlueprintIdentifier = "A80000000000000000000002"
                BuildableName = "HabitoTests.xctest"
                BlueprintName = "HabitoTests"
+               ReferencedContainer = "container:Habito.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference skipped = "NO" parallelizable = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "N80000000000000000000001"
+               BuildableName = "HabitoUITests.xctest"
+               BlueprintName = "HabitoUITests"
                ReferencedContainer = "container:Habito.xcodeproj">
             </BuildableReference>
          </TestableReference>

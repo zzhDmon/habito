@@ -16,7 +16,24 @@ struct HabitoApp: App {
     init() {
         let container: ModelContainer
         do {
-            container = try AppModelContainer.make()
+            #if DEBUG
+                if let configuration = UITestLaunchConfiguration.current {
+                    container = try configuration.makeContainer()
+                    let calendar = Calendar(identifier: .gregorian)
+                    let timeZone = TimeZone.autoupdatingCurrent
+                    try UITestSeedService.prepare(
+                        container: container,
+                        shouldReset: configuration.shouldReset,
+                        now: .now,
+                        calendar: calendar,
+                        timeZone: timeZone
+                    )
+                } else {
+                    container = try AppModelContainer.make()
+                }
+            #else
+                container = try AppModelContainer.make()
+            #endif
         } catch {
             // 持久化容器不可用时，继续运行会让后续读写行为不可预测，
             // 因此启动阶段直接失败并保留明确原因。

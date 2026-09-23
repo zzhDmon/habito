@@ -46,6 +46,7 @@ struct KidTaskCard: View {
         }
         .buttonStyle(.plain)
         .frame(minHeight: HabitoDesign.Layout.minimumTapSize)
+        .accessibilityIdentifier(HabitoAccessibilityID.task(task.id))
         .accessibilityHint("kidToday.openTaskHint")
     }
 }

@@ -103,10 +103,22 @@
 		M10000000000000000000005 /* TaskSessionViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = M20000000000000000000005 /* TaskSessionViewModelFactory.swift */; };
 		M10000000000000000000006 /* TaskSessionLoadedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = M20000000000000000000006 /* TaskSessionLoadedView.swift */; };
 		M10000000000000000000007 /* TaskSessionViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = M20000000000000000000007 /* TaskSessionViewModelTests.swift */; };
+		N10000000000000000000001 /* UITestLaunchConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = N20000000000000000000001 /* UITestLaunchConfiguration.swift */; };
+		N10000000000000000000002 /* UITestSeedService.swift in Sources */ = {isa = PBXBuildFile; fileRef = N20000000000000000000002 /* UITestSeedService.swift */; };
+		N10000000000000000000003 /* HabitoAccessibilityID.swift in Sources */ = {isa = PBXBuildFile; fileRef = N20000000000000000000003 /* HabitoAccessibilityID.swift */; };
+		N10000000000000000000004 /* LocalizationCatalogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = N20000000000000000000004 /* LocalizationCatalogTests.swift */; };
+		N10000000000000000000005 /* HabitoKidFlowUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = N20000000000000000000005 /* HabitoKidFlowUITests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
 		A30000000000000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A90000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A80000000000000000000001;
+			remoteInfo = Habito;
+		};
+		N30000000000000000000001 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = A90000000000000000000001 /* Project object */;
 			proxyType = 1;
@@ -214,6 +226,12 @@
 		M20000000000000000000005 /* TaskSessionViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskSessionViewModelFactory.swift; sourceTree = "<group>"; };
 		M20000000000000000000006 /* TaskSessionLoadedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskSessionLoadedView.swift; sourceTree = "<group>"; };
 		M20000000000000000000007 /* TaskSessionViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskSessionViewModelTests.swift; sourceTree = "<group>"; };
+		N20000000000000000000001 /* UITestLaunchConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestLaunchConfiguration.swift; sourceTree = "<group>"; };
+		N20000000000000000000002 /* UITestSeedService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestSeedService.swift; sourceTree = "<group>"; };
+		N20000000000000000000003 /* HabitoAccessibilityID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitoAccessibilityID.swift; sourceTree = "<group>"; };
+		N20000000000000000000004 /* LocalizationCatalogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationCatalogTests.swift; sourceTree = "<group>"; };
+		N20000000000000000000005 /* HabitoKidFlowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitoKidFlowUITests.swift; sourceTree = "<group>"; };
+		N20000000000000000000006 /* HabitoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HabitoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -231,6 +249,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		N40000000000000000000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -239,6 +264,7 @@
 			children = (
 				A50000000000000000000002 /* Habito */,
 				A50000000000000000000007 /* HabitoTests */,
+				N50000000000000000000002 /* HabitoUITests */,
 				A50000000000000000000008 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -264,6 +290,8 @@
 				A20000000000000000000009 /* AppDelegate.swift */,
 				A20000000000000000000001 /* HabitoApp.swift */,
 				A20000000000000000000002 /* RootView.swift */,
+				N20000000000000000000001 /* UITestLaunchConfiguration.swift */,
+				N20000000000000000000002 /* UITestSeedService.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -303,6 +331,7 @@
 				J50000000000000000000001 /* Features */,
 				A20000000000000000000011 /* FakeLocalNotificationService.swift */,
 				A20000000000000000000012 /* NotificationProbeViewModelTests.swift */,
+				N20000000000000000000004 /* LocalizationCatalogTests.swift */,
 			);
 			path = HabitoTests;
 			sourceTree = "<group>";
@@ -312,6 +341,7 @@
 			children = (
 				A20000000000000000000007 /* Habito.app */,
 				A20000000000000000000008 /* HabitoTests.xctest */,
+				N20000000000000000000006 /* HabitoUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -367,6 +397,7 @@
 		I50000000000000000000002 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				N50000000000000000000001 /* Accessibility */,
 				I50000000000000000000003 /* Layout */,
 			);
 			path = Shared;
@@ -378,6 +409,22 @@
 				I20000000000000000000002 /* AdaptiveTwoColumnLayout.swift */,
 			);
 			path = Layout;
+			sourceTree = "<group>";
+		};
+		N50000000000000000000001 /* Accessibility */ = {
+			isa = PBXGroup;
+			children = (
+				N20000000000000000000003 /* HabitoAccessibilityID.swift */,
+			);
+			path = Accessibility;
+			sourceTree = "<group>";
+		};
+		N50000000000000000000002 /* HabitoUITests */ = {
+			isa = PBXGroup;
+			children = (
+				N20000000000000000000005 /* HabitoKidFlowUITests.swift */,
+			);
+			path = HabitoUITests;
 			sourceTree = "<group>";
 		};
 		I50000000000000000000004 /* TaskSession */ = {
@@ -591,6 +638,23 @@
 			productReference = A20000000000000000000008 /* HabitoTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		N80000000000000000000001 /* HabitoUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = N70000000000000000000001 /* Build configuration list for PBXNativeTarget "HabitoUITests" */;
+			buildPhases = (
+				N40000000000000000000001 /* Frameworks */,
+				N60000000000000000000001 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				N30000000000000000000002 /* PBXTargetDependency */,
+			);
+			name = HabitoUITests;
+			productName = HabitoUITests;
+			productReference = N20000000000000000000006 /* HabitoUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -605,6 +669,10 @@
 						CreatedOnToolsVersion = 27.0;
 					};
 					A80000000000000000000002 = {
+						CreatedOnToolsVersion = 27.0;
+						TestTargetID = A80000000000000000000001;
+					};
+					N80000000000000000000001 = {
 						CreatedOnToolsVersion = 27.0;
 						TestTargetID = A80000000000000000000001;
 					};
@@ -625,6 +693,7 @@
 			targets = (
 				A80000000000000000000001 /* Habito */,
 				A80000000000000000000002 /* HabitoTests */,
+				N80000000000000000000001 /* HabitoUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -646,9 +715,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				I10000000000000000000002 /* AdaptiveTwoColumnLayout.swift in Sources */,
+				N10000000000000000000003 /* HabitoAccessibilityID.swift in Sources */,
 				A10000000000000000000007 /* AppDelegate.swift in Sources */,
 				D1000000000000000000000A /* AppSettings.swift in Sources */,
 				A10000000000000000000001 /* HabitoApp.swift in Sources */,
+				N10000000000000000000001 /* UITestLaunchConfiguration.swift in Sources */,
+				N10000000000000000000002 /* UITestSeedService.swift in Sources */,
 				C10000000000000000000004 /* CompletionSource.swift in Sources */,
 				D10000000000000000000006 /* CompletionRecord.swift in Sources */,
 				D10000000000000000000008 /* DayOverride.swift in Sources */,
@@ -734,6 +806,7 @@
 				L10000000000000000000001 /* FixedDateProvider.swift in Sources */,
 				M10000000000000000000007 /* TaskSessionViewModelTests.swift in Sources */,
 				C10000000000000000000010 /* LocalDateTests.swift in Sources */,
+				N10000000000000000000004 /* LocalizationCatalogTests.swift in Sources */,
 				H10000000000000000000002 /* M1DataKernelIntegrationTests.swift in Sources */,
 				A10000000000000000000010 /* NotificationProbeViewModelTests.swift in Sources */,
 				D1000000000000000000000C /* PersistenceConstraintTests.swift in Sources */,
@@ -750,6 +823,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		N60000000000000000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				N10000000000000000000005 /* HabitoKidFlowUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -757,6 +838,11 @@
 			isa = PBXTargetDependency;
 			target = A80000000000000000000001 /* Habito */;
 			targetProxy = A30000000000000000000001 /* PBXContainerItemProxy */;
+		};
+		N30000000000000000000002 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A80000000000000000000001 /* Habito */;
+			targetProxy = N30000000000000000000001 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -911,6 +997,48 @@
 			};
 			name = Release;
 		};
+		N90000000000000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 9GBZS6R42H;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zhangzehua.HabitoUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 2;
+				TEST_TARGET_NAME = Habito;
+			};
+			name = Debug;
+		};
+		N90000000000000000000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 9GBZS6R42H;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zhangzehua.HabitoUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 2;
+				TEST_TARGET_NAME = Habito;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -937,6 +1065,15 @@
 			buildConfigurations = (
 				B10000000000000000000005 /* Debug */,
 				B10000000000000000000006 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		N70000000000000000000001 /* Build configuration list for PBXNativeTarget "HabitoUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				N90000000000000000000001 /* Debug */,
+				N90000000000000000000002 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -1,0 +1,37 @@
+#if DEBUG
+    import Foundation
+    import SwiftData
+
+    /// 解析 UI 测试专用启动参数，并创建与正式数据完全隔离的磁盘容器。
+    ///
+    /// 只有 Debug 构建且显式传入 `--habito-ui-testing` 时才会启用。测试容器保留在 App
+    /// 沙箱内，使测试可以终止并重新启动 App 来核对计时状态恢复；正式容器不会被读取或清理。
+    struct UITestLaunchConfiguration {
+        static let enableArgument = "--habito-ui-testing"
+        static let resetArgument = "--habito-ui-reset"
+
+        let shouldReset: Bool
+
+        static var current: UITestLaunchConfiguration? {
+            let arguments = ProcessInfo.processInfo.arguments
+            guard arguments.contains(enableArgument) else { return nil }
+            return UITestLaunchConfiguration(shouldReset: arguments.contains(resetArgument))
+        }
+
+        /// 创建 UI 测试独占的磁盘容器。
+        ///
+        /// - Returns: 使用独立 SQLite 文件的完整 Habito 模型容器。
+        /// - Throws: Application Support 目录或 SwiftData 容器无法创建时抛出错误。
+        func makeContainer() throws -> ModelContainer {
+            let fileManager = FileManager.default
+            let directory = try fileManager.url(
+                for: .applicationSupportDirectory,
+                in: .userDomainMask,
+                appropriateFor: nil,
+                create: true
+            )
+            let storeURL = directory.appendingPathComponent("HabitoUITests.store")
+            return try AppModelContainer.make(storeURL: storeURL)
+        }
+    }
+#endif
