@@ -53,6 +53,10 @@
 		D1000000000000000000000B /* PersistenceRoundTripTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000B /* PersistenceRoundTripTests.swift */; };
 		D1000000000000000000000C /* PersistenceConstraintTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000C /* PersistenceConstraintTests.swift */; };
 		D1000000000000000000000D /* PersistenceFixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000D /* PersistenceFixture.swift */; };
+		E10000000000000000000001 /* ScheduledTaskCandidate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20000000000000000000001 /* ScheduledTaskCandidate.swift */; };
+		E10000000000000000000002 /* TaskRecurrenceExpansionError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20000000000000000000002 /* TaskRecurrenceExpansionError.swift */; };
+		E10000000000000000000003 /* TaskRecurrenceExpander.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20000000000000000000003 /* TaskRecurrenceExpander.swift */; };
+		E10000000000000000000004 /* TaskRecurrenceExpanderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20000000000000000000004 /* TaskRecurrenceExpanderTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -114,6 +118,10 @@
 		D2000000000000000000000B /* PersistenceRoundTripTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceRoundTripTests.swift; sourceTree = "<group>"; };
 		D2000000000000000000000C /* PersistenceConstraintTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceConstraintTests.swift; sourceTree = "<group>"; };
 		D2000000000000000000000D /* PersistenceFixture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceFixture.swift; sourceTree = "<group>"; };
+		E20000000000000000000001 /* ScheduledTaskCandidate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduledTaskCandidate.swift; sourceTree = "<group>"; };
+		E20000000000000000000002 /* TaskRecurrenceExpansionError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskRecurrenceExpansionError.swift; sourceTree = "<group>"; };
+		E20000000000000000000003 /* TaskRecurrenceExpander.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskRecurrenceExpander.swift; sourceTree = "<group>"; };
+		E20000000000000000000004 /* TaskRecurrenceExpanderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskRecurrenceExpanderTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -252,6 +260,7 @@
 			isa = PBXGroup;
 			children = (
 				C50000000000000000000002 /* Calendar */,
+				E50000000000000000000001 /* Scheduling */,
 				C50000000000000000000003 /* Tasks */,
 			);
 			path = Domain;
@@ -293,6 +302,7 @@
 			children = (
 				C20000000000000000000012 /* DomainStateMachineTests.swift */,
 				C20000000000000000000010 /* LocalDateTests.swift */,
+				E20000000000000000000004 /* TaskRecurrenceExpanderTests.swift */,
 				C20000000000000000000011 /* TaskRecurrenceTests.swift */,
 			);
 			path = Domain;
@@ -311,6 +321,16 @@
 				D20000000000000000000007 /* TimerSession.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		E50000000000000000000001 /* Scheduling */ = {
+			isa = PBXGroup;
+			children = (
+				E20000000000000000000001 /* ScheduledTaskCandidate.swift */,
+				E20000000000000000000002 /* TaskRecurrenceExpansionError.swift */,
+				E20000000000000000000003 /* TaskRecurrenceExpander.swift */,
+			);
+			path = Scheduling;
 			sourceTree = "<group>";
 		};
 		D50000000000000000000002 /* Data */ = {
@@ -436,11 +456,14 @@
 				D10000000000000000000009 /* NotificationLink.swift in Sources */,
 				D10000000000000000000004 /* ReminderRule.swift in Sources */,
 				A10000000000000000000002 /* RootView.swift in Sources */,
+				E10000000000000000000001 /* ScheduledTaskCandidate.swift in Sources */,
 				C10000000000000000000006 /* TaskOccurrenceAction.swift in Sources */,
 				D10000000000000000000005 /* TaskOccurrence.swift in Sources */,
 				C10000000000000000000008 /* TaskOccurrenceOrigin.swift in Sources */,
 				C10000000000000000000007 /* TaskOccurrenceStatus.swift in Sources */,
 				C1000000000000000000000B /* TaskRecurrence.swift in Sources */,
+				E10000000000000000000002 /* TaskRecurrenceExpansionError.swift in Sources */,
+				E10000000000000000000003 /* TaskRecurrenceExpander.swift in Sources */,
 				C10000000000000000000009 /* TaskRecurrenceError.swift in Sources */,
 				C1000000000000000000000A /* TaskRecurrenceKind.swift in Sources */,
 				C1000000000000000000000C /* TaskTemplateLifecycleAction.swift in Sources */,
@@ -466,6 +489,7 @@
 				D1000000000000000000000C /* PersistenceConstraintTests.swift in Sources */,
 				D1000000000000000000000D /* PersistenceFixture.swift in Sources */,
 				D1000000000000000000000B /* PersistenceRoundTripTests.swift in Sources */,
+				E10000000000000000000004 /* TaskRecurrenceExpanderTests.swift in Sources */,
 				C10000000000000000000011 /* TaskRecurrenceTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
