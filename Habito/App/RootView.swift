@@ -1,20 +1,33 @@
 import SwiftUI
 
-/// V0 工程壳的根视图和当前开发探针入口。
+/// 孩子模式的根导航视图。
 struct RootView: View {
-    let notificationProbeModel: NotificationProbeViewModel
+    let tasks: [KidTaskNavigationItem]
+
+    @State private var path: [KidRoute] = []
+
+    init(tasks: [KidTaskNavigationItem] = []) {
+        self.tasks = tasks
+    }
 
     var body: some View {
-        NavigationStack {
-            NotificationProbeView(model: notificationProbeModel)
+        NavigationStack(path: $path) {
+            KidTodayView(tasks: tasks, onSelectTask: showTask)
+                .navigationDestination(for: KidRoute.self) { route in
+                    switch route {
+                    case let .task(task):
+                        KidTaskSessionView(task: task)
+                    }
+                }
         }
+    }
+
+    private func showTask(_ task: KidTaskNavigationItem) {
+        path.append(.task(task))
     }
 }
 
-#Preview("iPad 横屏工程壳") {
-    RootView(
-        notificationProbeModel: NotificationProbeViewModel(
-            notificationService: LocalNotificationService()
-        )
-    )
+#Preview("孩子模式 · iPad 横屏") {
+    RootView(tasks: [.previewReading])
+        .frame(width: 1_194, height: 834)
 }

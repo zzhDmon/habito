@@ -71,6 +71,14 @@
 		G10000000000000000000003 /* TaskProgressServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = G20000000000000000000003 /* TaskProgressServiceTests.swift */; };
 		H10000000000000000000001 /* ReminderRuleDecodingError.swift in Sources */ = {isa = PBXBuildFile; fileRef = H20000000000000000000001 /* ReminderRuleDecodingError.swift */; };
 		H10000000000000000000002 /* M1DataKernelIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = H20000000000000000000002 /* M1DataKernelIntegrationTests.swift */; };
+		I10000000000000000000001 /* HabitoDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = I20000000000000000000001 /* HabitoDesign.swift */; };
+		I10000000000000000000002 /* AdaptiveTwoColumnLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = I20000000000000000000002 /* AdaptiveTwoColumnLayout.swift */; };
+		I10000000000000000000003 /* KidTaskNavigationItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = I20000000000000000000003 /* KidTaskNavigationItem.swift */; };
+		I10000000000000000000004 /* KidRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = I20000000000000000000004 /* KidRoute.swift */; };
+		I10000000000000000000005 /* KidTaskCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = I20000000000000000000005 /* KidTaskCard.swift */; };
+		I10000000000000000000006 /* KidTodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = I20000000000000000000006 /* KidTodayView.swift */; };
+		I10000000000000000000007 /* KidTodayGreetingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = I20000000000000000000007 /* KidTodayGreetingPanel.swift */; };
+		I10000000000000000000008 /* KidTaskSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = I20000000000000000000008 /* KidTaskSessionView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -150,6 +158,14 @@
 		G20000000000000000000003 /* TaskProgressServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskProgressServiceTests.swift; sourceTree = "<group>"; };
 		H20000000000000000000001 /* ReminderRuleDecodingError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderRuleDecodingError.swift; sourceTree = "<group>"; };
 		H20000000000000000000002 /* M1DataKernelIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = M1DataKernelIntegrationTests.swift; sourceTree = "<group>"; };
+		I20000000000000000000001 /* HabitoDesign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitoDesign.swift; sourceTree = "<group>"; };
+		I20000000000000000000002 /* AdaptiveTwoColumnLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptiveTwoColumnLayout.swift; sourceTree = "<group>"; };
+		I20000000000000000000003 /* KidTaskNavigationItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidTaskNavigationItem.swift; sourceTree = "<group>"; };
+		I20000000000000000000004 /* KidRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidRoute.swift; sourceTree = "<group>"; };
+		I20000000000000000000005 /* KidTaskCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidTaskCard.swift; sourceTree = "<group>"; };
+		I20000000000000000000006 /* KidTodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidTodayView.swift; sourceTree = "<group>"; };
+		I20000000000000000000007 /* KidTodayGreetingPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidTodayGreetingPanel.swift; sourceTree = "<group>"; };
+		I20000000000000000000008 /* KidTaskSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidTaskSessionView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -184,10 +200,12 @@
 			children = (
 				A50000000000000000000003 /* App */,
 				A50000000000000000000004 /* Data */,
+				I50000000000000000000001 /* DesignSystem */,
 				C50000000000000000000001 /* Domain */,
 				A5000000000000000000000B /* Features */,
 				A50000000000000000000006 /* Resources */,
 				A50000000000000000000009 /* Services */,
+				I50000000000000000000002 /* Shared */,
 			);
 			path = Habito;
 			sourceTree = "<group>";
@@ -272,6 +290,8 @@
 			isa = PBXGroup;
 			children = (
 				A5000000000000000000000C /* NotificationProbe */,
+				I50000000000000000000004 /* TaskSession */,
+				I50000000000000000000005 /* Today */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -284,6 +304,50 @@
 				A2000000000000000000000F /* NotificationProbeViewModel.swift */,
 			);
 			path = NotificationProbe;
+			sourceTree = "<group>";
+		};
+		I50000000000000000000001 /* DesignSystem */ = {
+			isa = PBXGroup;
+			children = (
+				I20000000000000000000001 /* HabitoDesign.swift */,
+			);
+			path = DesignSystem;
+			sourceTree = "<group>";
+		};
+		I50000000000000000000002 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				I50000000000000000000003 /* Layout */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		I50000000000000000000003 /* Layout */ = {
+			isa = PBXGroup;
+			children = (
+				I20000000000000000000002 /* AdaptiveTwoColumnLayout.swift */,
+			);
+			path = Layout;
+			sourceTree = "<group>";
+		};
+		I50000000000000000000004 /* TaskSession */ = {
+			isa = PBXGroup;
+			children = (
+				I20000000000000000000008 /* KidTaskSessionView.swift */,
+			);
+			path = TaskSession;
+			sourceTree = "<group>";
+		};
+		I50000000000000000000005 /* Today */ = {
+			isa = PBXGroup;
+			children = (
+				I20000000000000000000004 /* KidRoute.swift */,
+				I20000000000000000000005 /* KidTaskCard.swift */,
+				I20000000000000000000003 /* KidTaskNavigationItem.swift */,
+				I20000000000000000000007 /* KidTodayGreetingPanel.swift */,
+				I20000000000000000000006 /* KidTodayView.swift */,
+			);
+			path = Today;
 			sourceTree = "<group>";
 		};
 		C50000000000000000000001 /* Domain */ = {
@@ -493,6 +557,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				I10000000000000000000002 /* AdaptiveTwoColumnLayout.swift in Sources */,
 				A10000000000000000000007 /* AppDelegate.swift in Sources */,
 				D1000000000000000000000A /* AppSettings.swift in Sources */,
 				A10000000000000000000001 /* HabitoApp.swift in Sources */,
@@ -502,6 +567,13 @@
 				D10000000000000000000001 /* DayType.swift in Sources */,
 				E10000000000000000000005 /* DayTypeOverrideValue.swift in Sources */,
 				C10000000000000000000005 /* DomainStateTransitionError.swift in Sources */,
+				I10000000000000000000001 /* HabitoDesign.swift in Sources */,
+				I10000000000000000000004 /* KidRoute.swift in Sources */,
+				I10000000000000000000005 /* KidTaskCard.swift in Sources */,
+				I10000000000000000000003 /* KidTaskNavigationItem.swift in Sources */,
+				I10000000000000000000008 /* KidTaskSessionView.swift in Sources */,
+				I10000000000000000000007 /* KidTodayGreetingPanel.swift in Sources */,
+				I10000000000000000000006 /* KidTodayView.swift in Sources */,
 				C10000000000000000000002 /* LocalDate.swift in Sources */,
 				C10000000000000000000001 /* LocalDateError.swift in Sources */,
 				A10000000000000000000009 /* LocalNotificationScheduling.swift in Sources */,

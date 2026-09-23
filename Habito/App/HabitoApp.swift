@@ -10,15 +10,8 @@ struct HabitoApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
 
     private let modelContainer: ModelContainer
-    @State private var notificationProbeModel: NotificationProbeViewModel
 
     init() {
-        _notificationProbeModel = State(
-            initialValue: NotificationProbeViewModel(
-                notificationService: LocalNotificationService()
-            )
-        )
-
         do {
             modelContainer = try AppModelContainer.make()
         } catch {
@@ -30,7 +23,8 @@ struct HabitoApp: App {
 
     var body: some Scene {
         WindowGroup {
-            RootView(notificationProbeModel: notificationProbeModel)
+            // M2-002 接入今日查询前保持真实空态，避免把 Preview 示例写进正式数据。
+            RootView()
         }
         .modelContainer(modelContainer)
     }
