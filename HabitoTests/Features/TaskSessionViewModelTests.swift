@@ -77,6 +77,90 @@ struct TaskSessionViewModelTests {
         #expect(model.state == .failed)
     }
 
+    @Test("运行中完成会保存实际时长并结束计时会话")
+    func completionPersistsDurationAndEndsSession() throws {
+        let fixture = try TodayQueryFixture()
+        let occurrence = fixture.makeOccurrence(
+            title: "口算",
+            scheduledAt: fixture.now,
+            status: .pending
+        )
+        try fixture.context.save()
+        try TaskProgressService(context: fixture.context).startTiming(
+            for: occurrence,
+            at: fixture.now.addingTimeInterval(-120)
+        )
+        let model = makeModel(for: occurrence.id, fixture: fixture, now: fixture.now)
+        model.load()
+
+        model.completeTask()
+
+        let content = try loadedContent(from: model.state)
+        let completion = try #require(content.completion)
+        #expect(content.task.status == .completed)
+        #expect(completion.activeDurationSeconds == 120)
+        #expect(completion.source == .childManual)
+        #expect(content.canUndoCompletion(at: fixture.now))
+        #expect(content.undoRemainingSeconds(at: fixture.now) == 5)
+        #expect(try sessions(in: fixture.context, occurrenceID: occurrence.id).first?.state == .ended)
+        #expect(try completionRecords(in: fixture.context, occurrenceID: occurrence.id).count == 1)
+        #expect(try snapshot(in: fixture).completedCount == 1)
+    }
+
+    @Test("完成后五秒内撤销会删除完成记录并恢复待处理")
+    func undoWithinWindowRestoresPendingState() throws {
+        let fixture = try TodayQueryFixture()
+        let occurrence = fixture.makeOccurrence(
+            title: "背诗",
+            scheduledAt: fixture.now,
+            status: .pending
+        )
+        try fixture.context.save()
+        let completionModel = makeModel(for: occurrence.id, fixture: fixture, now: fixture.now)
+        completionModel.load()
+        completionModel.completeTask()
+
+        let undoAt = fixture.now.addingTimeInterval(4)
+        let undoModel = makeModel(for: occurrence.id, fixture: fixture, now: undoAt)
+        undoModel.load()
+        #expect(try loadedContent(from: undoModel.state).undoRemainingSeconds(at: undoAt) == 1)
+
+        undoModel.undoCompletion()
+
+        let content = try loadedContent(from: undoModel.state)
+        #expect(content.task.status == .pending)
+        #expect(content.completion == nil)
+        #expect(try completionRecords(in: fixture.context, occurrenceID: occurrence.id).isEmpty)
+        #expect(try snapshot(in: fixture, at: undoAt).completedCount == 0)
+    }
+
+    @Test("完成五秒后撤销不会改写完成事实")
+    func undoAfterWindowLeavesCompletionUntouched() throws {
+        let fixture = try TodayQueryFixture()
+        let occurrence = fixture.makeOccurrence(
+            title: "整理书包",
+            scheduledAt: fixture.now,
+            status: .pending
+        )
+        try fixture.context.save()
+        let completionModel = makeModel(for: occurrence.id, fixture: fixture, now: fixture.now)
+        completionModel.load()
+        completionModel.completeTask()
+
+        let expiredAt = fixture.now.addingTimeInterval(5)
+        let expiredModel = makeModel(for: occurrence.id, fixture: fixture, now: expiredAt)
+        expiredModel.load()
+        let expiredContent = try loadedContent(from: expiredModel.state)
+        #expect(!expiredContent.canUndoCompletion(at: expiredAt))
+        #expect(expiredContent.undoRemainingSeconds(at: expiredAt) == 0)
+
+        expiredModel.undoCompletion()
+
+        #expect(try loadedContent(from: expiredModel.state).task.status == .completed)
+        #expect(try completionRecords(in: fixture.context, occurrenceID: occurrence.id).count == 1)
+        #expect(try snapshot(in: fixture, at: expiredAt).completedCount == 1)
+    }
+
     private func makeModel(
         for occurrenceID: UUID,
         fixture: TodayQueryFixture,
@@ -106,6 +190,27 @@ struct TaskSessionViewModelTests {
         return try context.fetch(
             FetchDescriptor<TimerSession>(predicate: #Predicate { $0.occurrenceID == id })
         )
+    }
+
+    private func completionRecords(
+        in context: ModelContext,
+        occurrenceID: UUID
+    ) throws -> [CompletionRecord] {
+        let id = occurrenceID
+        return try context.fetch(
+            FetchDescriptor<CompletionRecord>(predicate: #Predicate { $0.occurrenceID == id })
+        )
+    }
+
+    private func snapshot(
+        in fixture: TodayQueryFixture,
+        at now: Date? = nil
+    ) throws -> TodayTasksSnapshot {
+        try TodayTaskQueryService(
+            context: fixture.context,
+            calendar: fixture.calendar,
+            timeZone: fixture.timeZone
+        ).snapshot(for: fixture.date, at: now ?? fixture.now)
     }
 }
 

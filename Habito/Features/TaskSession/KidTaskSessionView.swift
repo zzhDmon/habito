@@ -21,7 +21,9 @@ struct KidTaskSessionView: View {
                 TaskSessionLoadedView(
                     content: content,
                     onStartOrResume: model.startOrResume,
-                    onPause: model.pause
+                    onPause: model.pause,
+                    onComplete: model.completeTask,
+                    onUndoCompletion: model.undoCompletion
                 )
             case .failed:
                 ContentUnavailableView {

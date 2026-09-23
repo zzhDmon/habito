@@ -5,6 +5,8 @@ struct TaskSessionLoadedView: View {
     let content: TaskSessionScreenContent
     let onStartOrResume: () -> Void
     let onPause: () -> Void
+    let onComplete: () -> Void
+    let onUndoCompletion: () -> Void
 
     var body: some View {
         AdaptiveTwoColumnLayout {
@@ -15,7 +17,9 @@ struct TaskSessionLoadedView: View {
                     content: content,
                     now: context.date,
                     onStartOrResume: onStartOrResume,
-                    onPause: onPause
+                    onPause: onPause,
+                    onComplete: onComplete,
+                    onUndoCompletion: onUndoCompletion
                 )
             }
         }
@@ -50,6 +54,8 @@ private struct TaskSessionTimerPanel: View {
     let now: Date
     let onStartOrResume: () -> Void
     let onPause: () -> Void
+    let onComplete: () -> Void
+    let onUndoCompletion: () -> Void
 
     private var elapsedSeconds: TimeInterval {
         content.displayedActiveDuration(at: now)
@@ -81,12 +87,22 @@ private struct TaskSessionTimerPanel: View {
             LabeledContent("kidTask.goalTitle", value: content.task.targetDurationText)
             LabeledContent("kidTask.scheduleLabel", value: content.task.scheduledTimeText)
 
-            TaskSessionPrimaryButton(
-                action: content.primaryAction,
-                onStartOrResume: onStartOrResume,
-                onPause: onPause
-            )
-            .padding(.top, HabitoDesign.Spacing.small)
+            if let completion = content.completion {
+                TaskCompletionSnapshotView(
+                    completion: completion,
+                    undoRemainingSeconds: content.undoRemainingSeconds(at: now),
+                    canUndo: content.canUndoCompletion(at: now),
+                    onUndo: onUndoCompletion
+                )
+            } else {
+                TaskSessionControlsView(
+                    primaryAction: content.primaryAction,
+                    canComplete: content.canComplete,
+                    onStartOrResume: onStartOrResume,
+                    onPause: onPause,
+                    onComplete: onComplete
+                )
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(HabitoDesign.Spacing.large)
@@ -97,25 +113,41 @@ private struct TaskSessionTimerPanel: View {
     }
 }
 
-private struct TaskSessionPrimaryButton: View {
-    let action: TaskSessionScreenContent.PrimaryAction
+private struct TaskSessionControlsView: View {
+    let primaryAction: TaskSessionScreenContent.PrimaryAction
+    let canComplete: Bool
     let onStartOrResume: () -> Void
     let onPause: () -> Void
+    let onComplete: () -> Void
 
     var body: some View {
-        switch action {
-        case .start:
-            actionButton("taskSession.start", systemImage: "play.fill", action: onStartOrResume)
-        case .pause:
-            actionButton("taskSession.pause", systemImage: "pause.fill", action: onPause)
-        case .resume:
-            actionButton("taskSession.resume", systemImage: "play.fill", action: onStartOrResume)
-        case .none:
-            EmptyView()
+        VStack(spacing: HabitoDesign.Spacing.small) {
+            switch primaryAction {
+            case .start:
+                primaryButton("taskSession.start", systemImage: "play.fill", action: onStartOrResume)
+            case .pause:
+                primaryButton("taskSession.pause", systemImage: "pause.fill", action: onPause)
+            case .resume:
+                primaryButton("taskSession.resume", systemImage: "play.fill", action: onStartOrResume)
+            case .none:
+                EmptyView()
+            }
+
+            if canComplete {
+                Button(action: onComplete) {
+                    Label("taskSession.complete", systemImage: "checkmark.circle.fill")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity, minHeight: HabitoDesign.Layout.minimumTapSize)
+                }
+                .buttonStyle(.bordered)
+                .tint(HabitoDesign.Palette.success)
+                .controlSize(.large)
+            }
         }
+        .padding(.top, HabitoDesign.Spacing.small)
     }
 
-    private func actionButton(
+    private func primaryButton(
         _ titleKey: LocalizedStringKey,
         systemImage: String,
         action: @escaping () -> Void
@@ -127,6 +159,50 @@ private struct TaskSessionPrimaryButton: View {
         }
         .buttonStyle(.borderedProminent)
         .controlSize(.large)
+    }
+}
+
+private struct TaskCompletionSnapshotView: View {
+    let completion: TodayTaskCompletion
+    let undoRemainingSeconds: Int
+    let canUndo: Bool
+    let onUndo: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: HabitoDesign.Spacing.small) {
+            Label("taskSession.completedTitle", systemImage: HabitoDesign.Symbol.completed)
+                .font(.headline)
+                .foregroundStyle(HabitoDesign.Palette.success)
+
+            LabeledContent("taskSession.completedAt") {
+                Text(completion.completedAt, style: .time)
+            }
+
+            LabeledContent(
+                "taskSession.actualDuration",
+                value: TaskSessionDurationText.spoken(completion.activeDurationSeconds)
+            )
+
+            if canUndo {
+                Button(action: onUndo) {
+                    Label {
+                        Text(
+                            String.localizedStringWithFormat(
+                                String(localized: "taskSession.undoFormat"),
+                                undoRemainingSeconds
+                            )
+                        )
+                    } icon: {
+                        Image(systemName: "arrow.uturn.backward.circle.fill")
+                    }
+                    .frame(maxWidth: .infinity, minHeight: HabitoDesign.Layout.minimumTapSize)
+                }
+                .buttonStyle(.bordered)
+                .controlSize(.large)
+                .padding(.top, HabitoDesign.Spacing.small)
+            }
+        }
+        .padding(.top, HabitoDesign.Spacing.small)
     }
 }
 
@@ -169,10 +245,38 @@ private enum TaskSessionDurationText {
                 targetDurationSeconds: 900,
                 activeSessionState: .running,
                 activeDurationAtSnapshot: 125,
-                snapshotAt: .now
+                snapshotAt: .now,
+                completion: nil
             ),
             onStartOrResume: {},
-            onPause: {}
+            onPause: {},
+            onComplete: {},
+            onUndoCompletion: {}
+        )
+        .navigationTitle("kidTask.navigationTitle")
+    }
+    .frame(width: 1_194, height: 834)
+}
+
+#Preview("任务执行 · 完成与撤销 · iPad 横屏") {
+    NavigationStack {
+        TaskSessionLoadedView(
+            content: TaskSessionScreenContent(
+                task: .previewCompleted,
+                targetDurationSeconds: 900,
+                activeSessionState: nil,
+                activeDurationAtSnapshot: 780,
+                snapshotAt: .now,
+                completion: TodayTaskCompletion(
+                    completedAt: .now,
+                    activeDurationSeconds: 780,
+                    source: .childManual
+                )
+            ),
+            onStartOrResume: {},
+            onPause: {},
+            onComplete: {},
+            onUndoCompletion: {}
         )
         .navigationTitle("kidTask.navigationTitle")
     }

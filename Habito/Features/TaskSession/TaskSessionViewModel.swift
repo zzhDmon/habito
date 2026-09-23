@@ -80,6 +80,39 @@ final class TaskSessionViewModel {
         }
     }
 
+    /// 由孩子手动完成任务，并把所有计时段的实际活动时长写入唯一完成记录。
+    func completeTask() {
+        guard case let .loaded(content) = state, content.canComplete else { return }
+
+        do {
+            try progressService.complete(
+                fetchOccurrence(),
+                at: dateProvider.now(),
+                source: .childManual
+            )
+            reload(showLoading: false)
+        } catch {
+            handle(error)
+        }
+    }
+
+    /// 在完成时间后的 5 秒窗口内撤销；过期操作只刷新页面，不改写完成事实。
+    func undoCompletion() {
+        guard case let .loaded(content) = state else { return }
+        let now = dateProvider.now()
+        guard content.canUndoCompletion(at: now) else {
+            reload(showLoading: false)
+            return
+        }
+
+        do {
+            try progressService.undoCompletion(of: fetchOccurrence(), at: now)
+            reload(showLoading: false)
+        } catch {
+            handle(error)
+        }
+    }
+
     private func reload(showLoading: Bool) {
         if showLoading { state = .loading }
         do {
@@ -91,7 +124,8 @@ final class TaskSessionViewModel {
                     targetDurationSeconds: item.targetDurationSeconds,
                     activeSessionState: item.activeSessionState,
                     activeDurationAtSnapshot: item.activeDurationSeconds,
-                    snapshotAt: now
+                    snapshotAt: now,
+                    completion: item.completion
                 )
             )
         } catch {

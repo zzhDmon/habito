@@ -836,6 +836,50 @@
         }
       }
     },
+    "taskSession.actualDuration" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "实际专注"
+          }
+        }
+      }
+    },
+    "taskSession.complete" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "完成打卡"
+          }
+        }
+      }
+    },
+    "taskSession.completedAt" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "完成时间"
+          }
+        }
+      }
+    },
+    "taskSession.completedTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打卡成功"
+          }
+        }
+      }
+    },
     "taskSession.elapsedSpokenFormat" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -942,6 +986,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "开始任务"
+          }
+        }
+      }
+    },
+    "taskSession.undoFormat" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "撤销完成（%lld 秒）"
           }
         }
       }
