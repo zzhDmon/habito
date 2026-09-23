@@ -1140,6 +1140,7 @@
       }
     },
     "parentTemplates.createTitle" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1150,6 +1151,7 @@
       }
     },
     "parentTemplates.detailTitle" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1170,6 +1172,7 @@
       }
     },
     "parentTemplates.editorPlaceholderDescription" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1299,46 +1302,500 @@
         }
       }
     },
-    "taskEditor.basicSection" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "基本信息" } } } },
-    "taskEditor.color" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "颜色" } } } },
-    "taskEditor.color.activity" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "活力" } } } },
-    "taskEditor.color.practice" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "练习" } } } },
-    "taskEditor.color.reading" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "阅读" } } } },
-    "taskEditor.color.task" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "默认" } } } },
-    "taskEditor.createTitle" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "新建任务" } } } },
-    "taskEditor.durationMinutes" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "目标分钟数" } } } },
-    "taskEditor.editTitle" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "编辑任务" } } } },
-    "taskEditor.enabled" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "启用任务" } } } },
-    "taskEditor.errorDuration" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "目标时长必须是 1 到 180 分钟。" } } } },
-    "taskEditor.errorLoad" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "无法读取这个任务，请返回后重试。" } } } },
-    "taskEditor.errorLoadTitle" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "任务无法编辑" } } } },
-    "taskEditor.errorOption" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "图标或颜色选项无效。" } } } },
-    "taskEditor.errorSave" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "保存失败，请稍后再试。" } } } },
-    "taskEditor.errorTime" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "请选择有效时间。" } } } },
-    "taskEditor.errorTitleRequired" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "请输入任务名称。" } } } },
-    "taskEditor.errorTitleTooLong" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "任务名称不能超过 40 个字符。" } } } },
-    "taskEditor.errorWeekdays" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "请至少选择一天。" } } } },
-    "taskEditor.icon" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "图标" } } } },
-    "taskEditor.icon.book.fill" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "阅读" } } } },
-    "taskEditor.icon.figure.run" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "运动" } } } },
-    "taskEditor.icon.music.note" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "音乐" } } } },
-    "taskEditor.icon.pencil.line" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "书写" } } } },
-    "taskEditor.loading" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "正在读取任务…" } } } },
-    "taskEditor.notSelected" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "未选择" } } } },
-    "taskEditor.save" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "保存" } } } },
-    "taskEditor.scheduleSection" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "计划" } } } },
-    "taskEditor.selected" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "已选择" } } } },
-    "taskEditor.time" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "计划时间" } } } },
-    "taskEditor.title" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "任务名称" } } } },
-    "taskEditor.weekdaysHint" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "至少选择一天。" } } } },
-    "taskEditor.weekdaysSection" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "每周重复" } } } },
-    "weekday.1" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "星期日" } } } },
-    "weekday.2" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "星期一" } } } },
-    "weekday.3" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "星期二" } } } },
-    "weekday.4" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "星期三" } } } },
-    "weekday.5" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "星期四" } } } },
-    "weekday.6" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "星期五" } } } },
-    "weekday.7" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "星期六" } } } },
+    "taskEditor.basicSection" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "基本信息"
+          }
+        }
+      }
+    },
+    "taskEditor.color" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "颜色"
+          }
+        }
+      }
+    },
+    "taskEditor.color.%@" : {
+
+    },
+    "taskEditor.color.activity" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "活力"
+          }
+        }
+      }
+    },
+    "taskEditor.color.practice" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "练习"
+          }
+        }
+      }
+    },
+    "taskEditor.color.reading" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "阅读"
+          }
+        }
+      }
+    },
+    "taskEditor.color.task" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "默认"
+          }
+        }
+      }
+    },
+    "taskEditor.createTitle" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新建任务"
+          }
+        }
+      }
+    },
+    "taskEditor.durationMinutes" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "目标分钟数"
+          }
+        }
+      }
+    },
+    "taskEditor.editTitle" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "编辑任务"
+          }
+        }
+      }
+    },
+    "taskEditor.enabled" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用任务"
+          }
+        }
+      }
+    },
+    "taskEditor.errorDuration" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "目标时长必须是 1 到 180 分钟。"
+          }
+        }
+      }
+    },
+    "taskEditor.errorLoad" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法读取这个任务，请返回后重试。"
+          }
+        }
+      }
+    },
+    "taskEditor.errorLoadTitle" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "任务无法编辑"
+          }
+        }
+      }
+    },
+    "taskEditor.errorOption" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "图标或颜色选项无效。"
+          }
+        }
+      }
+    },
+    "taskEditor.errorSave" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保存失败，请稍后再试。"
+          }
+        }
+      }
+    },
+    "taskEditor.errorTime" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请选择有效时间。"
+          }
+        }
+      }
+    },
+    "taskEditor.errorTitleRequired" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请输入任务名称。"
+          }
+        }
+      }
+    },
+    "taskEditor.errorTitleTooLong" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "任务名称不能超过 40 个字符。"
+          }
+        }
+      }
+    },
+    "taskEditor.errorWeekdays" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请至少选择一天。"
+          }
+        }
+      }
+    },
+    "taskEditor.icon" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "图标"
+          }
+        }
+      }
+    },
+    "taskEditor.icon.%@" : {
+
+    },
+    "taskEditor.icon.book.fill" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "阅读"
+          }
+        }
+      }
+    },
+    "taskEditor.icon.figure.run" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "运动"
+          }
+        }
+      }
+    },
+    "taskEditor.icon.music.note" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "音乐"
+          }
+        }
+      }
+    },
+    "taskEditor.icon.pencil.line" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "书写"
+          }
+        }
+      }
+    },
+    "taskEditor.loading" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在读取任务…"
+          }
+        }
+      }
+    },
+    "taskEditor.notSelected" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未选择"
+          }
+        }
+      }
+    },
+    "taskEditor.save" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保存"
+          }
+        }
+      }
+    },
+    "taskEditor.scheduleSection" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "计划"
+          }
+        }
+      }
+    },
+    "taskEditor.selected" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已选择"
+          }
+        }
+      }
+    },
+    "taskEditor.time" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "计划时间"
+          }
+        }
+      }
+    },
+    "taskEditor.title" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "任务名称"
+          }
+        }
+      }
+    },
+    "taskEditor.weekdaysHint" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "至少选择一天。"
+          }
+        }
+      }
+    },
+    "taskEditor.weekdaysSection" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每周重复"
+          }
+        }
+      }
+    },
+    "taskLifecycle.archive" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除任务"
+          }
+        }
+      }
+    },
+    "taskLifecycle.archiveConfirm" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确认删除"
+          }
+        }
+      }
+    },
+    "taskLifecycle.archiveTitle" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除这个任务？"
+          }
+        }
+      }
+    },
+    "taskLifecycle.cancel" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取消"
+          }
+        }
+      }
+    },
+    "taskLifecycle.disable" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "停用任务"
+          }
+        }
+      }
+    },
+    "taskLifecycle.disableConfirm" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确认停用"
+          }
+        }
+      }
+    },
+    "taskLifecycle.disableTitle" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "停用这个任务？"
+          }
+        }
+      }
+    },
+    "taskLifecycle.enable" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重新启用任务"
+          }
+        }
+      }
+    },
+    "taskLifecycle.enableConfirm" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确认启用"
+          }
+        }
+      }
+    },
+    "taskLifecycle.enableMessage" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用后，这个任务会重新参与后续计划核对。"
+          }
+        }
+      }
+    },
+    "taskLifecycle.enableTitle" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重新启用这个任务？"
+          }
+        }
+      }
+    },
+    "taskLifecycle.preserveSuffix" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "个历史、已开始、已完成或单日调整的任务会保留。"
+          }
+        }
+      }
+    },
+    "taskLifecycle.removePrefix" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "将移除今天及未来"
+          }
+        }
+      }
+    },
+    "taskLifecycle.removeSuffix" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "个尚未开始的普通任务；"
+          }
+        }
+      }
+    },
+    "taskLifecycle.section" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "任务状态"
+          }
+        }
+      }
+    },
     "taskSession.actualDuration" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1500,6 +1957,86 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "撤销完成（%lld 秒）"
+          }
+        }
+      }
+    },
+    "weekday.%lld" : {
+
+    },
+    "weekday.1" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "星期日"
+          }
+        }
+      }
+    },
+    "weekday.2" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "星期一"
+          }
+        }
+      }
+    },
+    "weekday.3" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "星期二"
+          }
+        }
+      }
+    },
+    "weekday.4" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "星期三"
+          }
+        }
+      }
+    },
+    "weekday.5" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "星期四"
+          }
+        }
+      }
+    },
+    "weekday.6" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "星期五"
+          }
+        }
+      }
+    },
+    "weekday.7" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "星期六"
           }
         }
       }

@@ -6,6 +6,9 @@ struct TaskTemplateEditorForm: View {
     @Binding var scheduledTime: Date
     let feedback: TaskTemplateEditorFeedback?
     let onToggleWeekday: (Weekday) -> Void
+    let onDisable: () -> Void
+    let onEnable: () -> Void
+    let onArchive: () -> Void
 
     var body: some View {
         Form {
@@ -75,8 +78,22 @@ struct TaskTemplateEditorForm: View {
                 }
             }
 
-            Section {
-                Toggle("taskEditor.enabled", isOn: $draft.isEnabled)
+            if draft.templateID == nil {
+                Section {
+                    Toggle("taskEditor.enabled", isOn: $draft.isEnabled)
+                }
+            } else {
+                Section("taskLifecycle.section") {
+                    if draft.isEnabled {
+                        Button("taskLifecycle.disable", action: onDisable)
+                            .accessibilityIdentifier(HabitoAccessibilityID.taskLifecycleDisable)
+                    } else {
+                        Button("taskLifecycle.enable", action: onEnable)
+                            .accessibilityIdentifier(HabitoAccessibilityID.taskLifecycleEnable)
+                    }
+                    Button("taskLifecycle.archive", role: .destructive, action: onArchive)
+                        .accessibilityIdentifier(HabitoAccessibilityID.taskLifecycleArchive)
+                }
             }
 
             if feedbackLocation == .general {
@@ -172,7 +189,10 @@ private extension TaskTemplateEditorForm {
                 } else {
                     draft.weekdays.insert(weekday)
                 }
-            }
+            },
+            onDisable: {},
+            onEnable: {},
+            onArchive: {}
         )
         .navigationTitle("taskEditor.createTitle")
     }
@@ -186,7 +206,10 @@ private extension TaskTemplateEditorForm {
         draft: $draft,
         scheduledTime: $time,
         feedback: .validation(.titleRequired),
-        onToggleWeekday: { _ in }
+        onToggleWeekday: { _ in },
+        onDisable: {},
+        onEnable: {},
+        onArchive: {}
     )
 }
 
@@ -198,7 +221,37 @@ private extension TaskTemplateEditorForm {
         draft: $draft,
         scheduledTime: $time,
         feedback: nil,
-        onToggleWeekday: { _ in }
+        onToggleWeekday: { _ in },
+        onDisable: {},
+        onEnable: {},
+        onArchive: {}
     )
     .environment(\.dynamicTypeSize, .accessibility3)
+}
+
+#Preview("编辑已停用任务 · 横屏") {
+    @Previewable @State var draft = TaskTemplateDraft(
+        templateID: UUID(),
+        title: "阅读 15 分钟",
+        iconName: "book.fill",
+        colorToken: "reading",
+        timeOfDayMinutes: 19 * 60 + 30,
+        targetDurationMinutes: 15,
+        weekdays: Set(Weekday.allCases),
+        isEnabled: false
+    )
+    @Previewable @State var time = Date(timeIntervalSinceReferenceDate: 19 * 3_600 + 30 * 60)
+
+    NavigationStack {
+        TaskTemplateEditorForm(
+            draft: $draft,
+            scheduledTime: $time,
+            feedback: nil,
+            onToggleWeekday: { _ in },
+            onDisable: {},
+            onEnable: {},
+            onArchive: {}
+        )
+        .navigationTitle("taskEditor.editTitle")
+    }
 }

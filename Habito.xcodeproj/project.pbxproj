@@ -138,6 +138,11 @@
 		T10000000000000000000007 /* TaskTemplateEditorViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = T20000000000000000000007 /* TaskTemplateEditorViewModelFactory.swift */; };
 		T10000000000000000000008 /* TaskTemplateEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = T20000000000000000000008 /* TaskTemplateEditorView.swift */; };
 		T10000000000000000000009 /* TaskTemplateEditorForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = T20000000000000000000009 /* TaskTemplateEditorForm.swift */; };
+		U10000000000000000000001 /* TaskTemplateLifecycleImpact.swift in Sources */ = {isa = PBXBuildFile; fileRef = U20000000000000000000001 /* TaskTemplateLifecycleImpact.swift */; };
+		U10000000000000000000002 /* TaskTemplateLifecycleResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = U20000000000000000000002 /* TaskTemplateLifecycleResult.swift */; };
+		U10000000000000000000003 /* TaskTemplateLifecycleError.swift in Sources */ = {isa = PBXBuildFile; fileRef = U20000000000000000000003 /* TaskTemplateLifecycleError.swift */; };
+		U10000000000000000000004 /* TaskTemplateLifecycleService.swift in Sources */ = {isa = PBXBuildFile; fileRef = U20000000000000000000004 /* TaskTemplateLifecycleService.swift */; };
+		U10000000000000000000005 /* TaskTemplateLifecycleServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = U20000000000000000000005 /* TaskTemplateLifecycleServiceTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -292,6 +297,11 @@
 		T20000000000000000000007 /* TaskTemplateEditorViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskTemplateEditorViewModelFactory.swift; sourceTree = "<group>"; };
 		T20000000000000000000008 /* TaskTemplateEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskTemplateEditorView.swift; sourceTree = "<group>"; };
 		T20000000000000000000009 /* TaskTemplateEditorForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskTemplateEditorForm.swift; sourceTree = "<group>"; };
+		U20000000000000000000001 /* TaskTemplateLifecycleImpact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskTemplateLifecycleImpact.swift; sourceTree = "<group>"; };
+		U20000000000000000000002 /* TaskTemplateLifecycleResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskTemplateLifecycleResult.swift; sourceTree = "<group>"; };
+		U20000000000000000000003 /* TaskTemplateLifecycleError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskTemplateLifecycleError.swift; sourceTree = "<group>"; };
+		U20000000000000000000004 /* TaskTemplateLifecycleService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskTemplateLifecycleService.swift; sourceTree = "<group>"; };
+		U20000000000000000000005 /* TaskTemplateLifecycleServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskTemplateLifecycleServiceTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -538,6 +548,10 @@
 				T20000000000000000000009 /* TaskTemplateEditorForm.swift */,
 				T20000000000000000000006 /* TaskTemplateEditorViewModel.swift */,
 				T20000000000000000000007 /* TaskTemplateEditorViewModelFactory.swift */,
+				U20000000000000000000003 /* TaskTemplateLifecycleError.swift */,
+				U20000000000000000000001 /* TaskTemplateLifecycleImpact.swift */,
+				U20000000000000000000002 /* TaskTemplateLifecycleResult.swift */,
+				U20000000000000000000004 /* TaskTemplateLifecycleService.swift */,
 			);
 			path = ParentTaskTemplates;
 			sourceTree = "<group>";
@@ -588,6 +602,7 @@
 				Q20000000000000000000003 /* ParentGateViewModelTests.swift */,
 				S20000000000000000000001 /* ParentTaskTemplateQueryServiceTests.swift */,
 				T20000000000000000000004 /* TaskTemplateEditingServiceTests.swift */,
+				U20000000000000000000005 /* TaskTemplateLifecycleServiceTests.swift */,
 				M20000000000000000000007 /* TaskSessionViewModelTests.swift */,
 				J20000000000000000000006 /* TodayQueryFixture.swift */,
 				J20000000000000000000007 /* TodayTaskQueryServiceTests.swift */,
@@ -899,6 +914,10 @@
 				T10000000000000000000009 /* TaskTemplateEditorForm.swift in Sources */,
 				T10000000000000000000006 /* TaskTemplateEditorViewModel.swift in Sources */,
 				T10000000000000000000007 /* TaskTemplateEditorViewModelFactory.swift in Sources */,
+				U10000000000000000000003 /* TaskTemplateLifecycleError.swift in Sources */,
+				U10000000000000000000001 /* TaskTemplateLifecycleImpact.swift in Sources */,
+				U10000000000000000000002 /* TaskTemplateLifecycleResult.swift in Sources */,
+				U10000000000000000000004 /* TaskTemplateLifecycleService.swift in Sources */,
 				D10000000000000000000002 /* NotificationKind.swift in Sources */,
 				D10000000000000000000009 /* NotificationLink.swift in Sources */,
 				F10000000000000000000001 /* OccurrenceReconciliationError.swift in Sources */,
@@ -955,6 +974,7 @@
 				Q10000000000000000000003 /* ParentGateViewModelTests.swift in Sources */,
 				S10000000000000000000001 /* ParentTaskTemplateQueryServiceTests.swift in Sources */,
 				T10000000000000000000004 /* TaskTemplateEditingServiceTests.swift in Sources */,
+				U10000000000000000000005 /* TaskTemplateLifecycleServiceTests.swift in Sources */,
 				M10000000000000000000007 /* TaskSessionViewModelTests.swift in Sources */,
 				C10000000000000000000010 /* LocalDateTests.swift in Sources */,
 				N10000000000000000000004 /* LocalizationCatalogTests.swift in Sources */,

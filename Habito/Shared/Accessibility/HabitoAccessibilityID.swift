@@ -25,6 +25,11 @@ nonisolated enum HabitoAccessibilityID {
     static let taskEditorTitle = "parent.templates.editor.title"
     static let taskEditorDuration = "parent.templates.editor.duration"
     static let taskEditorSave = "parent.templates.editor.save"
+    static let taskLifecycleDisable = "parent.templates.lifecycle.disable"
+    static let taskLifecycleEnable = "parent.templates.lifecycle.enable"
+    static let taskLifecycleArchive = "parent.templates.lifecycle.archive"
+    static let taskLifecycleConfirm = "parent.templates.lifecycle.confirm"
+    static let taskLifecycleCancel = "parent.templates.lifecycle.cancel"
 
     static func task(_ id: UUID) -> String {
         "kid.today.task.\(id.uuidString.lowercased())"

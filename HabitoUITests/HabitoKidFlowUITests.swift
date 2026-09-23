@@ -92,6 +92,21 @@ final class HabitoKidFlowUITests: XCTestCase {
                 timeout: 5
             )
         )
+        let archive = app.buttons["parent.templates.lifecycle.archive"]
+        if !archive.exists {
+            app.swipeUp()
+            app.swipeUp()
+        }
+        XCTAssertTrue(archive.waitForExistence(timeout: 5))
+        archive.tap()
+        let lifecycleConfirmation = app.buttons["parent.templates.lifecycle.confirm"].firstMatch
+        XCTAssertTrue(lifecycleConfirmation.waitForExistence(timeout: 5))
+        app.buttons["parent.templates.lifecycle.cancel"].firstMatch.tap()
+        XCTAssertTrue(app.buttons["parent.templates.lifecycle.disable"].exists)
+
+        app.buttons["parent.templates.lifecycle.disable"].tap()
+        lifecycleConfirmation.tap()
+        XCTAssertTrue(app.buttons["parent.templates.lifecycle.enable"].waitForExistence(timeout: 5))
 
         app.terminate()
         app.launchArguments = ["--habito-ui-testing"]

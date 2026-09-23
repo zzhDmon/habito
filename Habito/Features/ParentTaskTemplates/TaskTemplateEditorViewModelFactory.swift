@@ -34,6 +34,7 @@ struct TaskTemplateEditorViewModelFactory {
                 calendar: calendar,
                 timeZone: timeZone
             ),
+            lifecycleService: TaskTemplateLifecycleService(context: context),
             dateProvider: dateProvider,
             calendar: calendar,
             timeZone: timeZone
