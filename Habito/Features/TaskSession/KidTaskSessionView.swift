@@ -16,7 +16,7 @@ struct KidTaskSessionView: View {
                     .font(.largeTitle)
                     .bold()
 
-                Label("kidTask.statusPending", systemImage: HabitoDesign.Symbol.pending)
+                Label(task.statusText, systemImage: task.statusIconName)
                     .font(.title3)
                     .foregroundStyle(.secondary)
             }

@@ -10,6 +10,9 @@ struct KidTaskNavigationItem: Hashable, Identifiable, Sendable {
     let iconName: String
     let scheduledTimeText: String
     let targetDurationText: String
+    let status: TaskOccurrenceStatus
+    let statusText: String
+    let statusIconName: String
 }
 
 extension KidTaskNavigationItem {
@@ -19,6 +22,31 @@ extension KidTaskNavigationItem {
         title: String(localized: "kidTask.previewTitle"),
         iconName: "book.fill",
         scheduledTimeText: String(localized: "kidTask.previewTime"),
-        targetDurationText: String(localized: "kidTask.previewDuration")
+        targetDurationText: String(localized: "kidTask.previewDuration"),
+        status: .pending,
+        statusText: String(localized: "kidTask.statusPending"),
+        statusIconName: HabitoDesign.Symbol.pending
+    )
+
+    static let previewWriting = KidTaskNavigationItem(
+        id: UUID(),
+        title: String(localized: "kidTask.previewWritingTitle"),
+        iconName: "pencil.line",
+        scheduledTimeText: String(localized: "kidTask.previewWritingTime"),
+        targetDurationText: String(localized: "kidTask.previewWritingDuration"),
+        status: .pending,
+        statusText: String(localized: "kidTask.statusPending"),
+        statusIconName: HabitoDesign.Symbol.pending
+    )
+
+    static let previewCompleted = KidTaskNavigationItem(
+        id: UUID(),
+        title: String(localized: "kidTask.previewCompletedTitle"),
+        iconName: "checkmark.seal.fill",
+        scheduledTimeText: String(localized: "kidTask.previewCompletedTime"),
+        targetDurationText: String(localized: "kidTask.previewCompletedDuration"),
+        status: .completed,
+        statusText: String(localized: "kidTask.statusCompleted"),
+        statusIconName: HabitoDesign.Symbol.completed
     )
 }

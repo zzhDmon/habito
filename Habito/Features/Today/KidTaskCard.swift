@@ -20,7 +20,7 @@ struct KidTaskCard: View {
                             .bold()
                             .foregroundStyle(.primary)
 
-                        Label("kidTask.statusPending", systemImage: HabitoDesign.Symbol.pending)
+                        Label(task.statusText, systemImage: task.statusIconName)
                             .font(.headline)
                             .foregroundStyle(.secondary)
                     }

@@ -10,21 +10,31 @@ struct HabitoApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
 
     private let modelContainer: ModelContainer
+    @State private var todayModel: TodayViewModel
 
     init() {
+        let container: ModelContainer
         do {
-            modelContainer = try AppModelContainer.make()
+            container = try AppModelContainer.make()
         } catch {
             // 持久化容器不可用时，继续运行会让后续读写行为不可预测，
             // 因此启动阶段直接失败并保留明确原因。
             fatalError("无法创建 Habito 数据容器：\(error.localizedDescription)")
         }
+        modelContainer = container
+        _todayModel = State(
+            initialValue: TodayViewModel(
+                context: container.mainContext,
+                calendar: Calendar(identifier: .gregorian),
+                timeZone: .autoupdatingCurrent,
+                dateProvider: SystemDateProvider()
+            )
+        )
     }
 
     var body: some Scene {
         WindowGroup {
-            // M2-002 接入今日查询前保持真实空态，避免把 Preview 示例写进正式数据。
-            RootView()
+            RootView(todayModel: todayModel)
         }
         .modelContainer(modelContainer)
     }

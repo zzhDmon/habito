@@ -86,6 +86,16 @@
 		J10000000000000000000005 /* TodayTaskQueryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = J20000000000000000000005 /* TodayTaskQueryService.swift */; };
 		J10000000000000000000006 /* TodayQueryFixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = J20000000000000000000006 /* TodayQueryFixture.swift */; };
 		J10000000000000000000007 /* TodayTaskQueryServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = J20000000000000000000007 /* TodayTaskQueryServiceTests.swift */; };
+		K10000000000000000000001 /* DateProviding.swift in Sources */ = {isa = PBXBuildFile; fileRef = K20000000000000000000001 /* DateProviding.swift */; };
+		K10000000000000000000002 /* SystemDateProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = K20000000000000000000002 /* SystemDateProvider.swift */; };
+		K10000000000000000000003 /* TodayScreenContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = K20000000000000000000003 /* TodayScreenContent.swift */; };
+		K10000000000000000000004 /* TodayViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = K20000000000000000000004 /* TodayViewState.swift */; };
+		K10000000000000000000005 /* TodayViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = K20000000000000000000005 /* TodayViewModel.swift */; };
+		K10000000000000000000006 /* KidTaskListRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = K20000000000000000000006 /* KidTaskListRow.swift */; };
+		K10000000000000000000007 /* KidTodayProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = K20000000000000000000007 /* KidTodayProgressView.swift */; };
+		K10000000000000000000008 /* KidTodayLoadedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = K20000000000000000000008 /* KidTodayLoadedView.swift */; };
+		L10000000000000000000001 /* FixedDateProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = L20000000000000000000001 /* FixedDateProvider.swift */; };
+		L10000000000000000000002 /* TodayViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = L20000000000000000000002 /* TodayViewModelTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -180,6 +190,16 @@
 		J20000000000000000000005 /* TodayTaskQueryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayTaskQueryService.swift; sourceTree = "<group>"; };
 		J20000000000000000000006 /* TodayQueryFixture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayQueryFixture.swift; sourceTree = "<group>"; };
 		J20000000000000000000007 /* TodayTaskQueryServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayTaskQueryServiceTests.swift; sourceTree = "<group>"; };
+		K20000000000000000000001 /* DateProviding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateProviding.swift; sourceTree = "<group>"; };
+		K20000000000000000000002 /* SystemDateProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemDateProvider.swift; sourceTree = "<group>"; };
+		K20000000000000000000003 /* TodayScreenContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayScreenContent.swift; sourceTree = "<group>"; };
+		K20000000000000000000004 /* TodayViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewState.swift; sourceTree = "<group>"; };
+		K20000000000000000000005 /* TodayViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewModel.swift; sourceTree = "<group>"; };
+		K20000000000000000000006 /* KidTaskListRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidTaskListRow.swift; sourceTree = "<group>"; };
+		K20000000000000000000007 /* KidTodayProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidTodayProgressView.swift; sourceTree = "<group>"; };
+		K20000000000000000000008 /* KidTodayLoadedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidTodayLoadedView.swift; sourceTree = "<group>"; };
+		L20000000000000000000001 /* FixedDateProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixedDateProvider.swift; sourceTree = "<group>"; };
+		L20000000000000000000002 /* TodayViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewModelTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -286,6 +306,7 @@
 			isa = PBXGroup;
 			children = (
 				A5000000000000000000000A /* Notifications */,
+				K50000000000000000000001 /* Time */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -358,14 +379,20 @@
 			children = (
 				I20000000000000000000004 /* KidRoute.swift */,
 				I20000000000000000000005 /* KidTaskCard.swift */,
+				K20000000000000000000006 /* KidTaskListRow.swift */,
 				I20000000000000000000003 /* KidTaskNavigationItem.swift */,
 				I20000000000000000000007 /* KidTodayGreetingPanel.swift */,
+				K20000000000000000000008 /* KidTodayLoadedView.swift */,
+				K20000000000000000000007 /* KidTodayProgressView.swift */,
 				I20000000000000000000006 /* KidTodayView.swift */,
+				K20000000000000000000003 /* TodayScreenContent.swift */,
 				J20000000000000000000001 /* TodayTaskCompletion.swift */,
 				J20000000000000000000002 /* TodayTaskItem.swift */,
 				J20000000000000000000004 /* TodayTaskQueryError.swift */,
 				J20000000000000000000005 /* TodayTaskQueryService.swift */,
 				J20000000000000000000003 /* TodayTasksSnapshot.swift */,
+				K20000000000000000000004 /* TodayViewState.swift */,
+				K20000000000000000000005 /* TodayViewModel.swift */,
 			);
 			path = Today;
 			sourceTree = "<group>";
@@ -373,10 +400,21 @@
 		J50000000000000000000001 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				L20000000000000000000001 /* FixedDateProvider.swift */,
 				J20000000000000000000006 /* TodayQueryFixture.swift */,
 				J20000000000000000000007 /* TodayTaskQueryServiceTests.swift */,
+				L20000000000000000000002 /* TodayViewModelTests.swift */,
 			);
 			path = Features;
+			sourceTree = "<group>";
+		};
+		K50000000000000000000001 /* Time */ = {
+			isa = PBXGroup;
+			children = (
+				K20000000000000000000001 /* DateProviding.swift */,
+				K20000000000000000000002 /* SystemDateProvider.swift */,
+			);
+			path = Time;
 			sourceTree = "<group>";
 		};
 		C50000000000000000000001 /* Domain */ = {
@@ -595,13 +633,17 @@
 				D10000000000000000000008 /* DayOverride.swift in Sources */,
 				D10000000000000000000001 /* DayType.swift in Sources */,
 				E10000000000000000000005 /* DayTypeOverrideValue.swift in Sources */,
+				K10000000000000000000001 /* DateProviding.swift in Sources */,
 				C10000000000000000000005 /* DomainStateTransitionError.swift in Sources */,
 				I10000000000000000000001 /* HabitoDesign.swift in Sources */,
 				I10000000000000000000004 /* KidRoute.swift in Sources */,
 				I10000000000000000000005 /* KidTaskCard.swift in Sources */,
+				K10000000000000000000006 /* KidTaskListRow.swift in Sources */,
 				I10000000000000000000003 /* KidTaskNavigationItem.swift in Sources */,
 				I10000000000000000000008 /* KidTaskSessionView.swift in Sources */,
 				I10000000000000000000007 /* KidTodayGreetingPanel.swift in Sources */,
+				K10000000000000000000008 /* KidTodayLoadedView.swift in Sources */,
+				K10000000000000000000007 /* KidTodayProgressView.swift in Sources */,
 				I10000000000000000000006 /* KidTodayView.swift in Sources */,
 				C10000000000000000000002 /* LocalDate.swift in Sources */,
 				C10000000000000000000001 /* LocalDateError.swift in Sources */,
@@ -621,6 +663,7 @@
 				E10000000000000000000006 /* ResolvedTaskCandidate.swift in Sources */,
 				A10000000000000000000002 /* RootView.swift in Sources */,
 				E10000000000000000000001 /* ScheduledTaskCandidate.swift in Sources */,
+				K10000000000000000000002 /* SystemDateProvider.swift in Sources */,
 				C10000000000000000000006 /* TaskOccurrenceAction.swift in Sources */,
 				F10000000000000000000003 /* TaskOccurrenceReconciliationService.swift in Sources */,
 				G10000000000000000000002 /* TaskProgressService.swift in Sources */,
@@ -641,11 +684,14 @@
 				D10000000000000000000007 /* TimerSession.swift in Sources */,
 				C1000000000000000000000E /* TimerSessionAction.swift in Sources */,
 				C1000000000000000000000F /* TimerSessionState.swift in Sources */,
+				K10000000000000000000003 /* TodayScreenContent.swift in Sources */,
 				J10000000000000000000001 /* TodayTaskCompletion.swift in Sources */,
 				J10000000000000000000002 /* TodayTaskItem.swift in Sources */,
 				J10000000000000000000004 /* TodayTaskQueryError.swift in Sources */,
 				J10000000000000000000005 /* TodayTaskQueryService.swift in Sources */,
 				J10000000000000000000003 /* TodayTasksSnapshot.swift in Sources */,
+				K10000000000000000000004 /* TodayViewState.swift in Sources */,
+				K10000000000000000000005 /* TodayViewModel.swift in Sources */,
 				C10000000000000000000003 /* Weekday.swift in Sources */,
 				A10000000000000000000004 /* AppModelContainer.swift in Sources */,
 			);
@@ -658,6 +704,7 @@
 				A10000000000000000000006 /* AppModelContainerTests.swift in Sources */,
 				C10000000000000000000012 /* DomainStateMachineTests.swift in Sources */,
 				A1000000000000000000000F /* FakeLocalNotificationService.swift in Sources */,
+				L10000000000000000000001 /* FixedDateProvider.swift in Sources */,
 				C10000000000000000000010 /* LocalDateTests.swift in Sources */,
 				H10000000000000000000002 /* M1DataKernelIntegrationTests.swift in Sources */,
 				A10000000000000000000010 /* NotificationProbeViewModelTests.swift in Sources */,
@@ -671,6 +718,7 @@
 				C10000000000000000000011 /* TaskRecurrenceTests.swift in Sources */,
 				J10000000000000000000006 /* TodayQueryFixture.swift in Sources */,
 				J10000000000000000000007 /* TodayTaskQueryServiceTests.swift in Sources */,
+				L10000000000000000000002 /* TodayViewModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

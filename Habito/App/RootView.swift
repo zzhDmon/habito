@@ -2,32 +2,35 @@ import SwiftUI
 
 /// 孩子模式的根导航视图。
 struct RootView: View {
-    let tasks: [KidTaskNavigationItem]
-
     @State private var path: [KidRoute] = []
+    @State private var todayModel: TodayViewModel
 
-    init(tasks: [KidTaskNavigationItem] = []) {
-        self.tasks = tasks
+    init(todayModel: TodayViewModel) {
+        _todayModel = State(initialValue: todayModel)
     }
 
     var body: some View {
         NavigationStack(path: $path) {
-            KidTodayView(tasks: tasks, onSelectTask: showTask)
-                .navigationDestination(for: KidRoute.self) { route in
-                    switch route {
-                    case let .task(task):
-                        KidTaskSessionView(task: task)
-                    }
+            KidTodayView(
+                state: todayModel.state,
+                onSelectTask: showTask,
+                onRetry: loadToday
+            )
+            .navigationDestination(for: KidRoute.self) { route in
+                switch route {
+                case let .task(task):
+                    KidTaskSessionView(task: task)
                 }
+            }
         }
+        .task(loadToday)
     }
 
     private func showTask(_ task: KidTaskNavigationItem) {
         path.append(.task(task))
     }
-}
 
-#Preview("孩子模式 · iPad 横屏") {
-    RootView(tasks: [.previewReading])
-        .frame(width: 1_194, height: 834)
+    private func loadToday() {
+        todayModel.load()
+    }
 }
