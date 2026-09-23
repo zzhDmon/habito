@@ -10,6 +10,7 @@ struct HabitoApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
 
     private let modelContainer: ModelContainer
+    private let taskSessionModelFactory: TaskSessionViewModelFactory
     @State private var todayModel: TodayViewModel
 
     init() {
@@ -22,19 +23,31 @@ struct HabitoApp: App {
             fatalError("无法创建 Habito 数据容器：\(error.localizedDescription)")
         }
         modelContainer = container
+        let calendar = Calendar(identifier: .gregorian)
+        let timeZone = TimeZone.autoupdatingCurrent
+        let dateProvider = SystemDateProvider()
         _todayModel = State(
             initialValue: TodayViewModel(
                 context: container.mainContext,
-                calendar: Calendar(identifier: .gregorian),
-                timeZone: .autoupdatingCurrent,
-                dateProvider: SystemDateProvider()
+                calendar: calendar,
+                timeZone: timeZone,
+                dateProvider: dateProvider
             )
+        )
+        taskSessionModelFactory = TaskSessionViewModelFactory(
+            context: container.mainContext,
+            calendar: calendar,
+            timeZone: timeZone,
+            dateProvider: dateProvider
         )
     }
 
     var body: some Scene {
         WindowGroup {
-            RootView(todayModel: todayModel)
+            RootView(
+                todayModel: todayModel,
+                taskSessionModelFactory: taskSessionModelFactory
+            )
         }
         .modelContainer(modelContainer)
     }

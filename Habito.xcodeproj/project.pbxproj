@@ -96,6 +96,13 @@
 		K10000000000000000000008 /* KidTodayLoadedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = K20000000000000000000008 /* KidTodayLoadedView.swift */; };
 		L10000000000000000000001 /* FixedDateProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = L20000000000000000000001 /* FixedDateProvider.swift */; };
 		L10000000000000000000002 /* TodayViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = L20000000000000000000002 /* TodayViewModelTests.swift */; };
+		M10000000000000000000001 /* TaskSessionScreenContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = M20000000000000000000001 /* TaskSessionScreenContent.swift */; };
+		M10000000000000000000002 /* TaskSessionViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = M20000000000000000000002 /* TaskSessionViewState.swift */; };
+		M10000000000000000000003 /* TaskSessionViewModelError.swift in Sources */ = {isa = PBXBuildFile; fileRef = M20000000000000000000003 /* TaskSessionViewModelError.swift */; };
+		M10000000000000000000004 /* TaskSessionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = M20000000000000000000004 /* TaskSessionViewModel.swift */; };
+		M10000000000000000000005 /* TaskSessionViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = M20000000000000000000005 /* TaskSessionViewModelFactory.swift */; };
+		M10000000000000000000006 /* TaskSessionLoadedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = M20000000000000000000006 /* TaskSessionLoadedView.swift */; };
+		M10000000000000000000007 /* TaskSessionViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = M20000000000000000000007 /* TaskSessionViewModelTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -200,6 +207,13 @@
 		K20000000000000000000008 /* KidTodayLoadedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidTodayLoadedView.swift; sourceTree = "<group>"; };
 		L20000000000000000000001 /* FixedDateProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixedDateProvider.swift; sourceTree = "<group>"; };
 		L20000000000000000000002 /* TodayViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewModelTests.swift; sourceTree = "<group>"; };
+		M20000000000000000000001 /* TaskSessionScreenContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskSessionScreenContent.swift; sourceTree = "<group>"; };
+		M20000000000000000000002 /* TaskSessionViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskSessionViewState.swift; sourceTree = "<group>"; };
+		M20000000000000000000003 /* TaskSessionViewModelError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskSessionViewModelError.swift; sourceTree = "<group>"; };
+		M20000000000000000000004 /* TaskSessionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskSessionViewModel.swift; sourceTree = "<group>"; };
+		M20000000000000000000005 /* TaskSessionViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskSessionViewModelFactory.swift; sourceTree = "<group>"; };
+		M20000000000000000000006 /* TaskSessionLoadedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskSessionLoadedView.swift; sourceTree = "<group>"; };
+		M20000000000000000000007 /* TaskSessionViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskSessionViewModelTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -370,6 +384,12 @@
 			isa = PBXGroup;
 			children = (
 				I20000000000000000000008 /* KidTaskSessionView.swift */,
+				M20000000000000000000006 /* TaskSessionLoadedView.swift */,
+				M20000000000000000000001 /* TaskSessionScreenContent.swift */,
+				M20000000000000000000002 /* TaskSessionViewState.swift */,
+				M20000000000000000000004 /* TaskSessionViewModel.swift */,
+				M20000000000000000000003 /* TaskSessionViewModelError.swift */,
+				M20000000000000000000005 /* TaskSessionViewModelFactory.swift */,
 			);
 			path = TaskSession;
 			sourceTree = "<group>";
@@ -401,6 +421,7 @@
 			isa = PBXGroup;
 			children = (
 				L20000000000000000000001 /* FixedDateProvider.swift */,
+				M20000000000000000000007 /* TaskSessionViewModelTests.swift */,
 				J20000000000000000000006 /* TodayQueryFixture.swift */,
 				J20000000000000000000007 /* TodayTaskQueryServiceTests.swift */,
 				L20000000000000000000002 /* TodayViewModelTests.swift */,
@@ -641,6 +662,12 @@
 				K10000000000000000000006 /* KidTaskListRow.swift in Sources */,
 				I10000000000000000000003 /* KidTaskNavigationItem.swift in Sources */,
 				I10000000000000000000008 /* KidTaskSessionView.swift in Sources */,
+				M10000000000000000000006 /* TaskSessionLoadedView.swift in Sources */,
+				M10000000000000000000001 /* TaskSessionScreenContent.swift in Sources */,
+				M10000000000000000000002 /* TaskSessionViewState.swift in Sources */,
+				M10000000000000000000004 /* TaskSessionViewModel.swift in Sources */,
+				M10000000000000000000003 /* TaskSessionViewModelError.swift in Sources */,
+				M10000000000000000000005 /* TaskSessionViewModelFactory.swift in Sources */,
 				I10000000000000000000007 /* KidTodayGreetingPanel.swift in Sources */,
 				K10000000000000000000008 /* KidTodayLoadedView.swift in Sources */,
 				K10000000000000000000007 /* KidTodayProgressView.swift in Sources */,
@@ -705,6 +732,7 @@
 				C10000000000000000000012 /* DomainStateMachineTests.swift in Sources */,
 				A1000000000000000000000F /* FakeLocalNotificationService.swift in Sources */,
 				L10000000000000000000001 /* FixedDateProvider.swift in Sources */,
+				M10000000000000000000007 /* TaskSessionViewModelTests.swift in Sources */,
 				C10000000000000000000010 /* LocalDateTests.swift in Sources */,
 				H10000000000000000000002 /* M1DataKernelIntegrationTests.swift in Sources */,
 				A10000000000000000000010 /* NotificationProbeViewModelTests.swift in Sources */,

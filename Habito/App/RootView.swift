@@ -4,9 +4,14 @@ import SwiftUI
 struct RootView: View {
     @State private var path: [KidRoute] = []
     @State private var todayModel: TodayViewModel
+    private let taskSessionModelFactory: TaskSessionViewModelFactory
 
-    init(todayModel: TodayViewModel) {
+    init(
+        todayModel: TodayViewModel,
+        taskSessionModelFactory: TaskSessionViewModelFactory
+    ) {
         _todayModel = State(initialValue: todayModel)
+        self.taskSessionModelFactory = taskSessionModelFactory
     }
 
     var body: some View {
@@ -19,7 +24,10 @@ struct RootView: View {
             .navigationDestination(for: KidRoute.self) { route in
                 switch route {
                 case let .task(task):
-                    KidTaskSessionView(task: task)
+                    KidTaskSessionView(
+                        model: taskSessionModelFactory.makeModel(for: task.id),
+                        onExit: loadToday
+                    )
                 }
             }
         }

@@ -53,6 +53,23 @@ struct TodayTaskQueryService {
         )
     }
 
+    /// 按稳定实例 ID 读取单个任务，供任务执行页重进或前台恢复时刷新。
+    ///
+    /// - Parameters:
+    ///   - id: `TaskOccurrence` 的稳定标识。
+    ///   - now: 运行中时长计算使用的绝对当前时间。
+    /// - Returns: 不持有 SwiftData 模型的任务页面值。
+    /// - Throws: 实例不存在或存储关系不满足领域约束时抛出明确错误。
+    func item(id: UUID, at now: Date) throws -> TodayTaskItem {
+        let descriptor = FetchDescriptor<TaskOccurrence>(
+            predicate: #Predicate { $0.id == id }
+        )
+        guard let occurrence = try context.fetch(descriptor).first else {
+            throw TodayTaskQueryError.occurrenceNotFound(occurrenceID: id)
+        }
+        return try makeItem(from: occurrence, at: now)
+    }
+
     private func makeItem(from occurrence: TaskOccurrence, at now: Date) throws -> TodayTaskItem {
         let date: LocalDate
         do {

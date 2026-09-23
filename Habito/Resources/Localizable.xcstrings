@@ -1,6 +1,16 @@
 {
   "sourceLanguage" : "zh-Hans",
   "strings" : {
+    "%lld / %lld" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld / %2$lld"
+          }
+        }
+      }
+    },
     "app.name" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -19,6 +29,413 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "工程准备好了，下一步开始搭建学习任务。"
+          }
+        }
+      }
+    },
+    "kidTask.durationLabel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "目标时长"
+          }
+        }
+      }
+    },
+    "kidTask.durationMinutesFormat" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld 分钟"
+          }
+        }
+      }
+    },
+    "kidTask.goalTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今天的目标"
+          }
+        }
+      }
+    },
+    "kidTask.navigationTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "任务"
+          }
+        }
+      }
+    },
+    "kidTask.previewCompletedDuration" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "10 分钟"
+          }
+        }
+      }
+    },
+    "kidTask.previewCompletedTime" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "18:30"
+          }
+        }
+      }
+    },
+    "kidTask.previewCompletedTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "背单词"
+          }
+        }
+      }
+    },
+    "kidTask.previewDuration" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "15 分钟"
+          }
+        }
+      }
+    },
+    "kidTask.previewTime" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "19:30"
+          }
+        }
+      }
+    },
+    "kidTask.previewTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "阅读"
+          }
+        }
+      }
+    },
+    "kidTask.previewWritingDuration" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "20 分钟"
+          }
+        }
+      }
+    },
+    "kidTask.previewWritingTime" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "20:00"
+          }
+        }
+      }
+    },
+    "kidTask.previewWritingTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "练字"
+          }
+        }
+      }
+    },
+    "kidTask.scheduleLabel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "计划时间"
+          }
+        }
+      }
+    },
+    "kidTask.statusCompleted" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已完成"
+          }
+        }
+      }
+    },
+    "kidTask.statusInProgress" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "进行中"
+          }
+        }
+      }
+    },
+    "kidTask.statusPending" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "准备开始"
+          }
+        }
+      }
+    },
+    "kidTask.statusSkipped" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已跳过"
+          }
+        }
+      }
+    },
+    "kidTask.timerComingSoon" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "计时操作将在下一步接入"
+          }
+        }
+      }
+    },
+    "kidToday.childMode" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "孩子模式"
+          }
+        }
+      }
+    },
+    "kidToday.completedDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今天的任务都完成了。"
+          }
+        }
+      }
+    },
+    "kidToday.completedTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "做得好！"
+          }
+        }
+      }
+    },
+    "kidToday.emptyDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "家长安排任务后，会显示在这里。"
+          }
+        }
+      }
+    },
+    "kidToday.emptyTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今天没有任务"
+          }
+        }
+      }
+    },
+    "kidToday.errorDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可以再试一次，或者请家长帮忙。"
+          }
+        }
+      }
+    },
+    "kidToday.errorTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "任务暂时没有加载出来"
+          }
+        }
+      }
+    },
+    "kidToday.greeting" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今天也一步一步来"
+          }
+        }
+      }
+    },
+    "kidToday.loading" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在准备今天的任务…"
+          }
+        }
+      }
+    },
+    "kidToday.navigationTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今日"
+          }
+        }
+      }
+    },
+    "kidToday.nextLabel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "接下来"
+          }
+        }
+      }
+    },
+    "kidToday.nowLabel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "现在做这个"
+          }
+        }
+      }
+    },
+    "kidToday.openTask" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "查看任务"
+          }
+        }
+      }
+    },
+    "kidToday.openTaskHint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打开任务执行页面"
+          }
+        }
+      }
+    },
+    "kidToday.progressFormat" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "完成 %1$lld / %2$lld"
+          }
+        }
+      }
+    },
+    "kidToday.progressTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今日进度"
+          }
+        }
+      }
+    },
+    "kidToday.retry" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再试一次"
+          }
+        }
+      }
+    },
+    "kidToday.subtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "先看看现在要做什么"
           }
         }
       }
@@ -419,337 +836,29 @@
         }
       }
     },
-    "kidTask.durationLabel" : {
+    "taskSession.elapsedSpokenFormat" : {
       "extractionState" : "manual",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "目标时长"
+            "value" : "%1$lld 分 %2$lld 秒"
           }
         }
       }
     },
-    "kidTask.goalTitle" : {
+    "taskSession.elapsedTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "今天的目标"
+            "value" : "已专注"
           }
         }
       }
     },
-    "kidTask.navigationTitle" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "任务"
-          }
-        }
-      }
-    },
-    "kidTask.previewDuration" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "15 分钟"
-          }
-        }
-      }
-    },
-    "kidTask.previewTime" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "19:30"
-          }
-        }
-      }
-    },
-    "kidTask.previewTitle" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "阅读"
-          }
-        }
-      }
-    },
-    "kidTask.scheduleLabel" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "计划时间"
-          }
-        }
-      }
-    },
-    "kidTask.statusPending" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "准备开始"
-          }
-        }
-      }
-    },
-    "kidTask.timerComingSoon" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "计时操作将在下一步接入"
-          }
-        }
-      }
-    },
-    "kidToday.childMode" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "孩子模式"
-          }
-        }
-      }
-    },
-    "kidToday.emptyDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "家长安排任务后，会显示在这里。"
-          }
-        }
-      }
-    },
-    "kidToday.emptyTitle" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "今天没有任务"
-          }
-        }
-      }
-    },
-    "kidToday.greeting" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "今天也一步一步来"
-          }
-        }
-      }
-    },
-    "kidToday.navigationTitle" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "今日"
-          }
-        }
-      }
-    },
-    "kidToday.nextLabel" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "接下来"
-          }
-        }
-      }
-    },
-    "kidToday.openTask" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "查看任务"
-          }
-        }
-      }
-    },
-    "kidToday.openTaskHint" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "打开任务执行页面"
-          }
-        }
-      }
-    },
-    "kidToday.subtitle" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "先看看现在要做什么"
-          }
-        }
-      }
-    },
-    "kidTask.durationMinutesFormat" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld 分钟"
-          }
-        }
-      }
-    },
-    "kidTask.previewCompletedDuration" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "10 分钟"
-          }
-        }
-      }
-    },
-    "kidTask.previewCompletedTime" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "18:30"
-          }
-        }
-      }
-    },
-    "kidTask.previewCompletedTitle" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "背单词"
-          }
-        }
-      }
-    },
-    "kidTask.previewWritingDuration" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "20 分钟"
-          }
-        }
-      }
-    },
-    "kidTask.previewWritingTime" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "20:00"
-          }
-        }
-      }
-    },
-    "kidTask.previewWritingTitle" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "练字"
-          }
-        }
-      }
-    },
-    "kidTask.statusCompleted" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "已完成"
-          }
-        }
-      }
-    },
-    "kidTask.statusInProgress" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "进行中"
-          }
-        }
-      }
-    },
-    "kidTask.statusSkipped" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "已跳过"
-          }
-        }
-      }
-    },
-    "kidToday.completedDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "今天的任务都完成了。"
-          }
-        }
-      }
-    },
-    "kidToday.completedTitle" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "做得好！"
-          }
-        }
-      }
-    },
-    "kidToday.errorDescription" : {
+    "taskSession.errorDescription" : {
       "extractionState" : "manual",
       "localizations" : {
         "zh-Hans" : {
@@ -760,68 +869,79 @@
         }
       }
     },
-    "kidToday.errorTitle" : {
+    "taskSession.errorTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "任务暂时没有加载出来"
+            "value" : "这个任务暂时打不开"
           }
         }
       }
     },
-    "kidToday.loading" : {
+    "taskSession.goalProgress" : {
       "extractionState" : "manual",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "正在准备今天的任务…"
+            "value" : "目标进度"
           }
         }
       }
     },
-    "kidToday.nowLabel" : {
+    "taskSession.loading" : {
       "extractionState" : "manual",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "现在做这个"
+            "value" : "正在打开任务…"
           }
         }
       }
     },
-    "kidToday.progressFormat" : {
+    "taskSession.pause" : {
       "extractionState" : "manual",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "完成 %1$lld / %2$lld"
+            "value" : "暂停一下"
           }
         }
       }
     },
-    "kidToday.progressTitle" : {
+    "taskSession.resume" : {
       "extractionState" : "manual",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "今日进度"
+            "value" : "继续任务"
           }
         }
       }
     },
-    "kidToday.retry" : {
+    "taskSession.retry" : {
       "extractionState" : "manual",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "再试一次"
+          }
+        }
+      }
+    },
+    "taskSession.start" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "开始任务"
           }
         }
       }

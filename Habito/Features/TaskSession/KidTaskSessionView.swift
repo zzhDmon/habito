@@ -1,57 +1,49 @@
 import SwiftUI
 
-/// 任务执行页的基础视觉结构；计时状态和操作由 M2-004 接入。
+/// 任务执行页容器，负责持有页面模型并响应 App 场景恢复。
 struct KidTaskSessionView: View {
-    let task: KidTaskNavigationItem
+    @Environment(\.scenePhase) private var scenePhase
+    @State private var model: TaskSessionViewModel
+    private let onExit: () -> Void
+
+    init(model: TaskSessionViewModel, onExit: @escaping () -> Void) {
+        _model = State(initialValue: model)
+        self.onExit = onExit
+    }
 
     var body: some View {
-        AdaptiveTwoColumnLayout {
-            VStack(alignment: .leading, spacing: HabitoDesign.Spacing.large) {
-                Image(systemName: task.iconName)
-                    .font(.system(.largeTitle, design: .rounded))
-                    .foregroundStyle(HabitoDesign.Palette.task)
-                    .accessibilityHidden(true)
-
-                Text(task.title)
-                    .font(.largeTitle)
-                    .bold()
-
-                Label(task.statusText, systemImage: task.statusIconName)
-                    .font(.title3)
-                    .foregroundStyle(.secondary)
+        Group {
+            switch model.state {
+            case .loading:
+                ProgressView("taskSession.loading")
+                    .controlSize(.large)
+            case let .loaded(content):
+                TaskSessionLoadedView(
+                    content: content,
+                    onStartOrResume: model.startOrResume,
+                    onPause: model.pause
+                )
+            case .failed:
+                ContentUnavailableView {
+                    Label("taskSession.errorTitle", systemImage: "exclamationmark.triangle.fill")
+                } description: {
+                    Text("taskSession.errorDescription")
+                } actions: {
+                    Button("taskSession.retry", action: model.load)
+                        .buttonStyle(.borderedProminent)
+                        .controlSize(.large)
+                }
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(HabitoDesign.Spacing.large)
-        } trailing: {
-            VStack(alignment: .leading, spacing: HabitoDesign.Spacing.medium) {
-                Text("kidTask.goalTitle")
-                    .font(.headline)
-                    .foregroundStyle(.secondary)
-
-                Text(task.targetDurationText)
-                    .font(.largeTitle)
-                    .bold()
-
-                LabeledContent("kidTask.scheduleLabel", value: task.scheduledTimeText)
-
-                Label("kidTask.timerComingSoon", systemImage: "hammer.fill")
-                    .font(.headline)
-                    .foregroundStyle(HabitoDesign.Palette.accent)
-                    .padding(.top, HabitoDesign.Spacing.medium)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(HabitoDesign.Spacing.large)
-            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: HabitoDesign.CornerRadius.card))
         }
         .navigationTitle("kidTask.navigationTitle")
         .navigationBarTitleDisplayMode(.inline)
         .background(.background)
+        .task(model.load)
+        .onChange(of: scenePhase) { _, newPhase in
+            if newPhase == .active {
+                model.refresh()
+            }
+        }
+        .onDisappear(perform: onExit)
     }
-}
-
-#Preview("任务执行 · iPad 横屏") {
-    NavigationStack {
-        KidTaskSessionView(task: .previewReading)
-    }
-    .frame(width: 1_194, height: 834)
 }

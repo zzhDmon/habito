@@ -61,49 +61,6 @@ final class TodayViewModel {
     }
 
     private func makeNavigationItem(from item: TodayTaskItem) -> KidTaskNavigationItem {
-        let components = calendar.dateComponents([.hour, .minute], from: item.scheduledAt)
-        let hour = components.hour ?? 0
-        let minute = components.minute ?? 0
-        let targetMinutes = max(1, Int(ceil(item.targetDurationSeconds / 60)))
-
-        return KidTaskNavigationItem(
-            id: item.id,
-            title: item.title,
-            iconName: item.iconName,
-            scheduledTimeText: String(format: "%02d:%02d", hour, minute),
-            targetDurationText: String.localizedStringWithFormat(
-                String(localized: "kidTask.durationMinutesFormat"),
-                targetMinutes
-            ),
-            status: item.status,
-            statusText: statusText(for: item.status),
-            statusIconName: statusIconName(for: item.status)
-        )
-    }
-
-    private func statusText(for status: TaskOccurrenceStatus) -> String {
-        switch status {
-        case .pending:
-            String(localized: "kidTask.statusPending")
-        case .inProgress:
-            String(localized: "kidTask.statusInProgress")
-        case .completed:
-            String(localized: "kidTask.statusCompleted")
-        case .skipped:
-            String(localized: "kidTask.statusSkipped")
-        }
-    }
-
-    private func statusIconName(for status: TaskOccurrenceStatus) -> String {
-        switch status {
-        case .pending:
-            HabitoDesign.Symbol.pending
-        case .inProgress:
-            "play.circle.fill"
-        case .completed:
-            HabitoDesign.Symbol.completed
-        case .skipped:
-            "forward.end.circle.fill"
-        }
+        KidTaskNavigationItem(item: item, calendar: calendar)
     }
 }
