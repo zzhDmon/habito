@@ -66,6 +66,9 @@
 		F10000000000000000000002 /* OccurrenceReconciliationReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20000000000000000000002 /* OccurrenceReconciliationReport.swift */; };
 		F10000000000000000000003 /* TaskOccurrenceReconciliationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20000000000000000000003 /* TaskOccurrenceReconciliationService.swift */; };
 		F10000000000000000000004 /* TaskOccurrenceReconciliationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20000000000000000000004 /* TaskOccurrenceReconciliationServiceTests.swift */; };
+		G10000000000000000000001 /* TaskProgressServiceError.swift in Sources */ = {isa = PBXBuildFile; fileRef = G20000000000000000000001 /* TaskProgressServiceError.swift */; };
+		G10000000000000000000002 /* TaskProgressService.swift in Sources */ = {isa = PBXBuildFile; fileRef = G20000000000000000000002 /* TaskProgressService.swift */; };
+		G10000000000000000000003 /* TaskProgressServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = G20000000000000000000003 /* TaskProgressServiceTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -140,6 +143,9 @@
 		F20000000000000000000002 /* OccurrenceReconciliationReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OccurrenceReconciliationReport.swift; sourceTree = "<group>"; };
 		F20000000000000000000003 /* TaskOccurrenceReconciliationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskOccurrenceReconciliationService.swift; sourceTree = "<group>"; };
 		F20000000000000000000004 /* TaskOccurrenceReconciliationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskOccurrenceReconciliationServiceTests.swift; sourceTree = "<group>"; };
+		G20000000000000000000001 /* TaskProgressServiceError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskProgressServiceError.swift; sourceTree = "<group>"; };
+		G20000000000000000000002 /* TaskProgressService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskProgressService.swift; sourceTree = "<group>"; };
+		G20000000000000000000003 /* TaskProgressServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskProgressServiceTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -198,6 +204,7 @@
 				D50000000000000000000001 /* Models */,
 				F50000000000000000000001 /* OccurrenceGeneration */,
 				A50000000000000000000005 /* Persistence */,
+				G50000000000000000000001 /* TaskProgress */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -365,6 +372,7 @@
 				D2000000000000000000000D /* PersistenceFixture.swift */,
 				D2000000000000000000000B /* PersistenceRoundTripTests.swift */,
 				F20000000000000000000004 /* TaskOccurrenceReconciliationServiceTests.swift */,
+				G20000000000000000000003 /* TaskProgressServiceTests.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -377,6 +385,15 @@
 				F20000000000000000000003 /* TaskOccurrenceReconciliationService.swift */,
 			);
 			path = OccurrenceGeneration;
+			sourceTree = "<group>";
+		};
+		G50000000000000000000001 /* TaskProgress */ = {
+			isa = PBXGroup;
+			children = (
+				G20000000000000000000002 /* TaskProgressService.swift */,
+				G20000000000000000000001 /* TaskProgressServiceError.swift */,
+			);
+			path = TaskProgress;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -498,6 +515,8 @@
 				E10000000000000000000001 /* ScheduledTaskCandidate.swift in Sources */,
 				C10000000000000000000006 /* TaskOccurrenceAction.swift in Sources */,
 				F10000000000000000000003 /* TaskOccurrenceReconciliationService.swift in Sources */,
+				G10000000000000000000002 /* TaskProgressService.swift in Sources */,
+				G10000000000000000000001 /* TaskProgressServiceError.swift in Sources */,
 				E10000000000000000000007 /* TaskCandidateOverrideError.swift in Sources */,
 				E10000000000000000000008 /* TaskCandidateOverrideResolver.swift in Sources */,
 				D10000000000000000000005 /* TaskOccurrence.swift in Sources */,
@@ -534,6 +553,7 @@
 				E10000000000000000000009 /* TaskCandidateOverrideResolverTests.swift in Sources */,
 				E10000000000000000000004 /* TaskRecurrenceExpanderTests.swift in Sources */,
 				F10000000000000000000004 /* TaskOccurrenceReconciliationServiceTests.swift in Sources */,
+				G10000000000000000000003 /* TaskProgressServiceTests.swift in Sources */,
 				C10000000000000000000011 /* TaskRecurrenceTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
