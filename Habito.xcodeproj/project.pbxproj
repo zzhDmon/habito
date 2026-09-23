@@ -79,6 +79,13 @@
 		I10000000000000000000006 /* KidTodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = I20000000000000000000006 /* KidTodayView.swift */; };
 		I10000000000000000000007 /* KidTodayGreetingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = I20000000000000000000007 /* KidTodayGreetingPanel.swift */; };
 		I10000000000000000000008 /* KidTaskSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = I20000000000000000000008 /* KidTaskSessionView.swift */; };
+		J10000000000000000000001 /* TodayTaskCompletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = J20000000000000000000001 /* TodayTaskCompletion.swift */; };
+		J10000000000000000000002 /* TodayTaskItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = J20000000000000000000002 /* TodayTaskItem.swift */; };
+		J10000000000000000000003 /* TodayTasksSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = J20000000000000000000003 /* TodayTasksSnapshot.swift */; };
+		J10000000000000000000004 /* TodayTaskQueryError.swift in Sources */ = {isa = PBXBuildFile; fileRef = J20000000000000000000004 /* TodayTaskQueryError.swift */; };
+		J10000000000000000000005 /* TodayTaskQueryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = J20000000000000000000005 /* TodayTaskQueryService.swift */; };
+		J10000000000000000000006 /* TodayQueryFixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = J20000000000000000000006 /* TodayQueryFixture.swift */; };
+		J10000000000000000000007 /* TodayTaskQueryServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = J20000000000000000000007 /* TodayTaskQueryServiceTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -166,6 +173,13 @@
 		I20000000000000000000006 /* KidTodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidTodayView.swift; sourceTree = "<group>"; };
 		I20000000000000000000007 /* KidTodayGreetingPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidTodayGreetingPanel.swift; sourceTree = "<group>"; };
 		I20000000000000000000008 /* KidTaskSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidTaskSessionView.swift; sourceTree = "<group>"; };
+		J20000000000000000000001 /* TodayTaskCompletion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayTaskCompletion.swift; sourceTree = "<group>"; };
+		J20000000000000000000002 /* TodayTaskItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayTaskItem.swift; sourceTree = "<group>"; };
+		J20000000000000000000003 /* TodayTasksSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayTasksSnapshot.swift; sourceTree = "<group>"; };
+		J20000000000000000000004 /* TodayTaskQueryError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayTaskQueryError.swift; sourceTree = "<group>"; };
+		J20000000000000000000005 /* TodayTaskQueryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayTaskQueryService.swift; sourceTree = "<group>"; };
+		J20000000000000000000006 /* TodayQueryFixture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayQueryFixture.swift; sourceTree = "<group>"; };
+		J20000000000000000000007 /* TodayTaskQueryServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayTaskQueryServiceTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -252,6 +266,7 @@
 			children = (
 				D50000000000000000000002 /* Data */,
 				C50000000000000000000004 /* Domain */,
+				J50000000000000000000001 /* Features */,
 				A20000000000000000000011 /* FakeLocalNotificationService.swift */,
 				A20000000000000000000012 /* NotificationProbeViewModelTests.swift */,
 			);
@@ -346,8 +361,22 @@
 				I20000000000000000000003 /* KidTaskNavigationItem.swift */,
 				I20000000000000000000007 /* KidTodayGreetingPanel.swift */,
 				I20000000000000000000006 /* KidTodayView.swift */,
+				J20000000000000000000001 /* TodayTaskCompletion.swift */,
+				J20000000000000000000002 /* TodayTaskItem.swift */,
+				J20000000000000000000004 /* TodayTaskQueryError.swift */,
+				J20000000000000000000005 /* TodayTaskQueryService.swift */,
+				J20000000000000000000003 /* TodayTasksSnapshot.swift */,
 			);
 			path = Today;
+			sourceTree = "<group>";
+		};
+		J50000000000000000000001 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				J20000000000000000000006 /* TodayQueryFixture.swift */,
+				J20000000000000000000007 /* TodayTaskQueryServiceTests.swift */,
+			);
+			path = Features;
 			sourceTree = "<group>";
 		};
 		C50000000000000000000001 /* Domain */ = {
@@ -612,6 +641,11 @@
 				D10000000000000000000007 /* TimerSession.swift in Sources */,
 				C1000000000000000000000E /* TimerSessionAction.swift in Sources */,
 				C1000000000000000000000F /* TimerSessionState.swift in Sources */,
+				J10000000000000000000001 /* TodayTaskCompletion.swift in Sources */,
+				J10000000000000000000002 /* TodayTaskItem.swift in Sources */,
+				J10000000000000000000004 /* TodayTaskQueryError.swift in Sources */,
+				J10000000000000000000005 /* TodayTaskQueryService.swift in Sources */,
+				J10000000000000000000003 /* TodayTasksSnapshot.swift in Sources */,
 				C10000000000000000000003 /* Weekday.swift in Sources */,
 				A10000000000000000000004 /* AppModelContainer.swift in Sources */,
 			);
@@ -635,6 +669,8 @@
 				F10000000000000000000004 /* TaskOccurrenceReconciliationServiceTests.swift in Sources */,
 				G10000000000000000000003 /* TaskProgressServiceTests.swift in Sources */,
 				C10000000000000000000011 /* TaskRecurrenceTests.swift in Sources */,
+				J10000000000000000000006 /* TodayQueryFixture.swift in Sources */,
+				J10000000000000000000007 /* TodayTaskQueryServiceTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
