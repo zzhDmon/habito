@@ -3,6 +3,8 @@ import XCTest
 /// 在真实 iPad 模拟器进程中验证不依赖通知的孩子闭环。
 final class HabitoKidFlowUITests: XCTestCase {
     private let seededTaskIdentifier = "kid.today.task.c5412144-2fb8-4e96-9f7a-6a42e0803d11"
+    private let seededTemplateIdentifier =
+        "parent.templates.item.6743a00b-878f-4bb0-a861-64056ec19fe5"
 
     override func setUpWithError() throws {
         continueAfterFailure = false
@@ -70,6 +72,15 @@ final class HabitoKidFlowUITests: XCTestCase {
         app.buttons["parent.gate.create"].tap()
         XCTAssertTrue(
             app.descendants(matching: .any)["parent.gate.unlocked"].waitForExistence(timeout: 5)
+        )
+        XCTAssertTrue(app.buttons["parent.templates.create"].exists)
+        let template = app.buttons[seededTemplateIdentifier]
+        XCTAssertTrue(template.waitForExistence(timeout: 5))
+        template.tap()
+        XCTAssertTrue(
+            app.descendants(matching: .any)["parent.templates.destination"].waitForExistence(
+                timeout: 5
+            )
         )
 
         app.terminate()

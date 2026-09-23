@@ -5,17 +5,20 @@ struct RootView: View {
     @State private var path: [KidRoute] = []
     @State private var todayModel: TodayViewModel
     @State private var parentGateModel: ParentGateViewModel
+    @State private var parentTaskTemplatesModel: ParentTaskTemplateListViewModel
     @State private var isParentGatePresented = false
     private let taskSessionModelFactory: TaskSessionViewModelFactory
 
     init(
         todayModel: TodayViewModel,
         taskSessionModelFactory: TaskSessionViewModelFactory,
-        parentGateModel: ParentGateViewModel
+        parentGateModel: ParentGateViewModel,
+        parentTaskTemplatesModel: ParentTaskTemplateListViewModel
     ) {
         _todayModel = State(initialValue: todayModel)
         self.taskSessionModelFactory = taskSessionModelFactory
         _parentGateModel = State(initialValue: parentGateModel)
+        _parentTaskTemplatesModel = State(initialValue: parentTaskTemplatesModel)
     }
 
     var body: some View {
@@ -52,7 +55,10 @@ struct RootView: View {
         }
         .task(loadToday)
         .sheet(isPresented: $isParentGatePresented) {
-            ParentGateView(model: parentGateModel)
+            ParentGateView(
+                model: parentGateModel,
+                taskTemplatesModel: parentTaskTemplatesModel
+            )
         }
     }
 

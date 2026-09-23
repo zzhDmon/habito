@@ -119,6 +119,17 @@
 		Q10000000000000000000002 /* ParentPINTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = Q20000000000000000000002 /* ParentPINTests.swift */; };
 		Q10000000000000000000003 /* ParentGateViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = Q20000000000000000000003 /* ParentGateViewModelTests.swift */; };
 		Q10000000000000000000004 /* KeychainParentPINCredentialStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = Q20000000000000000000004 /* KeychainParentPINCredentialStoreTests.swift */; };
+		R10000000000000000000001 /* ParentTaskTemplateListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = R20000000000000000000001 /* ParentTaskTemplateListItem.swift */; };
+		R10000000000000000000002 /* ParentTaskTemplateListState.swift in Sources */ = {isa = PBXBuildFile; fileRef = R20000000000000000000002 /* ParentTaskTemplateListState.swift */; };
+		R10000000000000000000003 /* ParentTaskTemplateQueryError.swift in Sources */ = {isa = PBXBuildFile; fileRef = R20000000000000000000003 /* ParentTaskTemplateQueryError.swift */; };
+		R10000000000000000000004 /* ParentTaskTemplateQueryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = R20000000000000000000004 /* ParentTaskTemplateQueryService.swift */; };
+		R10000000000000000000005 /* ParentTaskTemplateListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = R20000000000000000000005 /* ParentTaskTemplateListViewModel.swift */; };
+		R10000000000000000000006 /* ParentTaskTemplateRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = R20000000000000000000006 /* ParentTaskTemplateRoute.swift */; };
+		R10000000000000000000007 /* ParentTaskTemplateRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = R20000000000000000000007 /* ParentTaskTemplateRow.swift */; };
+		R10000000000000000000008 /* ParentTaskTemplateListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = R20000000000000000000008 /* ParentTaskTemplateListView.swift */; };
+		R10000000000000000000009 /* ParentTaskTemplatePlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = R20000000000000000000009 /* ParentTaskTemplatePlaceholderView.swift */; };
+		R1000000000000000000000A /* ParentTaskTemplateListContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = R2000000000000000000000A /* ParentTaskTemplateListContent.swift */; };
+		S10000000000000000000001 /* ParentTaskTemplateQueryServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = S20000000000000000000001 /* ParentTaskTemplateQueryServiceTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -254,6 +265,17 @@
 		Q20000000000000000000002 /* ParentPINTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentPINTests.swift; sourceTree = "<group>"; };
 		Q20000000000000000000003 /* ParentGateViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentGateViewModelTests.swift; sourceTree = "<group>"; };
 		Q20000000000000000000004 /* KeychainParentPINCredentialStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainParentPINCredentialStoreTests.swift; sourceTree = "<group>"; };
+		R20000000000000000000001 /* ParentTaskTemplateListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentTaskTemplateListItem.swift; sourceTree = "<group>"; };
+		R20000000000000000000002 /* ParentTaskTemplateListState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentTaskTemplateListState.swift; sourceTree = "<group>"; };
+		R20000000000000000000003 /* ParentTaskTemplateQueryError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentTaskTemplateQueryError.swift; sourceTree = "<group>"; };
+		R20000000000000000000004 /* ParentTaskTemplateQueryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentTaskTemplateQueryService.swift; sourceTree = "<group>"; };
+		R20000000000000000000005 /* ParentTaskTemplateListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentTaskTemplateListViewModel.swift; sourceTree = "<group>"; };
+		R20000000000000000000006 /* ParentTaskTemplateRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentTaskTemplateRoute.swift; sourceTree = "<group>"; };
+		R20000000000000000000007 /* ParentTaskTemplateRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentTaskTemplateRow.swift; sourceTree = "<group>"; };
+		R20000000000000000000008 /* ParentTaskTemplateListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentTaskTemplateListView.swift; sourceTree = "<group>"; };
+		R20000000000000000000009 /* ParentTaskTemplatePlaceholderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentTaskTemplatePlaceholderView.swift; sourceTree = "<group>"; };
+		R2000000000000000000000A /* ParentTaskTemplateListContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentTaskTemplateListContent.swift; sourceTree = "<group>"; };
+		S20000000000000000000001 /* ParentTaskTemplateQueryServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentTaskTemplateQueryServiceTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -394,6 +416,7 @@
 			children = (
 				A5000000000000000000000C /* NotificationProbe */,
 				P50000000000000000000003 /* ParentGate */,
+				R50000000000000000000001 /* ParentTaskTemplates */,
 				I50000000000000000000004 /* TaskSession */,
 				I50000000000000000000005 /* Today */,
 			);
@@ -479,6 +502,23 @@
 			path = ParentGate;
 			sourceTree = "<group>";
 		};
+		R50000000000000000000001 /* ParentTaskTemplates */ = {
+			isa = PBXGroup;
+			children = (
+				R20000000000000000000001 /* ParentTaskTemplateListItem.swift */,
+				R2000000000000000000000A /* ParentTaskTemplateListContent.swift */,
+				R20000000000000000000008 /* ParentTaskTemplateListView.swift */,
+				R20000000000000000000005 /* ParentTaskTemplateListViewModel.swift */,
+				R20000000000000000000002 /* ParentTaskTemplateListState.swift */,
+				R20000000000000000000009 /* ParentTaskTemplatePlaceholderView.swift */,
+				R20000000000000000000003 /* ParentTaskTemplateQueryError.swift */,
+				R20000000000000000000004 /* ParentTaskTemplateQueryService.swift */,
+				R20000000000000000000006 /* ParentTaskTemplateRoute.swift */,
+				R20000000000000000000007 /* ParentTaskTemplateRow.swift */,
+			);
+			path = ParentTaskTemplates;
+			sourceTree = "<group>";
+		};
 		I50000000000000000000004 /* TaskSession */ = {
 			isa = PBXGroup;
 			children = (
@@ -523,6 +563,7 @@
 				Q20000000000000000000001 /* InMemoryParentPINCredentialStore.swift */,
 				Q20000000000000000000004 /* KeychainParentPINCredentialStoreTests.swift */,
 				Q20000000000000000000003 /* ParentGateViewModelTests.swift */,
+				S20000000000000000000001 /* ParentTaskTemplateQueryServiceTests.swift */,
 				M20000000000000000000007 /* TaskSessionViewModelTests.swift */,
 				J20000000000000000000006 /* TodayQueryFixture.swift */,
 				J20000000000000000000007 /* TodayTaskQueryServiceTests.swift */,
@@ -817,6 +858,16 @@
 				P10000000000000000000006 /* ParentPINError.swift in Sources */,
 				P10000000000000000000002 /* ParentPINCredentialStoring.swift in Sources */,
 				P10000000000000000000007 /* KeychainParentPINError.swift in Sources */,
+				R10000000000000000000001 /* ParentTaskTemplateListItem.swift in Sources */,
+				R10000000000000000000002 /* ParentTaskTemplateListState.swift in Sources */,
+				R10000000000000000000003 /* ParentTaskTemplateQueryError.swift in Sources */,
+				R10000000000000000000004 /* ParentTaskTemplateQueryService.swift in Sources */,
+				R10000000000000000000005 /* ParentTaskTemplateListViewModel.swift in Sources */,
+				R10000000000000000000006 /* ParentTaskTemplateRoute.swift in Sources */,
+				R10000000000000000000007 /* ParentTaskTemplateRow.swift in Sources */,
+				R10000000000000000000008 /* ParentTaskTemplateListView.swift in Sources */,
+				R10000000000000000000009 /* ParentTaskTemplatePlaceholderView.swift in Sources */,
+				R1000000000000000000000A /* ParentTaskTemplateListContent.swift in Sources */,
 				D10000000000000000000002 /* NotificationKind.swift in Sources */,
 				D10000000000000000000009 /* NotificationLink.swift in Sources */,
 				F10000000000000000000001 /* OccurrenceReconciliationError.swift in Sources */,
@@ -871,6 +922,7 @@
 				Q10000000000000000000001 /* InMemoryParentPINCredentialStore.swift in Sources */,
 				Q10000000000000000000004 /* KeychainParentPINCredentialStoreTests.swift in Sources */,
 				Q10000000000000000000003 /* ParentGateViewModelTests.swift in Sources */,
+				S10000000000000000000001 /* ParentTaskTemplateQueryServiceTests.swift in Sources */,
 				M10000000000000000000007 /* TaskSessionViewModelTests.swift in Sources */,
 				C10000000000000000000010 /* LocalDateTests.swift in Sources */,
 				N10000000000000000000004 /* LocalizationCatalogTests.swift in Sources */,

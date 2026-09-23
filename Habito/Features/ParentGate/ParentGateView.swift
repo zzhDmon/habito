@@ -4,16 +4,22 @@ import SwiftUI
 struct ParentGateView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var model: ParentGateViewModel
+    @State private var taskTemplatesModel: ParentTaskTemplateListViewModel
+    @State private var path: [ParentTaskTemplateRoute] = []
     @State private var pin = ""
     @State private var confirmation = ""
     @State private var isResetConfirmationPresented = false
 
-    init(model: ParentGateViewModel) {
+    init(
+        model: ParentGateViewModel,
+        taskTemplatesModel: ParentTaskTemplateListViewModel
+    ) {
         _model = State(initialValue: model)
+        _taskTemplatesModel = State(initialValue: taskTemplatesModel)
     }
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             Group {
                 switch model.state {
                 case .loading:
@@ -23,12 +29,11 @@ struct ParentGateView: View {
                 case .verify:
                     verifyForm
                 case .unlocked:
-                    ContentUnavailableView(
-                        "parentGate.unlockedTitle",
-                        systemImage: "lock.open.fill",
-                        description: Text("parentGate.unlockedDescription")
+                    ParentTaskTemplateListView(
+                        model: taskTemplatesModel,
+                        onCreate: { path.append(.create) },
+                        onSelect: { path.append(.detail($0)) }
                     )
-                    .accessibilityIdentifier(HabitoAccessibilityID.parentUnlocked)
                 case .failed:
                     ContentUnavailableView {
                         Label("parentGate.errorTitle", systemImage: "exclamationmark.triangle.fill")
@@ -44,6 +49,9 @@ struct ParentGateView: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("parentGate.close", action: dismiss.callAsFunction)
                 }
+            }
+            .navigationDestination(for: ParentTaskTemplateRoute.self) { route in
+                ParentTaskTemplatePlaceholderView(route: route)
             }
         }
         .presentationDetents([.large])

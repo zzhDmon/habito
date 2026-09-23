@@ -20,8 +20,14 @@ nonisolated enum HabitoAccessibilityID {
     static let parentUnlockButton = "parent.gate.unlock"
     static let parentResetButton = "parent.gate.reset"
     static let parentUnlocked = "parent.gate.unlocked"
+    static let parentTemplateCreate = "parent.templates.create"
+    static let parentTemplateDestination = "parent.templates.destination"
 
     static func task(_ id: UUID) -> String {
         "kid.today.task.\(id.uuidString.lowercased())"
+    }
+
+    static func parentTemplate(_ id: UUID) -> String {
+        "parent.templates.item.\(id.uuidString.lowercased())"
     }
 }
