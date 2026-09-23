@@ -12,13 +12,20 @@ struct HabitoApp: App {
     private let modelContainer: ModelContainer
     private let taskSessionModelFactory: TaskSessionViewModelFactory
     @State private var todayModel: TodayViewModel
+    @State private var parentGateModel: ParentGateViewModel
 
     init() {
         let container: ModelContainer
+        let credentialStore: any ParentPINCredentialStoring
         do {
             #if DEBUG
                 if let configuration = UITestLaunchConfiguration.current {
                     container = try configuration.makeContainer()
+                    let uiTestCredentialStore = configuration.makeCredentialStore()
+                    if configuration.shouldReset {
+                        try uiTestCredentialStore.removeCredential()
+                    }
+                    credentialStore = uiTestCredentialStore
                     let calendar = Calendar(identifier: .gregorian)
                     let timeZone = TimeZone.autoupdatingCurrent
                     try UITestSeedService.prepare(
@@ -30,9 +37,11 @@ struct HabitoApp: App {
                     )
                 } else {
                     container = try AppModelContainer.make()
+                    credentialStore = KeychainParentPINCredentialStore()
                 }
             #else
                 container = try AppModelContainer.make()
+                credentialStore = KeychainParentPINCredentialStore()
             #endif
         } catch {
             // 持久化容器不可用时，继续运行会让后续读写行为不可预测，
@@ -57,13 +66,20 @@ struct HabitoApp: App {
             timeZone: timeZone,
             dateProvider: dateProvider
         )
+        _parentGateModel = State(
+            initialValue: ParentGateViewModel(
+                context: container.mainContext,
+                credentialStore: credentialStore
+            )
+        )
     }
 
     var body: some Scene {
         WindowGroup {
             RootView(
                 todayModel: todayModel,
-                taskSessionModelFactory: taskSessionModelFactory
+                taskSessionModelFactory: taskSessionModelFactory,
+                parentGateModel: parentGateModel
             )
         }
         .modelContainer(modelContainer)

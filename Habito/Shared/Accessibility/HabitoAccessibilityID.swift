@@ -13,6 +13,13 @@ nonisolated enum HabitoAccessibilityID {
     static let resumeButton = "kid.session.resume"
     static let completeButton = "kid.session.complete"
     static let undoButton = "kid.session.undo"
+    static let parentEntry = "parent.gate.entry"
+    static let parentPINField = "parent.gate.pin"
+    static let parentPINConfirmationField = "parent.gate.pin-confirmation"
+    static let parentCreateButton = "parent.gate.create"
+    static let parentUnlockButton = "parent.gate.unlock"
+    static let parentResetButton = "parent.gate.reset"
+    static let parentUnlocked = "parent.gate.unlocked"
 
     static func task(_ id: UUID) -> String {
         "kid.today.task.\(id.uuidString.lowercased())"

@@ -33,5 +33,13 @@
             let storeURL = directory.appendingPathComponent("HabitoUITests.store")
             return try AppModelContainer.make(storeURL: storeURL)
         }
+
+        /// 创建与正式家长 PIN 完全隔离的 UI 测试 Keychain 存储。
+        func makeCredentialStore() -> KeychainParentPINCredentialStore {
+            KeychainParentPINCredentialStore(
+                service: "com.zhangzehua.Habito.ui-tests.parent-pin",
+                account: "habito.ui-tests.parent-pin"
+            )
+        }
     }
 #endif

@@ -108,6 +108,17 @@
 		N10000000000000000000003 /* HabitoAccessibilityID.swift in Sources */ = {isa = PBXBuildFile; fileRef = N20000000000000000000003 /* HabitoAccessibilityID.swift */; };
 		N10000000000000000000004 /* LocalizationCatalogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = N20000000000000000000004 /* LocalizationCatalogTests.swift */; };
 		N10000000000000000000005 /* HabitoKidFlowUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = N20000000000000000000005 /* HabitoKidFlowUITests.swift */; };
+		P10000000000000000000001 /* ParentPIN.swift in Sources */ = {isa = PBXBuildFile; fileRef = P20000000000000000000001 /* ParentPIN.swift */; };
+		P10000000000000000000002 /* ParentPINCredentialStoring.swift in Sources */ = {isa = PBXBuildFile; fileRef = P20000000000000000000002 /* ParentPINCredentialStoring.swift */; };
+		P10000000000000000000003 /* KeychainParentPINCredentialStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = P20000000000000000000003 /* KeychainParentPINCredentialStore.swift */; };
+		P10000000000000000000004 /* ParentGateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = P20000000000000000000004 /* ParentGateViewModel.swift */; };
+		P10000000000000000000005 /* ParentGateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = P20000000000000000000005 /* ParentGateView.swift */; };
+		P10000000000000000000006 /* ParentPINError.swift in Sources */ = {isa = PBXBuildFile; fileRef = P20000000000000000000006 /* ParentPINError.swift */; };
+		P10000000000000000000007 /* KeychainParentPINError.swift in Sources */ = {isa = PBXBuildFile; fileRef = P20000000000000000000007 /* KeychainParentPINError.swift */; };
+		Q10000000000000000000001 /* InMemoryParentPINCredentialStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = Q20000000000000000000001 /* InMemoryParentPINCredentialStore.swift */; };
+		Q10000000000000000000002 /* ParentPINTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = Q20000000000000000000002 /* ParentPINTests.swift */; };
+		Q10000000000000000000003 /* ParentGateViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = Q20000000000000000000003 /* ParentGateViewModelTests.swift */; };
+		Q10000000000000000000004 /* KeychainParentPINCredentialStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = Q20000000000000000000004 /* KeychainParentPINCredentialStoreTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -232,6 +243,17 @@
 		N20000000000000000000004 /* LocalizationCatalogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationCatalogTests.swift; sourceTree = "<group>"; };
 		N20000000000000000000005 /* HabitoKidFlowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitoKidFlowUITests.swift; sourceTree = "<group>"; };
 		N20000000000000000000006 /* HabitoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HabitoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		P20000000000000000000001 /* ParentPIN.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentPIN.swift; sourceTree = "<group>"; };
+		P20000000000000000000002 /* ParentPINCredentialStoring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentPINCredentialStoring.swift; sourceTree = "<group>"; };
+		P20000000000000000000003 /* KeychainParentPINCredentialStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainParentPINCredentialStore.swift; sourceTree = "<group>"; };
+		P20000000000000000000004 /* ParentGateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentGateViewModel.swift; sourceTree = "<group>"; };
+		P20000000000000000000005 /* ParentGateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentGateView.swift; sourceTree = "<group>"; };
+		P20000000000000000000006 /* ParentPINError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentPINError.swift; sourceTree = "<group>"; };
+		P20000000000000000000007 /* KeychainParentPINError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainParentPINError.swift; sourceTree = "<group>"; };
+		Q20000000000000000000001 /* InMemoryParentPINCredentialStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryParentPINCredentialStore.swift; sourceTree = "<group>"; };
+		Q20000000000000000000002 /* ParentPINTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentPINTests.swift; sourceTree = "<group>"; };
+		Q20000000000000000000003 /* ParentGateViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentGateViewModelTests.swift; sourceTree = "<group>"; };
+		Q20000000000000000000004 /* KeychainParentPINCredentialStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainParentPINCredentialStoreTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -350,6 +372,7 @@
 			isa = PBXGroup;
 			children = (
 				A5000000000000000000000A /* Notifications */,
+				P50000000000000000000002 /* Security */,
 				K50000000000000000000001 /* Time */,
 			);
 			path = Services;
@@ -370,6 +393,7 @@
 			isa = PBXGroup;
 			children = (
 				A5000000000000000000000C /* NotificationProbe */,
+				P50000000000000000000003 /* ParentGate */,
 				I50000000000000000000004 /* TaskSession */,
 				I50000000000000000000005 /* Today */,
 			);
@@ -427,6 +451,34 @@
 			path = HabitoUITests;
 			sourceTree = "<group>";
 		};
+		P50000000000000000000001 /* Security */ = {
+			isa = PBXGroup;
+			children = (
+				P20000000000000000000001 /* ParentPIN.swift */,
+				P20000000000000000000006 /* ParentPINError.swift */,
+			);
+			path = Security;
+			sourceTree = "<group>";
+		};
+		P50000000000000000000002 /* Security */ = {
+			isa = PBXGroup;
+			children = (
+				P20000000000000000000007 /* KeychainParentPINError.swift */,
+				P20000000000000000000003 /* KeychainParentPINCredentialStore.swift */,
+				P20000000000000000000002 /* ParentPINCredentialStoring.swift */,
+			);
+			path = Security;
+			sourceTree = "<group>";
+		};
+		P50000000000000000000003 /* ParentGate */ = {
+			isa = PBXGroup;
+			children = (
+				P20000000000000000000005 /* ParentGateView.swift */,
+				P20000000000000000000004 /* ParentGateViewModel.swift */,
+			);
+			path = ParentGate;
+			sourceTree = "<group>";
+		};
 		I50000000000000000000004 /* TaskSession */ = {
 			isa = PBXGroup;
 			children = (
@@ -468,6 +520,9 @@
 			isa = PBXGroup;
 			children = (
 				L20000000000000000000001 /* FixedDateProvider.swift */,
+				Q20000000000000000000001 /* InMemoryParentPINCredentialStore.swift */,
+				Q20000000000000000000004 /* KeychainParentPINCredentialStoreTests.swift */,
+				Q20000000000000000000003 /* ParentGateViewModelTests.swift */,
 				M20000000000000000000007 /* TaskSessionViewModelTests.swift */,
 				J20000000000000000000006 /* TodayQueryFixture.swift */,
 				J20000000000000000000007 /* TodayTaskQueryServiceTests.swift */,
@@ -489,6 +544,7 @@
 			isa = PBXGroup;
 			children = (
 				C50000000000000000000002 /* Calendar */,
+				P50000000000000000000001 /* Security */,
 				E50000000000000000000001 /* Scheduling */,
 				C50000000000000000000003 /* Tasks */,
 			);
@@ -530,6 +586,7 @@
 			isa = PBXGroup;
 			children = (
 				C20000000000000000000012 /* DomainStateMachineTests.swift */,
+				Q20000000000000000000002 /* ParentPINTests.swift */,
 				C20000000000000000000010 /* LocalDateTests.swift */,
 				E20000000000000000000009 /* TaskCandidateOverrideResolverTests.swift */,
 				E20000000000000000000004 /* TaskRecurrenceExpanderTests.swift */,
@@ -719,6 +776,7 @@
 				A10000000000000000000007 /* AppDelegate.swift in Sources */,
 				D1000000000000000000000A /* AppSettings.swift in Sources */,
 				A10000000000000000000001 /* HabitoApp.swift in Sources */,
+				P10000000000000000000003 /* KeychainParentPINCredentialStore.swift in Sources */,
 				N10000000000000000000001 /* UITestLaunchConfiguration.swift in Sources */,
 				N10000000000000000000002 /* UITestSeedService.swift in Sources */,
 				C10000000000000000000004 /* CompletionSource.swift in Sources */,
@@ -753,6 +811,12 @@
 				A1000000000000000000000C /* NotificationProbeScenario.swift in Sources */,
 				A1000000000000000000000E /* NotificationProbeView.swift in Sources */,
 				A1000000000000000000000D /* NotificationProbeViewModel.swift in Sources */,
+				P10000000000000000000005 /* ParentGateView.swift in Sources */,
+				P10000000000000000000004 /* ParentGateViewModel.swift in Sources */,
+				P10000000000000000000001 /* ParentPIN.swift in Sources */,
+				P10000000000000000000006 /* ParentPINError.swift in Sources */,
+				P10000000000000000000002 /* ParentPINCredentialStoring.swift in Sources */,
+				P10000000000000000000007 /* KeychainParentPINError.swift in Sources */,
 				D10000000000000000000002 /* NotificationKind.swift in Sources */,
 				D10000000000000000000009 /* NotificationLink.swift in Sources */,
 				F10000000000000000000001 /* OccurrenceReconciliationError.swift in Sources */,
@@ -804,12 +868,16 @@
 				C10000000000000000000012 /* DomainStateMachineTests.swift in Sources */,
 				A1000000000000000000000F /* FakeLocalNotificationService.swift in Sources */,
 				L10000000000000000000001 /* FixedDateProvider.swift in Sources */,
+				Q10000000000000000000001 /* InMemoryParentPINCredentialStore.swift in Sources */,
+				Q10000000000000000000004 /* KeychainParentPINCredentialStoreTests.swift in Sources */,
+				Q10000000000000000000003 /* ParentGateViewModelTests.swift in Sources */,
 				M10000000000000000000007 /* TaskSessionViewModelTests.swift in Sources */,
 				C10000000000000000000010 /* LocalDateTests.swift in Sources */,
 				N10000000000000000000004 /* LocalizationCatalogTests.swift in Sources */,
 				H10000000000000000000002 /* M1DataKernelIntegrationTests.swift in Sources */,
 				A10000000000000000000010 /* NotificationProbeViewModelTests.swift in Sources */,
 				D1000000000000000000000C /* PersistenceConstraintTests.swift in Sources */,
+				Q10000000000000000000002 /* ParentPINTests.swift in Sources */,
 				D1000000000000000000000D /* PersistenceFixture.swift in Sources */,
 				D1000000000000000000000B /* PersistenceRoundTripTests.swift in Sources */,
 				E10000000000000000000009 /* TaskCandidateOverrideResolverTests.swift in Sources */,

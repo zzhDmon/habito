@@ -48,4 +48,47 @@ final class HabitoKidFlowUITests: XCTestCase {
         undo.tap()
         XCTAssertTrue(start.waitForExistence(timeout: 5))
     }
+
+    func testParentGateRequiresLongPressAndPersistsCredentialAcrossRelaunch() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["--habito-ui-testing", "--habito-ui-reset"]
+        app.launch()
+
+        let entry = app.buttons["parent.gate.entry"]
+        XCTAssertTrue(entry.waitForExistence(timeout: 5))
+        entry.tap()
+        XCTAssertFalse(app.secureTextFields["parent.gate.pin"].waitForExistence(timeout: 1))
+
+        entry.press(forDuration: 1.2)
+        let pin = app.secureTextFields["parent.gate.pin"]
+        let confirmation = app.secureTextFields["parent.gate.pin-confirmation"]
+        XCTAssertTrue(pin.waitForExistence(timeout: 5))
+        pin.tap()
+        pin.typeText("1357")
+        confirmation.tap()
+        confirmation.typeText("1357")
+        app.buttons["parent.gate.create"].tap()
+        XCTAssertTrue(
+            app.descendants(matching: .any)["parent.gate.unlocked"].waitForExistence(timeout: 5)
+        )
+
+        app.terminate()
+        app.launchArguments = ["--habito-ui-testing"]
+        app.launch()
+        XCTAssertTrue(entry.waitForExistence(timeout: 5))
+        entry.press(forDuration: 1.2)
+        XCTAssertTrue(pin.waitForExistence(timeout: 5))
+
+        pin.tap()
+        pin.typeText("0000")
+        app.buttons["parent.gate.unlock"].tap()
+        XCTAssertFalse(app.descendants(matching: .any)["parent.gate.unlocked"].exists)
+
+        pin.tap()
+        pin.typeText("1357")
+        app.buttons["parent.gate.unlock"].tap()
+        XCTAssertTrue(
+            app.descendants(matching: .any)["parent.gate.unlocked"].waitForExistence(timeout: 5)
+        )
+    }
 }
