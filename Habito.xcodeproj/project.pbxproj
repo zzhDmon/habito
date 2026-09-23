@@ -62,6 +62,10 @@
 		E10000000000000000000007 /* TaskCandidateOverrideError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20000000000000000000007 /* TaskCandidateOverrideError.swift */; };
 		E10000000000000000000008 /* TaskCandidateOverrideResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20000000000000000000008 /* TaskCandidateOverrideResolver.swift */; };
 		E10000000000000000000009 /* TaskCandidateOverrideResolverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20000000000000000000009 /* TaskCandidateOverrideResolverTests.swift */; };
+		F10000000000000000000001 /* OccurrenceReconciliationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20000000000000000000001 /* OccurrenceReconciliationError.swift */; };
+		F10000000000000000000002 /* OccurrenceReconciliationReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20000000000000000000002 /* OccurrenceReconciliationReport.swift */; };
+		F10000000000000000000003 /* TaskOccurrenceReconciliationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20000000000000000000003 /* TaskOccurrenceReconciliationService.swift */; };
+		F10000000000000000000004 /* TaskOccurrenceReconciliationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20000000000000000000004 /* TaskOccurrenceReconciliationServiceTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -132,6 +136,10 @@
 		E20000000000000000000007 /* TaskCandidateOverrideError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCandidateOverrideError.swift; sourceTree = "<group>"; };
 		E20000000000000000000008 /* TaskCandidateOverrideResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCandidateOverrideResolver.swift; sourceTree = "<group>"; };
 		E20000000000000000000009 /* TaskCandidateOverrideResolverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCandidateOverrideResolverTests.swift; sourceTree = "<group>"; };
+		F20000000000000000000001 /* OccurrenceReconciliationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OccurrenceReconciliationError.swift; sourceTree = "<group>"; };
+		F20000000000000000000002 /* OccurrenceReconciliationReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OccurrenceReconciliationReport.swift; sourceTree = "<group>"; };
+		F20000000000000000000003 /* TaskOccurrenceReconciliationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskOccurrenceReconciliationService.swift; sourceTree = "<group>"; };
+		F20000000000000000000004 /* TaskOccurrenceReconciliationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskOccurrenceReconciliationServiceTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -188,6 +196,7 @@
 			isa = PBXGroup;
 			children = (
 				D50000000000000000000001 /* Models */,
+				F50000000000000000000001 /* OccurrenceGeneration */,
 				A50000000000000000000005 /* Persistence */,
 			);
 			path = Data;
@@ -355,8 +364,19 @@
 				D2000000000000000000000C /* PersistenceConstraintTests.swift */,
 				D2000000000000000000000D /* PersistenceFixture.swift */,
 				D2000000000000000000000B /* PersistenceRoundTripTests.swift */,
+				F20000000000000000000004 /* TaskOccurrenceReconciliationServiceTests.swift */,
 			);
 			path = Data;
+			sourceTree = "<group>";
+		};
+		F50000000000000000000001 /* OccurrenceGeneration */ = {
+			isa = PBXGroup;
+			children = (
+				F20000000000000000000001 /* OccurrenceReconciliationError.swift */,
+				F20000000000000000000002 /* OccurrenceReconciliationReport.swift */,
+				F20000000000000000000003 /* TaskOccurrenceReconciliationService.swift */,
+			);
+			path = OccurrenceGeneration;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -470,11 +490,14 @@
 				A1000000000000000000000D /* NotificationProbeViewModel.swift in Sources */,
 				D10000000000000000000002 /* NotificationKind.swift in Sources */,
 				D10000000000000000000009 /* NotificationLink.swift in Sources */,
+				F10000000000000000000001 /* OccurrenceReconciliationError.swift in Sources */,
+				F10000000000000000000002 /* OccurrenceReconciliationReport.swift in Sources */,
 				D10000000000000000000004 /* ReminderRule.swift in Sources */,
 				E10000000000000000000006 /* ResolvedTaskCandidate.swift in Sources */,
 				A10000000000000000000002 /* RootView.swift in Sources */,
 				E10000000000000000000001 /* ScheduledTaskCandidate.swift in Sources */,
 				C10000000000000000000006 /* TaskOccurrenceAction.swift in Sources */,
+				F10000000000000000000003 /* TaskOccurrenceReconciliationService.swift in Sources */,
 				E10000000000000000000007 /* TaskCandidateOverrideError.swift in Sources */,
 				E10000000000000000000008 /* TaskCandidateOverrideResolver.swift in Sources */,
 				D10000000000000000000005 /* TaskOccurrence.swift in Sources */,
@@ -510,6 +533,7 @@
 				D1000000000000000000000B /* PersistenceRoundTripTests.swift in Sources */,
 				E10000000000000000000009 /* TaskCandidateOverrideResolverTests.swift in Sources */,
 				E10000000000000000000004 /* TaskRecurrenceExpanderTests.swift in Sources */,
+				F10000000000000000000004 /* TaskOccurrenceReconciliationServiceTests.swift in Sources */,
 				C10000000000000000000011 /* TaskRecurrenceTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
