@@ -37,7 +37,8 @@ struct TodayTaskQueryService {
         let sortedItems = items.sorted { lhs, rhs in
             sortKey(for: lhs, at: now) < sortKey(for: rhs, at: now)
         }
-        let actionable = sortedItems.first { item in
+        let carryOverItems = try carryOverItems(before: date, at: now)
+        let actionable = (carryOverItems + sortedItems).first { item in
             item.status == .inProgress || item.status == .pending
         }
         let visibleItems = sortedItems.filter { $0.status != .skipped }
@@ -47,10 +48,23 @@ struct TodayTaskQueryService {
             date: date,
             isCurrentDate: currentDate == date,
             tasks: sortedItems,
+            carryOverTasks: carryOverItems,
             recommendedTaskID: actionable?.id,
             completedCount: visibleItems.count { $0.status == .completed },
             totalCount: visibleItems.count
         )
+    }
+
+    /// 找出目标日期之前仍有活动会话的实例，避免跨午夜后从孩子界面消失。
+    private func carryOverItems(before date: LocalDate, at now: Date) throws -> [TodayTaskItem] {
+        let inProgress = TaskOccurrenceStatus.inProgress.rawValue
+        let descriptor = FetchDescriptor<TaskOccurrence>(
+            predicate: #Predicate { $0.statusRawValue == inProgress },
+            sortBy: [SortDescriptor(\.scheduledAt)]
+        )
+        return try context.fetch(descriptor)
+            .filter { $0.dateKey < date.dateKey }
+            .map { try makeItem(from: $0, at: now) }
     }
 
     /// 按稳定实例 ID 读取单个任务，供任务执行页重进或前台恢复时刷新。

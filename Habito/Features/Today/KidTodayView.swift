@@ -12,7 +12,7 @@ struct KidTodayView: View {
             case .loading:
                 ProgressView("kidToday.loading")
                     .controlSize(.large)
-            case let .loaded(content) where content.totalCount == 0:
+            case let .loaded(content) where content.isEmpty:
                 ContentUnavailableView(
                     "kidToday.emptyTitle",
                     systemImage: "sun.max.fill",
@@ -66,6 +66,44 @@ struct KidTodayView: View {
             onRetry: {}
         )
     }
+    .frame(width: 1_194, height: 834)
+}
+
+#Preview("今日 · 全部完成") {
+    NavigationStack {
+        KidTodayView(
+            state: .loaded(
+                TodayScreenContent(
+                    recommendedTask: nil,
+                    remainingTasks: [.previewCompleted],
+                    completedCount: 1,
+                    totalCount: 1,
+                    isAllCompleted: true
+                )
+            ),
+            onSelectTask: { _ in },
+            onRetry: {}
+        )
+    }
+    .frame(width: 1_194, height: 834)
+}
+
+#Preview("今日 · 昨日任务进行中") {
+    NavigationStack {
+        KidTodayView(
+            state: .loaded(.previewCarryOver),
+            onSelectTask: { _ in },
+            onRetry: {}
+        )
+    }
+    .frame(width: 1_194, height: 834)
+}
+
+#Preview("今日 · 数据错误") {
+    NavigationStack {
+        KidTodayView(state: .failed, onSelectTask: { _ in }, onRetry: {})
+    }
+    .frame(width: 1_194, height: 834)
 }
 
 #Preview("今日 · 辅助功能字号") {

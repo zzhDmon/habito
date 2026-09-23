@@ -23,11 +23,12 @@ struct TodayQueryFixture {
     func makeOccurrence(
         title: String,
         scheduledAt: Date,
-        status: TaskOccurrenceStatus
+        status: TaskOccurrenceStatus,
+        date occurrenceDate: LocalDate? = nil
     ) -> TaskOccurrence {
         let occurrence = TaskOccurrence(
             templateID: UUID(),
-            date: date,
+            date: occurrenceDate ?? date,
             scheduledAt: scheduledAt,
             titleSnapshot: title,
             iconSnapshot: "book.fill",

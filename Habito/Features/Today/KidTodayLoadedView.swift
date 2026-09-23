@@ -9,10 +9,12 @@ struct KidTodayLoadedView: View {
         AdaptiveTwoColumnLayout {
             VStack(alignment: .leading, spacing: HabitoDesign.Spacing.large) {
                 KidTodayGreetingPanel()
-                KidTodayProgressView(
-                    completedCount: content.completedCount,
-                    totalCount: content.totalCount
-                )
+                if content.totalCount > 0 {
+                    KidTodayProgressView(
+                        completedCount: content.completedCount,
+                        totalCount: content.totalCount
+                    )
+                }
             }
         } trailing: {
             VStack(alignment: .leading, spacing: HabitoDesign.Spacing.medium) {

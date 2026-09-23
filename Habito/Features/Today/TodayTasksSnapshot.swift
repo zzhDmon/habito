@@ -5,20 +5,21 @@ struct TodayTasksSnapshot: Equatable, Sendable {
     let date: LocalDate
     let isCurrentDate: Bool
     let tasks: [TodayTaskItem]
+    let carryOverTasks: [TodayTaskItem]
     let recommendedTaskID: UUID?
     let completedCount: Int
     let totalCount: Int
 
     /// 被家长跳过的实例不进入孩子的任务总数。
     var visibleTasks: [TodayTaskItem] {
-        tasks.filter { $0.status != .skipped }
+        carryOverTasks + tasks.filter { $0.status != .skipped }
     }
 
     var isEmpty: Bool {
-        totalCount == 0
+        visibleTasks.isEmpty
     }
 
     var isAllCompleted: Bool {
-        totalCount > 0 && completedCount == totalCount
+        carryOverTasks.isEmpty && totalCount > 0 && completedCount == totalCount
     }
 }

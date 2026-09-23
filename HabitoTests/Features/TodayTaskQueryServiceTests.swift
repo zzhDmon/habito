@@ -119,6 +119,36 @@ struct TodayTaskQueryServiceTests {
         #expect(first.activeDurationSeconds == 480)
     }
 
+    @Test("昨日进行中任务优先展示且不计入今日进度")
+    func carryOverTaskIsRecommendedWithoutChangingTodayProgress() throws {
+        let fixture = try TodayQueryFixture()
+        let yesterday = try LocalDate(dateKey: "2026-09-22")
+        let carryOver = fixture.makeOccurrence(
+            title: "昨日阅读",
+            scheduledAt: try instant("2026-09-22T11:30:00Z"),
+            status: .inProgress,
+            date: yesterday
+        )
+        fixture.addSession(
+            to: carryOver,
+            state: .running,
+            startedAt: try instant("2026-09-22T11:30:00Z"),
+            lastResumedAt: try instant("2026-09-22T11:30:00Z"),
+            accumulatedSeconds: 0
+        )
+
+        let snapshot = try fixture.snapshot()
+
+        #expect(snapshot.tasks.isEmpty)
+        #expect(snapshot.carryOverTasks.map(\.id) == [carryOver.id])
+        #expect(snapshot.visibleTasks.map(\.id) == [carryOver.id])
+        #expect(snapshot.recommendedTaskID == carryOver.id)
+        #expect(snapshot.completedCount == 0)
+        #expect(snapshot.totalCount == 0)
+        #expect(!snapshot.isEmpty)
+        #expect(!snapshot.isAllCompleted)
+    }
+
     @Test("跳过任务不进入孩子进度也不会被推荐")
     func skippedTaskIsExcludedFromChildProgress() throws {
         let fixture = try TodayQueryFixture()

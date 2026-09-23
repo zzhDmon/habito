@@ -17,7 +17,7 @@ struct KidTaskNavigationItem: Hashable, Identifiable, Sendable {
     /// 把领域查询值转换为孩子界面和导航共用的稳定展示值。
     ///
     /// 日历由组合根注入，避免时间文案偷偷依赖设备当前设置。
-    init(item: TodayTaskItem, calendar: Calendar) {
+    init(item: TodayTaskItem, calendar: Calendar, referenceDate: LocalDate? = nil) {
         let components = calendar.dateComponents([.hour, .minute], from: item.scheduledAt)
         let hour = components.hour ?? 0
         let minute = components.minute ?? 0
@@ -33,19 +33,24 @@ struct KidTaskNavigationItem: Hashable, Identifiable, Sendable {
         )
         status = item.status
 
-        switch item.status {
-        case .pending:
-            statusText = String(localized: "kidTask.statusPending")
-            statusIconName = HabitoDesign.Symbol.pending
-        case .inProgress:
-            statusText = String(localized: "kidTask.statusInProgress")
-            statusIconName = "play.circle.fill"
-        case .completed:
-            statusText = String(localized: "kidTask.statusCompleted")
-            statusIconName = HabitoDesign.Symbol.completed
-        case .skipped:
-            statusText = String(localized: "kidTask.statusSkipped")
-            statusIconName = "forward.end.circle.fill"
+        if item.status == .inProgress, let referenceDate, item.date < referenceDate {
+            statusText = String(localized: "kidTask.statusCarryOver")
+            statusIconName = "clock.arrow.circlepath"
+        } else {
+            switch item.status {
+            case .pending:
+                statusText = String(localized: "kidTask.statusPending")
+                statusIconName = HabitoDesign.Symbol.pending
+            case .inProgress:
+                statusText = String(localized: "kidTask.statusInProgress")
+                statusIconName = "play.circle.fill"
+            case .completed:
+                statusText = String(localized: "kidTask.statusCompleted")
+                statusIconName = HabitoDesign.Symbol.completed
+            case .skipped:
+                statusText = String(localized: "kidTask.statusSkipped")
+                statusIconName = "forward.end.circle.fill"
+            }
         }
     }
 

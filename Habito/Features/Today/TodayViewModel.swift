@@ -47,7 +47,9 @@ final class TodayViewModel {
     }
 
     private func makeContent(from snapshot: TodayTasksSnapshot) -> TodayScreenContent {
-        let tasks = snapshot.visibleTasks.map(makeNavigationItem)
+        let tasks = snapshot.visibleTasks.map { item in
+            KidTaskNavigationItem(item: item, calendar: calendar, referenceDate: snapshot.date)
+        }
         let recommendedTask = tasks.first { $0.id == snapshot.recommendedTaskID }
         let remainingTasks = tasks.filter { $0.id != snapshot.recommendedTaskID }
 
@@ -58,9 +60,5 @@ final class TodayViewModel {
             totalCount: snapshot.totalCount,
             isAllCompleted: snapshot.isAllCompleted
         )
-    }
-
-    private func makeNavigationItem(from item: TodayTaskItem) -> KidTaskNavigationItem {
-        KidTaskNavigationItem(item: item, calendar: calendar)
     }
 }
