@@ -39,7 +39,7 @@ struct TaskSessionViewModelTests {
         )
         try fixture.context.save()
         let startedAt = fixture.now.addingTimeInterval(-120)
-        try TaskProgressService(context: fixture.context).startTiming(
+        _ = try TaskProgressService(context: fixture.context).startTiming(
             for: occurrence,
             at: startedAt
         )
@@ -86,7 +86,7 @@ struct TaskSessionViewModelTests {
             status: .pending
         )
         try fixture.context.save()
-        try TaskProgressService(context: fixture.context).startTiming(
+        _ = try TaskProgressService(context: fixture.context).startTiming(
             for: occurrence,
             at: fixture.now.addingTimeInterval(-120)
         )

@@ -9,13 +9,16 @@ struct ParentGateView: View {
     @State private var pin = ""
     @State private var confirmation = ""
     @State private var isResetConfirmationPresented = false
+    private let taskTemplateEditorModelFactory: TaskTemplateEditorViewModelFactory
 
     init(
         model: ParentGateViewModel,
-        taskTemplatesModel: ParentTaskTemplateListViewModel
+        taskTemplatesModel: ParentTaskTemplateListViewModel,
+        taskTemplateEditorModelFactory: TaskTemplateEditorViewModelFactory
     ) {
         _model = State(initialValue: model)
         _taskTemplatesModel = State(initialValue: taskTemplatesModel)
+        self.taskTemplateEditorModelFactory = taskTemplateEditorModelFactory
     }
 
     var body: some View {
@@ -51,7 +54,10 @@ struct ParentGateView: View {
                 }
             }
             .navigationDestination(for: ParentTaskTemplateRoute.self) { route in
-                ParentTaskTemplatePlaceholderView(route: route)
+                TaskTemplateEditorView(
+                    model: taskTemplateEditorModelFactory.makeModel(for: route),
+                    onSaved: taskTemplatesModel.load
+                )
             }
         }
         .presentationDetents([.large])

@@ -11,6 +11,7 @@ struct HabitoApp: App {
 
     private let modelContainer: ModelContainer
     private let taskSessionModelFactory: TaskSessionViewModelFactory
+    private let taskTemplateEditorModelFactory: TaskTemplateEditorViewModelFactory
     @State private var todayModel: TodayViewModel
     @State private var parentGateModel: ParentGateViewModel
     @State private var parentTaskTemplatesModel: ParentTaskTemplateListViewModel
@@ -67,6 +68,12 @@ struct HabitoApp: App {
             timeZone: timeZone,
             dateProvider: dateProvider
         )
+        taskTemplateEditorModelFactory = TaskTemplateEditorViewModelFactory(
+            context: container.mainContext,
+            calendar: calendar,
+            timeZone: timeZone,
+            dateProvider: dateProvider
+        )
         _parentGateModel = State(
             initialValue: ParentGateViewModel(
                 context: container.mainContext,
@@ -89,7 +96,8 @@ struct HabitoApp: App {
                 todayModel: todayModel,
                 taskSessionModelFactory: taskSessionModelFactory,
                 parentGateModel: parentGateModel,
-                parentTaskTemplatesModel: parentTaskTemplatesModel
+                parentTaskTemplatesModel: parentTaskTemplatesModel,
+                taskTemplateEditorModelFactory: taskTemplateEditorModelFactory
             )
         }
         .modelContainer(modelContainer)

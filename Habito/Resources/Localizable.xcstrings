@@ -847,51 +847,498 @@
         }
       }
     },
-    "parentGate.cancel" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "取消" } } } },
-    "parentGate.close" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "关闭" } } } },
-    "parentGate.confirmPIN" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "再输入一次 PIN" } } } },
-    "parentGate.create" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "创建并进入" } } } },
-    "parentGate.entry" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "家长" } } } },
-    "parentGate.entryHint" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "长按一秒打开家长入口" } } } },
-    "parentGate.errorDescription" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "无法读取本机凭据，请再试一次。" } } } },
-    "parentGate.errorTitle" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "家长入口暂时不可用" } } } },
-    "parentGate.feedbackIncorrect" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "PIN 不正确，请再试一次。" } } } },
-    "parentGate.feedbackInvalidFormat" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "请输入四位数字。" } } } },
-    "parentGate.feedbackMismatch" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "两次输入不一致。" } } } },
-    "parentGate.feedbackStorageFailure" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "保存失败，请稍后再试。" } } } },
-    "parentGate.loading" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "正在打开家长入口…" } } } },
-    "parentGate.navigationTitle" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "家长入口" } } } },
-    "parentGate.openAction" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "打开家长入口" } } } },
-    "parentGate.pin" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "四位 PIN" } } } },
-    "parentGate.reset" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "在本机重置 PIN" } } } },
-    "parentGate.resetConfirm" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "清除 PIN" } } } },
-    "parentGate.resetConfirmationDescription" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "任务和完成记录会保留。清除后需要重新创建四位 PIN。" } } } },
-    "parentGate.resetConfirmationTitle" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "确定重置家长 PIN？" } } } },
-    "parentGate.retry" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "再试一次" } } } },
-    "parentGate.setupDescription" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "请输入两次相同的四位数字。PIN 只用于防止孩子误入。" } } } },
-    "parentGate.setupTitle" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "创建家长 PIN" } } } },
-    "parentGate.unlock" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "进入家长模式" } } } },
-    "parentGate.unlockedDescription" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "任务管理会在下一步接入。" } } } },
-    "parentGate.unlockedTitle" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "家长模式已解锁" } } } },
-    "parentGate.verifyDescription" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "请输入创建时设置的四位数字。" } } } },
-    "parentGate.verifyTitle" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "验证家长 PIN" } } } },
-    "parentTemplates.create" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "新建任务" } } } },
-    "parentTemplates.createTitle" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "新建任务" } } } },
-    "parentTemplates.detailTitle" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "任务详情" } } } },
-    "parentTemplates.disabled" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "已停用" } } } },
-    "parentTemplates.editorPlaceholderDescription" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "任务编辑会在下一步接入。" } } } },
-    "parentTemplates.emptyDescription" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "创建第一个任务后，就能在这里查看计划。" } } } },
-    "parentTemplates.emptyTitle" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "还没有任务" } } } },
-    "parentTemplates.enabled" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "已启用" } } } },
-    "parentTemplates.errorDescription" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "无法读取任务数据，请再试一次。" } } } },
-    "parentTemplates.errorTitle" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "任务列表暂时不可用" } } } },
-    "parentTemplates.loading" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "正在读取任务…" } } } },
-    "parentTemplates.navigationTitle" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "家长任务" } } } },
-    "parentTemplates.nextDisabled" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "下一次：已停用" } } } },
-    "parentTemplates.nextNone" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "下一次：暂无计划" } } } },
-    "parentTemplates.nextPrefix" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "下一次：" } } } },
-    "parentTemplates.openHint" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "打开任务详情" } } } },
-    "parentTemplates.retry" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "重新加载" } } } },
+    "parentGate.cancel" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取消"
+          }
+        }
+      }
+    },
+    "parentGate.close" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        }
+      }
+    },
+    "parentGate.confirmPIN" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再输入一次 PIN"
+          }
+        }
+      }
+    },
+    "parentGate.create" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "创建并进入"
+          }
+        }
+      }
+    },
+    "parentGate.entry" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "家长"
+          }
+        }
+      }
+    },
+    "parentGate.entryHint" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "长按一秒打开家长入口"
+          }
+        }
+      }
+    },
+    "parentGate.errorDescription" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法读取本机凭据，请再试一次。"
+          }
+        }
+      }
+    },
+    "parentGate.errorTitle" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "家长入口暂时不可用"
+          }
+        }
+      }
+    },
+    "parentGate.feedbackIncorrect" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PIN 不正确，请再试一次。"
+          }
+        }
+      }
+    },
+    "parentGate.feedbackInvalidFormat" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请输入四位数字。"
+          }
+        }
+      }
+    },
+    "parentGate.feedbackMismatch" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "两次输入不一致。"
+          }
+        }
+      }
+    },
+    "parentGate.feedbackStorageFailure" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保存失败，请稍后再试。"
+          }
+        }
+      }
+    },
+    "parentGate.loading" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在打开家长入口…"
+          }
+        }
+      }
+    },
+    "parentGate.navigationTitle" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "家长入口"
+          }
+        }
+      }
+    },
+    "parentGate.openAction" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打开家长入口"
+          }
+        }
+      }
+    },
+    "parentGate.pin" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "四位 PIN"
+          }
+        }
+      }
+    },
+    "parentGate.reset" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在本机重置 PIN"
+          }
+        }
+      }
+    },
+    "parentGate.resetConfirm" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "清除 PIN"
+          }
+        }
+      }
+    },
+    "parentGate.resetConfirmationDescription" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "任务和完成记录会保留。清除后需要重新创建四位 PIN。"
+          }
+        }
+      }
+    },
+    "parentGate.resetConfirmationTitle" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确定重置家长 PIN？"
+          }
+        }
+      }
+    },
+    "parentGate.retry" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再试一次"
+          }
+        }
+      }
+    },
+    "parentGate.setupDescription" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请输入两次相同的四位数字。PIN 只用于防止孩子误入。"
+          }
+        }
+      }
+    },
+    "parentGate.setupTitle" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "创建家长 PIN"
+          }
+        }
+      }
+    },
+    "parentGate.unlock" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "进入家长模式"
+          }
+        }
+      }
+    },
+    "parentGate.unlockedDescription" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "任务管理会在下一步接入。"
+          }
+        }
+      }
+    },
+    "parentGate.unlockedTitle" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "家长模式已解锁"
+          }
+        }
+      }
+    },
+    "parentGate.verifyDescription" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请输入创建时设置的四位数字。"
+          }
+        }
+      }
+    },
+    "parentGate.verifyTitle" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "验证家长 PIN"
+          }
+        }
+      }
+    },
+    "parentTemplates.create" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新建任务"
+          }
+        }
+      }
+    },
+    "parentTemplates.createTitle" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新建任务"
+          }
+        }
+      }
+    },
+    "parentTemplates.detailTitle" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "任务详情"
+          }
+        }
+      }
+    },
+    "parentTemplates.disabled" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已停用"
+          }
+        }
+      }
+    },
+    "parentTemplates.editorPlaceholderDescription" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "任务编辑会在下一步接入。"
+          }
+        }
+      }
+    },
+    "parentTemplates.emptyDescription" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "创建第一个任务后，就能在这里查看计划。"
+          }
+        }
+      }
+    },
+    "parentTemplates.emptyTitle" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "还没有任务"
+          }
+        }
+      }
+    },
+    "parentTemplates.enabled" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已启用"
+          }
+        }
+      }
+    },
+    "parentTemplates.errorDescription" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法读取任务数据，请再试一次。"
+          }
+        }
+      }
+    },
+    "parentTemplates.errorTitle" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "任务列表暂时不可用"
+          }
+        }
+      }
+    },
+    "parentTemplates.loading" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在读取任务…"
+          }
+        }
+      }
+    },
+    "parentTemplates.navigationTitle" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "家长任务"
+          }
+        }
+      }
+    },
+    "parentTemplates.nextDisabled" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下一次：已停用"
+          }
+        }
+      }
+    },
+    "parentTemplates.nextNone" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下一次：暂无计划"
+          }
+        }
+      }
+    },
+    "parentTemplates.nextPrefix" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下一次："
+          }
+        }
+      }
+    },
+    "parentTemplates.openHint" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打开任务详情"
+          }
+        }
+      }
+    },
+    "parentTemplates.retry" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重新加载"
+          }
+        }
+      }
+    },
+    "taskEditor.basicSection" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "基本信息" } } } },
+    "taskEditor.color" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "颜色" } } } },
+    "taskEditor.color.activity" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "活力" } } } },
+    "taskEditor.color.practice" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "练习" } } } },
+    "taskEditor.color.reading" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "阅读" } } } },
+    "taskEditor.color.task" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "默认" } } } },
+    "taskEditor.createTitle" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "新建任务" } } } },
+    "taskEditor.durationMinutes" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "目标分钟数" } } } },
+    "taskEditor.editTitle" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "编辑任务" } } } },
+    "taskEditor.enabled" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "启用任务" } } } },
+    "taskEditor.errorDuration" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "目标时长必须是 1 到 180 分钟。" } } } },
+    "taskEditor.errorLoad" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "无法读取这个任务，请返回后重试。" } } } },
+    "taskEditor.errorLoadTitle" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "任务无法编辑" } } } },
+    "taskEditor.errorOption" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "图标或颜色选项无效。" } } } },
+    "taskEditor.errorSave" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "保存失败，请稍后再试。" } } } },
+    "taskEditor.errorTime" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "请选择有效时间。" } } } },
+    "taskEditor.errorTitleRequired" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "请输入任务名称。" } } } },
+    "taskEditor.errorTitleTooLong" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "任务名称不能超过 40 个字符。" } } } },
+    "taskEditor.errorWeekdays" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "请至少选择一天。" } } } },
+    "taskEditor.icon" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "图标" } } } },
+    "taskEditor.icon.book.fill" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "阅读" } } } },
+    "taskEditor.icon.figure.run" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "运动" } } } },
+    "taskEditor.icon.music.note" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "音乐" } } } },
+    "taskEditor.icon.pencil.line" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "书写" } } } },
+    "taskEditor.loading" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "正在读取任务…" } } } },
+    "taskEditor.notSelected" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "未选择" } } } },
+    "taskEditor.save" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "保存" } } } },
+    "taskEditor.scheduleSection" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "计划" } } } },
+    "taskEditor.selected" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "已选择" } } } },
+    "taskEditor.time" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "计划时间" } } } },
+    "taskEditor.title" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "任务名称" } } } },
+    "taskEditor.weekdaysHint" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "至少选择一天。" } } } },
+    "taskEditor.weekdaysSection" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "每周重复" } } } },
+    "weekday.1" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "星期日" } } } },
+    "weekday.2" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "星期一" } } } },
+    "weekday.3" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "星期二" } } } },
+    "weekday.4" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "星期三" } } } },
+    "weekday.5" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "星期四" } } } },
+    "weekday.6" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "星期五" } } } },
+    "weekday.7" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "星期六" } } } },
     "taskSession.actualDuration" : {
       "extractionState" : "manual",
       "localizations" : {

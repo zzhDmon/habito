@@ -64,8 +64,16 @@
                 createdAt: now,
                 updatedAt: now
             )
+            let rule = ReminderRule(
+                taskTemplateID: templateID,
+                recurrence: try .weekly(on: Set(Weekday.allCases), starting: localDate),
+                timeOfDayMinutes: 19 * 60 + 30
+            )
+            template.reminderRule = rule
+            rule.taskTemplate = template
             occurrence.template = template
             context.insert(template)
+            context.insert(rule)
             context.insert(occurrence)
             try context.save()
         }

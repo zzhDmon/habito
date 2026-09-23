@@ -8,17 +8,20 @@ struct RootView: View {
     @State private var parentTaskTemplatesModel: ParentTaskTemplateListViewModel
     @State private var isParentGatePresented = false
     private let taskSessionModelFactory: TaskSessionViewModelFactory
+    private let taskTemplateEditorModelFactory: TaskTemplateEditorViewModelFactory
 
     init(
         todayModel: TodayViewModel,
         taskSessionModelFactory: TaskSessionViewModelFactory,
         parentGateModel: ParentGateViewModel,
-        parentTaskTemplatesModel: ParentTaskTemplateListViewModel
+        parentTaskTemplatesModel: ParentTaskTemplateListViewModel,
+        taskTemplateEditorModelFactory: TaskTemplateEditorViewModelFactory
     ) {
         _todayModel = State(initialValue: todayModel)
         self.taskSessionModelFactory = taskSessionModelFactory
         _parentGateModel = State(initialValue: parentGateModel)
         _parentTaskTemplatesModel = State(initialValue: parentTaskTemplatesModel)
+        self.taskTemplateEditorModelFactory = taskTemplateEditorModelFactory
     }
 
     var body: some View {
@@ -57,7 +60,8 @@ struct RootView: View {
         .sheet(isPresented: $isParentGatePresented) {
             ParentGateView(
                 model: parentGateModel,
-                taskTemplatesModel: parentTaskTemplatesModel
+                taskTemplatesModel: parentTaskTemplatesModel,
+                taskTemplateEditorModelFactory: taskTemplateEditorModelFactory
             )
         }
     }

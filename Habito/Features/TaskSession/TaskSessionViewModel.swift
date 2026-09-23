@@ -56,9 +56,9 @@ final class TaskSessionViewModel {
             let now = dateProvider.now()
             switch content.primaryAction {
             case .start:
-                try progressService.startTiming(for: occurrence, at: now)
+                _ = try progressService.startTiming(for: occurrence, at: now)
             case .resume:
-                try progressService.resumeTiming(for: occurrence, at: now)
+                _ = try progressService.resumeTiming(for: occurrence, at: now)
             case .pause, .none:
                 return
             }
@@ -73,7 +73,7 @@ final class TaskSessionViewModel {
         guard case let .loaded(content) = state, content.primaryAction == .pause else { return }
 
         do {
-            try progressService.pauseTiming(for: fetchOccurrence(), at: dateProvider.now())
+            _ = try progressService.pauseTiming(for: fetchOccurrence(), at: dateProvider.now())
             reload(showLoading: false)
         } catch {
             handle(error)
@@ -85,7 +85,7 @@ final class TaskSessionViewModel {
         guard case let .loaded(content) = state, content.canComplete else { return }
 
         do {
-            try progressService.complete(
+            _ = try progressService.complete(
                 fetchOccurrence(),
                 at: dateProvider.now(),
                 source: .childManual

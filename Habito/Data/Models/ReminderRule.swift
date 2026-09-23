@@ -83,6 +83,23 @@ final class ReminderRule {
         }
     }
 
+    /// 用已经过领域校验的规则更新持久化标量，避免编辑服务重复位掩码编码逻辑。
+    func update(
+        recurrence: TaskRecurrence,
+        timeOfDayMinutes: Int,
+        isEnabled: Bool
+    ) {
+        scheduleTypeRawValue = recurrence.kind.rawValue
+        self.timeOfDayMinutes = timeOfDayMinutes
+        weekdayMask = recurrence.weekdays.reduce(into: 0) { mask, weekday in
+            mask |= 1 << weekday.rawValue
+        }
+        oneOffDateKey = recurrence.oneOffDate?.dateKey
+        startDateKey = recurrence.startDate.dateKey
+        endDateKey = recurrence.endDate?.dateKey
+        self.isEnabled = isEnabled
+    }
+
     private func decodeDateKey(_ value: String, field: String) throws -> LocalDate {
         do {
             return try LocalDate(dateKey: value)

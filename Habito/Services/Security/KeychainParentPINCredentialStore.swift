@@ -9,9 +9,15 @@ import Security
 /// 产生相同持久化内容，恒定时间比较降低验证时序泄露。
 struct KeychainParentPINCredentialStore: ParentPINCredentialStoring {
     private struct StoredCredential: Codable {
-        let version = 1
+        let version: Int
         let salt: Data
         let digest: Data
+
+        init(salt: Data, digest: Data) {
+            version = 1
+            self.salt = salt
+            self.digest = digest
+        }
     }
 
     private let service: String
