@@ -24,6 +24,27 @@ struct ParentTodayTaskManagementServiceTests {
         #expect(fixture.template.reminderRule?.timeOfDayMinutes == 19 * 60 + 30)
     }
 
+    @Test("家长单日修改成功后请求重建通知")
+    func viewModelRequestsNotificationRebuildAfterReschedule() throws {
+        let fixture = try Fixture()
+        let trigger = NotificationRebuildTrigger()
+        let model = ParentTodayTaskViewModel(
+            context: fixture.context,
+            calendar: Calendar(identifier: .gregorian),
+            timeZone: fixture.timeZone,
+            dateProvider: FixedDateProvider(value: fixture.now),
+            notificationRebuildTrigger: trigger
+        )
+
+        model.reschedule(
+            occurrenceID: fixture.occurrence.id,
+            to: try fixture.instant("2026-09-23T12:15:00Z")
+        )
+
+        #expect(trigger.revision == 1)
+        #expect(fixture.occurrence.isDetachedOverride)
+    }
+
     @Test("跨日调时被拒绝且实例保持原值")
     func rescheduleRejectsDifferentLocalDate() throws {
         let fixture = try Fixture()
@@ -107,12 +128,13 @@ struct ParentTodayTaskManagementServiceTests {
         let occurrence: TaskOccurrence
         let service: ParentTodayTaskManagementService
         let now: Date
+        let timeZone: TimeZone
 
         init(status: TaskOccurrenceStatus = .pending) throws {
             context = ModelContext(try AppModelContainer.make(inMemory: true))
             now = try Date("2026-09-23T04:00:00Z", strategy: .iso8601)
             let date = try LocalDate(dateKey: "2026-09-23")
-            let timeZone = try #require(TimeZone(identifier: "Asia/Shanghai"))
+            timeZone = try #require(TimeZone(identifier: "Asia/Shanghai"))
             template = TaskTemplate(
                 title: "阅读",
                 iconName: "book.fill",

@@ -54,7 +54,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         XCTAssertTrue(start.waitForExistence(timeout: 5))
     }
 
-    func testParentGateRequiresLongPressAndPersistsCredentialAcrossRelaunch() throws {
+    func testParentGateOpensWithTapAndPersistsCredentialAcrossRelaunch() throws {
         XCUIDevice.shared.orientation = .landscapeLeft
         let app = XCUIApplication()
         app.launchArguments = ["--habito-ui-testing", "--habito-ui-reset"]
@@ -63,9 +63,6 @@ final class HabitoKidFlowUITests: XCTestCase {
         let entry = app.buttons["parent.gate.entry"]
         XCTAssertTrue(entry.waitForExistence(timeout: 5))
         entry.tap()
-        XCTAssertFalse(app.secureTextFields["parent.gate.pin"].waitForExistence(timeout: 1))
-
-        entry.press(forDuration: 1.2)
         let pin = app.secureTextFields["parent.gate.pin"]
         let confirmation = app.secureTextFields["parent.gate.pin-confirmation"]
         XCTAssertTrue(pin.waitForExistence(timeout: 5))
@@ -114,7 +111,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         app.launchArguments = ["--habito-ui-testing"]
         app.launch()
         XCTAssertTrue(entry.waitForExistence(timeout: 5))
-        entry.press(forDuration: 1.2)
+        entry.tap()
         XCTAssertTrue(pin.waitForExistence(timeout: 5))
 
         pin.tap()
@@ -138,7 +135,7 @@ final class HabitoKidFlowUITests: XCTestCase {
 
         let entry = app.buttons["parent.gate.entry"]
         XCTAssertTrue(entry.waitForExistence(timeout: 5))
-        entry.press(forDuration: 1.2)
+        entry.tap()
         let pin = app.secureTextFields["parent.gate.pin"]
         let confirmation = app.secureTextFields["parent.gate.pin-confirmation"]
         XCTAssertTrue(pin.waitForExistence(timeout: 5))
@@ -201,7 +198,7 @@ final class HabitoKidFlowUITests: XCTestCase {
 
         let entry = app.buttons["parent.gate.entry"]
         XCTAssertTrue(entry.waitForExistence(timeout: 5))
-        entry.press(forDuration: 1.2)
+        entry.tap()
         let pin = app.secureTextFields["parent.gate.pin"]
         let confirmation = app.secureTextFields["parent.gate.pin-confirmation"]
         XCTAssertTrue(pin.waitForExistence(timeout: 5))
@@ -329,7 +326,7 @@ final class HabitoKidFlowUITests: XCTestCase {
     private func unlockParent(in app: XCUIApplication) {
         let entry = app.buttons["parent.gate.entry"]
         XCTAssertTrue(entry.waitForExistence(timeout: 5))
-        entry.press(forDuration: 1.2)
+        entry.tap()
         let pin = app.secureTextFields["parent.gate.pin"]
         let confirmation = app.secureTextFields["parent.gate.pin-confirmation"]
         XCTAssertTrue(pin.waitForExistence(timeout: 5))

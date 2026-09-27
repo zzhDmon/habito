@@ -1,7 +1,9 @@
+import OSLog
 import SwiftUI
 
 /// 孩子模式的根导航视图。
 struct RootView: View {
+    @Environment(\.scenePhase) private var scenePhase
     @State private var path: [KidRoute] = []
     @State private var todayModel: TodayViewModel
     @State private var parentGateModel: ParentGateViewModel
@@ -9,9 +11,12 @@ struct RootView: View {
     @State private var parentTodayModel: ParentTodayTaskViewModel
     @State private var parentCalendarModel: ParentCalendarDayViewModel
     @State private var parentNotificationModel: ParentNotificationDiagnosticsViewModel
+    @State private var notificationRebuildTrigger: NotificationRebuildTrigger
     @State private var isParentGatePresented = false
     private let taskSessionModelFactory: TaskSessionViewModelFactory
     private let taskTemplateEditorModelFactory: TaskTemplateEditorViewModelFactory
+    private let notificationRebuildService: NotificationRebuildService
+    private let logger = Logger(subsystem: "com.zhangzehua.Habito", category: "NotificationRebuild")
 
     init(
         todayModel: TodayViewModel,
@@ -21,7 +26,9 @@ struct RootView: View {
         parentTodayModel: ParentTodayTaskViewModel,
         parentCalendarModel: ParentCalendarDayViewModel,
         parentNotificationModel: ParentNotificationDiagnosticsViewModel,
-        taskTemplateEditorModelFactory: TaskTemplateEditorViewModelFactory
+        taskTemplateEditorModelFactory: TaskTemplateEditorViewModelFactory,
+        notificationRebuildService: NotificationRebuildService,
+        notificationRebuildTrigger: NotificationRebuildTrigger
     ) {
         _todayModel = State(initialValue: todayModel)
         self.taskSessionModelFactory = taskSessionModelFactory
@@ -30,7 +37,9 @@ struct RootView: View {
         _parentTodayModel = State(initialValue: parentTodayModel)
         _parentCalendarModel = State(initialValue: parentCalendarModel)
         _parentNotificationModel = State(initialValue: parentNotificationModel)
+        _notificationRebuildTrigger = State(initialValue: notificationRebuildTrigger)
         self.taskTemplateEditorModelFactory = taskTemplateEditorModelFactory
+        self.notificationRebuildService = notificationRebuildService
     }
 
     var body: some View {
@@ -42,17 +51,14 @@ struct RootView: View {
             )
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Label("parentGate.entry", systemImage: "person.badge.key.fill")
-                        .frame(minWidth: 44, minHeight: 44)
-                        .contentShape(Rectangle())
-                        .accessibilityAddTraits(.isButton)
-                        .accessibilityIdentifier(HabitoAccessibilityID.parentEntry)
-                        .accessibilityHint("parentGate.entryHint")
-                        .accessibilityAction(named: "parentGate.openAction") {
-                            openParentGate()
-                        }
-                        // 普通 Button 会优先识别点击并吞掉长按；入口只接受长按，避免孩子误触进入。
-                        .onLongPressGesture(minimumDuration: 1, perform: openParentGate)
+                    Button(
+                        "parentGate.entry",
+                        systemImage: "person.badge.key.fill",
+                        action: openParentGate
+                    )
+                    .frame(minWidth: 44, minHeight: 44)
+                    .accessibilityIdentifier(HabitoAccessibilityID.parentEntry)
+                    .accessibilityHint("parentGate.entryHint")
                 }
             }
             .navigationDestination(for: KidRoute.self) { route in
@@ -66,6 +72,13 @@ struct RootView: View {
             }
         }
         .task(loadToday)
+        .task(id: notificationRebuildTrigger.revision) {
+            await rebuildNotifications()
+        }
+        .onChange(of: scenePhase) { _, phase in
+            guard phase == .active else { return }
+            notificationRebuildTrigger.requestRebuild()
+        }
         .sheet(isPresented: $isParentGatePresented, onDismiss: loadToday) {
             ParentGateView(
                 model: parentGateModel,
@@ -89,5 +102,15 @@ struct RootView: View {
     private func openParentGate() {
         parentGateModel.prepareForPresentation()
         isParentGatePresented = true
+    }
+
+    private func rebuildNotifications() async {
+        do {
+            _ = try await notificationRebuildService.rebuild(at: .now)
+        } catch is CancellationError {
+            return
+        } catch {
+            logger.error("通知重建失败：\(String(describing: type(of: error)), privacy: .public)")
+        }
     }
 }

@@ -13,6 +13,7 @@ final class ParentTodayTaskViewModel {
     private let queryService: TodayTaskQueryService
     private let managementService: ParentTodayTaskManagementService
     private let dateProvider: any DateProviding
+    private let notificationRebuildTrigger: NotificationRebuildTrigger
     private var calendar: Calendar
     private let timeZone: TimeZone
     private let logger = Logger(subsystem: "com.zhangzehua.Habito", category: "ParentToday")
@@ -21,7 +22,8 @@ final class ParentTodayTaskViewModel {
         context: ModelContext,
         calendar: Calendar,
         timeZone: TimeZone,
-        dateProvider: any DateProviding
+        dateProvider: any DateProviding,
+        notificationRebuildTrigger: NotificationRebuildTrigger = NotificationRebuildTrigger()
     ) {
         var configuredCalendar = calendar
         configuredCalendar.timeZone = timeZone
@@ -36,6 +38,7 @@ final class ParentTodayTaskViewModel {
             timeZone: timeZone
         )
         self.dateProvider = dateProvider
+        self.notificationRebuildTrigger = notificationRebuildTrigger
         self.calendar = configuredCalendar
         self.timeZone = timeZone
     }
@@ -87,6 +90,7 @@ final class ParentTodayTaskViewModel {
     private func perform(_ operation: () throws -> Void) {
         do {
             try operation()
+            notificationRebuildTrigger.requestRebuild()
             load()
         } catch {
             logger.error("家长今日实例操作失败：\(String(describing: type(of: error)), privacy: .public)")

@@ -90,7 +90,13 @@ struct TaskSessionViewModelTests {
             for: occurrence,
             at: fixture.now.addingTimeInterval(-120)
         )
-        let model = makeModel(for: occurrence.id, fixture: fixture, now: fixture.now)
+        let rebuildTrigger = NotificationRebuildTrigger()
+        let model = makeModel(
+            for: occurrence.id,
+            fixture: fixture,
+            now: fixture.now,
+            notificationRebuildTrigger: rebuildTrigger
+        )
         model.load()
 
         model.completeTask()
@@ -105,6 +111,7 @@ struct TaskSessionViewModelTests {
         #expect(try sessions(in: fixture.context, occurrenceID: occurrence.id).first?.state == .ended)
         #expect(try completionRecords(in: fixture.context, occurrenceID: occurrence.id).count == 1)
         #expect(try snapshot(in: fixture).completedCount == 1)
+        #expect(rebuildTrigger.revision == 1)
     }
 
     @Test("完成后五秒内撤销会删除完成记录并恢复待处理")
@@ -121,7 +128,13 @@ struct TaskSessionViewModelTests {
         completionModel.completeTask()
 
         let undoAt = fixture.now.addingTimeInterval(4)
-        let undoModel = makeModel(for: occurrence.id, fixture: fixture, now: undoAt)
+        let rebuildTrigger = NotificationRebuildTrigger()
+        let undoModel = makeModel(
+            for: occurrence.id,
+            fixture: fixture,
+            now: undoAt,
+            notificationRebuildTrigger: rebuildTrigger
+        )
         undoModel.load()
         #expect(try loadedContent(from: undoModel.state).undoRemainingSeconds(at: undoAt) == 1)
 
@@ -132,6 +145,7 @@ struct TaskSessionViewModelTests {
         #expect(content.completion == nil)
         #expect(try completionRecords(in: fixture.context, occurrenceID: occurrence.id).isEmpty)
         #expect(try snapshot(in: fixture, at: undoAt).completedCount == 0)
+        #expect(rebuildTrigger.revision == 1)
     }
 
     @Test("完成五秒后撤销不会改写完成事实")
@@ -164,14 +178,16 @@ struct TaskSessionViewModelTests {
     private func makeModel(
         for occurrenceID: UUID,
         fixture: TodayQueryFixture,
-        now: Date
+        now: Date,
+        notificationRebuildTrigger: NotificationRebuildTrigger = NotificationRebuildTrigger()
     ) -> TaskSessionViewModel {
         TaskSessionViewModel(
             occurrenceID: occurrenceID,
             context: fixture.context,
             calendar: fixture.calendar,
             timeZone: fixture.timeZone,
-            dateProvider: FixedDateProvider(value: now)
+            dateProvider: FixedDateProvider(value: now),
+            notificationRebuildTrigger: notificationRebuildTrigger
         )
     }
 

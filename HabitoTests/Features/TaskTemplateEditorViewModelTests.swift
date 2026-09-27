@@ -17,6 +17,7 @@ struct TaskTemplateEditorViewModelTests {
 
         #expect(outcome == .saved)
         #expect(fixture.provider.requestCount == 0)
+        #expect(fixture.rebuildTrigger.revision == 1)
         #expect(try fixture.context.fetchCount(FetchDescriptor<TaskTemplate>()) == 1)
     }
 
@@ -39,6 +40,7 @@ struct TaskTemplateEditorViewModelTests {
         let calendar = Calendar(identifier: .gregorian)
         let timeZone = try #require(TimeZone(identifier: "Asia/Shanghai"))
         let provider = FakeLocalNotificationService()
+        let rebuildTrigger = NotificationRebuildTrigger()
         let model = TaskTemplateEditorViewModel(
             templateID: nil,
             service: TaskTemplateEditingService(
@@ -55,17 +57,25 @@ struct TaskTemplateEditorViewModelTests {
                 context: context,
                 provider: provider
             ),
+            notificationRebuildTrigger: rebuildTrigger,
             dateProvider: FixedDateProvider(value: Date(timeIntervalSince1970: 1_800_000_000)),
             calendar: calendar,
             timeZone: timeZone
         )
-        return Fixture(container: container, context: context, provider: provider, model: model)
+        return Fixture(
+            container: container,
+            context: context,
+            provider: provider,
+            rebuildTrigger: rebuildTrigger,
+            model: model
+        )
     }
 
     private struct Fixture {
         let container: ModelContainer
         let context: ModelContext
         let provider: FakeLocalNotificationService
+        let rebuildTrigger: NotificationRebuildTrigger
         let model: TaskTemplateEditorViewModel
     }
 }

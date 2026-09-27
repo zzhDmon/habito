@@ -38,6 +38,27 @@ struct ParentCalendarDayServiceTests {
         #expect(try fixture.overrideType() == .holiday)
     }
 
+    @Test("日期覆盖成功后请求重建通知")
+    func viewModelRequestsNotificationRebuildAfterOverride() throws {
+        let fixture = try Fixture()
+        _ = try fixture.insertTemplateAndOccurrence(status: .pending)
+        let trigger = NotificationRebuildTrigger()
+        let model = ParentCalendarDayViewModel(
+            context: fixture.context,
+            calendar: Calendar(identifier: .gregorian),
+            timeZone: fixture.timeZone,
+            dateProvider: FixedDateProvider(value: fixture.now),
+            notificationRebuildTrigger: trigger
+        )
+        model.selectedDate = try Date("2026-09-25T04:00:00Z", strategy: .iso8601)
+
+        model.preview(.setHoliday)
+        model.confirmPendingAction()
+
+        #expect(trigger.revision == 1)
+        #expect(try fixture.overrideType() == .holiday)
+    }
+
     @Test("撤销放假后按模板恢复且重复执行不产生重复实例")
     func removingHolidayRestoresTemplateOccurrenceIdempotently() throws {
         let fixture = try Fixture()
@@ -120,7 +141,7 @@ struct ParentCalendarDayServiceTests {
         let service: ParentCalendarDayService
         let date: LocalDate
         let now: Date
-        private let timeZone: TimeZone
+        let timeZone: TimeZone
 
         init(dateKey: String = "2026-09-25") throws {
             context = ModelContext(try AppModelContainer.make(inMemory: true))

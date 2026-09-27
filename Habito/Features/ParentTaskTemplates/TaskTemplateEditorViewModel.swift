@@ -18,6 +18,7 @@ final class TaskTemplateEditorViewModel {
     private let service: TaskTemplateEditingService
     private let lifecycleService: TaskTemplateLifecycleService
     private let notificationPermissionService: NotificationPermissionService
+    private let notificationRebuildTrigger: NotificationRebuildTrigger
     private let dateProvider: any DateProviding
     private var calendar: Calendar
     private let logger = Logger(subsystem: "com.zhangzehua.Habito", category: "TemplateEditor")
@@ -32,6 +33,7 @@ final class TaskTemplateEditorViewModel {
         service: TaskTemplateEditingService,
         lifecycleService: TaskTemplateLifecycleService,
         notificationPermissionService: NotificationPermissionService,
+        notificationRebuildTrigger: NotificationRebuildTrigger = NotificationRebuildTrigger(),
         dateProvider: any DateProviding,
         calendar: Calendar,
         timeZone: TimeZone
@@ -42,6 +44,7 @@ final class TaskTemplateEditorViewModel {
         self.service = service
         self.lifecycleService = lifecycleService
         self.notificationPermissionService = notificationPermissionService
+        self.notificationRebuildTrigger = notificationRebuildTrigger
         self.dateProvider = dateProvider
         self.calendar = configuredCalendar
         draft = .new
@@ -84,6 +87,7 @@ final class TaskTemplateEditorViewModel {
         do {
             _ = try service.save(value, at: dateProvider.now())
             draft = value
+            notificationRebuildTrigger.requestRebuild()
             guard isCreating else { return .saved }
             do {
                 _ = try await notificationPermissionService.requestIfNeeded()
@@ -136,6 +140,7 @@ final class TaskTemplateEditorViewModel {
                 today: try currentLocalDate(),
                 now: dateProvider.now()
             )
+            notificationRebuildTrigger.requestRebuild()
             lifecycleImpact = nil
             if impact.action != .archive {
                 draft = try service.load(templateID: impact.templateID)

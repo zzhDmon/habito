@@ -14,6 +14,7 @@ final class TaskSessionViewModel {
     private let queryService: TodayTaskQueryService
     private let progressService: TaskProgressService
     private let dateProvider: any DateProviding
+    private let notificationRebuildTrigger: NotificationRebuildTrigger
     private var calendar: Calendar
     private let logger = Logger(subsystem: "com.zhangzehua.Habito", category: "TaskSession")
 
@@ -22,7 +23,8 @@ final class TaskSessionViewModel {
         context: ModelContext,
         calendar: Calendar,
         timeZone: TimeZone,
-        dateProvider: any DateProviding
+        dateProvider: any DateProviding,
+        notificationRebuildTrigger: NotificationRebuildTrigger = NotificationRebuildTrigger()
     ) {
         self.occurrenceID = occurrenceID
         self.context = context
@@ -33,6 +35,7 @@ final class TaskSessionViewModel {
         )
         progressService = TaskProgressService(context: context)
         self.dateProvider = dateProvider
+        self.notificationRebuildTrigger = notificationRebuildTrigger
         self.calendar = calendar
         self.calendar.timeZone = timeZone
     }
@@ -90,6 +93,7 @@ final class TaskSessionViewModel {
                 at: dateProvider.now(),
                 source: .childManual
             )
+            notificationRebuildTrigger.requestRebuild()
             reload(showLoading: false)
         } catch {
             handle(error)
@@ -107,6 +111,7 @@ final class TaskSessionViewModel {
 
         do {
             try progressService.undoCompletion(of: fetchOccurrence(), at: now)
+            notificationRebuildTrigger.requestRebuild()
             reload(showLoading: false)
         } catch {
             handle(error)

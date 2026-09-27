@@ -10,8 +10,10 @@ struct HabitoApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
 
     private let modelContainer: ModelContainer
+    private let notificationRebuildService: NotificationRebuildService
     private let taskSessionModelFactory: TaskSessionViewModelFactory
     private let taskTemplateEditorModelFactory: TaskTemplateEditorViewModelFactory
+    @State private var notificationRebuildTrigger: NotificationRebuildTrigger
     @State private var todayModel: TodayViewModel
     @State private var parentGateModel: ParentGateViewModel
     @State private var parentTaskTemplatesModel: ParentTaskTemplateListViewModel
@@ -23,6 +25,7 @@ struct HabitoApp: App {
         let container: ModelContainer
         let credentialStore: any ParentPINCredentialStoring
         let notificationProvider: any NotificationPermissionProviding
+        let notificationScheduler: any NotificationRequestScheduling
         do {
             #if DEBUG
                 if let configuration = UITestLaunchConfiguration.current {
@@ -32,7 +35,9 @@ struct HabitoApp: App {
                         try uiTestCredentialStore.removeCredential()
                     }
                     credentialStore = uiTestCredentialStore
-                    notificationProvider = UITestNotificationPermissionProvider()
+                    let uiTestNotificationService = UITestNotificationPermissionProvider()
+                    notificationProvider = uiTestNotificationService
+                    notificationScheduler = uiTestNotificationService
                     let calendar = Calendar(identifier: .gregorian)
                     let timeZone = TimeZone.autoupdatingCurrent
                     try UITestSeedService.prepare(
@@ -46,12 +51,16 @@ struct HabitoApp: App {
                 } else {
                     container = try AppModelContainer.make()
                     credentialStore = KeychainParentPINCredentialStore()
-                    notificationProvider = LocalNotificationService()
+                    let notificationService = LocalNotificationService()
+                    notificationProvider = notificationService
+                    notificationScheduler = notificationService
                 }
             #else
                 container = try AppModelContainer.make()
                 credentialStore = KeychainParentPINCredentialStore()
-                notificationProvider = LocalNotificationService()
+                let notificationService = LocalNotificationService()
+                notificationProvider = notificationService
+                notificationScheduler = notificationService
             #endif
         } catch {
             // 持久化容器不可用时，继续运行会让后续读写行为不可预测，
@@ -62,6 +71,14 @@ struct HabitoApp: App {
         let calendar = Calendar(identifier: .gregorian)
         let timeZone = TimeZone.autoupdatingCurrent
         let dateProvider = SystemDateProvider()
+        let rebuildTrigger = NotificationRebuildTrigger()
+        _notificationRebuildTrigger = State(initialValue: rebuildTrigger)
+        notificationRebuildService = NotificationRebuildService(
+            context: container.mainContext,
+            scheduler: notificationScheduler,
+            calendar: calendar,
+            timeZone: timeZone
+        )
         let notificationPermissionService = NotificationPermissionService(
             context: container.mainContext,
             provider: notificationProvider
@@ -78,14 +95,16 @@ struct HabitoApp: App {
             context: container.mainContext,
             calendar: calendar,
             timeZone: timeZone,
-            dateProvider: dateProvider
+            dateProvider: dateProvider,
+            notificationRebuildTrigger: rebuildTrigger
         )
         taskTemplateEditorModelFactory = TaskTemplateEditorViewModelFactory(
             context: container.mainContext,
             calendar: calendar,
             timeZone: timeZone,
             dateProvider: dateProvider,
-            notificationPermissionService: notificationPermissionService
+            notificationPermissionService: notificationPermissionService,
+            notificationRebuildTrigger: rebuildTrigger
         )
         _parentGateModel = State(
             initialValue: ParentGateViewModel(
@@ -106,7 +125,8 @@ struct HabitoApp: App {
                 context: container.mainContext,
                 calendar: calendar,
                 timeZone: timeZone,
-                dateProvider: dateProvider
+                dateProvider: dateProvider,
+                notificationRebuildTrigger: rebuildTrigger
             )
         )
         _parentCalendarModel = State(
@@ -114,7 +134,8 @@ struct HabitoApp: App {
                 context: container.mainContext,
                 calendar: calendar,
                 timeZone: timeZone,
-                dateProvider: dateProvider
+                dateProvider: dateProvider,
+                notificationRebuildTrigger: rebuildTrigger
             )
         )
         _parentNotificationModel = State(
@@ -134,7 +155,9 @@ struct HabitoApp: App {
                 parentTodayModel: parentTodayModel,
                 parentCalendarModel: parentCalendarModel,
                 parentNotificationModel: parentNotificationModel,
-                taskTemplateEditorModelFactory: taskTemplateEditorModelFactory
+                taskTemplateEditorModelFactory: taskTemplateEditorModelFactory,
+                notificationRebuildService: notificationRebuildService,
+                notificationRebuildTrigger: notificationRebuildTrigger
             )
         }
         .modelContainer(modelContainer)

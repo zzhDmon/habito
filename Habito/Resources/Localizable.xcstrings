@@ -721,6 +721,17 @@
         }
       }
     },
+    "notification.taskBody" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "准备好就开始吧。"
+          }
+        }
+      }
+    },
     "notificationAuthorizationAuthorized" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1502,7 +1513,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "长按一秒打开家长入口"
+            "value" : "点击打开家长入口"
           }
         }
       }
@@ -1588,6 +1599,7 @@
       }
     },
     "parentGate.openAction" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {

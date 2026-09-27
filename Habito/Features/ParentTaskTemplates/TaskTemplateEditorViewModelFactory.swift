@@ -9,19 +9,22 @@ struct TaskTemplateEditorViewModelFactory {
     private let timeZone: TimeZone
     private let dateProvider: any DateProviding
     private let notificationPermissionService: NotificationPermissionService
+    private let notificationRebuildTrigger: NotificationRebuildTrigger
 
     init(
         context: ModelContext,
         calendar: Calendar,
         timeZone: TimeZone,
         dateProvider: any DateProviding,
-        notificationPermissionService: NotificationPermissionService
+        notificationPermissionService: NotificationPermissionService,
+        notificationRebuildTrigger: NotificationRebuildTrigger = NotificationRebuildTrigger()
     ) {
         self.context = context
         self.calendar = calendar
         self.timeZone = timeZone
         self.dateProvider = dateProvider
         self.notificationPermissionService = notificationPermissionService
+        self.notificationRebuildTrigger = notificationRebuildTrigger
     }
 
     func makeModel(for route: ParentTaskTemplateRoute) -> TaskTemplateEditorViewModel {
@@ -43,6 +46,7 @@ struct TaskTemplateEditorViewModelFactory {
                 timeZone: timeZone
             ),
             notificationPermissionService: notificationPermissionService,
+            notificationRebuildTrigger: notificationRebuildTrigger,
             dateProvider: dateProvider,
             calendar: calendar,
             timeZone: timeZone

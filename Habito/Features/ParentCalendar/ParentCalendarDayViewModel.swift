@@ -21,6 +21,7 @@ final class ParentCalendarDayViewModel {
 
     private let service: ParentCalendarDayService
     private let dateProvider: any DateProviding
+    private let notificationRebuildTrigger: NotificationRebuildTrigger
     private var calendar: Calendar
     private let timeZone: TimeZone
     private let logger = Logger(subsystem: "com.zhangzehua.Habito", category: "ParentCalendar")
@@ -29,13 +30,15 @@ final class ParentCalendarDayViewModel {
         context: ModelContext,
         calendar: Calendar,
         timeZone: TimeZone,
-        dateProvider: any DateProviding
+        dateProvider: any DateProviding,
+        notificationRebuildTrigger: NotificationRebuildTrigger = NotificationRebuildTrigger()
     ) {
         var configuredCalendar = calendar
         configuredCalendar.timeZone = timeZone
         self.calendar = configuredCalendar
         self.timeZone = timeZone
         self.dateProvider = dateProvider
+        self.notificationRebuildTrigger = notificationRebuildTrigger
         selectedDate = dateProvider.now()
         service = ParentCalendarDayService(
             context: context,
@@ -82,6 +85,7 @@ final class ParentCalendarDayViewModel {
                 today: localDate(now),
                 now: now
             )
+            notificationRebuildTrigger.requestRebuild()
             load()
         } catch {
             present(error)

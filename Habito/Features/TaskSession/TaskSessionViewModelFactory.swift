@@ -8,17 +8,20 @@ struct TaskSessionViewModelFactory {
     private let calendar: Calendar
     private let timeZone: TimeZone
     private let dateProvider: any DateProviding
+    private let notificationRebuildTrigger: NotificationRebuildTrigger
 
     init(
         context: ModelContext,
         calendar: Calendar,
         timeZone: TimeZone,
-        dateProvider: any DateProviding
+        dateProvider: any DateProviding,
+        notificationRebuildTrigger: NotificationRebuildTrigger = NotificationRebuildTrigger()
     ) {
         self.context = context
         self.calendar = calendar
         self.timeZone = timeZone
         self.dateProvider = dateProvider
+        self.notificationRebuildTrigger = notificationRebuildTrigger
     }
 
     func makeModel(for occurrenceID: UUID) -> TaskSessionViewModel {
@@ -27,7 +30,8 @@ struct TaskSessionViewModelFactory {
             context: context,
             calendar: calendar,
             timeZone: timeZone,
-            dateProvider: dateProvider
+            dateProvider: dateProvider,
+            notificationRebuildTrigger: notificationRebuildTrigger
         )
     }
 }
