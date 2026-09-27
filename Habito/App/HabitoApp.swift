@@ -15,10 +15,14 @@ struct HabitoApp: App {
     @State private var todayModel: TodayViewModel
     @State private var parentGateModel: ParentGateViewModel
     @State private var parentTaskTemplatesModel: ParentTaskTemplateListViewModel
+    @State private var parentTodayModel: ParentTodayTaskViewModel
+    @State private var parentCalendarModel: ParentCalendarDayViewModel
+    @State private var parentNotificationModel: ParentNotificationDiagnosticsViewModel
 
     init() {
         let container: ModelContainer
         let credentialStore: any ParentPINCredentialStoring
+        let notificationProvider: any NotificationPermissionProviding
         do {
             #if DEBUG
                 if let configuration = UITestLaunchConfiguration.current {
@@ -28,11 +32,13 @@ struct HabitoApp: App {
                         try uiTestCredentialStore.removeCredential()
                     }
                     credentialStore = uiTestCredentialStore
+                    notificationProvider = UITestNotificationPermissionProvider()
                     let calendar = Calendar(identifier: .gregorian)
                     let timeZone = TimeZone.autoupdatingCurrent
                     try UITestSeedService.prepare(
                         container: container,
                         shouldReset: configuration.shouldReset,
+                        shouldSeedSampleData: configuration.shouldSeedSampleData,
                         now: .now,
                         calendar: calendar,
                         timeZone: timeZone
@@ -40,10 +46,12 @@ struct HabitoApp: App {
                 } else {
                     container = try AppModelContainer.make()
                     credentialStore = KeychainParentPINCredentialStore()
+                    notificationProvider = LocalNotificationService()
                 }
             #else
                 container = try AppModelContainer.make()
                 credentialStore = KeychainParentPINCredentialStore()
+                notificationProvider = LocalNotificationService()
             #endif
         } catch {
             // 持久化容器不可用时，继续运行会让后续读写行为不可预测，
@@ -54,6 +62,10 @@ struct HabitoApp: App {
         let calendar = Calendar(identifier: .gregorian)
         let timeZone = TimeZone.autoupdatingCurrent
         let dateProvider = SystemDateProvider()
+        let notificationPermissionService = NotificationPermissionService(
+            context: container.mainContext,
+            provider: notificationProvider
+        )
         _todayModel = State(
             initialValue: TodayViewModel(
                 context: container.mainContext,
@@ -72,7 +84,8 @@ struct HabitoApp: App {
             context: container.mainContext,
             calendar: calendar,
             timeZone: timeZone,
-            dateProvider: dateProvider
+            dateProvider: dateProvider,
+            notificationPermissionService: notificationPermissionService
         )
         _parentGateModel = State(
             initialValue: ParentGateViewModel(
@@ -88,6 +101,27 @@ struct HabitoApp: App {
                 dateProvider: dateProvider
             )
         )
+        _parentTodayModel = State(
+            initialValue: ParentTodayTaskViewModel(
+                context: container.mainContext,
+                calendar: calendar,
+                timeZone: timeZone,
+                dateProvider: dateProvider
+            )
+        )
+        _parentCalendarModel = State(
+            initialValue: ParentCalendarDayViewModel(
+                context: container.mainContext,
+                calendar: calendar,
+                timeZone: timeZone,
+                dateProvider: dateProvider
+            )
+        )
+        _parentNotificationModel = State(
+            initialValue: ParentNotificationDiagnosticsViewModel(
+                service: notificationPermissionService
+            )
+        )
     }
 
     var body: some Scene {
@@ -97,6 +131,9 @@ struct HabitoApp: App {
                 taskSessionModelFactory: taskSessionModelFactory,
                 parentGateModel: parentGateModel,
                 parentTaskTemplatesModel: parentTaskTemplatesModel,
+                parentTodayModel: parentTodayModel,
+                parentCalendarModel: parentCalendarModel,
+                parentNotificationModel: parentNotificationModel,
                 taskTemplateEditorModelFactory: taskTemplateEditorModelFactory
             )
         }

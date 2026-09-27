@@ -42,7 +42,7 @@ struct TaskTemplateEditingService {
         )
     }
 
-    /// 校验并保存草稿；所有校验都在插入或修改模型之前完成。
+    /// 校验并保存草稿，同时在同一事务中核对今天至既有边界的实例。
     ///
     /// - Returns: 新建或更新模板的稳定 ID。
     /// - Throws: 字段校验、目标查找、日期转换或 SwiftData 保存失败。
@@ -74,7 +74,7 @@ struct TaskTemplateEditingService {
                 timeOfDayMinutes: draft.timeOfDayMinutes,
                 isEnabled: draft.isEnabled
             )
-            try saveOrRollback()
+            try materializeAndSave(template, today: today, now: now)
             return template.id
         }
 
@@ -98,13 +98,27 @@ struct TaskTemplateEditingService {
         rule.taskTemplate = template
         context.insert(template)
         context.insert(rule)
-        try saveOrRollback()
+        try materializeAndSave(template, today: today, now: now)
         return template.id
     }
 
-    /// 只在模型已经变更、持久化失败时回滚，避免前置校验错误清掉共享上下文的无关改动。
-    private func saveOrRollback() throws {
+    /// 模板与实例必须一起成功；任一核对错误都回滚本次复合写入。
+    private func materializeAndSave(
+        _ template: TaskTemplate,
+        today: LocalDate,
+        now: Date
+    ) throws {
         do {
+            _ = try TaskOccurrenceMaterializationService(
+                context: context,
+                calendar: calendar,
+                timeZone: timeZone
+            ).reconcile(
+                template: template,
+                today: today,
+                now: now,
+                savesChanges: false
+            )
             try context.save()
         } catch {
             context.rollback()

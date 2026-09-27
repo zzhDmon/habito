@@ -8,9 +8,15 @@ import SwiftData
 @MainActor
 struct TaskTemplateLifecycleService {
     private let context: ModelContext
+    private let materializationService: TaskOccurrenceMaterializationService
 
-    init(context: ModelContext) {
+    init(context: ModelContext, calendar: Calendar, timeZone: TimeZone) {
         self.context = context
+        materializationService = TaskOccurrenceMaterializationService(
+            context: context,
+            calendar: calendar,
+            timeZone: timeZone
+        )
     }
 
     /// 计算确认文案所需的准确影响数量，不修改持久化状态。
@@ -80,20 +86,13 @@ struct TaskTemplateLifecycleService {
 
         apply(nextState, to: template, rule: rule, at: now)
         do {
-            let report: OccurrenceReconciliationReport?
-            if action == .enable {
-                try context.save()
-                report = nil
-            } else {
-                let end = max(today, impact.latestOccurrenceDate ?? today)
-                report = try TaskOccurrenceReconciliationService(context: context).reconcile(
-                    template: template,
-                    candidates: [],
-                    in: today...end,
-                    today: today,
-                    now: now
-                )
-            }
+            let report = try materializationService.reconcile(
+                template: template,
+                today: today,
+                now: now,
+                savesChanges: false
+            )
+            try context.save()
             return TaskTemplateLifecycleResult(impact: impact, reconciliationReport: report)
         } catch {
             context.rollback()

@@ -17,6 +17,7 @@ final class TaskTemplateEditorViewModel {
     private let templateID: UUID?
     private let service: TaskTemplateEditingService
     private let lifecycleService: TaskTemplateLifecycleService
+    private let notificationPermissionService: NotificationPermissionService
     private let dateProvider: any DateProviding
     private var calendar: Calendar
     private let logger = Logger(subsystem: "com.zhangzehua.Habito", category: "TemplateEditor")
@@ -30,6 +31,7 @@ final class TaskTemplateEditorViewModel {
         templateID: UUID?,
         service: TaskTemplateEditingService,
         lifecycleService: TaskTemplateLifecycleService,
+        notificationPermissionService: NotificationPermissionService,
         dateProvider: any DateProviding,
         calendar: Calendar,
         timeZone: TimeZone
@@ -39,6 +41,7 @@ final class TaskTemplateEditorViewModel {
         self.templateID = templateID
         self.service = service
         self.lifecycleService = lifecycleService
+        self.notificationPermissionService = notificationPermissionService
         self.dateProvider = dateProvider
         self.calendar = configuredCalendar
         draft = .new
@@ -70,8 +73,8 @@ final class TaskTemplateEditorViewModel {
         }
     }
 
-    /// 保存当前草稿；成功返回 `true`，失败保留页面和可理解反馈。
-    func save() -> Bool {
+    /// 保存当前草稿；首次创建成功后才请求通知权限，权限问题不会回滚任务。
+    func save() async -> TaskTemplateSaveOutcome {
         feedback = nil
         isSaving = true
         defer { isSaving = false }
@@ -81,14 +84,21 @@ final class TaskTemplateEditorViewModel {
         do {
             _ = try service.save(value, at: dateProvider.now())
             draft = value
-            return true
+            guard isCreating else { return .saved }
+            do {
+                _ = try await notificationPermissionService.requestIfNeeded()
+                return .saved
+            } catch {
+                logger.error("通知权限状态读取失败：\(String(describing: type(of: error)), privacy: .public)")
+                return .savedWithNotificationWarning
+            }
         } catch let error as TaskTemplateEditorError {
             feedback = .validation(error)
-            return false
+            return .failed
         } catch {
             logger.error("任务编辑器保存失败：\(String(describing: type(of: error)), privacy: .public)")
             feedback = .storageFailure
-            return false
+            return .failed
         }
     }
 

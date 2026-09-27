@@ -27,6 +27,12 @@ struct TaskTemplateEditingServiceTests {
         #expect(rule.timeOfDayMinutes == 19 * 60 + 30)
         #expect(recurrence.weekdays == Set(Weekday.allCases))
         #expect(recurrence.startDate == expectedStartDate)
+        let occurrence = try #require(
+            fixture.context.fetch(FetchDescriptor<TaskOccurrence>()).first
+        )
+        #expect(occurrence.dateKey == expectedStartDate.dateKey)
+        #expect(occurrence.titleSnapshot == "阅读 15 分钟")
+        #expect(occurrence.sourceRevision == template.revision)
 
         let loaded = try fixture.service.load(templateID: id)
         #expect(loaded.templateID == id)
@@ -106,6 +112,42 @@ struct TaskTemplateEditingServiceTests {
         #expect(throws: TaskTemplateEditorError.archivedTemplate(id)) {
             try fixture.service.load(templateID: id)
         }
+    }
+
+    @Test("编辑同步今日实例但保留历史快照")
+    func editingUpdatesTodayAndPreservesHistory() throws {
+        let fixture = try Fixture()
+        var draft = TaskTemplateDraft.new
+        draft.title = "阅读"
+        let id = try fixture.service.save(draft, at: fixture.now)
+        let template = try #require(
+            fixture.context.fetch(FetchDescriptor<TaskTemplate>()).first
+        )
+        let historyDate = try LocalDate(dateKey: "2026-09-22")
+        let history = TaskOccurrence(
+            templateID: id,
+            date: historyDate,
+            scheduledAt: fixture.now.addingTimeInterval(-86_400),
+            titleSnapshot: "阅读",
+            iconSnapshot: template.iconName,
+            colorSnapshot: template.colorToken,
+            targetDurationSnapshot: template.targetDurationSeconds,
+            status: .completed,
+            sourceRevision: template.revision
+        )
+        history.template = template
+        fixture.context.insert(history)
+        try fixture.context.save()
+
+        var edited = try fixture.service.load(templateID: id)
+        edited.title = "晚间阅读"
+        _ = try fixture.service.save(edited, at: fixture.now.addingTimeInterval(60))
+
+        let occurrences = try fixture.context.fetch(FetchDescriptor<TaskOccurrence>())
+        let today = try #require(occurrences.first { $0.dateKey == "2026-09-23" })
+        #expect(today.titleSnapshot == "晚间阅读")
+        #expect(history.titleSnapshot == "阅读")
+        #expect(history.status == .completed)
     }
 
     private final class Fixture {

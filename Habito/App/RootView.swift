@@ -6,6 +6,9 @@ struct RootView: View {
     @State private var todayModel: TodayViewModel
     @State private var parentGateModel: ParentGateViewModel
     @State private var parentTaskTemplatesModel: ParentTaskTemplateListViewModel
+    @State private var parentTodayModel: ParentTodayTaskViewModel
+    @State private var parentCalendarModel: ParentCalendarDayViewModel
+    @State private var parentNotificationModel: ParentNotificationDiagnosticsViewModel
     @State private var isParentGatePresented = false
     private let taskSessionModelFactory: TaskSessionViewModelFactory
     private let taskTemplateEditorModelFactory: TaskTemplateEditorViewModelFactory
@@ -15,12 +18,18 @@ struct RootView: View {
         taskSessionModelFactory: TaskSessionViewModelFactory,
         parentGateModel: ParentGateViewModel,
         parentTaskTemplatesModel: ParentTaskTemplateListViewModel,
+        parentTodayModel: ParentTodayTaskViewModel,
+        parentCalendarModel: ParentCalendarDayViewModel,
+        parentNotificationModel: ParentNotificationDiagnosticsViewModel,
         taskTemplateEditorModelFactory: TaskTemplateEditorViewModelFactory
     ) {
         _todayModel = State(initialValue: todayModel)
         self.taskSessionModelFactory = taskSessionModelFactory
         _parentGateModel = State(initialValue: parentGateModel)
         _parentTaskTemplatesModel = State(initialValue: parentTaskTemplatesModel)
+        _parentTodayModel = State(initialValue: parentTodayModel)
+        _parentCalendarModel = State(initialValue: parentCalendarModel)
+        _parentNotificationModel = State(initialValue: parentNotificationModel)
         self.taskTemplateEditorModelFactory = taskTemplateEditorModelFactory
     }
 
@@ -57,10 +66,13 @@ struct RootView: View {
             }
         }
         .task(loadToday)
-        .sheet(isPresented: $isParentGatePresented) {
+        .sheet(isPresented: $isParentGatePresented, onDismiss: loadToday) {
             ParentGateView(
                 model: parentGateModel,
                 taskTemplatesModel: parentTaskTemplatesModel,
+                parentTodayModel: parentTodayModel,
+                parentCalendarModel: parentCalendarModel,
+                parentNotificationModel: parentNotificationModel,
                 taskTemplateEditorModelFactory: taskTemplateEditorModelFactory
             )
         }

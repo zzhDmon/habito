@@ -22,19 +22,25 @@ final class LocalNotificationService: LocalNotificationScheduling {
         self.now = now
     }
 
-    func authorizationState() async -> NotificationAuthorizationState {
+    func diagnostics() async -> NotificationDiagnosticSnapshot {
         let settings = await center.notificationSettings()
-        return NotificationAuthorizationState(systemStatus: settings.authorizationStatus)
+        return NotificationDiagnosticSnapshot(
+            authorization: NotificationAuthorizationState(
+                systemStatus: settings.authorizationStatus
+            ),
+            alerts: NotificationDeliverySettingState(systemSetting: settings.alertSetting),
+            sounds: NotificationDeliverySettingState(systemSetting: settings.soundSetting)
+        )
     }
 
     func requestAuthorization() async throws -> NotificationAuthorizationState {
-        let currentState = await authorizationState()
+        let currentState = await diagnostics().authorization
         guard currentState == .notDetermined else {
             return currentState
         }
 
         _ = try await center.requestAuthorization(options: [.alert, .badge, .sound])
-        return await authorizationState()
+        return await diagnostics().authorization
     }
 
     func scheduleProbe(

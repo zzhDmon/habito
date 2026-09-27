@@ -21,6 +21,8 @@ struct TaskOccurrenceReconciliationService {
     ///   - range: 本次允许创建、更新或删除的闭合日期范围。
     ///   - today: 注入的业务今天；早于它的实例一律视为历史。
     ///   - now: 注入的写入时间，测试不可依赖真实时钟。
+    ///   - savesChanges: 是否在本次核对后立即保存。复合事务可传入 `false`，
+    ///     待多个模板全部核对成功后由外层统一提交。
     /// - Returns: 实际插入、更新、删除和受保护的数量。
     /// - Throws: 输入冲突、存量状态损坏或 SwiftData 保存失败。
     func reconcile(
@@ -28,7 +30,8 @@ struct TaskOccurrenceReconciliationService {
         candidates: [ResolvedTaskCandidate],
         in range: ClosedRange<LocalDate>,
         today: LocalDate,
-        now: Date
+        now: Date,
+        savesChanges: Bool = true
     ) throws -> OccurrenceReconciliationReport {
         guard template.lifecycleState == .active || candidates.isEmpty else {
             throw OccurrenceReconciliationError.inactiveTemplateHasCandidates
@@ -86,7 +89,9 @@ struct TaskOccurrenceReconciliationService {
             }
         }
 
-        try context.save()
+        if savesChanges {
+            try context.save()
+        }
         return .init(
             insertedCount: inserted,
             updatedCount: updated,

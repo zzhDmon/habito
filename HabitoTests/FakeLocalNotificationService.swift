@@ -5,17 +5,27 @@ import Foundation
 final class FakeLocalNotificationService: LocalNotificationScheduling {
     var currentAuthorizationState: NotificationAuthorizationState = .notDetermined
     var requestedAuthorizationState: NotificationAuthorizationState = .authorized
+    var alertSetting: NotificationDeliverySettingState = .enabled
+    var soundSetting: NotificationDeliverySettingState = .enabled
+    var requestCount = 0
+    var requestError: (any Error)?
     var pendingDate: Date?
     var scheduledDate = Date(timeIntervalSince1970: 2_000_000_000)
     var scheduledScenario: NotificationProbeScenario?
     var scheduledDelay: TimeInterval?
     var didCancel = false
 
-    func authorizationState() async -> NotificationAuthorizationState {
-        currentAuthorizationState
+    func diagnostics() async -> NotificationDiagnosticSnapshot {
+        NotificationDiagnosticSnapshot(
+            authorization: currentAuthorizationState,
+            alerts: alertSetting,
+            sounds: soundSetting
+        )
     }
 
     func requestAuthorization() async throws -> NotificationAuthorizationState {
+        requestCount += 1
+        if let requestError { throw requestError }
         currentAuthorizationState = requestedAuthorizationState
         return requestedAuthorizationState
     }

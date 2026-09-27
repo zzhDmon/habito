@@ -1,6 +1,26 @@
 {
   "sourceLanguage" : "zh-Hans",
   "strings" : {
+    "%@%@" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@%2$@"
+          }
+        }
+      }
+    },
+    "%@%@%@%@%@" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@%2$@%3$@%4$@%5$@"
+          }
+        }
+      }
+    },
     "%lld / %lld" : {
       "localizations" : {
         "zh-Hans" : {
@@ -451,6 +471,256 @@
         }
       }
     },
+    "notification.authorization.authorized" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已允许"
+          }
+        }
+      }
+    },
+    "notification.authorization.denied" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已拒绝"
+          }
+        }
+      }
+    },
+    "notification.authorization.ephemeral" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "临时允许"
+          }
+        }
+      }
+    },
+    "notification.authorization.notDetermined" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "尚未询问"
+          }
+        }
+      }
+    },
+    "notification.authorization.provisional" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暂时允许"
+          }
+        }
+      }
+    },
+    "notification.authorization.unknown" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未知"
+          }
+        }
+      }
+    },
+    "notification.delivery.disabled" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已关闭"
+          }
+        }
+      }
+    },
+    "notification.delivery.enabled" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已开启"
+          }
+        }
+      }
+    },
+    "notification.delivery.notSupported" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不支持"
+          }
+        }
+      }
+    },
+    "notification.delivery.unknown" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未知"
+          }
+        }
+      }
+    },
+    "notification.diagnosticsAlerts" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "提醒显示"
+          }
+        }
+      }
+    },
+    "notification.diagnosticsAuthorization" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "通知权限"
+          }
+        }
+      }
+    },
+    "notification.diagnosticsErrorMessage" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暂时无法读取系统通知设置，请重试。"
+          }
+        }
+      }
+    },
+    "notification.diagnosticsErrorTitle" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法检查通知"
+          }
+        }
+      }
+    },
+    "notification.diagnosticsFooter" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭通知、提醒或声音后，Habito 不会声称提醒已生效。可前往系统设置修改。"
+          }
+        }
+      }
+    },
+    "notification.diagnosticsLoading" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在检查通知设置…"
+          }
+        }
+      }
+    },
+    "notification.diagnosticsOpen" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "通知设置"
+          }
+        }
+      }
+    },
+    "notification.diagnosticsRetry" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重试"
+          }
+        }
+      }
+    },
+    "notification.diagnosticsSounds" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "提醒声音"
+          }
+        }
+      }
+    },
+    "notification.diagnosticsStatusSection" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "系统状态"
+          }
+        }
+      }
+    },
+    "notification.diagnosticsTitle" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "通知诊断"
+          }
+        }
+      }
+    },
+    "notification.openSettings" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "前往系统设置"
+          }
+        }
+      }
+    },
+    "notification.permissionWarningConfirm" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "知道了"
+          }
+        }
+      }
+    },
+    "notification.permissionWarningMessage" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "任务已经保存，但暂时无法确认通知设置。你可以稍后在家长中心重新检查。"
+          }
+        }
+      }
+    },
+    "notification.permissionWarningTitle" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "任务已保存"
+          }
+        }
+      }
+    },
     "notificationAuthorizationAuthorized" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -843,6 +1113,336 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在处理"
+          }
+        }
+      }
+    },
+    "parentCalendar.actionErrorDescription" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日期或任务状态可能已变化，请重试。"
+          }
+        }
+      }
+    },
+    "parentCalendar.actionErrorTitle" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "操作没有完成"
+          }
+        }
+      }
+    },
+    "parentCalendar.actionsSection" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日期覆盖"
+          }
+        }
+      }
+    },
+    "parentCalendar.cancel" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取消"
+          }
+        }
+      }
+    },
+    "parentCalendar.confirm" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确认更改"
+          }
+        }
+      }
+    },
+    "parentCalendar.confirmHoliday" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "将这一天标记为放假？"
+          }
+        }
+      }
+    },
+    "parentCalendar.confirmRemove" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "撤销这一天的覆盖？"
+          }
+        }
+      }
+    },
+    "parentCalendar.confirmSchoolDay" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "将这一天标记为上课？"
+          }
+        }
+      }
+    },
+    "parentCalendar.currentOverride" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "当前覆盖"
+          }
+        }
+      }
+    },
+    "parentCalendar.dateSection" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择日期"
+          }
+        }
+      }
+    },
+    "parentCalendar.dayTypeSection" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日期类型"
+          }
+        }
+      }
+    },
+    "parentCalendar.detached" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "单日调整"
+          }
+        }
+      }
+    },
+    "parentCalendar.dismiss" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "知道了"
+          }
+        }
+      }
+    },
+    "parentCalendar.emptyDescription" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可以更改日期类型，系统会按模板同步任务。"
+          }
+        }
+      }
+    },
+    "parentCalendar.emptyTitle" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这一天没有任务"
+          }
+        }
+      }
+    },
+    "parentCalendar.errorDescription" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法读取这一天的任务和覆盖。"
+          }
+        }
+      }
+    },
+    "parentCalendar.errorTitle" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日历加载失败"
+          }
+        }
+      }
+    },
+    "parentCalendar.historyReadOnly" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "历史日期仅可查看"
+          }
+        }
+      }
+    },
+    "parentCalendar.holiday" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "放假"
+          }
+        }
+      }
+    },
+    "parentCalendar.impact %lld %lld %lld" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "预计新增 %1$lld 个、移除 %2$lld 个任务；%3$lld 个已开始、已完成、已跳过或单日调整的任务会保留。"
+          }
+        }
+      }
+    },
+    "parentCalendar.loading" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在读取日历…"
+          }
+        }
+      }
+    },
+    "parentCalendar.markHoliday" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "标记为放假"
+          }
+        }
+      }
+    },
+    "parentCalendar.markSchoolDay" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "标记为上课"
+          }
+        }
+      }
+    },
+    "parentCalendar.naturalType" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自然类型"
+          }
+        }
+      }
+    },
+    "parentCalendar.navigationTitle" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日历与放假"
+          }
+        }
+      }
+    },
+    "parentCalendar.noImpact" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "本次更改不会影响任务。"
+          }
+        }
+      }
+    },
+    "parentCalendar.noOverride" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "按自然类型"
+          }
+        }
+      }
+    },
+    "parentCalendar.open" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日历"
+          }
+        }
+      }
+    },
+    "parentCalendar.removeOverride" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "撤销日期覆盖"
+          }
+        }
+      }
+    },
+    "parentCalendar.retry" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重试"
+          }
+        }
+      }
+    },
+    "parentCalendar.schoolDay" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "上课"
+          }
+        }
+      }
+    },
+    "parentCalendar.selectedDate" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日期"
+          }
+        }
+      }
+    },
+    "parentCalendar.tasksSection" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "当日任务"
           }
         }
       }
@@ -1302,6 +1902,281 @@
         }
       }
     },
+    "parentToday.actionErrorDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "任务状态可能已经变化，请重试。"
+          }
+        }
+      }
+    },
+    "parentToday.actionErrorTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "操作没有完成"
+          }
+        }
+      }
+    },
+    "parentToday.actions" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "操作"
+          }
+        }
+      }
+    },
+    "parentToday.cancel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取消"
+          }
+        }
+      }
+    },
+    "parentToday.correctComplete" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更正为已完成"
+          }
+        }
+      }
+    },
+    "parentToday.dismiss" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "知道了"
+          }
+        }
+      }
+    },
+    "parentToday.emptyDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今天还没有生成任务实例。"
+          }
+        }
+      }
+    },
+    "parentToday.emptyTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今天没有任务"
+          }
+        }
+      }
+    },
+    "parentToday.errorDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请重试；如果仍失败，请检查本地数据。"
+          }
+        }
+      }
+    },
+    "parentToday.errorTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今日任务没有加载出来"
+          }
+        }
+      }
+    },
+    "parentToday.loading" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在读取今日任务…"
+          }
+        }
+      }
+    },
+    "parentToday.navigationTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今日任务管理"
+          }
+        }
+      }
+    },
+    "parentToday.open" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "管理今天"
+          }
+        }
+      }
+    },
+    "parentToday.parentCorrection" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "由家长更正"
+          }
+        }
+      }
+    },
+    "parentToday.reschedule" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "调整今天的时间"
+          }
+        }
+      }
+    },
+    "parentToday.restore" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "恢复任务"
+          }
+        }
+      }
+    },
+    "parentToday.retry" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重试"
+          }
+        }
+      }
+    },
+    "parentToday.saveTime" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保存"
+          }
+        }
+      }
+    },
+    "parentToday.skip" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "跳过今天"
+          }
+        }
+      }
+    },
+    "parentToday.statusCompleted" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已完成"
+          }
+        }
+      }
+    },
+    "parentToday.statusInProgress" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "进行中"
+          }
+        }
+      }
+    },
+    "parentToday.statusPending" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "待完成"
+          }
+        }
+      }
+    },
+    "parentToday.statusSkipped" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已跳过"
+          }
+        }
+      }
+    },
+    "parentToday.timeHelp" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "只调整今天，不会修改任务模板和之后的安排。"
+          }
+        }
+      }
+    },
+    "parentToday.timeLabel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "计划时间"
+          }
+        }
+      }
+    },
     "taskEditor.basicSection" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1323,7 +2198,15 @@
       }
     },
     "taskEditor.color.%@" : {
-
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "颜色"
+          }
+        }
+      }
     },
     "taskEditor.color.activity" : {
       "extractionState" : "stale",
@@ -1510,7 +2393,15 @@
       }
     },
     "taskEditor.icon.%@" : {
-
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "图标"
+          }
+        }
+      }
     },
     "taskEditor.icon.book.fill" : {
       "extractionState" : "stale",
@@ -1962,7 +2853,15 @@
       }
     },
     "weekday.%lld" : {
-
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "星期"
+          }
+        }
+      }
     },
     "weekday.1" : {
       "extractionState" : "stale",

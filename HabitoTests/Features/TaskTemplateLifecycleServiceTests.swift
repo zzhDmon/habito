@@ -82,8 +82,10 @@ struct TaskTemplateLifecycleServiceTests {
 
         #expect(fixture.template.lifecycleState == .active)
         #expect(fixture.template.reminderRule?.isEnabled == true)
-        #expect(result.reconciliationReport == nil)
-        #expect(try fixture.context.fetch(FetchDescriptor<TaskOccurrence>()).map(\.id) == [occurrence.id])
+        #expect(result.reconciliationReport?.insertedCount == 1)
+        let occurrences = try fixture.context.fetch(FetchDescriptor<TaskOccurrence>())
+        #expect(occurrences.contains { $0.id == occurrence.id })
+        #expect(occurrences.contains { $0.dateKey == fixture.today.dateKey })
     }
 
     private final class Fixture {
@@ -123,7 +125,11 @@ struct TaskTemplateLifecycleServiceTests {
             context.insert(template)
             context.insert(rule)
             try context.save()
-            service = TaskTemplateLifecycleService(context: context)
+            service = TaskTemplateLifecycleService(
+                context: context,
+                calendar: .init(identifier: .gregorian),
+                timeZone: timeZone
+            )
         }
 
         func makeOccurrence(

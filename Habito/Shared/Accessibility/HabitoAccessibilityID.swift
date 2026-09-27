@@ -21,6 +21,17 @@ nonisolated enum HabitoAccessibilityID {
     static let parentResetButton = "parent.gate.reset"
     static let parentUnlocked = "parent.gate.unlocked"
     static let parentTemplateCreate = "parent.templates.create"
+    static let parentTodayOpen = "parent.today.open"
+    static let parentTodayScreen = "parent.today.screen"
+    static let parentTodayTimeSave = "parent.today.time.save"
+    static let parentCalendarOpen = "parent.calendar.open"
+    static let parentCalendarScreen = "parent.calendar.screen"
+    static let parentCalendarSchoolDay = "parent.calendar.school-day"
+    static let parentCalendarHoliday = "parent.calendar.holiday"
+    static let parentCalendarRemoveOverride = "parent.calendar.remove-override"
+    static let parentCalendarConfirm = "parent.calendar.confirm"
+    static let parentNotificationDiagnosticsOpen = "parent.notifications.open"
+    static let parentNotificationDiagnostics = "parent.notifications.screen"
     static let taskEditorScreen = "parent.templates.editor"
     static let taskEditorTitle = "parent.templates.editor.title"
     static let taskEditorDuration = "parent.templates.editor.duration"
@@ -37,5 +48,13 @@ nonisolated enum HabitoAccessibilityID {
 
     static func parentTemplate(_ id: UUID) -> String {
         "parent.templates.item.\(id.uuidString.lowercased())"
+    }
+
+    static func parentTodayTask(_ id: UUID) -> String {
+        "parent.today.task.\(id.uuidString.lowercased())"
+    }
+
+    static func parentTodayActions(_ id: UUID) -> String {
+        "parent.today.actions.\(id.uuidString.lowercased())"
     }
 }

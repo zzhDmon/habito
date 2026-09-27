@@ -47,8 +47,12 @@ struct ParentTaskTemplateRow: View {
         if item.lifecycleState != .active {
             Text("parentTemplates.nextDisabled")
         } else if let date = item.nextScheduledAt {
-            Text("parentTemplates.nextPrefix")
-                + Text(date, format: .dateTime.month().day().weekday(.abbreviated).hour().minute())
+            let prefix = Text("parentTemplates.nextPrefix")
+            let value = Text(
+                date,
+                format: .dateTime.month().day().weekday(.abbreviated).hour().minute()
+            )
+            Text("\(prefix)\(value)")
         } else {
             Text("parentTemplates.nextNone")
         }

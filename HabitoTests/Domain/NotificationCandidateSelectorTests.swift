@@ -1,0 +1,65 @@
+import Foundation
+import Testing
+@testable import Habito
+
+@Suite("通知滚动候选选择")
+struct NotificationCandidateSelectorTests {
+    @Test("高任务量受限且同一时刻稳定排序")
+    func limitsAndSorts() throws {
+        let date = try LocalDate(dateKey: "2026-09-30")
+        let candidates = (0..<60).reversed().map { index in
+            NotificationSchedulingCandidate(
+                occurrenceID: UUID(
+                    uuid: (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, UInt8(index + 1))
+                ),
+                date: date,
+                scheduledAt: Date(timeIntervalSince1970: 1_800_000_100)
+            )
+        }
+        let result = try NotificationCandidateSelector().select(
+            from: candidates,
+            now: Date(timeIntervalSince1970: 1_800_000_000),
+            availableThrough: date,
+            minimumCoverageThrough: date
+        )
+        #expect(result.primaryCandidates.count == 48)
+        #expect(result.primaryCandidates.first?.occurrenceID.uuidString.hasSuffix("000000000001") == true)
+        #expect(result.isCoverageBoundaryPartial)
+        #expect(!result.hasMinimumCoverage)
+    }
+
+    @Test("跨月完整覆盖与不足七天可区分")
+    func coverageAcrossMonth() throws {
+        let start = try LocalDate(dateKey: "2026-09-30")
+        let next = try LocalDate(dateKey: "2026-10-01")
+        let selector = NotificationCandidateSelector()
+        let full = try selector.select(
+            from: [], now: .now, availableThrough: next, minimumCoverageThrough: start
+        )
+        let insufficient = try selector.select(
+            from: [], now: .now, availableThrough: start, minimumCoverageThrough: next
+        )
+        #expect(full.coverageThrough == next)
+        #expect(full.hasMinimumCoverage)
+        #expect(!insufficient.hasMinimumCoverage)
+    }
+
+    @Test("重复实例与越界候选显式失败")
+    func rejectsInvalidInputs() throws {
+        let date = try LocalDate(dateKey: "2026-09-30")
+        let next = try LocalDate(dateKey: "2026-10-01")
+        let id = UUID()
+        let candidate = NotificationSchedulingCandidate(
+            occurrenceID: id, date: next, scheduledAt: .now.addingTimeInterval(60)
+        )
+        let selector = NotificationCandidateSelector()
+        #expect(throws: NotificationCandidateSelectionError.duplicateOccurrenceID(id)) {
+            try selector.select(
+                from: [candidate, candidate], now: .distantPast, availableThrough: next, minimumCoverageThrough: date)
+        }
+        #expect(throws: NotificationCandidateSelectionError.candidateBeyondAvailableHorizon(id)) {
+            try selector.select(
+                from: [candidate], now: .distantPast, availableThrough: date, minimumCoverageThrough: date)
+        }
+    }
+}

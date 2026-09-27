@@ -58,4 +58,9 @@ final class AppSettings {
         guard let lastNotificationAuthorizationRawValue else { return nil }
         return NotificationAuthorizationState(rawValue: lastNotificationAuthorizationRawValue)
     }
+
+    /// 记录最近一次从系统读取的通知总授权状态，不据此推断提醒或声音开关。
+    func recordNotificationAuthorization(_ authorization: NotificationAuthorizationState) {
+        lastNotificationAuthorizationRawValue = authorization.rawValue
+    }
 }

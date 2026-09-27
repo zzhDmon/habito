@@ -4,6 +4,7 @@ import SwiftUI
 struct TaskTemplateEditorView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var model: TaskTemplateEditorViewModel
+    @State private var isNotificationWarningPresented = false
     let onSaved: () -> Void
 
     init(model: TaskTemplateEditorViewModel, onSaved: @escaping () -> Void) {
@@ -61,10 +62,27 @@ struct TaskTemplateEditorView: View {
         } message: { impact in
             lifecycleMessage(for: impact)
         }
+        .alert("notification.permissionWarningTitle", isPresented: $isNotificationWarningPresented) {
+            Button("notification.permissionWarningConfirm", action: finishSaving)
+        } message: {
+            Text("notification.permissionWarningMessage")
+        }
     }
 
     private func save() {
-        guard model.save() else { return }
+        Task {
+            switch await model.save() {
+            case .failed:
+                break
+            case .saved:
+                finishSaving()
+            case .savedWithNotificationWarning:
+                isNotificationWarningPresented = true
+            }
+        }
+    }
+
+    private func finishSaving() {
         onSaved()
         dismiss()
     }
@@ -101,11 +119,14 @@ struct TaskTemplateEditorView: View {
         if impact.action == .enable {
             return Text("taskLifecycle.enableMessage")
         }
-        return Text("taskLifecycle.removePrefix")
-            + Text(verbatim: " \(impact.removableOccurrenceCount) ")
-            + Text("taskLifecycle.removeSuffix")
-            + Text(verbatim: " \(impact.preservedOccurrenceCount) ")
-            + Text("taskLifecycle.preserveSuffix")
+        let removePrefix = Text("taskLifecycle.removePrefix")
+        let removableCount = Text(verbatim: " \(impact.removableOccurrenceCount) ")
+        let removeSuffix = Text("taskLifecycle.removeSuffix")
+        let preservedCount = Text(verbatim: " \(impact.preservedOccurrenceCount) ")
+        let preserveSuffix = Text("taskLifecycle.preserveSuffix")
+        return Text(
+            "\(removePrefix)\(removableCount)\(removeSuffix)\(preservedCount)\(preserveSuffix)"
+        )
     }
 
     private func confirmLifecycleAction() {

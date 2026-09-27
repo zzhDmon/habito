@@ -30,7 +30,7 @@ final class NotificationProbeViewModel {
 
     /// 刷新授权和系统待处理请求，支持 App 被终止后恢复探针状态。
     func refresh() async {
-        authorizationState = await notificationService.authorizationState()
+        authorizationState = await notificationService.diagnostics().authorization
         scheduledDate = await notificationService.pendingProbeDate()
         statusMessage =
             scheduledDate == nil

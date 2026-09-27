@@ -20,6 +20,7 @@
         /// - Parameters:
         ///   - container: UI 测试独占的磁盘容器。
         ///   - shouldReset: 是否清空上一次测试状态。重启恢复场景必须传 `false`。
+        ///   - shouldSeedSampleData: 是否写入固定样例；空数据验收只清理、不播种。
         ///   - now: 用于生成“今天”测试数据的绝对时间。
         ///   - calendar: 解释本地日期的日历。
         ///   - timeZone: 解释本地日期的时区。
@@ -27,6 +28,7 @@
         static func prepare(
             container: ModelContainer,
             shouldReset: Bool,
+            shouldSeedSampleData: Bool = true,
             now: Date,
             calendar: Calendar,
             timeZone: TimeZone
@@ -35,6 +37,7 @@
             if shouldReset {
                 try removeAllData(from: context)
             }
+            guard shouldSeedSampleData else { return }
 
             let existing = try context.fetch(
                 FetchDescriptor<TaskOccurrence>(predicate: #Predicate { $0.id == taskID })

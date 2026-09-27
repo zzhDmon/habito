@@ -4,13 +4,7 @@ import Foundation
 ///
 /// ViewModel 只依赖这个窄接口，因此单元测试不需要真的请求系统权限或等待两分钟。
 @MainActor
-protocol LocalNotificationScheduling {
-    /// 读取当前系统授权状态。
-    func authorizationState() async -> NotificationAuthorizationState
-
-    /// 在需要时请求通知权限，并返回请求后的最终状态。
-    func requestAuthorization() async throws -> NotificationAuthorizationState
-
+protocol LocalNotificationScheduling: NotificationPermissionProviding {
     /// 安排一条指定延迟的探针通知。
     ///
     /// - Parameters:

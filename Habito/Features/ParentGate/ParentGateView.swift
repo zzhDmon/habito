@@ -5,7 +5,10 @@ struct ParentGateView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var model: ParentGateViewModel
     @State private var taskTemplatesModel: ParentTaskTemplateListViewModel
-    @State private var path: [ParentTaskTemplateRoute] = []
+    @State private var parentTodayModel: ParentTodayTaskViewModel
+    @State private var parentCalendarModel: ParentCalendarDayViewModel
+    @State private var parentNotificationModel: ParentNotificationDiagnosticsViewModel
+    @State private var path: [ParentRoute] = []
     @State private var pin = ""
     @State private var confirmation = ""
     @State private var isResetConfirmationPresented = false
@@ -14,10 +17,16 @@ struct ParentGateView: View {
     init(
         model: ParentGateViewModel,
         taskTemplatesModel: ParentTaskTemplateListViewModel,
+        parentTodayModel: ParentTodayTaskViewModel,
+        parentCalendarModel: ParentCalendarDayViewModel,
+        parentNotificationModel: ParentNotificationDiagnosticsViewModel,
         taskTemplateEditorModelFactory: TaskTemplateEditorViewModelFactory
     ) {
         _model = State(initialValue: model)
         _taskTemplatesModel = State(initialValue: taskTemplatesModel)
+        _parentTodayModel = State(initialValue: parentTodayModel)
+        _parentCalendarModel = State(initialValue: parentCalendarModel)
+        _parentNotificationModel = State(initialValue: parentNotificationModel)
         self.taskTemplateEditorModelFactory = taskTemplateEditorModelFactory
     }
 
@@ -34,8 +43,11 @@ struct ParentGateView: View {
                 case .unlocked:
                     ParentTaskTemplateListView(
                         model: taskTemplatesModel,
-                        onCreate: { path.append(.create) },
-                        onSelect: { path.append(.detail($0)) }
+                        onShowToday: { path.append(.today) },
+                        onShowCalendar: { path.append(.calendar) },
+                        onShowNotifications: { path.append(.notifications) },
+                        onCreate: { path.append(.template(.create)) },
+                        onSelect: { path.append(.template(.detail($0))) }
                     )
                 case .failed:
                     ContentUnavailableView {
@@ -53,11 +65,20 @@ struct ParentGateView: View {
                     Button("parentGate.close", action: dismiss.callAsFunction)
                 }
             }
-            .navigationDestination(for: ParentTaskTemplateRoute.self) { route in
-                TaskTemplateEditorView(
-                    model: taskTemplateEditorModelFactory.makeModel(for: route),
-                    onSaved: taskTemplatesModel.load
-                )
+            .navigationDestination(for: ParentRoute.self) { route in
+                switch route {
+                case .today:
+                    ParentTodayTaskListView(model: parentTodayModel)
+                case .calendar:
+                    ParentCalendarDayView(model: parentCalendarModel)
+                case .notifications:
+                    ParentNotificationDiagnosticsView(model: parentNotificationModel)
+                case let .template(templateRoute):
+                    TaskTemplateEditorView(
+                        model: taskTemplateEditorModelFactory.makeModel(for: templateRoute),
+                        onSaved: taskTemplatesModel.load
+                    )
+                }
             }
         }
         .presentationDetents([.large])

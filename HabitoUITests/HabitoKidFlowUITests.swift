@@ -6,6 +6,8 @@ final class HabitoKidFlowUITests: XCTestCase {
     private let seededTaskIdentifier = "kid.today.task.c5412144-2fb8-4e96-9f7a-6a42e0803d11"
     private let seededTemplateIdentifier =
         "parent.templates.item.6743a00b-878f-4bb0-a861-64056ec19fe5"
+    private let parentTodayTaskIdentifier =
+        "parent.today.task.c5412144-2fb8-4e96-9f7a-6a42e0803d11"
 
     override func setUpWithError() throws {
         continueAfterFailure = false
@@ -126,5 +128,224 @@ final class HabitoKidFlowUITests: XCTestCase {
         XCTAssertTrue(
             app.descendants(matching: .any)["parent.gate.unlocked"].waitForExistence(timeout: 5)
         )
+    }
+
+    func testParentCanSkipRestoreAndCorrectTodayTask() throws {
+        XCUIDevice.shared.orientation = .landscapeLeft
+        let app = XCUIApplication()
+        app.launchArguments = ["--habito-ui-testing", "--habito-ui-reset"]
+        app.launch()
+
+        let entry = app.buttons["parent.gate.entry"]
+        XCTAssertTrue(entry.waitForExistence(timeout: 5))
+        entry.press(forDuration: 1.2)
+        let pin = app.secureTextFields["parent.gate.pin"]
+        let confirmation = app.secureTextFields["parent.gate.pin-confirmation"]
+        XCTAssertTrue(pin.waitForExistence(timeout: 5))
+        pin.tap()
+        pin.typeText("1357")
+        confirmation.tap()
+        confirmation.typeText("1357")
+        app.buttons["parent.gate.create"].tap()
+
+        let today = app.buttons["parent.today.open"]
+        XCTAssertTrue(today.waitForExistence(timeout: 5))
+        today.tap()
+        XCTAssertTrue(
+            app.descendants(matching: .any)[parentTodayTaskIdentifier].waitForExistence(timeout: 5)
+        )
+
+        let actions = app.buttons["操作"]
+        XCTAssertTrue(actions.waitForExistence(timeout: 5))
+        actions.tap()
+        app.buttons["跳过今天"].tap()
+        XCTAssertTrue(app.staticTexts["已跳过"].waitForExistence(timeout: 5))
+
+        actions.tap()
+        app.buttons["恢复任务"].tap()
+        XCTAssertTrue(app.staticTexts["待完成"].waitForExistence(timeout: 5))
+
+        actions.tap()
+        app.buttons["更正为已完成"].tap()
+        XCTAssertTrue(app.staticTexts["已完成"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["由家长更正"].exists)
+    }
+
+    func testParentNotificationDiagnosticsShowsIndependentStates() throws {
+        XCUIDevice.shared.orientation = .landscapeLeft
+        let app = XCUIApplication()
+        app.launchArguments = ["--habito-ui-testing", "--habito-ui-reset"]
+        app.launch()
+
+        unlockParent(in: app)
+        let diagnostics = app.buttons["parent.notifications.open"]
+        XCTAssertTrue(diagnostics.waitForExistence(timeout: 5))
+        diagnostics.tap()
+
+        XCTAssertTrue(
+            app.descendants(matching: .any)["parent.notifications.screen"].waitForExistence(
+                timeout: 5
+            )
+        )
+        XCTAssertTrue(app.staticTexts["通知权限"].exists)
+        XCTAssertTrue(app.staticTexts["提醒显示"].exists)
+        XCTAssertTrue(app.staticTexts["提醒声音"].exists)
+        XCTAssertTrue(app.buttons["前往系统设置"].exists)
+    }
+
+    func testParentCanPreviewHolidayAndRestoreTasksByRemovingOverride() throws {
+        XCUIDevice.shared.orientation = .landscapeLeft
+        let app = XCUIApplication()
+        app.launchArguments = ["--habito-ui-testing", "--habito-ui-reset"]
+        app.launch()
+
+        let entry = app.buttons["parent.gate.entry"]
+        XCTAssertTrue(entry.waitForExistence(timeout: 5))
+        entry.press(forDuration: 1.2)
+        let pin = app.secureTextFields["parent.gate.pin"]
+        let confirmation = app.secureTextFields["parent.gate.pin-confirmation"]
+        XCTAssertTrue(pin.waitForExistence(timeout: 5))
+        pin.tap()
+        pin.typeText("1357")
+        confirmation.tap()
+        confirmation.typeText("1357")
+        app.buttons["parent.gate.create"].tap()
+
+        let calendar = app.buttons["parent.calendar.open"]
+        XCTAssertTrue(calendar.waitForExistence(timeout: 5))
+        calendar.tap()
+        XCTAssertTrue(
+            app.descendants(matching: .any)["parent.calendar.screen"].waitForExistence(timeout: 5)
+        )
+        XCTAssertTrue(app.staticTexts["阅读 15 分钟"].waitForExistence(timeout: 5))
+
+        let holiday = app.buttons["parent.calendar.holiday"]
+        if !holiday.exists {
+            app.swipeUp()
+        }
+        XCTAssertTrue(holiday.waitForExistence(timeout: 5))
+        holiday.tap()
+        let confirm = app.buttons["parent.calendar.confirm"].firstMatch
+        XCTAssertTrue(confirm.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label CONTAINS '移除 1 个任务'")).firstMatch.exists)
+        confirm.tap()
+        XCTAssertTrue(app.staticTexts["这一天没有任务"].waitForExistence(timeout: 5))
+
+        let removeOverride = app.buttons["parent.calendar.remove-override"]
+        if !removeOverride.exists {
+            app.swipeUp()
+        }
+        XCTAssertTrue(removeOverride.waitForExistence(timeout: 5))
+        removeOverride.tap()
+        XCTAssertTrue(confirm.waitForExistence(timeout: 5))
+        confirm.tap()
+        XCTAssertTrue(app.staticTexts["阅读 15 分钟"].waitForExistence(timeout: 5))
+    }
+
+    func testParentManagementLoopFromEmptyData() throws {
+        XCUIDevice.shared.orientation = .landscapeLeft
+        let app = XCUIApplication()
+        app.launchArguments = [
+            "--habito-ui-testing",
+            "--habito-ui-reset",
+            "--habito-ui-empty",
+        ]
+        app.launch()
+
+        XCTAssertTrue(app.staticTexts["今天没有任务啊"].waitForExistence(timeout: 5))
+        unlockParent(in: app)
+        XCTAssertTrue(app.staticTexts["还没有任务"].waitForExistence(timeout: 5))
+
+        app.buttons["parent.templates.create"].firstMatch.tap()
+        let title = app.textFields["parent.templates.editor.title"]
+        XCTAssertTrue(title.waitForExistence(timeout: 5))
+        title.tap()
+        title.typeText("闭环阅读")
+        app.buttons["parent.templates.editor.save"].tap()
+        XCTAssertTrue(app.staticTexts["闭环阅读"].waitForExistence(timeout: 5))
+
+        let template = app.buttons.matching(
+            NSPredicate(format: "label CONTAINS %@", "闭环阅读")
+        ).firstMatch
+        XCTAssertTrue(template.waitForExistence(timeout: 5))
+        template.tap()
+        XCTAssertTrue(title.waitForExistence(timeout: 5))
+        title.tap()
+        title.typeText("已编辑")
+        app.buttons["parent.templates.editor.save"].tap()
+        XCTAssertTrue(app.staticTexts["闭环阅读已编辑"].waitForExistence(timeout: 5))
+
+        app.buttons["parent.today.open"].tap()
+        XCTAssertTrue(app.staticTexts["闭环阅读已编辑"].waitForExistence(timeout: 5))
+        app.buttons["操作"].tap()
+        app.buttons["调整今天的时间"].tap()
+        let saveTime = app.buttons["parent.today.time.save"]
+        XCTAssertTrue(saveTime.waitForExistence(timeout: 5))
+        saveTime.tap()
+
+        navigateBack(in: app, from: "今日任务管理")
+        app.buttons["parent.calendar.open"].tap()
+        let holiday = app.buttons["parent.calendar.holiday"]
+        if !holiday.exists { app.swipeUp() }
+        XCTAssertTrue(holiday.waitForExistence(timeout: 5))
+        holiday.tap()
+        let calendarConfirm = app.buttons["parent.calendar.confirm"].firstMatch
+        XCTAssertTrue(calendarConfirm.waitForExistence(timeout: 5))
+        XCTAssertTrue(
+            app.staticTexts.matching(
+                NSPredicate(format: "label CONTAINS '1 个已开始、已完成、已跳过或单日调整的任务会保留'")
+            ).firstMatch.exists
+        )
+        calendarConfirm.tap()
+
+        let removeOverride = app.buttons["parent.calendar.remove-override"]
+        if !removeOverride.exists { app.swipeUp() }
+        removeOverride.tap()
+        XCTAssertTrue(calendarConfirm.waitForExistence(timeout: 5))
+        calendarConfirm.tap()
+
+        navigateBack(in: app, from: "日历与放假")
+        let editedTemplate = app.buttons.matching(
+            NSPredicate(format: "label CONTAINS %@", "闭环阅读已编辑")
+        ).firstMatch
+        editedTemplate.tap()
+        let disable = app.buttons["parent.templates.lifecycle.disable"]
+        if !disable.exists {
+            app.swipeUp()
+            app.swipeUp()
+        }
+        disable.tap()
+        let lifecycleConfirm = app.buttons["parent.templates.lifecycle.confirm"].firstMatch
+        XCTAssertTrue(lifecycleConfirm.waitForExistence(timeout: 5))
+        lifecycleConfirm.tap()
+        XCTAssertTrue(app.buttons["parent.templates.lifecycle.enable"].waitForExistence(timeout: 5))
+
+        app.buttons["parent.templates.lifecycle.archive"].tap()
+        XCTAssertTrue(lifecycleConfirm.waitForExistence(timeout: 5))
+        lifecycleConfirm.tap()
+        XCTAssertTrue(app.staticTexts["还没有任务"].waitForExistence(timeout: 5))
+    }
+
+    private func unlockParent(in app: XCUIApplication) {
+        let entry = app.buttons["parent.gate.entry"]
+        XCTAssertTrue(entry.waitForExistence(timeout: 5))
+        entry.press(forDuration: 1.2)
+        let pin = app.secureTextFields["parent.gate.pin"]
+        let confirmation = app.secureTextFields["parent.gate.pin-confirmation"]
+        XCTAssertTrue(pin.waitForExistence(timeout: 5))
+        pin.tap()
+        pin.typeText("1357")
+        confirmation.tap()
+        confirmation.typeText("1357")
+        app.buttons["parent.gate.create"].tap()
+        XCTAssertTrue(
+            app.descendants(matching: .any)["parent.gate.unlocked"].waitForExistence(timeout: 5)
+        )
+    }
+
+    private func navigateBack(in app: XCUIApplication, from navigationTitle: String) {
+        let back = app.navigationBars[navigationTitle].buttons["家长任务"]
+        XCTAssertTrue(back.waitForExistence(timeout: 5))
+        back.tap()
     }
 }

@@ -8,17 +8,20 @@ struct TaskTemplateEditorViewModelFactory {
     private let calendar: Calendar
     private let timeZone: TimeZone
     private let dateProvider: any DateProviding
+    private let notificationPermissionService: NotificationPermissionService
 
     init(
         context: ModelContext,
         calendar: Calendar,
         timeZone: TimeZone,
-        dateProvider: any DateProviding
+        dateProvider: any DateProviding,
+        notificationPermissionService: NotificationPermissionService
     ) {
         self.context = context
         self.calendar = calendar
         self.timeZone = timeZone
         self.dateProvider = dateProvider
+        self.notificationPermissionService = notificationPermissionService
     }
 
     func makeModel(for route: ParentTaskTemplateRoute) -> TaskTemplateEditorViewModel {
@@ -34,7 +37,12 @@ struct TaskTemplateEditorViewModelFactory {
                 calendar: calendar,
                 timeZone: timeZone
             ),
-            lifecycleService: TaskTemplateLifecycleService(context: context),
+            lifecycleService: TaskTemplateLifecycleService(
+                context: context,
+                calendar: calendar,
+                timeZone: timeZone
+            ),
+            notificationPermissionService: notificationPermissionService,
             dateProvider: dateProvider,
             calendar: calendar,
             timeZone: timeZone

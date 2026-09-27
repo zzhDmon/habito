@@ -66,6 +66,29 @@
 		F10000000000000000000002 /* OccurrenceReconciliationReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20000000000000000000002 /* OccurrenceReconciliationReport.swift */; };
 		F10000000000000000000003 /* TaskOccurrenceReconciliationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20000000000000000000003 /* TaskOccurrenceReconciliationService.swift */; };
 		F10000000000000000000004 /* TaskOccurrenceReconciliationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20000000000000000000004 /* TaskOccurrenceReconciliationServiceTests.swift */; };
+		X10000000000000000000001 /* TaskOccurrenceMaterializationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = X20000000000000000000001 /* TaskOccurrenceMaterializationError.swift */; };
+		X10000000000000000000002 /* TaskOccurrenceMaterializationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = X20000000000000000000002 /* TaskOccurrenceMaterializationService.swift */; };
+		Y10000000000000000000001 /* NotificationDeliverySettingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = Y20000000000000000000001 /* NotificationDeliverySettingState.swift */; };
+		Y10000000000000000000002 /* NotificationDiagnosticSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = Y20000000000000000000002 /* NotificationDiagnosticSnapshot.swift */; };
+		Y10000000000000000000003 /* NotificationPermissionProviding.swift in Sources */ = {isa = PBXBuildFile; fileRef = Y20000000000000000000003 /* NotificationPermissionProviding.swift */; };
+		Y10000000000000000000004 /* NotificationPermissionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = Y20000000000000000000004 /* NotificationPermissionService.swift */; };
+		Y10000000000000000000005 /* TaskTemplateSaveOutcome.swift in Sources */ = {isa = PBXBuildFile; fileRef = Y20000000000000000000005 /* TaskTemplateSaveOutcome.swift */; };
+		Y10000000000000000000006 /* UITestNotificationPermissionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = Y20000000000000000000006 /* UITestNotificationPermissionProvider.swift */; };
+		Y10000000000000000000007 /* ParentNotificationDiagnosticsState.swift in Sources */ = {isa = PBXBuildFile; fileRef = Y20000000000000000000007 /* ParentNotificationDiagnosticsState.swift */; };
+		Y10000000000000000000008 /* ParentNotificationDiagnosticsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = Y20000000000000000000008 /* ParentNotificationDiagnosticsViewModel.swift */; };
+		Y10000000000000000000009 /* ParentNotificationDiagnosticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = Y20000000000000000000009 /* ParentNotificationDiagnosticsView.swift */; };
+		Y1000000000000000000000A /* NotificationPermissionServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = Y2000000000000000000000A /* NotificationPermissionServiceTests.swift */; };
+		Y1000000000000000000000B /* TaskTemplateEditorViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = Y2000000000000000000000B /* TaskTemplateEditorViewModelTests.swift */; };
+		Y1000000000000000000000C /* ParentNotificationDiagnosticsPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = Y2000000000000000000000C /* ParentNotificationDiagnosticsPreview.swift */; };
+		Y1000000000000000000000D /* NotificationRequestIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = Y2000000000000000000000D /* NotificationRequestIdentifier.swift */; };
+		Y1000000000000000000000E /* NotificationLinkStoreError.swift in Sources */ = {isa = PBXBuildFile; fileRef = Y2000000000000000000000E /* NotificationLinkStoreError.swift */; };
+		Y1000000000000000000000F /* NotificationLinkStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = Y2000000000000000000000F /* NotificationLinkStore.swift */; };
+		Y10000000000000000000010 /* NotificationLinkStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = Y20000000000000000000010 /* NotificationLinkStoreTests.swift */; };
+		Y10000000000000000000011 /* NotificationSchedulingCandidate.swift in Sources */ = {isa = PBXBuildFile; fileRef = Y20000000000000000000011 /* NotificationSchedulingCandidate.swift */; };
+		Y10000000000000000000012 /* NotificationCandidateSelectionError.swift in Sources */ = {isa = PBXBuildFile; fileRef = Y20000000000000000000012 /* NotificationCandidateSelectionError.swift */; };
+		Y10000000000000000000013 /* NotificationCandidateSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = Y20000000000000000000013 /* NotificationCandidateSelection.swift */; };
+		Y10000000000000000000014 /* NotificationCandidateSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = Y20000000000000000000014 /* NotificationCandidateSelector.swift */; };
+		Y10000000000000000000015 /* NotificationCandidateSelectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = Y20000000000000000000015 /* NotificationCandidateSelectorTests.swift */; };
 		G10000000000000000000001 /* TaskProgressServiceError.swift in Sources */ = {isa = PBXBuildFile; fileRef = G20000000000000000000001 /* TaskProgressServiceError.swift */; };
 		G10000000000000000000002 /* TaskProgressService.swift in Sources */ = {isa = PBXBuildFile; fileRef = G20000000000000000000002 /* TaskProgressService.swift */; };
 		G10000000000000000000003 /* TaskProgressServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = G20000000000000000000003 /* TaskProgressServiceTests.swift */; };
@@ -143,6 +166,29 @@
 		U10000000000000000000003 /* TaskTemplateLifecycleError.swift in Sources */ = {isa = PBXBuildFile; fileRef = U20000000000000000000003 /* TaskTemplateLifecycleError.swift */; };
 		U10000000000000000000004 /* TaskTemplateLifecycleService.swift in Sources */ = {isa = PBXBuildFile; fileRef = U20000000000000000000004 /* TaskTemplateLifecycleService.swift */; };
 		U10000000000000000000005 /* TaskTemplateLifecycleServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = U20000000000000000000005 /* TaskTemplateLifecycleServiceTests.swift */; };
+		V10000000000000000000001 /* ParentTodayTaskManagementError.swift in Sources */ = {isa = PBXBuildFile; fileRef = V20000000000000000000001 /* ParentTodayTaskManagementError.swift */; };
+		V10000000000000000000002 /* ParentTodayTaskManagementService.swift in Sources */ = {isa = PBXBuildFile; fileRef = V20000000000000000000002 /* ParentTodayTaskManagementService.swift */; };
+		V10000000000000000000003 /* ParentTodayTaskListState.swift in Sources */ = {isa = PBXBuildFile; fileRef = V20000000000000000000003 /* ParentTodayTaskListState.swift */; };
+		V10000000000000000000004 /* ParentTodayTaskListContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = V20000000000000000000004 /* ParentTodayTaskListContent.swift */; };
+		V10000000000000000000005 /* ParentTodayTaskViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = V20000000000000000000005 /* ParentTodayTaskViewModel.swift */; };
+		V10000000000000000000006 /* ParentTodayTaskRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = V20000000000000000000006 /* ParentTodayTaskRow.swift */; };
+		V10000000000000000000007 /* ParentTodayTimeEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = V20000000000000000000007 /* ParentTodayTimeEditorView.swift */; };
+		V10000000000000000000008 /* ParentTodayTaskListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = V20000000000000000000008 /* ParentTodayTaskListView.swift */; };
+		V10000000000000000000009 /* ParentRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = V20000000000000000000009 /* ParentRoute.swift */; };
+		V1000000000000000000000A /* ParentTodayTaskManagementServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = V2000000000000000000000A /* ParentTodayTaskManagementServiceTests.swift */; };
+		V1000000000000000000000B /* ParentTodayTaskListBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = V2000000000000000000000B /* ParentTodayTaskListBody.swift */; };
+		W10000000000000000000001 /* ParentCalendarDayAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = W20000000000000000000001 /* ParentCalendarDayAction.swift */; };
+		W10000000000000000000002 /* ParentCalendarDayError.swift in Sources */ = {isa = PBXBuildFile; fileRef = W20000000000000000000002 /* ParentCalendarDayError.swift */; };
+		W10000000000000000000003 /* ParentCalendarDayService.swift in Sources */ = {isa = PBXBuildFile; fileRef = W20000000000000000000003 /* ParentCalendarDayService.swift */; };
+		W10000000000000000000004 /* ParentCalendarDayViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = W20000000000000000000004 /* ParentCalendarDayViewModel.swift */; };
+		W10000000000000000000005 /* ParentCalendarDayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = W20000000000000000000005 /* ParentCalendarDayView.swift */; };
+		W10000000000000000000006 /* ParentCalendarDayServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = W20000000000000000000006 /* ParentCalendarDayServiceTests.swift */; };
+		W10000000000000000000007 /* ParentCalendarDayImpact.swift in Sources */ = {isa = PBXBuildFile; fileRef = W20000000000000000000007 /* ParentCalendarDayImpact.swift */; };
+		W10000000000000000000008 /* ParentCalendarOccurrenceItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = W20000000000000000000008 /* ParentCalendarOccurrenceItem.swift */; };
+		W10000000000000000000009 /* ParentCalendarDaySnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = W20000000000000000000009 /* ParentCalendarDaySnapshot.swift */; };
+		W1000000000000000000000A /* ParentCalendarReconciliationPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = W2000000000000000000000A /* ParentCalendarReconciliationPlan.swift */; };
+		W1000000000000000000000B /* ParentCalendarDayContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = W2000000000000000000000B /* ParentCalendarDayContent.swift */; };
+		W1000000000000000000000C /* ParentCalendarDayPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = W2000000000000000000000C /* ParentCalendarDayPreview.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -224,6 +270,29 @@
 		F20000000000000000000002 /* OccurrenceReconciliationReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OccurrenceReconciliationReport.swift; sourceTree = "<group>"; };
 		F20000000000000000000003 /* TaskOccurrenceReconciliationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskOccurrenceReconciliationService.swift; sourceTree = "<group>"; };
 		F20000000000000000000004 /* TaskOccurrenceReconciliationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskOccurrenceReconciliationServiceTests.swift; sourceTree = "<group>"; };
+		X20000000000000000000001 /* TaskOccurrenceMaterializationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskOccurrenceMaterializationError.swift; sourceTree = "<group>"; };
+		X20000000000000000000002 /* TaskOccurrenceMaterializationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskOccurrenceMaterializationService.swift; sourceTree = "<group>"; };
+		Y20000000000000000000001 /* NotificationDeliverySettingState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationDeliverySettingState.swift; sourceTree = "<group>"; };
+		Y20000000000000000000002 /* NotificationDiagnosticSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationDiagnosticSnapshot.swift; sourceTree = "<group>"; };
+		Y20000000000000000000003 /* NotificationPermissionProviding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationPermissionProviding.swift; sourceTree = "<group>"; };
+		Y20000000000000000000004 /* NotificationPermissionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationPermissionService.swift; sourceTree = "<group>"; };
+		Y20000000000000000000005 /* TaskTemplateSaveOutcome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskTemplateSaveOutcome.swift; sourceTree = "<group>"; };
+		Y20000000000000000000006 /* UITestNotificationPermissionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestNotificationPermissionProvider.swift; sourceTree = "<group>"; };
+		Y20000000000000000000007 /* ParentNotificationDiagnosticsState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentNotificationDiagnosticsState.swift; sourceTree = "<group>"; };
+		Y20000000000000000000008 /* ParentNotificationDiagnosticsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentNotificationDiagnosticsViewModel.swift; sourceTree = "<group>"; };
+		Y20000000000000000000009 /* ParentNotificationDiagnosticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentNotificationDiagnosticsView.swift; sourceTree = "<group>"; };
+		Y2000000000000000000000A /* NotificationPermissionServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationPermissionServiceTests.swift; sourceTree = "<group>"; };
+		Y2000000000000000000000B /* TaskTemplateEditorViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskTemplateEditorViewModelTests.swift; sourceTree = "<group>"; };
+		Y2000000000000000000000C /* ParentNotificationDiagnosticsPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentNotificationDiagnosticsPreview.swift; sourceTree = "<group>"; };
+		Y2000000000000000000000D /* NotificationRequestIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationRequestIdentifier.swift; sourceTree = "<group>"; };
+		Y2000000000000000000000E /* NotificationLinkStoreError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationLinkStoreError.swift; sourceTree = "<group>"; };
+		Y2000000000000000000000F /* NotificationLinkStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationLinkStore.swift; sourceTree = "<group>"; };
+		Y20000000000000000000010 /* NotificationLinkStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationLinkStoreTests.swift; sourceTree = "<group>"; };
+		Y20000000000000000000011 /* NotificationSchedulingCandidate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSchedulingCandidate.swift; sourceTree = "<group>"; };
+		Y20000000000000000000012 /* NotificationCandidateSelectionError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCandidateSelectionError.swift; sourceTree = "<group>"; };
+		Y20000000000000000000013 /* NotificationCandidateSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCandidateSelection.swift; sourceTree = "<group>"; };
+		Y20000000000000000000014 /* NotificationCandidateSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCandidateSelector.swift; sourceTree = "<group>"; };
+		Y20000000000000000000015 /* NotificationCandidateSelectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCandidateSelectorTests.swift; sourceTree = "<group>"; };
 		G20000000000000000000001 /* TaskProgressServiceError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskProgressServiceError.swift; sourceTree = "<group>"; };
 		G20000000000000000000002 /* TaskProgressService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskProgressService.swift; sourceTree = "<group>"; };
 		G20000000000000000000003 /* TaskProgressServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskProgressServiceTests.swift; sourceTree = "<group>"; };
@@ -302,6 +371,29 @@
 		U20000000000000000000003 /* TaskTemplateLifecycleError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskTemplateLifecycleError.swift; sourceTree = "<group>"; };
 		U20000000000000000000004 /* TaskTemplateLifecycleService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskTemplateLifecycleService.swift; sourceTree = "<group>"; };
 		U20000000000000000000005 /* TaskTemplateLifecycleServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskTemplateLifecycleServiceTests.swift; sourceTree = "<group>"; };
+		V20000000000000000000001 /* ParentTodayTaskManagementError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentTodayTaskManagementError.swift; sourceTree = "<group>"; };
+		V20000000000000000000002 /* ParentTodayTaskManagementService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentTodayTaskManagementService.swift; sourceTree = "<group>"; };
+		V20000000000000000000003 /* ParentTodayTaskListState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentTodayTaskListState.swift; sourceTree = "<group>"; };
+		V20000000000000000000004 /* ParentTodayTaskListContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentTodayTaskListContent.swift; sourceTree = "<group>"; };
+		V20000000000000000000005 /* ParentTodayTaskViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentTodayTaskViewModel.swift; sourceTree = "<group>"; };
+		V20000000000000000000006 /* ParentTodayTaskRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentTodayTaskRow.swift; sourceTree = "<group>"; };
+		V20000000000000000000007 /* ParentTodayTimeEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentTodayTimeEditorView.swift; sourceTree = "<group>"; };
+		V20000000000000000000008 /* ParentTodayTaskListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentTodayTaskListView.swift; sourceTree = "<group>"; };
+		V20000000000000000000009 /* ParentRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentRoute.swift; sourceTree = "<group>"; };
+		V2000000000000000000000A /* ParentTodayTaskManagementServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentTodayTaskManagementServiceTests.swift; sourceTree = "<group>"; };
+		V2000000000000000000000B /* ParentTodayTaskListBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentTodayTaskListBody.swift; sourceTree = "<group>"; };
+		W20000000000000000000001 /* ParentCalendarDayAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentCalendarDayAction.swift; sourceTree = "<group>"; };
+		W20000000000000000000002 /* ParentCalendarDayError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentCalendarDayError.swift; sourceTree = "<group>"; };
+		W20000000000000000000003 /* ParentCalendarDayService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentCalendarDayService.swift; sourceTree = "<group>"; };
+		W20000000000000000000004 /* ParentCalendarDayViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentCalendarDayViewModel.swift; sourceTree = "<group>"; };
+		W20000000000000000000005 /* ParentCalendarDayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentCalendarDayView.swift; sourceTree = "<group>"; };
+		W20000000000000000000006 /* ParentCalendarDayServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentCalendarDayServiceTests.swift; sourceTree = "<group>"; };
+		W20000000000000000000007 /* ParentCalendarDayImpact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentCalendarDayImpact.swift; sourceTree = "<group>"; };
+		W20000000000000000000008 /* ParentCalendarOccurrenceItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentCalendarOccurrenceItem.swift; sourceTree = "<group>"; };
+		W20000000000000000000009 /* ParentCalendarDaySnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentCalendarDaySnapshot.swift; sourceTree = "<group>"; };
+		W2000000000000000000000A /* ParentCalendarReconciliationPlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentCalendarReconciliationPlan.swift; sourceTree = "<group>"; };
+		W2000000000000000000000B /* ParentCalendarDayContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentCalendarDayContent.swift; sourceTree = "<group>"; };
+		W2000000000000000000000C /* ParentCalendarDayPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentCalendarDayPreview.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -362,6 +454,7 @@
 				A20000000000000000000002 /* RootView.swift */,
 				N20000000000000000000001 /* UITestLaunchConfiguration.swift */,
 				N20000000000000000000002 /* UITestSeedService.swift */,
+				Y20000000000000000000006 /* UITestNotificationPermissionProvider.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -371,6 +464,7 @@
 			children = (
 				D50000000000000000000001 /* Models */,
 				F50000000000000000000001 /* OccurrenceGeneration */,
+				Y50000000000000000000002 /* Notifications */,
 				A50000000000000000000005 /* Persistence */,
 				G50000000000000000000001 /* TaskProgress */,
 			);
@@ -433,6 +527,10 @@
 				A2000000000000000000000D /* LocalNotificationService.swift */,
 				A2000000000000000000000C /* LocalNotificationServiceError.swift */,
 				A2000000000000000000000A /* NotificationAuthorizationState.swift */,
+				Y20000000000000000000001 /* NotificationDeliverySettingState.swift */,
+				Y20000000000000000000002 /* NotificationDiagnosticSnapshot.swift */,
+				Y20000000000000000000003 /* NotificationPermissionProviding.swift */,
+				Y20000000000000000000004 /* NotificationPermissionService.swift */,
 			);
 			path = Notifications;
 			sourceTree = "<group>";
@@ -441,7 +539,10 @@
 			isa = PBXGroup;
 			children = (
 				A5000000000000000000000C /* NotificationProbe */,
+				W50000000000000000000001 /* ParentCalendar */,
+				Y50000000000000000000001 /* ParentNotifications */,
 				P50000000000000000000003 /* ParentGate */,
+				V50000000000000000000001 /* ParentToday */,
 				R50000000000000000000001 /* ParentTaskTemplates */,
 				I50000000000000000000004 /* TaskSession */,
 				I50000000000000000000005 /* Today */,
@@ -522,10 +623,45 @@
 		P50000000000000000000003 /* ParentGate */ = {
 			isa = PBXGroup;
 			children = (
+				V20000000000000000000009 /* ParentRoute.swift */,
 				P20000000000000000000005 /* ParentGateView.swift */,
 				P20000000000000000000004 /* ParentGateViewModel.swift */,
 			);
 			path = ParentGate;
+			sourceTree = "<group>";
+		};
+		V50000000000000000000001 /* ParentToday */ = {
+			isa = PBXGroup;
+			children = (
+				V2000000000000000000000B /* ParentTodayTaskListBody.swift */,
+				V20000000000000000000004 /* ParentTodayTaskListContent.swift */,
+				V20000000000000000000008 /* ParentTodayTaskListView.swift */,
+				V20000000000000000000003 /* ParentTodayTaskListState.swift */,
+				V20000000000000000000001 /* ParentTodayTaskManagementError.swift */,
+				V20000000000000000000002 /* ParentTodayTaskManagementService.swift */,
+				V20000000000000000000006 /* ParentTodayTaskRow.swift */,
+				V20000000000000000000007 /* ParentTodayTimeEditorView.swift */,
+				V20000000000000000000005 /* ParentTodayTaskViewModel.swift */,
+			);
+			path = ParentToday;
+			sourceTree = "<group>";
+		};
+		W50000000000000000000001 /* ParentCalendar */ = {
+			isa = PBXGroup;
+			children = (
+				W20000000000000000000001 /* ParentCalendarDayAction.swift */,
+				W2000000000000000000000B /* ParentCalendarDayContent.swift */,
+				W20000000000000000000002 /* ParentCalendarDayError.swift */,
+				W20000000000000000000007 /* ParentCalendarDayImpact.swift */,
+				W2000000000000000000000C /* ParentCalendarDayPreview.swift */,
+				W20000000000000000000003 /* ParentCalendarDayService.swift */,
+				W20000000000000000000009 /* ParentCalendarDaySnapshot.swift */,
+				W20000000000000000000005 /* ParentCalendarDayView.swift */,
+				W20000000000000000000004 /* ParentCalendarDayViewModel.swift */,
+				W20000000000000000000008 /* ParentCalendarOccurrenceItem.swift */,
+				W2000000000000000000000A /* ParentCalendarReconciliationPlan.swift */,
+			);
+			path = ParentCalendar;
 			sourceTree = "<group>";
 		};
 		R50000000000000000000001 /* ParentTaskTemplates */ = {
@@ -548,6 +684,7 @@
 				T20000000000000000000009 /* TaskTemplateEditorForm.swift */,
 				T20000000000000000000006 /* TaskTemplateEditorViewModel.swift */,
 				T20000000000000000000007 /* TaskTemplateEditorViewModelFactory.swift */,
+				Y20000000000000000000005 /* TaskTemplateSaveOutcome.swift */,
 				U20000000000000000000003 /* TaskTemplateLifecycleError.swift */,
 				U20000000000000000000001 /* TaskTemplateLifecycleImpact.swift */,
 				U20000000000000000000002 /* TaskTemplateLifecycleResult.swift */,
@@ -597,9 +734,13 @@
 			isa = PBXGroup;
 			children = (
 				L20000000000000000000001 /* FixedDateProvider.swift */,
+				Y2000000000000000000000A /* NotificationPermissionServiceTests.swift */,
+				Y2000000000000000000000B /* TaskTemplateEditorViewModelTests.swift */,
+				W20000000000000000000006 /* ParentCalendarDayServiceTests.swift */,
 				Q20000000000000000000001 /* InMemoryParentPINCredentialStore.swift */,
 				Q20000000000000000000004 /* KeychainParentPINCredentialStoreTests.swift */,
 				Q20000000000000000000003 /* ParentGateViewModelTests.swift */,
+				V2000000000000000000000A /* ParentTodayTaskManagementServiceTests.swift */,
 				S20000000000000000000001 /* ParentTaskTemplateQueryServiceTests.swift */,
 				T20000000000000000000004 /* TaskTemplateEditingServiceTests.swift */,
 				U20000000000000000000005 /* TaskTemplateLifecycleServiceTests.swift */,
@@ -609,6 +750,38 @@
 				L20000000000000000000002 /* TodayViewModelTests.swift */,
 			);
 			path = Features;
+			sourceTree = "<group>";
+		};
+		Y50000000000000000000001 /* ParentNotifications */ = {
+			isa = PBXGroup;
+			children = (
+				Y20000000000000000000007 /* ParentNotificationDiagnosticsState.swift */,
+				Y2000000000000000000000C /* ParentNotificationDiagnosticsPreview.swift */,
+				Y20000000000000000000009 /* ParentNotificationDiagnosticsView.swift */,
+				Y20000000000000000000008 /* ParentNotificationDiagnosticsViewModel.swift */,
+			);
+			path = ParentNotifications;
+			sourceTree = "<group>";
+		};
+		Y50000000000000000000002 /* Notifications */ = {
+			isa = PBXGroup;
+			children = (
+				Y2000000000000000000000F /* NotificationLinkStore.swift */,
+				Y2000000000000000000000E /* NotificationLinkStoreError.swift */,
+				Y2000000000000000000000D /* NotificationRequestIdentifier.swift */,
+			);
+			path = Notifications;
+			sourceTree = "<group>";
+		};
+		Y50000000000000000000003 /* Notifications */ = {
+			isa = PBXGroup;
+			children = (
+				Y20000000000000000000014 /* NotificationCandidateSelector.swift */,
+				Y20000000000000000000013 /* NotificationCandidateSelection.swift */,
+				Y20000000000000000000012 /* NotificationCandidateSelectionError.swift */,
+				Y20000000000000000000011 /* NotificationSchedulingCandidate.swift */,
+			);
+			path = Notifications;
 			sourceTree = "<group>";
 		};
 		K50000000000000000000001 /* Time */ = {
@@ -624,6 +797,7 @@
 			isa = PBXGroup;
 			children = (
 				C50000000000000000000002 /* Calendar */,
+				Y50000000000000000000003 /* Notifications */,
 				P50000000000000000000001 /* Security */,
 				E50000000000000000000001 /* Scheduling */,
 				C50000000000000000000003 /* Tasks */,
@@ -668,6 +842,7 @@
 				C20000000000000000000012 /* DomainStateMachineTests.swift */,
 				Q20000000000000000000002 /* ParentPINTests.swift */,
 				C20000000000000000000010 /* LocalDateTests.swift */,
+				Y20000000000000000000015 /* NotificationCandidateSelectorTests.swift */,
 				E20000000000000000000009 /* TaskCandidateOverrideResolverTests.swift */,
 				E20000000000000000000004 /* TaskRecurrenceExpanderTests.swift */,
 				C20000000000000000000011 /* TaskRecurrenceTests.swift */,
@@ -710,6 +885,7 @@
 			children = (
 				A20000000000000000000006 /* AppModelContainerTests.swift */,
 				H20000000000000000000002 /* M1DataKernelIntegrationTests.swift */,
+				Y20000000000000000000010 /* NotificationLinkStoreTests.swift */,
 				D2000000000000000000000C /* PersistenceConstraintTests.swift */,
 				D2000000000000000000000D /* PersistenceFixture.swift */,
 				D2000000000000000000000B /* PersistenceRoundTripTests.swift */,
@@ -724,6 +900,8 @@
 			children = (
 				F20000000000000000000001 /* OccurrenceReconciliationError.swift */,
 				F20000000000000000000002 /* OccurrenceReconciliationReport.swift */,
+				X20000000000000000000001 /* TaskOccurrenceMaterializationError.swift */,
+				X20000000000000000000002 /* TaskOccurrenceMaterializationService.swift */,
 				F20000000000000000000003 /* TaskOccurrenceReconciliationService.swift */,
 			);
 			path = OccurrenceGeneration;
@@ -859,6 +1037,7 @@
 				P10000000000000000000003 /* KeychainParentPINCredentialStore.swift in Sources */,
 				N10000000000000000000001 /* UITestLaunchConfiguration.swift in Sources */,
 				N10000000000000000000002 /* UITestSeedService.swift in Sources */,
+				Y10000000000000000000006 /* UITestNotificationPermissionProvider.swift in Sources */,
 				C10000000000000000000004 /* CompletionSource.swift in Sources */,
 				D10000000000000000000006 /* CompletionRecord.swift in Sources */,
 				D10000000000000000000008 /* DayOverride.swift in Sources */,
@@ -888,11 +1067,36 @@
 				A1000000000000000000000B /* LocalNotificationService.swift in Sources */,
 				A1000000000000000000000A /* LocalNotificationServiceError.swift in Sources */,
 				A10000000000000000000008 /* NotificationAuthorizationState.swift in Sources */,
+				Y10000000000000000000001 /* NotificationDeliverySettingState.swift in Sources */,
+				Y10000000000000000000002 /* NotificationDiagnosticSnapshot.swift in Sources */,
+				Y10000000000000000000003 /* NotificationPermissionProviding.swift in Sources */,
+				Y10000000000000000000004 /* NotificationPermissionService.swift in Sources */,
 				A1000000000000000000000C /* NotificationProbeScenario.swift in Sources */,
 				A1000000000000000000000E /* NotificationProbeView.swift in Sources */,
 				A1000000000000000000000D /* NotificationProbeViewModel.swift in Sources */,
 				P10000000000000000000005 /* ParentGateView.swift in Sources */,
 				P10000000000000000000004 /* ParentGateViewModel.swift in Sources */,
+				V10000000000000000000009 /* ParentRoute.swift in Sources */,
+				V1000000000000000000000B /* ParentTodayTaskListBody.swift in Sources */,
+				V10000000000000000000004 /* ParentTodayTaskListContent.swift in Sources */,
+				V10000000000000000000008 /* ParentTodayTaskListView.swift in Sources */,
+				V10000000000000000000003 /* ParentTodayTaskListState.swift in Sources */,
+				V10000000000000000000001 /* ParentTodayTaskManagementError.swift in Sources */,
+				V10000000000000000000002 /* ParentTodayTaskManagementService.swift in Sources */,
+				V10000000000000000000006 /* ParentTodayTaskRow.swift in Sources */,
+				V10000000000000000000007 /* ParentTodayTimeEditorView.swift in Sources */,
+				V10000000000000000000005 /* ParentTodayTaskViewModel.swift in Sources */,
+				W10000000000000000000001 /* ParentCalendarDayAction.swift in Sources */,
+				W10000000000000000000002 /* ParentCalendarDayError.swift in Sources */,
+				W10000000000000000000007 /* ParentCalendarDayImpact.swift in Sources */,
+				W10000000000000000000008 /* ParentCalendarOccurrenceItem.swift in Sources */,
+				W10000000000000000000009 /* ParentCalendarDaySnapshot.swift in Sources */,
+				W1000000000000000000000A /* ParentCalendarReconciliationPlan.swift in Sources */,
+				W10000000000000000000003 /* ParentCalendarDayService.swift in Sources */,
+				W1000000000000000000000B /* ParentCalendarDayContent.swift in Sources */,
+				W10000000000000000000004 /* ParentCalendarDayViewModel.swift in Sources */,
+				W10000000000000000000005 /* ParentCalendarDayView.swift in Sources */,
+				W1000000000000000000000C /* ParentCalendarDayPreview.swift in Sources */,
 				P10000000000000000000001 /* ParentPIN.swift in Sources */,
 				P10000000000000000000006 /* ParentPINError.swift in Sources */,
 				P10000000000000000000002 /* ParentPINCredentialStoring.swift in Sources */,
@@ -905,6 +1109,10 @@
 				R10000000000000000000006 /* ParentTaskTemplateRoute.swift in Sources */,
 				R10000000000000000000007 /* ParentTaskTemplateRow.swift in Sources */,
 				R10000000000000000000008 /* ParentTaskTemplateListView.swift in Sources */,
+				Y10000000000000000000007 /* ParentNotificationDiagnosticsState.swift in Sources */,
+				Y10000000000000000000008 /* ParentNotificationDiagnosticsViewModel.swift in Sources */,
+				Y10000000000000000000009 /* ParentNotificationDiagnosticsView.swift in Sources */,
+				Y1000000000000000000000C /* ParentNotificationDiagnosticsPreview.swift in Sources */,
 				R1000000000000000000000A /* ParentTaskTemplateListContent.swift in Sources */,
 				T10000000000000000000001 /* TaskTemplateDraft.swift in Sources */,
 				T10000000000000000000002 /* TaskTemplateEditorError.swift in Sources */,
@@ -914,14 +1122,24 @@
 				T10000000000000000000009 /* TaskTemplateEditorForm.swift in Sources */,
 				T10000000000000000000006 /* TaskTemplateEditorViewModel.swift in Sources */,
 				T10000000000000000000007 /* TaskTemplateEditorViewModelFactory.swift in Sources */,
+				Y10000000000000000000005 /* TaskTemplateSaveOutcome.swift in Sources */,
 				U10000000000000000000003 /* TaskTemplateLifecycleError.swift in Sources */,
 				U10000000000000000000001 /* TaskTemplateLifecycleImpact.swift in Sources */,
 				U10000000000000000000002 /* TaskTemplateLifecycleResult.swift in Sources */,
 				U10000000000000000000004 /* TaskTemplateLifecycleService.swift in Sources */,
 				D10000000000000000000002 /* NotificationKind.swift in Sources */,
 				D10000000000000000000009 /* NotificationLink.swift in Sources */,
+				Y1000000000000000000000D /* NotificationRequestIdentifier.swift in Sources */,
+				Y1000000000000000000000E /* NotificationLinkStoreError.swift in Sources */,
+				Y1000000000000000000000F /* NotificationLinkStore.swift in Sources */,
+				Y10000000000000000000011 /* NotificationSchedulingCandidate.swift in Sources */,
+				Y10000000000000000000012 /* NotificationCandidateSelectionError.swift in Sources */,
+				Y10000000000000000000013 /* NotificationCandidateSelection.swift in Sources */,
+				Y10000000000000000000014 /* NotificationCandidateSelector.swift in Sources */,
 				F10000000000000000000001 /* OccurrenceReconciliationError.swift in Sources */,
 				F10000000000000000000002 /* OccurrenceReconciliationReport.swift in Sources */,
+				X10000000000000000000001 /* TaskOccurrenceMaterializationError.swift in Sources */,
+				X10000000000000000000002 /* TaskOccurrenceMaterializationService.swift in Sources */,
 				D10000000000000000000004 /* ReminderRule.swift in Sources */,
 				H10000000000000000000001 /* ReminderRuleDecodingError.swift in Sources */,
 				E10000000000000000000006 /* ResolvedTaskCandidate.swift in Sources */,
@@ -966,12 +1184,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				A10000000000000000000006 /* AppModelContainerTests.swift in Sources */,
+				W10000000000000000000006 /* ParentCalendarDayServiceTests.swift in Sources */,
 				C10000000000000000000012 /* DomainStateMachineTests.swift in Sources */,
 				A1000000000000000000000F /* FakeLocalNotificationService.swift in Sources */,
+				Y1000000000000000000000A /* NotificationPermissionServiceTests.swift in Sources */,
+				Y1000000000000000000000B /* TaskTemplateEditorViewModelTests.swift in Sources */,
 				L10000000000000000000001 /* FixedDateProvider.swift in Sources */,
 				Q10000000000000000000001 /* InMemoryParentPINCredentialStore.swift in Sources */,
 				Q10000000000000000000004 /* KeychainParentPINCredentialStoreTests.swift in Sources */,
 				Q10000000000000000000003 /* ParentGateViewModelTests.swift in Sources */,
+				V1000000000000000000000A /* ParentTodayTaskManagementServiceTests.swift in Sources */,
 				S10000000000000000000001 /* ParentTaskTemplateQueryServiceTests.swift in Sources */,
 				T10000000000000000000004 /* TaskTemplateEditingServiceTests.swift in Sources */,
 				U10000000000000000000005 /* TaskTemplateLifecycleServiceTests.swift in Sources */,
@@ -979,6 +1201,8 @@
 				C10000000000000000000010 /* LocalDateTests.swift in Sources */,
 				N10000000000000000000004 /* LocalizationCatalogTests.swift in Sources */,
 				H10000000000000000000002 /* M1DataKernelIntegrationTests.swift in Sources */,
+				Y10000000000000000000010 /* NotificationLinkStoreTests.swift in Sources */,
+				Y10000000000000000000015 /* NotificationCandidateSelectorTests.swift in Sources */,
 				A10000000000000000000010 /* NotificationProbeViewModelTests.swift in Sources */,
 				D1000000000000000000000C /* PersistenceConstraintTests.swift in Sources */,
 				Q10000000000000000000002 /* ParentPINTests.swift in Sources */,

@@ -9,13 +9,18 @@
     struct UITestLaunchConfiguration {
         static let enableArgument = "--habito-ui-testing"
         static let resetArgument = "--habito-ui-reset"
+        static let emptyDataArgument = "--habito-ui-empty"
 
         let shouldReset: Bool
+        let shouldSeedSampleData: Bool
 
         static var current: UITestLaunchConfiguration? {
             let arguments = ProcessInfo.processInfo.arguments
             guard arguments.contains(enableArgument) else { return nil }
-            return UITestLaunchConfiguration(shouldReset: arguments.contains(resetArgument))
+            return UITestLaunchConfiguration(
+                shouldReset: arguments.contains(resetArgument),
+                shouldSeedSampleData: !arguments.contains(emptyDataArgument)
+            )
         }
 
         /// 创建 UI 测试独占的磁盘容器。
