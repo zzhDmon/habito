@@ -11,6 +11,7 @@ struct HabitoApp: App {
 
     private let modelContainer: ModelContainer
     private let notificationRebuildService: NotificationRebuildService
+    private let notificationNavigationService: NotificationNavigationService
     private let taskSessionModelFactory: TaskSessionViewModelFactory
     private let taskTemplateEditorModelFactory: TaskTemplateEditorViewModelFactory
     @State private var notificationRebuildTrigger: NotificationRebuildTrigger
@@ -79,6 +80,7 @@ struct HabitoApp: App {
             calendar: calendar,
             timeZone: timeZone
         )
+        notificationNavigationService = NotificationNavigationService(context: container.mainContext)
         let notificationPermissionService = NotificationPermissionService(
             context: container.mainContext,
             provider: notificationProvider
@@ -157,7 +159,9 @@ struct HabitoApp: App {
                 parentNotificationModel: parentNotificationModel,
                 taskTemplateEditorModelFactory: taskTemplateEditorModelFactory,
                 notificationRebuildService: notificationRebuildService,
-                notificationRebuildTrigger: notificationRebuildTrigger
+                notificationRebuildTrigger: notificationRebuildTrigger,
+                notificationResponseRouter: appDelegate.notificationResponseRouter,
+                notificationNavigationService: notificationNavigationService
             )
         }
         .modelContainer(modelContainer)

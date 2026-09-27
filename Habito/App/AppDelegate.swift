@@ -7,6 +7,7 @@ import UserNotifications
 /// SwiftUI 暂时没有可替代 `UNUserNotificationCenterDelegate` 的原生场景 API，
 /// 因此这里使用最小的 `UIApplicationDelegate` 桥接，并把业务排程留在通知服务中。
 final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
+    let notificationResponseRouter = NotificationResponseRouter()
     private let logger = Logger(
         subsystem: "com.zhangzehua.Habito",
         category: "LocalNotification"
@@ -17,6 +18,21 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
         UNUserNotificationCenter.current().delegate = self
+        #if DEBUG
+            // UI 自动化用与系统回调相同的桥模拟“根视图显示前已点击通知”的冷启动顺序。
+            if let configuration = UITestLaunchConfiguration.current,
+                let identifier = configuration.notificationRequestIdentifier
+            {
+                if configuration.shouldDelayNotificationResponse {
+                    Task { @MainActor [notificationResponseRouter] in
+                        try? await Task.sleep(for: .seconds(2))
+                        notificationResponseRouter.receive(requestIdentifier: identifier)
+                    }
+                } else {
+                    notificationResponseRouter.receive(requestIdentifier: identifier)
+                }
+            }
+        #endif
         return true
     }
 
@@ -29,11 +45,13 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
         return [.banner, .list, .sound]
     }
 
-    /// 记录用户点击通知的事实；V0 的正式页面路由将在 M4-006 接入。
+    /// 把点击交给可跨冷启动保存意图的桥；页面解析仍由 SwiftData 业务服务负责。
     func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         didReceive response: UNNotificationResponse
     ) async {
-        logger.info("用户点击本地通知：\(response.notification.request.identifier, privacy: .public)")
+        let identifier = response.notification.request.identifier
+        logger.info("用户点击本地通知：\(identifier, privacy: .public)")
+        notificationResponseRouter.receive(requestIdentifier: identifier)
     }
 }

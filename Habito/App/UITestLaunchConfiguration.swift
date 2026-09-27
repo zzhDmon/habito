@@ -10,16 +10,26 @@
         static let enableArgument = "--habito-ui-testing"
         static let resetArgument = "--habito-ui-reset"
         static let emptyDataArgument = "--habito-ui-empty"
+        static let notificationRequestArgument = "--habito-ui-notification-request"
+        static let delayedNotificationArgument = "--habito-ui-delayed-notification"
 
         let shouldReset: Bool
         let shouldSeedSampleData: Bool
+        let notificationRequestIdentifier: String?
+        let shouldDelayNotificationResponse: Bool
 
         static var current: UITestLaunchConfiguration? {
             let arguments = ProcessInfo.processInfo.arguments
             guard arguments.contains(enableArgument) else { return nil }
+            let notificationRequestIdentifier = arguments.firstIndex(of: notificationRequestArgument)
+                .flatMap { index in
+                    arguments.indices.contains(index + 1) ? arguments[index + 1] : nil
+                }
             return UITestLaunchConfiguration(
                 shouldReset: arguments.contains(resetArgument),
-                shouldSeedSampleData: !arguments.contains(emptyDataArgument)
+                shouldSeedSampleData: !arguments.contains(emptyDataArgument),
+                notificationRequestIdentifier: notificationRequestIdentifier,
+                shouldDelayNotificationResponse: arguments.contains(delayedNotificationArgument)
             )
         }
 

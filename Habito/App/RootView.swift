@@ -12,10 +12,12 @@ struct RootView: View {
     @State private var parentCalendarModel: ParentCalendarDayViewModel
     @State private var parentNotificationModel: ParentNotificationDiagnosticsViewModel
     @State private var notificationRebuildTrigger: NotificationRebuildTrigger
+    @State private var notificationResponseRouter: NotificationResponseRouter
     @State private var isParentGatePresented = false
     private let taskSessionModelFactory: TaskSessionViewModelFactory
     private let taskTemplateEditorModelFactory: TaskTemplateEditorViewModelFactory
     private let notificationRebuildService: NotificationRebuildService
+    private let notificationNavigationService: NotificationNavigationService
     private let logger = Logger(subsystem: "com.zhangzehua.Habito", category: "NotificationRebuild")
 
     init(
@@ -28,7 +30,9 @@ struct RootView: View {
         parentNotificationModel: ParentNotificationDiagnosticsViewModel,
         taskTemplateEditorModelFactory: TaskTemplateEditorViewModelFactory,
         notificationRebuildService: NotificationRebuildService,
-        notificationRebuildTrigger: NotificationRebuildTrigger
+        notificationRebuildTrigger: NotificationRebuildTrigger,
+        notificationResponseRouter: NotificationResponseRouter,
+        notificationNavigationService: NotificationNavigationService
     ) {
         _todayModel = State(initialValue: todayModel)
         self.taskSessionModelFactory = taskSessionModelFactory
@@ -38,8 +42,10 @@ struct RootView: View {
         _parentCalendarModel = State(initialValue: parentCalendarModel)
         _parentNotificationModel = State(initialValue: parentNotificationModel)
         _notificationRebuildTrigger = State(initialValue: notificationRebuildTrigger)
+        _notificationResponseRouter = State(initialValue: notificationResponseRouter)
         self.taskTemplateEditorModelFactory = taskTemplateEditorModelFactory
         self.notificationRebuildService = notificationRebuildService
+        self.notificationNavigationService = notificationNavigationService
     }
 
     var body: some View {
@@ -63,9 +69,9 @@ struct RootView: View {
             }
             .navigationDestination(for: KidRoute.self) { route in
                 switch route {
-                case let .task(task):
+                case let .task(occurrenceID):
                     KidTaskSessionView(
-                        model: taskSessionModelFactory.makeModel(for: task.id),
+                        model: taskSessionModelFactory.makeModel(for: occurrenceID),
                         onExit: loadToday
                     )
                 }
@@ -74,6 +80,9 @@ struct RootView: View {
         .task(loadToday)
         .task(id: notificationRebuildTrigger.revision) {
             await rebuildNotifications()
+        }
+        .task(id: notificationResponseRouter.revision) {
+            routePendingNotificationResponse()
         }
         .onChange(of: scenePhase) { _, phase in
             guard phase == .active else { return }
@@ -92,7 +101,7 @@ struct RootView: View {
     }
 
     private func showTask(_ task: KidTaskNavigationItem) {
-        path.append(.task(task))
+        path.append(.task(task.id))
     }
 
     private func loadToday() {
@@ -111,6 +120,23 @@ struct RootView: View {
             return
         } catch {
             logger.error("通知重建失败：\(String(describing: type(of: error)), privacy: .public)")
+        }
+    }
+
+    private func routePendingNotificationResponse() {
+        guard let identifier = notificationResponseRouter.consumePendingRequestIdentifier() else {
+            return
+        }
+        switch notificationNavigationService.destination(for: identifier) {
+        case let .task(occurrenceID):
+            isParentGatePresented = false
+            path = [.task(occurrenceID)]
+        case .home:
+            isParentGatePresented = false
+            path = []
+            loadToday()
+        case .ignored:
+            break
         }
     }
 }

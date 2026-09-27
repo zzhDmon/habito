@@ -13,6 +13,37 @@ final class HabitoKidFlowUITests: XCTestCase {
         continueAfterFailure = false
     }
 
+    func testColdLaunchNotificationOpensSeededTask() throws {
+        XCUIDevice.shared.orientation = .landscapeLeft
+        let app = XCUIApplication()
+        app.launchArguments = [
+            "--habito-ui-testing",
+            "--habito-ui-reset",
+            "--habito-ui-notification-request",
+            "habito.occurrence.c5412144-2fb8-4e96-9f7a-6a42e0803d11.primary",
+        ]
+        app.launch()
+
+        XCTAssertTrue(app.buttons["kid.session.start"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["阅读 15 分钟"].exists)
+    }
+
+    func testBackgroundNotificationReplacesCurrentNavigationWithSeededTask() throws {
+        XCUIDevice.shared.orientation = .landscapeLeft
+        let app = XCUIApplication()
+        app.launchArguments = [
+            "--habito-ui-testing",
+            "--habito-ui-reset",
+            "--habito-ui-notification-request",
+            "habito.occurrence.c5412144-2fb8-4e96-9f7a-6a42e0803d11.primary",
+            "--habito-ui-delayed-notification",
+        ]
+        app.launch()
+
+        XCTAssertTrue(app.buttons[seededTaskIdentifier].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["kid.session.start"].waitForExistence(timeout: 5))
+    }
+
     func testStartPauseRelaunchResumeCompleteAndUndo() throws {
         XCUIDevice.shared.orientation = .landscapeLeft
         let app = XCUIApplication()

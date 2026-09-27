@@ -101,6 +101,10 @@
 		Y1000000000000000000001F /* NotificationRebuildService.swift in Sources */ = {isa = PBXBuildFile; fileRef = Y2000000000000000000001F /* NotificationRebuildService.swift */; };
 		Y10000000000000000000020 /* NotificationRebuildServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = Y20000000000000000000020 /* NotificationRebuildServiceTests.swift */; };
 		Y10000000000000000000021 /* NotificationRebuildTrigger.swift in Sources */ = {isa = PBXBuildFile; fileRef = Y20000000000000000000021 /* NotificationRebuildTrigger.swift */; };
+		Y10000000000000000000022 /* NotificationNavigationDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = Y20000000000000000000022 /* NotificationNavigationDestination.swift */; };
+		Y10000000000000000000023 /* NotificationNavigationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = Y20000000000000000000023 /* NotificationNavigationService.swift */; };
+		Y10000000000000000000024 /* NotificationResponseRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = Y20000000000000000000024 /* NotificationResponseRouter.swift */; };
+		Y10000000000000000000025 /* NotificationNavigationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = Y20000000000000000000025 /* NotificationNavigationServiceTests.swift */; };
 		G10000000000000000000001 /* TaskProgressServiceError.swift in Sources */ = {isa = PBXBuildFile; fileRef = G20000000000000000000001 /* TaskProgressServiceError.swift */; };
 		G10000000000000000000002 /* TaskProgressService.swift in Sources */ = {isa = PBXBuildFile; fileRef = G20000000000000000000002 /* TaskProgressService.swift */; };
 		G10000000000000000000003 /* TaskProgressServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = G20000000000000000000003 /* TaskProgressServiceTests.swift */; };
@@ -317,6 +321,10 @@
 		Y2000000000000000000001F /* NotificationRebuildService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationRebuildService.swift; sourceTree = "<group>"; };
 		Y20000000000000000000020 /* NotificationRebuildServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationRebuildServiceTests.swift; sourceTree = "<group>"; };
 		Y20000000000000000000021 /* NotificationRebuildTrigger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationRebuildTrigger.swift; sourceTree = "<group>"; };
+		Y20000000000000000000022 /* NotificationNavigationDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationNavigationDestination.swift; sourceTree = "<group>"; };
+		Y20000000000000000000023 /* NotificationNavigationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationNavigationService.swift; sourceTree = "<group>"; };
+		Y20000000000000000000024 /* NotificationResponseRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationResponseRouter.swift; sourceTree = "<group>"; };
+		Y20000000000000000000025 /* NotificationNavigationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationNavigationServiceTests.swift; sourceTree = "<group>"; };
 		G20000000000000000000001 /* TaskProgressServiceError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskProgressServiceError.swift; sourceTree = "<group>"; };
 		G20000000000000000000002 /* TaskProgressService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskProgressService.swift; sourceTree = "<group>"; };
 		G20000000000000000000003 /* TaskProgressServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskProgressServiceTests.swift; sourceTree = "<group>"; };
@@ -560,6 +568,9 @@
 				Y2000000000000000000001E /* NotificationRebuildResult.swift */,
 				Y2000000000000000000001F /* NotificationRebuildService.swift */,
 				Y20000000000000000000021 /* NotificationRebuildTrigger.swift */,
+				Y20000000000000000000022 /* NotificationNavigationDestination.swift */,
+				Y20000000000000000000023 /* NotificationNavigationService.swift */,
+				Y20000000000000000000024 /* NotificationResponseRouter.swift */,
 				Y2000000000000000000001A /* NotificationRequestScheduling.swift */,
 			);
 			path = Notifications;
@@ -766,6 +777,7 @@
 				L20000000000000000000001 /* FixedDateProvider.swift */,
 				Y2000000000000000000000A /* NotificationPermissionServiceTests.swift */,
 				Y20000000000000000000020 /* NotificationRebuildServiceTests.swift */,
+				Y20000000000000000000025 /* NotificationNavigationServiceTests.swift */,
 				Y2000000000000000000000B /* TaskTemplateEditorViewModelTests.swift */,
 				W20000000000000000000006 /* ParentCalendarDayServiceTests.swift */,
 				Q20000000000000000000001 /* InMemoryParentPINCredentialStore.swift */,
@@ -1182,6 +1194,9 @@
 				Y1000000000000000000001E /* NotificationRebuildResult.swift in Sources */,
 				Y1000000000000000000001F /* NotificationRebuildService.swift in Sources */,
 				Y10000000000000000000021 /* NotificationRebuildTrigger.swift in Sources */,
+				Y10000000000000000000022 /* NotificationNavigationDestination.swift in Sources */,
+				Y10000000000000000000023 /* NotificationNavigationService.swift in Sources */,
+				Y10000000000000000000024 /* NotificationResponseRouter.swift in Sources */,
 				F10000000000000000000001 /* OccurrenceReconciliationError.swift in Sources */,
 				F10000000000000000000002 /* OccurrenceReconciliationReport.swift in Sources */,
 				X10000000000000000000001 /* TaskOccurrenceMaterializationError.swift in Sources */,
@@ -1235,6 +1250,7 @@
 				A1000000000000000000000F /* FakeLocalNotificationService.swift in Sources */,
 				Y1000000000000000000000A /* NotificationPermissionServiceTests.swift in Sources */,
 				Y10000000000000000000020 /* NotificationRebuildServiceTests.swift in Sources */,
+				Y10000000000000000000025 /* NotificationNavigationServiceTests.swift in Sources */,
 				Y1000000000000000000000B /* TaskTemplateEditorViewModelTests.swift in Sources */,
 				L10000000000000000000001 /* FixedDateProvider.swift in Sources */,
 				Q10000000000000000000001 /* InMemoryParentPINCredentialStore.swift in Sources */,

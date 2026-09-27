@@ -5,9 +5,9 @@
 ## 1. 当前状态
 
 - 当前阶段：M4 通知闭环
-- 当前任务：`M4-006 实现通知点击路由`
+- 当前任务：`M4-007 实现 App 内稍后提醒`
 - 当前任务状态：`TODO`
-- 下一建议任务：尽早设置通知 delegate，解析任务通知 identifier，并覆盖冷启动、后台点击与失效实例回首页
+- 下一建议任务：实现同一实例唯一的 10 分钟稍后提醒，接入预算、替换、完成清理和午夜边界提示
 - 最近更新时间：2026-09-27
 - 代码状态：M0、M1、M2、M3 已放行；家长可从空数据通过横屏 UI 完成完整配置与维护闭环
 
@@ -29,10 +29,10 @@
 | M1 | 数据与规则内核 | `DONE` | 7/7 | 规则与数据单测通过，无重复实例 |
 | M2 | 孩子闭环 | `DONE` | 7/7 | 无通知也能完成计时打卡闭环 |
 | M3 | 家长闭环 | `DONE` | 7/7 | 可完全通过 UI 配置和维护任务 |
-| M4 | 通知闭环 | `IN_PROGRESS` | 5/8 | 锁屏/终止提醒及更新清理通过 |
+| M4 | 通知闭环 | `IN_PROGRESS` | 6/8 | 锁屏/终止提醒及更新清理通过 |
 | M5 | 实机收口 | `WAITING` | 0/8 | 无 P0/P1，形成分发结论 |
 
-总计：33/44 个任务完成。
+总计：34/44 个任务完成。
 
 ## 4. 任务索引
 
@@ -73,7 +73,7 @@
 | M4-003 | 实现滚动排程候选计算 | M4-002 | `DONE` | 48 条主提醒预算与 8 条稍后提醒预留；稳定排序、跨月、部分日覆盖及不足 7 天诊断通过；全量 114/114 |
 | M4-004 | 实现系统挂起请求增量核对 | M4-003 | `DONE` | 连续五次幂等；增加/保留/替换/取消差集及非 Habito 请求隔离；单条失败可查且不中断；全量 117/117 |
 | M4-005 | 接入业务变更后的通知重建 | M4-004 | `DONE` | 启动/前台及六类业务写事件统一重建；连续五次幂等、完成/放假/停用清理通过；121 单测 + 1 横屏 UI 闭环通过 |
-| M4-006 | 实现通知点击路由 | M4-005 | `TODO` | — |
+| M4-006 | 实现通知点击路由 | M4-005 | `DONE` | delegate 启动期接管；有效实例冷启动/后台进入任务页，已处理/删除回首页；126 单测 + 2 横屏 UI 场景通过 |
 | M4-007 | 实现 App 内稍后提醒 | M4-005 | `TODO` | — |
 | M4-008 | M4 通知集成与真机验收 | M4-006、M4-007 | `WAITING` | — |
 | M5-001 | 完成可访问性与 iPad 布局收口 | M4-008 | `WAITING` | — |
@@ -133,6 +133,27 @@
 | R-010 | Xcode 27 与模拟器 runtime 偶发无法握手或在成功后卡住诊断收集 | 中/中 | 最低目标持续执行 build-for-testing；iOS 27 跑完整套件；区分测试断言结果与外围诊断收集，后续继续重试或更新 runtime | `OPEN` |
 
 ## 8. 最近一次交接
+
+### 2026-09-27 22:37：M4-006 完成，通知点击路由放行
+
+- 当前任务：`M4-007 实现 App 内稍后提醒`，状态 `TODO`；M4 已完成 6/8，项目总进度 34/44。
+- 已完成：`AppDelegate` 在启动完成时继续尽早设置 `UNUserNotificationCenterDelegate`，点击回调把稳定 request identifier 交给主 actor `NotificationResponseRouter`；该桥可在 SwiftUI 根视图创建前保留冷启动意图，也能用 revision 驱动已显示根视图响应后台点击。
+- 解析与导航：`NotificationNavigationService` 只从稳定 identifier 提取 occurrence ID 并读取当前 SwiftData 真相；待处理或进行中实例进入对应任务执行页，已完成、已跳过、已删除或损坏实例清空导航并回首页，非 Habito 请求不干扰当前页面。`KidRoute` 简化为只携带稳定 UUID，页面进入时仍重新加载最新实例。
+- 自动化：新增 5 个 Swift Testing 用例（7 次参数化执行）覆盖 pending/in-progress、completed/skipped、已删除、损坏/外部标识和冷启动桥单次消费；Debug UI 启动配置通过与正式回调相同的桥模拟即时冷启动点击和根视图显示后的延迟点击。
+- 验证：iOS 27 完整单元测试 126/126；冷启动点击横屏 UI 1/1（7.488 秒）与后台时序横屏 UI 1/1（8.573 秒）通过；`xcodebuild analyze`、iPadOS 17.2 `build-for-testing`、Swift 格式、工程 plist 和 `git diff --check` 通过。两项 UI 首次组合运行时后台用例被模拟器以 `signal term` 终止，单独重跑明确通过，无业务断言或 App 崩溃证据。
+- `swiftui-pro` 复核：继续使用类型安全 `NavigationStack`；路由值只携带稳定 ID，不持有 SwiftData 模型；UIKit 仅保留系统通知 delegate 边界，状态桥明确归属主 actor。未发现新增数据流、导航、并发、无障碍或性能 P0/P1。
+- 修改文件：新增 `NotificationNavigationDestination`、`NotificationNavigationService`、`NotificationResponseRouter` 及专项测试；更新 `AppDelegate`、组合根、`RootView`、`KidRoute`、UI 测试启动配置、横屏 UI 测试、Xcode 工程和本执行看板。
+- 下一条操作：开始 M4-007，先盘点任务执行页动作与通知 8 条预留预算，定义同一 occurrence 的固定 snooze 槽位替换、完成清理和跨午夜拒绝语义。
+- 新增假设/待确认：稍后提醒与主提醒共用 occurrence 点击解析规则；无业务阻塞。
+
+### 2026-09-27 22:30：M4-006 开始
+
+- 当前任务：`M4-006 实现通知点击路由`，状态 `IN_PROGRESS`。
+- 已确认边界：`AppDelegate` 已在启动完成时设置 `UNUserNotificationCenterDelegate`，但点击回调当前只记录日志；根导航使用类型安全 `NavigationStack`，任务执行页实际只需要稳定 occurrence ID。
+- 计划范围：新增可保留冷启动点击的主 actor 路由桥，以及从稳定通知 identifier 查询当前 `TaskOccurrence` 的纯业务路由服务；待处理或进行中实例进入任务页，已完成、已跳过、已删除或损坏实例回首页，非 Habito 通知不干扰当前导航。
+- 验收路径：单元测试覆盖有效、已处理、已删除、损坏和非 Habito identifier；横屏 UI 启动参数模拟冷启动通知点击，并验证进入指定任务及失效目标留在首页。
+- 下一条操作：实现点击事件桥和解析服务，再把 occurrence ID 路由接入 `RootView` 与组合根。
+- 新增假设/待确认：稍后提醒沿用相同 occurrence identifier 解析规则，实际创建稍后提醒仍留给 M4-007。
 
 ### 2026-09-27 22:27：M4-005 完成，通知重建业务链放行
 
