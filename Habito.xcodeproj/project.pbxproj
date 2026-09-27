@@ -89,6 +89,13 @@
 		Y10000000000000000000013 /* NotificationCandidateSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = Y20000000000000000000013 /* NotificationCandidateSelection.swift */; };
 		Y10000000000000000000014 /* NotificationCandidateSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = Y20000000000000000000014 /* NotificationCandidateSelector.swift */; };
 		Y10000000000000000000015 /* NotificationCandidateSelectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = Y20000000000000000000015 /* NotificationCandidateSelectorTests.swift */; };
+		Y10000000000000000000016 /* TaskNotificationRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = Y20000000000000000000016 /* TaskNotificationRequest.swift */; };
+		Y10000000000000000000017 /* PendingNotificationRequestSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = Y20000000000000000000017 /* PendingNotificationRequestSnapshot.swift */; };
+		Y10000000000000000000018 /* NotificationReconciliationFailure.swift in Sources */ = {isa = PBXBuildFile; fileRef = Y20000000000000000000018 /* NotificationReconciliationFailure.swift */; };
+		Y10000000000000000000019 /* NotificationReconciliationReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = Y20000000000000000000019 /* NotificationReconciliationReport.swift */; };
+		Y1000000000000000000001A /* NotificationRequestScheduling.swift in Sources */ = {isa = PBXBuildFile; fileRef = Y2000000000000000000001A /* NotificationRequestScheduling.swift */; };
+		Y1000000000000000000001B /* NotificationReconciliationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = Y2000000000000000000001B /* NotificationReconciliationCoordinator.swift */; };
+		Y1000000000000000000001C /* NotificationReconciliationCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = Y2000000000000000000001C /* NotificationReconciliationCoordinatorTests.swift */; };
 		G10000000000000000000001 /* TaskProgressServiceError.swift in Sources */ = {isa = PBXBuildFile; fileRef = G20000000000000000000001 /* TaskProgressServiceError.swift */; };
 		G10000000000000000000002 /* TaskProgressService.swift in Sources */ = {isa = PBXBuildFile; fileRef = G20000000000000000000002 /* TaskProgressService.swift */; };
 		G10000000000000000000003 /* TaskProgressServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = G20000000000000000000003 /* TaskProgressServiceTests.swift */; };
@@ -293,6 +300,13 @@
 		Y20000000000000000000013 /* NotificationCandidateSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCandidateSelection.swift; sourceTree = "<group>"; };
 		Y20000000000000000000014 /* NotificationCandidateSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCandidateSelector.swift; sourceTree = "<group>"; };
 		Y20000000000000000000015 /* NotificationCandidateSelectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCandidateSelectorTests.swift; sourceTree = "<group>"; };
+		Y20000000000000000000016 /* TaskNotificationRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskNotificationRequest.swift; sourceTree = "<group>"; };
+		Y20000000000000000000017 /* PendingNotificationRequestSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingNotificationRequestSnapshot.swift; sourceTree = "<group>"; };
+		Y20000000000000000000018 /* NotificationReconciliationFailure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationReconciliationFailure.swift; sourceTree = "<group>"; };
+		Y20000000000000000000019 /* NotificationReconciliationReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationReconciliationReport.swift; sourceTree = "<group>"; };
+		Y2000000000000000000001A /* NotificationRequestScheduling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationRequestScheduling.swift; sourceTree = "<group>"; };
+		Y2000000000000000000001B /* NotificationReconciliationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationReconciliationCoordinator.swift; sourceTree = "<group>"; };
+		Y2000000000000000000001C /* NotificationReconciliationCoordinatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationReconciliationCoordinatorTests.swift; sourceTree = "<group>"; };
 		G20000000000000000000001 /* TaskProgressServiceError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskProgressServiceError.swift; sourceTree = "<group>"; };
 		G20000000000000000000002 /* TaskProgressService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskProgressService.swift; sourceTree = "<group>"; };
 		G20000000000000000000003 /* TaskProgressServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskProgressServiceTests.swift; sourceTree = "<group>"; };
@@ -531,6 +545,8 @@
 				Y20000000000000000000002 /* NotificationDiagnosticSnapshot.swift */,
 				Y20000000000000000000003 /* NotificationPermissionProviding.swift */,
 				Y20000000000000000000004 /* NotificationPermissionService.swift */,
+				Y2000000000000000000001B /* NotificationReconciliationCoordinator.swift */,
+				Y2000000000000000000001A /* NotificationRequestScheduling.swift */,
 			);
 			path = Notifications;
 			sourceTree = "<group>";
@@ -779,7 +795,11 @@
 				Y20000000000000000000014 /* NotificationCandidateSelector.swift */,
 				Y20000000000000000000013 /* NotificationCandidateSelection.swift */,
 				Y20000000000000000000012 /* NotificationCandidateSelectionError.swift */,
+				Y20000000000000000000018 /* NotificationReconciliationFailure.swift */,
+				Y20000000000000000000019 /* NotificationReconciliationReport.swift */,
 				Y20000000000000000000011 /* NotificationSchedulingCandidate.swift */,
+				Y20000000000000000000017 /* PendingNotificationRequestSnapshot.swift */,
+				Y20000000000000000000016 /* TaskNotificationRequest.swift */,
 			);
 			path = Notifications;
 			sourceTree = "<group>";
@@ -843,6 +863,7 @@
 				Q20000000000000000000002 /* ParentPINTests.swift */,
 				C20000000000000000000010 /* LocalDateTests.swift */,
 				Y20000000000000000000015 /* NotificationCandidateSelectorTests.swift */,
+				Y2000000000000000000001C /* NotificationReconciliationCoordinatorTests.swift */,
 				E20000000000000000000009 /* TaskCandidateOverrideResolverTests.swift */,
 				E20000000000000000000004 /* TaskRecurrenceExpanderTests.swift */,
 				C20000000000000000000011 /* TaskRecurrenceTests.swift */,
@@ -1136,6 +1157,12 @@
 				Y10000000000000000000012 /* NotificationCandidateSelectionError.swift in Sources */,
 				Y10000000000000000000013 /* NotificationCandidateSelection.swift in Sources */,
 				Y10000000000000000000014 /* NotificationCandidateSelector.swift in Sources */,
+				Y10000000000000000000016 /* TaskNotificationRequest.swift in Sources */,
+				Y10000000000000000000017 /* PendingNotificationRequestSnapshot.swift in Sources */,
+				Y10000000000000000000018 /* NotificationReconciliationFailure.swift in Sources */,
+				Y10000000000000000000019 /* NotificationReconciliationReport.swift in Sources */,
+				Y1000000000000000000001A /* NotificationRequestScheduling.swift in Sources */,
+				Y1000000000000000000001B /* NotificationReconciliationCoordinator.swift in Sources */,
 				F10000000000000000000001 /* OccurrenceReconciliationError.swift in Sources */,
 				F10000000000000000000002 /* OccurrenceReconciliationReport.swift in Sources */,
 				X10000000000000000000001 /* TaskOccurrenceMaterializationError.swift in Sources */,
@@ -1203,6 +1230,7 @@
 				H10000000000000000000002 /* M1DataKernelIntegrationTests.swift in Sources */,
 				Y10000000000000000000010 /* NotificationLinkStoreTests.swift in Sources */,
 				Y10000000000000000000015 /* NotificationCandidateSelectorTests.swift in Sources */,
+				Y1000000000000000000001C /* NotificationReconciliationCoordinatorTests.swift in Sources */,
 				A10000000000000000000010 /* NotificationProbeViewModelTests.swift in Sources */,
 				D1000000000000000000000C /* PersistenceConstraintTests.swift in Sources */,
 				Q10000000000000000000002 /* ParentPINTests.swift in Sources */,

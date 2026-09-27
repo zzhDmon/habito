@@ -2,7 +2,7 @@ import Foundation
 import UserNotifications
 
 /// 使用 `UNUserNotificationCenter` 实现本地通知授权、排程和取消。
-final class LocalNotificationService: LocalNotificationScheduling {
+final class LocalNotificationService: LocalNotificationScheduling, NotificationRequestScheduling {
     /// M0 探针始终复用同一个标识，重新安排时会覆盖旧请求，避免测试通知堆积。
     static let probeIdentifier = "habito.notification.probe"
 
@@ -81,5 +81,60 @@ final class LocalNotificationService: LocalNotificationScheduling {
 
     func cancelProbe() {
         center.removePendingNotificationRequests(withIdentifiers: [Self.probeIdentifier])
+    }
+
+    func pendingNotificationRequests() async throws -> [PendingNotificationRequestSnapshot] {
+        await center.pendingNotificationRequests().map { request in
+            PendingNotificationRequestSnapshot(
+                identifier: request.identifier,
+                title: request.content.title,
+                body: request.content.body,
+                scheduledAt: Self.nextTriggerDate(for: request.trigger)
+            )
+        }
+    }
+
+    func addNotificationRequest(_ request: TaskNotificationRequest) async throws {
+        let content = UNMutableNotificationContent()
+        content.title = request.title
+        content.body = request.body
+        content.sound = .default
+        content.userInfo = [
+            "occurrenceID": request.occurrenceID.uuidString.lowercased(),
+            "notificationKind": request.kind.rawValue,
+        ]
+
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = .current
+        let trigger = UNCalendarNotificationTrigger(
+            dateMatching: calendar.dateComponents(
+                [.year, .month, .day, .hour, .minute, .second],
+                from: request.scheduledAt
+            ),
+            repeats: false
+        )
+        try await center.add(
+            UNNotificationRequest(
+                identifier: request.identifier,
+                content: content,
+                trigger: trigger
+            )
+        )
+    }
+
+    func removePendingNotificationRequest(identifier: String) async throws {
+        center.removePendingNotificationRequests(withIdentifiers: [identifier])
+    }
+
+    /// `UNNotificationTrigger` 基类不暴露触发日期；仅已知系统触发器可还原，未知类型交由协调器替换。
+    private static func nextTriggerDate(for trigger: UNNotificationTrigger?) -> Date? {
+        switch trigger {
+        case let trigger as UNCalendarNotificationTrigger:
+            trigger.nextTriggerDate()
+        case let trigger as UNTimeIntervalNotificationTrigger:
+            trigger.nextTriggerDate()
+        default:
+            nil
+        }
     }
 }
