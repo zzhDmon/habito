@@ -6,6 +6,23 @@ import Testing
 @MainActor
 @Suite("十分钟稍后提醒")
 struct TaskSnoozeServiceTests {
+    @Test("等待读取预算期间删除实例，不向系统添加已不存在任务的请求")
+    func deletionDuringBudgetReadDoesNotAddRequest() async throws {
+        let fixture = try Fixture()
+        let occurrence = try fixture.makeOccurrence()
+        let occurrenceID = occurrence.id
+        fixture.scheduler.onRead = {
+            fixture.context.delete(occurrence)
+            try fixture.context.save()
+        }
+        await #expect(throws: TaskSnoozeError.occurrenceNotFound(occurrenceID)) {
+            _ = try await fixture.service.schedule(occurrenceID: occurrenceID, at: fixture.now)
+        }
+        #expect(fixture.scheduler.addCount == 0)
+        #expect(fixture.scheduler.pending.isEmpty)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<NotificationLink>()) == 0)
+    }
+
     @Test("系统添加期间关闭授权或提醒，不误报稍后成功且补偿清理请求", arguments: [true, false])
     func permissionsChangedDuringAddingDoNotReportSuccess(revokeAuthorization: Bool) async throws {
         let fixture = try Fixture()
@@ -353,16 +370,23 @@ private extension TaskSnoozeServiceTests {
 
     final class SnoozeSchedulerFake: NotificationRequestScheduling {
         var pending: [String: PendingNotificationRequestSnapshot] = [:]
+        var addCount = 0
         var addError: SchedulerFailure?
+        var onRead: (() throws -> Void)?
         var onAdd: (() throws -> Void)?
         var onAddAsync: (() async throws -> Void)?
 
         func pendingNotificationRequests() async throws -> [PendingNotificationRequestSnapshot] {
-            Array(pending.values)
+            if let onRead {
+                self.onRead = nil
+                try onRead()
+            }
+            return Array(pending.values)
         }
 
         func addNotificationRequest(_ request: TaskNotificationRequest) async throws {
             if let addError { throw addError }
+            addCount += 1
             try onAdd?()
             if let onAddAsync {
                 self.onAddAsync = nil

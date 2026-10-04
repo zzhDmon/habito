@@ -82,7 +82,7 @@ struct TaskSnoozeService {
         }
 
         let identifier = NotificationRequestIdentifier(
-            occurrenceID: occurrence.id,
+            occurrenceID: occurrenceID,
             kind: .snooze
         )
         let occupiedIdentifiers = try await occupiedSnoozeIdentifiers(
@@ -93,13 +93,14 @@ struct TaskSnoozeService {
             throw TaskSnoozeError.pendingLimitReached(Self.maximumPendingCount)
         }
 
-        // `pendingNotificationRequests()` 是异步系统边界；返回后重新核对状态，降低等待期间完成任务的竞态窗口。
-        try validateStatus(of: occurrence)
         try Task.checkCancellation()
+        // 已删除的 SwiftData 对象仍可能保留缓存属性；必须按稳定 ID 重查，不能以旧对象状态证明实例存在。
+        let latestOccurrence = try fetchOccurrence(id: occurrenceID)
+        try validateStatus(of: latestOccurrence)
         let request = TaskNotificationRequest(
-            occurrenceID: occurrence.id,
+            occurrenceID: occurrenceID,
             kind: .snooze,
-            title: occurrence.titleSnapshot,
+            title: latestOccurrence.titleSnapshot,
             body: String(localized: "notification.snoozeBody"),
             scheduledAt: scheduledAt
         )
@@ -114,7 +115,7 @@ struct TaskSnoozeService {
             guard latestPermissions.canPresentAlerts else { throw TaskSnoozeError.notificationsUnavailable }
             try validateStatus(of: fetchOccurrence(id: occurrenceID))
             try NotificationLinkStore(context: context).upsert(
-                occurrenceID: occurrence.id,
+                occurrenceID: occurrenceID,
                 kind: .snooze,
                 scheduledAt: scheduledAt,
                 createdAt: now
