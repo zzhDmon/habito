@@ -90,6 +90,45 @@ struct NotificationReconciliationCoordinatorTests {
         #expect(scheduler.pending[stale.identifier] == nil)
     }
 
+    @Test("已送达的失效 Habito 通知被清理，探针保持隔离")
+    func deliveredCleanupIsScopedAndIdempotent() async {
+        let desired = request(index: 1)
+        let stale = request(index: 2)
+        let orphan = request(index: 3)
+        let scheduler = FakeNotificationRequestScheduler()
+        scheduler.delivered = [
+            desired.identifier, stale.identifier, orphan.identifier, LocalNotificationService.probeIdentifier,
+        ]
+        let coordinator = NotificationReconciliationCoordinator(scheduler: scheduler)
+
+        let first = await coordinator.reconcile(desiredRequests: [desired])
+        let second = await coordinator.reconcile(desiredRequests: [desired])
+
+        #expect(first.removedDeliveredIdentifiers == [stale.identifier, orphan.identifier].sorted())
+        #expect(second.removedDeliveredIdentifiers.isEmpty)
+        #expect(scheduler.delivered == [desired.identifier, LocalNotificationService.probeIdentifier])
+        #expect(first.isSuccessful && second.isSuccessful)
+    }
+
+    @Test("单条已送达清理失败可重试且不阻断其他清理")
+    func deliveredCleanupFailureCanRetry() async {
+        let failing = request(index: 1)
+        let removable = request(index: 2)
+        let scheduler = FakeNotificationRequestScheduler()
+        scheduler.delivered = [failing.identifier, removable.identifier]
+        scheduler.failingDeliveredRemovalIdentifiers = [failing.identifier]
+        let coordinator = NotificationReconciliationCoordinator(scheduler: scheduler)
+
+        let first = await coordinator.reconcile(desiredRequests: [])
+        #expect(first.removedDeliveredIdentifiers == [removable.identifier])
+        #expect(first.failures.first?.operation == .removeDelivered)
+        #expect(scheduler.delivered == [failing.identifier])
+        scheduler.failingDeliveredRemovalIdentifiers = []
+        let retried = await coordinator.reconcile(desiredRequests: [])
+        #expect(retried.isSuccessful)
+        #expect(scheduler.delivered.isEmpty)
+    }
+
     private func request(index: UInt8) -> TaskNotificationRequest {
         TaskNotificationRequest(
             occurrenceID: UUID(uuid: (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, index)),
@@ -119,6 +158,8 @@ private final class FakeNotificationRequestScheduler: NotificationRequestSchedul
     var pending: [String: PendingNotificationRequestSnapshot]
     var failingAddIdentifiers: Set<String> = []
     var addedIdentifiers: [String] = []
+    var delivered: Set<String> = []
+    var failingDeliveredRemovalIdentifiers: Set<String> = []
 
     init(pending: [PendingNotificationRequestSnapshot] = []) {
         self.pending = Dictionary(uniqueKeysWithValues: pending.map { ($0.identifier, $0) })
@@ -143,5 +184,12 @@ private final class FakeNotificationRequestScheduler: NotificationRequestSchedul
 
     func removePendingNotificationRequest(identifier: String) async throws {
         pending[identifier] = nil
+    }
+
+    func deliveredNotificationIdentifiers() async throws -> [String] { Array(delivered) }
+
+    func removeDeliveredNotificationRequest(identifier: String) async throws {
+        if failingDeliveredRemovalIdentifiers.contains(identifier) { throw Failure.requested }
+        delivered.remove(identifier)
     }
 }

@@ -8,4 +8,9 @@ protocol NotificationRequestScheduling {
     func addNotificationRequest(_ request: TaskNotificationRequest) async throws
 
     func removePendingNotificationRequest(identifier: String) async throws
+
+    /// 已送达通知是另一份系统集合，取消挂起请求不会清掉通知中心中的旧卡片。
+    func deliveredNotificationIdentifiers() async throws -> [String]
+
+    func removeDeliveredNotificationRequest(identifier: String) async throws
 }

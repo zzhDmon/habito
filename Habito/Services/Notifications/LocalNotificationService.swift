@@ -126,6 +126,14 @@ final class LocalNotificationService: LocalNotificationScheduling, NotificationR
         center.removePendingNotificationRequests(withIdentifiers: [identifier])
     }
 
+    func deliveredNotificationIdentifiers() async throws -> [String] {
+        await center.deliveredNotifications().map { $0.request.identifier }
+    }
+
+    func removeDeliveredNotificationRequest(identifier: String) async throws {
+        center.removeDeliveredNotifications(withIdentifiers: [identifier])
+    }
+
     /// `UNNotificationTrigger` 基类不暴露触发日期；仅已知系统触发器可还原，未知类型交由协调器替换。
     private static func nextTriggerDate(for trigger: UNNotificationTrigger?) -> Date? {
         switch trigger {

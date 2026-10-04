@@ -2,6 +2,8 @@
 nonisolated struct NotificationReconciliationFailure: Equatable, Sendable {
     enum Operation: String, Equatable, Sendable {
         case readPending
+        case readDelivered
+        case removeDelivered
         case validateDesired
         case remove
         case add

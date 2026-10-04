@@ -20,6 +20,7 @@ struct NotificationReconciliationCoordinator {
     ) async -> NotificationReconciliationReport {
         var report = NotificationReconciliationReport()
         let desiredByIdentifier = validatedDesiredRequests(desiredRequests, report: &report)
+        guard report.isSuccessful else { return report }
 
         let pendingRequests: [PendingNotificationRequestSnapshot]
         do {
@@ -42,10 +43,12 @@ struct NotificationReconciliationCoordinator {
         }
 
         for identifier in managedPending.keys.sorted() where desiredByIdentifier[identifier] == nil {
+            guard !Task.isCancelled else { return report }
             await remove(identifier: identifier, operation: .remove, report: &report)
         }
 
         for identifier in desiredByIdentifier.keys.sorted() {
+            guard !Task.isCancelled else { return report }
             guard let desired = desiredByIdentifier[identifier] else { continue }
 
             guard let pending = managedPending[identifier] else {
@@ -61,7 +64,41 @@ struct NotificationReconciliationCoordinator {
             await replace(pendingIdentifier: identifier, with: desired, report: &report)
         }
 
+        await cleanDeliveredNotifications(desiredIdentifiers: Set(desiredByIdentifier.keys), report: &report)
+
         return report
+    }
+
+    private func cleanDeliveredNotifications(
+        desiredIdentifiers: Set<String>,
+        report: inout NotificationReconciliationReport
+    ) async {
+        let identifiers: [String]
+        do {
+            identifiers = try await scheduler.deliveredNotificationIdentifiers()
+        } catch {
+            report.failures.append(
+                NotificationReconciliationFailure(
+                    identifier: nil, operation: .readDelivered, message: String(describing: error)
+                )
+            )
+            return
+        }
+        // 直接按稳定标识检查系统集合，即使实例已删除并级联清除了映射，也能清理孤立卡片。
+        for identifier in Set(identifiers).sorted()
+        where NotificationRequestIdentifier(rawValue: identifier) != nil && !desiredIdentifiers.contains(identifier) {
+            guard !Task.isCancelled else { return }
+            do {
+                try await scheduler.removeDeliveredNotificationRequest(identifier: identifier)
+                report.removedDeliveredIdentifiers.append(identifier)
+            } catch {
+                report.failures.append(
+                    NotificationReconciliationFailure(
+                        identifier: identifier, operation: .removeDelivered, message: String(describing: error)
+                    )
+                )
+            }
+        }
     }
 
     private func validatedDesiredRequests(

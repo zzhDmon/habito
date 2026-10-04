@@ -73,12 +73,14 @@ struct HabitoApp: App {
         let timeZone = TimeZone.autoupdatingCurrent
         let dateProvider = SystemDateProvider()
         let rebuildTrigger = NotificationRebuildTrigger()
+        let notificationOperationGate = NotificationOperationGate()
         _notificationRebuildTrigger = State(initialValue: rebuildTrigger)
         notificationRebuildService = NotificationRebuildService(
             context: container.mainContext,
             scheduler: notificationScheduler,
             calendar: calendar,
-            timeZone: timeZone
+            timeZone: timeZone,
+            operationGate: notificationOperationGate
         )
         notificationNavigationService = NotificationNavigationService(context: container.mainContext)
         let notificationPermissionService = NotificationPermissionService(
@@ -102,7 +104,8 @@ struct HabitoApp: App {
                 context: container.mainContext,
                 scheduler: notificationScheduler,
                 calendar: calendar,
-                timeZone: timeZone
+                timeZone: timeZone,
+                operationGate: notificationOperationGate
             ),
             notificationRebuildTrigger: rebuildTrigger
         )

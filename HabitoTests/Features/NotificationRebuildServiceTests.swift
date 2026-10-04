@@ -107,6 +107,10 @@ struct NotificationRebuildServiceTests {
         ).rawValue
         #expect(fixture.scheduler.pending[snoozeIdentifier] != nil)
 
+        // 已送达卡片与挂起队列独立；完成时必须同时清理两份系统集合。
+        let primaryIdentifier = NotificationRequestIdentifier(occurrenceID: occurrence.id, kind: .primary).rawValue
+        fixture.scheduler.delivered = [primaryIdentifier, snoozeIdentifier]
+
         _ = try TaskProgressService(context: fixture.context).complete(
             occurrence,
             at: fixture.now,
@@ -116,11 +120,83 @@ struct NotificationRebuildServiceTests {
 
         #expect(result.reconciliation.removedIdentifiers.contains(snoozeIdentifier))
         #expect(fixture.scheduler.pending[snoozeIdentifier] == nil)
+        #expect(fixture.scheduler.delivered.isEmpty)
         #expect(
             try NotificationLinkStore(context: fixture.context)
                 .links(occurrenceID: occurrence.id)
                 .isEmpty
         )
+    }
+
+    @Test("读取系统队列失败时保留清理映射，下一次重建仍可追溯")
+    func failedPendingReadPreservesSnoozeLink() async throws {
+        let fixture = try Fixture()
+        _ = try fixture.insertDailyTemplate()
+        _ = try await fixture.service.rebuild(at: fixture.now)
+        let occurrence = try #require(
+            fixture.context.fetch(FetchDescriptor<TaskOccurrence>()).first {
+                $0.dateKey == "2026-09-27"
+            }
+        )
+        _ = try await TaskSnoozeService(
+            context: fixture.context, scheduler: fixture.scheduler,
+            calendar: fixture.calendar, timeZone: fixture.timeZone
+        ).schedule(occurrenceID: occurrence.id, at: fixture.now)
+        _ = try TaskProgressService(context: fixture.context).complete(
+            occurrence, at: fixture.now, source: .childManual
+        )
+        fixture.scheduler.readFails = true
+
+        let result = try await fixture.service.rebuild(at: fixture.now)
+        #expect(!result.reconciliation.isSuccessful)
+        #expect(
+            try NotificationLinkStore(context: fixture.context)
+                .links(occurrenceID: occurrence.id).contains { $0.kind == .snooze }
+        )
+        fixture.scheduler.readFails = false
+        _ = try await fixture.service.rebuild(at: fixture.now)
+        #expect(try NotificationLinkStore(context: fixture.context).links(occurrenceID: occurrence.id).isEmpty)
+    }
+
+    @Test("前台重建等待系统队列时创建稍后提醒不会丢失")
+    func rebuildAndSnoozeShareOneTransactionBoundary() async throws {
+        let fixture = try Fixture()
+        _ = try fixture.insertDailyTemplate()
+        _ = try await fixture.service.rebuild(at: fixture.now)
+        let occurrence = try #require(
+            fixture.context.fetch(FetchDescriptor<TaskOccurrence>()).first { $0.dateKey == "2026-09-27" }
+        )
+        let snooze = TaskSnoozeService(
+            context: fixture.context, scheduler: fixture.scheduler,
+            calendar: fixture.calendar, timeZone: fixture.timeZone,
+            operationGate: fixture.operationGate
+        )
+        let entered = AsyncStream.makeStream(of: Void.self)
+        let release = AsyncStream.makeStream(of: Void.self)
+        let snoozeStarted = AsyncStream.makeStream(of: Void.self)
+        fixture.scheduler.onReadAsync = {
+            entered.continuation.yield(())
+            var iterator = release.stream.makeAsyncIterator()
+            _ = await iterator.next()
+        }
+        let rebuilding = Task { try await fixture.service.rebuild(at: fixture.now) }
+        var enteredIterator = entered.stream.makeAsyncIterator()
+        _ = await enteredIterator.next()
+        let snoozing = Task {
+            snoozeStarted.continuation.yield(())
+            return try await snooze.schedule(occurrenceID: occurrence.id, at: fixture.now)
+        }
+        var snoozeIterator = snoozeStarted.stream.makeAsyncIterator()
+        _ = await snoozeIterator.next()
+        release.continuation.yield(())
+        _ = try await rebuilding.value
+        let scheduledAt = try await snoozing.value
+
+        let identifier = NotificationRequestIdentifier(occurrenceID: occurrence.id, kind: .snooze).rawValue
+        #expect(fixture.scheduler.pending[identifier]?.scheduledAt == scheduledAt)
+        #expect(try NotificationLinkStore(context: fixture.context).link(requestIdentifier: identifier) != nil)
+        let result = try await fixture.service.rebuild(at: fixture.now)
+        #expect(result.reconciliation.retainedIdentifiers.contains(identifier))
     }
 }
 
@@ -133,6 +209,7 @@ private extension NotificationRebuildServiceTests {
         let now: Date
         let calendar: Calendar
         let timeZone: TimeZone
+        let operationGate = NotificationOperationGate()
 
         init() throws {
             context = ModelContext(try AppModelContainer.make(inMemory: true))
@@ -144,7 +221,8 @@ private extension NotificationRebuildServiceTests {
                 context: context,
                 scheduler: scheduler,
                 calendar: calendar,
-                timeZone: timeZone
+                timeZone: timeZone,
+                operationGate: operationGate
             )
         }
 
@@ -175,9 +253,17 @@ private extension NotificationRebuildServiceTests {
     final class RebuildSchedulerFake: NotificationRequestScheduling {
         var pending: [String: PendingNotificationRequestSnapshot] = [:]
         var addCount = 0
+        var readFails = false
+        var delivered: Set<String> = []
+        var onReadAsync: (() async -> Void)?
 
         func pendingNotificationRequests() async throws -> [PendingNotificationRequestSnapshot] {
-            Array(pending.values)
+            if readFails { throw CocoaError(.fileReadUnknown) }
+            if let onReadAsync {
+                self.onReadAsync = nil
+                await onReadAsync()
+            }
+            return Array(pending.values)
         }
 
         func addNotificationRequest(_ request: TaskNotificationRequest) async throws {
@@ -192,6 +278,12 @@ private extension NotificationRebuildServiceTests {
 
         func removePendingNotificationRequest(identifier: String) async throws {
             pending[identifier] = nil
+        }
+
+        func deliveredNotificationIdentifiers() async throws -> [String] { Array(delivered) }
+
+        func removeDeliveredNotificationRequest(identifier: String) async throws {
+            delivered.remove(identifier)
         }
     }
 }

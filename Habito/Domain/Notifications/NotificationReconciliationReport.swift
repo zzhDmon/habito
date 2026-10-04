@@ -4,6 +4,7 @@ nonisolated struct NotificationReconciliationReport: Equatable, Sendable {
     var addedIdentifiers: [String] = []
     var replacedIdentifiers: [String] = []
     var removedIdentifiers: [String] = []
+    var removedDeliveredIdentifiers: [String] = []
     var failures: [NotificationReconciliationFailure] = []
 
     var isSuccessful: Bool {

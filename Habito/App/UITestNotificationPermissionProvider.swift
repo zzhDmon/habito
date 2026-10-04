@@ -23,5 +23,9 @@
         func addNotificationRequest(_ request: TaskNotificationRequest) async throws {}
 
         func removePendingNotificationRequest(identifier: String) async throws {}
+
+        func deliveredNotificationIdentifiers() async throws -> [String] { [] }
+
+        func removeDeliveredNotificationRequest(identifier: String) async throws {}
     }
 #endif

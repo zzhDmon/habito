@@ -46,6 +46,7 @@ final class TaskSessionViewModel {
 
     /// 为当前未完成任务安排唯一的十分钟稍后提醒，并把业务失败转换为儿童可理解反馈。
     func snooze() async {
+        guard snoozeState != .scheduling else { return }
         guard case let .loaded(content) = state, content.canComplete else { return }
         guard let snoozeService else {
             snoozeState = .failed
@@ -53,13 +54,16 @@ final class TaskSessionViewModel {
         }
 
         snoozeState = .scheduling
+        // 失败补偿也可能需要重建；只要尝试过系统操作，就让根视图按最终真相核对。
+        defer { notificationRebuildTrigger.requestRebuild() }
         do {
             let scheduledAt = try await snoozeService.schedule(
                 occurrenceID: occurrenceID,
                 at: dateProvider.now()
             )
             snoozeState = .scheduled(scheduledAt)
-            notificationRebuildTrigger.requestRebuild()
+        } catch is CancellationError {
+            snoozeState = .idle
         } catch TaskSnoozeError.crossesLocalMidnight {
             snoozeState = .crossesMidnight
         } catch TaskSnoozeError.pendingLimitReached {
@@ -126,6 +130,7 @@ final class TaskSessionViewModel {
                 source: .childManual
             )
             notificationRebuildTrigger.requestRebuild()
+            snoozeState = .idle
             reload(showLoading: false)
         } catch {
             handle(error)

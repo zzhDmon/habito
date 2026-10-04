@@ -99,6 +99,96 @@ struct TaskSnoozeServiceTests {
         #expect(fixture.scheduler.pending.isEmpty)
         #expect(try fixture.context.fetchCount(FetchDescriptor<NotificationLink>()) == 0)
     }
+
+    @Test("等待系统添加时完成任务，返回后不能留下稍后提醒")
+    func completionDuringSchedulingDoesNotLeaveRequest() async throws {
+        let fixture = try Fixture()
+        let occurrence = try fixture.makeOccurrence()
+        fixture.scheduler.onAdd = {
+            _ = try TaskProgressService(context: fixture.context).complete(
+                occurrence, at: fixture.now, source: .childManual
+            )
+        }
+
+        await #expect(throws: TaskSnoozeError.invalidOccurrenceStatus(occurrence.id, "completed")) {
+            _ = try await fixture.service.schedule(occurrenceID: occurrence.id, at: fixture.now)
+        }
+        #expect(fixture.scheduler.pending.isEmpty)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<NotificationLink>()) == 0)
+    }
+
+    @Test("七个槽位已占用时两个并发操作最多只新增一个")
+    func concurrentSchedulesCannotExceedBudget() async throws {
+        let fixture = try Fixture()
+        var occurrences: [TaskOccurrence] = []
+        for index in 0..<9 {
+            occurrences.append(try fixture.makeOccurrence(title: "任务 \(index)"))
+        }
+        for occurrence in occurrences.prefix(7) {
+            _ = try await fixture.service.schedule(occurrenceID: occurrence.id, at: fixture.now)
+        }
+        let entered = AsyncStream.makeStream(of: Void.self)
+        let release = AsyncStream.makeStream(of: Void.self)
+        let secondStarted = AsyncStream.makeStream(of: Void.self)
+        fixture.scheduler.onAddAsync = {
+            entered.continuation.yield(())
+            var iterator = release.stream.makeAsyncIterator()
+            _ = await iterator.next()
+        }
+        let firstID = occurrences[7].id
+        let secondID = occurrences[8].id
+        let first = Task { try await fixture.service.schedule(occurrenceID: firstID, at: fixture.now) }
+        var enteredIterator = entered.stream.makeAsyncIterator()
+        _ = await enteredIterator.next()
+        let second = Task {
+            secondStarted.continuation.yield(())
+            do {
+                _ = try await fixture.service.schedule(occurrenceID: secondID, at: fixture.now)
+                return false
+            } catch TaskSnoozeError.pendingLimitReached {
+                return true
+            }
+        }
+        var secondIterator = secondStarted.stream.makeAsyncIterator()
+        _ = await secondIterator.next()
+        release.continuation.yield(())
+
+        _ = try await first.value
+        #expect(try await second.value)
+        #expect(fixture.scheduler.pending.count == 8)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<NotificationLink>()) == 8)
+    }
+
+    @Test("添加请求期间取消操作会补偿清理，且不阻塞下一次排程")
+    func cancelledScheduleCleansRequestAndReleasesGate() async throws {
+        let fixture = try Fixture()
+        let occurrence = try fixture.makeOccurrence()
+        let entered = AsyncStream.makeStream(of: Void.self)
+        let release = AsyncStream.makeStream(of: Void.self)
+        fixture.scheduler.onAddAsync = {
+            entered.continuation.yield(())
+            var iterator = release.stream.makeAsyncIterator()
+            _ = await iterator.next()
+        }
+        let scheduling = Task {
+            do {
+                _ = try await fixture.service.schedule(occurrenceID: occurrence.id, at: fixture.now)
+                return false
+            } catch is CancellationError {
+                return true
+            }
+        }
+        var iterator = entered.stream.makeAsyncIterator()
+        _ = await iterator.next()
+        scheduling.cancel()
+        release.continuation.yield(())
+        #expect(try await scheduling.value)
+        #expect(fixture.scheduler.pending.isEmpty)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<NotificationLink>()) == 0)
+
+        _ = try await fixture.service.schedule(occurrenceID: occurrence.id, at: fixture.now)
+        #expect(fixture.scheduler.pending.count == 1)
+    }
 }
 
 @MainActor
@@ -152,6 +242,8 @@ private extension TaskSnoozeServiceTests {
     final class SnoozeSchedulerFake: NotificationRequestScheduling {
         var pending: [String: PendingNotificationRequestSnapshot] = [:]
         var addError: SchedulerFailure?
+        var onAdd: (() throws -> Void)?
+        var onAddAsync: (() async throws -> Void)?
 
         func pendingNotificationRequests() async throws -> [PendingNotificationRequestSnapshot] {
             Array(pending.values)
@@ -159,6 +251,11 @@ private extension TaskSnoozeServiceTests {
 
         func addNotificationRequest(_ request: TaskNotificationRequest) async throws {
             if let addError { throw addError }
+            try onAdd?()
+            if let onAddAsync {
+                self.onAddAsync = nil
+                try await onAddAsync()
+            }
             pending[request.identifier] = PendingNotificationRequestSnapshot(
                 identifier: request.identifier,
                 title: request.title,
@@ -170,6 +267,10 @@ private extension TaskSnoozeServiceTests {
         func removePendingNotificationRequest(identifier: String) async throws {
             pending[identifier] = nil
         }
+
+        func deliveredNotificationIdentifiers() async throws -> [String] { [] }
+
+        func removeDeliveredNotificationRequest(identifier: String) async throws {}
     }
 
     enum SchedulerFailure: Error, Equatable {

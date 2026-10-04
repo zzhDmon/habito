@@ -9,6 +9,7 @@ struct NotificationRebuildService {
 
     private let context: ModelContext
     private let coordinator: NotificationReconciliationCoordinator
+    private let operationGate: NotificationOperationGate
     private let selector = NotificationCandidateSelector()
     private let resolver = TaskCandidateOverrideResolver()
     private var calendar: Calendar
@@ -20,10 +21,12 @@ struct NotificationRebuildService {
         scheduler: any NotificationRequestScheduling,
         calendar: Calendar,
         timeZone: TimeZone,
-        horizonDays: Int = Self.defaultHorizonDays
+        horizonDays: Int = Self.defaultHorizonDays,
+        operationGate: NotificationOperationGate = NotificationOperationGate()
     ) {
         self.context = context
         coordinator = NotificationReconciliationCoordinator(scheduler: scheduler)
+        self.operationGate = operationGate
         self.calendar = calendar
         self.timeZone = timeZone
         self.horizonDays = horizonDays
@@ -32,6 +35,12 @@ struct NotificationRebuildService {
 
     /// 生成滚动实例、选择预算内主提醒、核对系统队列并保存成功映射。
     func rebuild(at now: Date) async throws -> NotificationRebuildResult {
+        try await operationGate.perform {
+            try await rebuildExclusively(at: now)
+        }
+    }
+
+    private func rebuildExclusively(at now: Date) async throws -> NotificationRebuildResult {
         try Task.checkCancellation()
         guard horizonDays >= Self.minimumCoverageDays else {
             throw NotificationRebuildError.invalidHorizonDays(horizonDays)
@@ -224,6 +233,8 @@ struct NotificationRebuildService {
         report: NotificationReconciliationReport,
         at now: Date
     ) throws {
+        // 无法读取系统队列时没有任何取消证据；保留映射，供下次重建继续核对。
+        guard !report.failures.contains(where: { $0.operation == .readPending }) else { return }
         let successful = Set(
             report.retainedIdentifiers + report.addedIdentifiers + report.replacedIdentifiers
         )
@@ -239,13 +250,13 @@ struct NotificationRebuildService {
         let removed = Set(report.removedIdentifiers)
         let desired = Set(requests.map(\.identifier))
         let failed = Set(report.failures.compactMap(\.identifier))
+        let didReadDelivered = !report.failures.contains { $0.operation == .readDelivered }
         for link in try context.fetch(FetchDescriptor<NotificationLink>()) {
             let isRemoved = removed.contains(link.requestIdentifier)
-            let isStaleSnooze =
-                link.kind == .snooze
-                && !desired.contains(link.requestIdentifier)
+            let isStaleMapping =
+                !desired.contains(link.requestIdentifier)
                 && !failed.contains(link.requestIdentifier)
-            if isRemoved || isStaleSnooze {
+            if didReadDelivered && !failed.contains(link.requestIdentifier) && (isRemoved || isStaleMapping) {
                 context.delete(link)
             }
         }

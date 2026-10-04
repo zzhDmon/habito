@@ -1,4 +1,5 @@
 import Foundation
+import OSLog
 import SwiftData
 
 /// 为当天未完成任务创建唯一的十分钟稍后提醒。
@@ -12,6 +13,8 @@ struct TaskSnoozeService {
 
     private let context: ModelContext
     private let scheduler: any NotificationRequestScheduling
+    private let operationGate: NotificationOperationGate
+    private let logger = Logger(subsystem: "com.zhangzehua.Habito", category: "TaskSnooze")
     private var calendar: Calendar
     private let timeZone: TimeZone
 
@@ -19,10 +22,12 @@ struct TaskSnoozeService {
         context: ModelContext,
         scheduler: any NotificationRequestScheduling,
         calendar: Calendar,
-        timeZone: TimeZone
+        timeZone: TimeZone,
+        operationGate: NotificationOperationGate = NotificationOperationGate()
     ) {
         self.context = context
         self.scheduler = scheduler
+        self.operationGate = operationGate
         self.calendar = calendar
         self.timeZone = timeZone
         self.calendar.timeZone = timeZone
@@ -36,8 +41,15 @@ struct TaskSnoozeService {
     /// - Returns: 实际安排的绝对触发时间。
     /// - Throws: 任务不是今天、已经处理、跨本地午夜、预算已满或系统排程失败时抛错。
     func schedule(occurrenceID: UUID, at now: Date) async throws -> Date {
+        try await operationGate.perform {
+            try await scheduleExclusively(occurrenceID: occurrenceID, at: now)
+        }
+    }
+
+    private func scheduleExclusively(occurrenceID: UUID, at now: Date) async throws -> Date {
         let occurrence = try fetchOccurrence(id: occurrenceID)
         try validateStatus(of: occurrence)
+        try Task.checkCancellation()
 
         let today = try LocalDate(date: now, calendar: calendar, timeZone: timeZone)
         let occurrenceDate: LocalDate
@@ -84,6 +96,9 @@ struct TaskSnoozeService {
         try await scheduler.addNotificationRequest(request)
 
         do {
+            // 添加请求期间仍可能完成或删除任务；重新查询，避免复活已处理实例的提醒。
+            try Task.checkCancellation()
+            try validateStatus(of: fetchOccurrence(id: occurrenceID))
             try NotificationLinkStore(context: context).upsert(
                 occurrenceID: occurrence.id,
                 kind: .snooze,
@@ -92,7 +107,11 @@ struct TaskSnoozeService {
             )
         } catch {
             // 系统请求已成功但映射失败时立即移除，避免留下无法审计和清理的孤立提醒。
-            try? await scheduler.removePendingNotificationRequest(identifier: request.identifier)
+            do {
+                try await scheduler.removePendingNotificationRequest(identifier: request.identifier)
+            } catch {
+                logger.error("稍后提醒补偿清理失败：\(String(describing: type(of: error)), privacy: .public)")
+            }
             throw error
         }
         return scheduledAt
@@ -134,7 +153,7 @@ struct TaskSnoozeService {
         }
         var identifiers = Set<String>(pendingIdentifiers)
 
-        // 映射可能已写入而系统快照尚未反映；取两者并集，避免并发操作突破预留的八条预算。
+        // 系统快照可能延迟反映已写入映射；即使系统暂未返回，也保留该槽位的预算占用。
         for link in try context.fetch(FetchDescriptor<NotificationLink>())
         where link.requestIdentifier != excludedIdentifier && link.scheduledAt > now {
             guard
