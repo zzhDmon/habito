@@ -85,6 +85,25 @@ final class HabitoKidFlowUITests: XCTestCase {
         XCTAssertTrue(start.waitForExistence(timeout: 5))
     }
 
+    func testPendingTaskCanScheduleTenMinuteSnooze() throws {
+        XCUIDevice.shared.orientation = .landscapeLeft
+        let app = XCUIApplication()
+        app.launchArguments = ["--habito-ui-testing", "--habito-ui-reset"]
+        app.launch()
+
+        let task = app.buttons[seededTaskIdentifier]
+        XCTAssertTrue(task.waitForExistence(timeout: 5))
+        task.tap()
+
+        let snooze = app.buttons["kid.session.snooze"]
+        XCTAssertTrue(snooze.waitForExistence(timeout: 5))
+        snooze.tap()
+
+        let feedback = app.descendants(matching: .any)["kid.session.snooze-feedback"]
+        XCTAssertTrue(feedback.waitForExistence(timeout: 5))
+        XCTAssertEqual(feedback.label, "好，10 分钟后提醒你。")
+    }
+
     func testParentGateOpensWithTapAndPersistsCredentialAcrossRelaunch() throws {
         XCUIDevice.shared.orientation = .landscapeLeft
         let app = XCUIApplication()

@@ -323,7 +323,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "今天没有任务"
+            "value" : "今天没有任务啊"
           }
         }
       }
@@ -728,6 +728,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "准备好就开始吧。"
+          }
+        }
+      }
+    },
+    "notification.snoozeBody" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "十分钟前说好啦，现在开始吧。"
           }
         }
       }
@@ -2849,6 +2860,83 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "开始任务"
+          }
+        }
+      }
+    },
+    "taskSession.snooze" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "10 分钟后提醒我"
+          }
+        }
+      }
+    },
+    "taskSession.snoozeBudgetFull" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "稍后提醒已经很多了，请先完成一个任务。"
+          }
+        }
+      }
+    },
+    "taskSession.snoozeFailed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "提醒没有安排成功，可以再试一次。"
+          }
+        }
+      }
+    },
+    "taskSession.snoozeMidnight" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今天太晚了，请找家长调整任务时间。"
+          }
+        }
+      }
+    },
+    "taskSession.snoozeScheduled" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "好，10 分钟后提醒你。"
+          }
+        }
+      }
+    },
+    "taskSession.snoozeScheduling" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在安排提醒…"
+          }
+        }
+      }
+    },
+    "taskSession.snoozeUnavailable" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这个任务现在不能稍后提醒。"
           }
         }
       }

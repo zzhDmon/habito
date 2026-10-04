@@ -8,12 +8,14 @@ import SwiftData
 @Observable
 final class TaskSessionViewModel {
     private(set) var state: TaskSessionViewState = .loading
+    private(set) var snoozeState: TaskSnoozeState = .idle
 
     private let occurrenceID: UUID
     private let context: ModelContext
     private let queryService: TodayTaskQueryService
     private let progressService: TaskProgressService
     private let dateProvider: any DateProviding
+    private let snoozeService: TaskSnoozeService?
     private let notificationRebuildTrigger: NotificationRebuildTrigger
     private var calendar: Calendar
     private let logger = Logger(subsystem: "com.zhangzehua.Habito", category: "TaskSession")
@@ -24,6 +26,7 @@ final class TaskSessionViewModel {
         calendar: Calendar,
         timeZone: TimeZone,
         dateProvider: any DateProviding,
+        snoozeService: TaskSnoozeService? = nil,
         notificationRebuildTrigger: NotificationRebuildTrigger = NotificationRebuildTrigger()
     ) {
         self.occurrenceID = occurrenceID
@@ -35,9 +38,38 @@ final class TaskSessionViewModel {
         )
         progressService = TaskProgressService(context: context)
         self.dateProvider = dateProvider
+        self.snoozeService = snoozeService
         self.notificationRebuildTrigger = notificationRebuildTrigger
         self.calendar = calendar
         self.calendar.timeZone = timeZone
+    }
+
+    /// 为当前未完成任务安排唯一的十分钟稍后提醒，并把业务失败转换为儿童可理解反馈。
+    func snooze() async {
+        guard case let .loaded(content) = state, content.canComplete else { return }
+        guard let snoozeService else {
+            snoozeState = .failed
+            return
+        }
+
+        snoozeState = .scheduling
+        do {
+            let scheduledAt = try await snoozeService.schedule(
+                occurrenceID: occurrenceID,
+                at: dateProvider.now()
+            )
+            snoozeState = .scheduled(scheduledAt)
+            notificationRebuildTrigger.requestRebuild()
+        } catch TaskSnoozeError.crossesLocalMidnight {
+            snoozeState = .crossesMidnight
+        } catch TaskSnoozeError.pendingLimitReached {
+            snoozeState = .budgetFull
+        } catch is TaskSnoozeError {
+            snoozeState = .unavailable
+        } catch {
+            logger.error("稍后提醒创建失败：\(String(describing: type(of: error)), privacy: .public)")
+            snoozeState = .failed
+        }
     }
 
     /// 首次进入页面时加载稳定实例 ID 对应的最新状态。

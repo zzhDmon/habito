@@ -8,6 +8,7 @@ struct TaskSessionViewModelFactory {
     private let calendar: Calendar
     private let timeZone: TimeZone
     private let dateProvider: any DateProviding
+    private let snoozeService: TaskSnoozeService?
     private let notificationRebuildTrigger: NotificationRebuildTrigger
 
     init(
@@ -15,12 +16,14 @@ struct TaskSessionViewModelFactory {
         calendar: Calendar,
         timeZone: TimeZone,
         dateProvider: any DateProviding,
+        snoozeService: TaskSnoozeService? = nil,
         notificationRebuildTrigger: NotificationRebuildTrigger = NotificationRebuildTrigger()
     ) {
         self.context = context
         self.calendar = calendar
         self.timeZone = timeZone
         self.dateProvider = dateProvider
+        self.snoozeService = snoozeService
         self.notificationRebuildTrigger = notificationRebuildTrigger
     }
 
@@ -31,6 +34,7 @@ struct TaskSessionViewModelFactory {
             calendar: calendar,
             timeZone: timeZone,
             dateProvider: dateProvider,
+            snoozeService: snoozeService,
             notificationRebuildTrigger: notificationRebuildTrigger
         )
     }

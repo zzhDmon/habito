@@ -20,8 +20,10 @@ struct KidTaskSessionView: View {
             case let .loaded(content):
                 TaskSessionLoadedView(
                     content: content,
+                    snoozeState: model.snoozeState,
                     onStartOrResume: model.startOrResume,
                     onPause: model.pause,
+                    onSnooze: model.snooze,
                     onComplete: model.completeTask,
                     onUndoCompletion: model.undoCompletion
                 )

@@ -82,6 +82,46 @@ struct NotificationRebuildServiceTests {
         #expect(remaining.first?.id == completed.id)
         #expect(remaining.first?.status == .completed)
     }
+
+    @Test("完成任务后重建会同时清理主提醒和稍后提醒")
+    func completionCleansPrimaryAndSnoozeNotifications() async throws {
+        let fixture = try Fixture()
+        _ = try fixture.insertDailyTemplate()
+        _ = try await fixture.service.rebuild(at: fixture.now)
+        let occurrence = try #require(
+            fixture.context.fetch(FetchDescriptor<TaskOccurrence>()).first {
+                $0.dateKey == "2026-09-27"
+            }
+        )
+        let snoozeService = TaskSnoozeService(
+            context: fixture.context,
+            scheduler: fixture.scheduler,
+            calendar: fixture.calendar,
+            timeZone: fixture.timeZone
+        )
+        _ = try await snoozeService.schedule(occurrenceID: occurrence.id, at: fixture.now)
+
+        let snoozeIdentifier = NotificationRequestIdentifier(
+            occurrenceID: occurrence.id,
+            kind: .snooze
+        ).rawValue
+        #expect(fixture.scheduler.pending[snoozeIdentifier] != nil)
+
+        _ = try TaskProgressService(context: fixture.context).complete(
+            occurrence,
+            at: fixture.now,
+            source: .childManual
+        )
+        let result = try await fixture.service.rebuild(at: fixture.now)
+
+        #expect(result.reconciliation.removedIdentifiers.contains(snoozeIdentifier))
+        #expect(fixture.scheduler.pending[snoozeIdentifier] == nil)
+        #expect(
+            try NotificationLinkStore(context: fixture.context)
+                .links(occurrenceID: occurrence.id)
+                .isEmpty
+        )
+    }
 }
 
 @MainActor

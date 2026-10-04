@@ -48,7 +48,9 @@ struct NotificationRebuildService {
             availableThrough: availableThrough,
             minimumCoverageThrough: minimumCoverageThrough
         )
-        let requests = try makeRequests(from: selection.primaryCandidates)
+        let requests =
+            try makeRequests(from: selection.primaryCandidates)
+            + snoozeRequests(at: now, today: today)
         let reconciliation = await coordinator.reconcile(desiredRequests: requests)
 
         // `.task(id:)` 可能因更新的业务事件取消旧重建；旧任务不再写检查点，由新任务按最新真相修复映射。
@@ -165,6 +167,58 @@ struct NotificationRebuildService {
         }
     }
 
+    /// 从可审计映射恢复仍有效的稍后提醒，使启动、前台与业务重建不会误删它们。
+    ///
+    /// 只保留今天、未来、未完成实例的最近八条请求；其他映射不进入期望集合，
+    /// 随后由协调器清理对应系统请求。
+    private func snoozeRequests(at now: Date, today: LocalDate) throws -> [TaskNotificationRequest] {
+        let occurrencesByID = Dictionary(
+            uniqueKeysWithValues: try context.fetch(FetchDescriptor<TaskOccurrence>()).map {
+                ($0.id, $0)
+            }
+        )
+        let links = try context.fetch(FetchDescriptor<NotificationLink>())
+        let valid = try links.compactMap { link -> TaskNotificationRequest? in
+            guard let identifier = NotificationRequestIdentifier(rawValue: link.requestIdentifier) else {
+                throw NotificationLinkStoreError.invalidIdentifier(link.requestIdentifier)
+            }
+            guard identifier.occurrenceID == link.occurrenceID, identifier.kind == link.kind else {
+                throw NotificationLinkStoreError.inconsistentMapping(
+                    identifier: link.requestIdentifier
+                )
+            }
+            guard identifier.kind == .snooze, link.scheduledAt > now else { return nil }
+            guard let occurrence = occurrencesByID[link.occurrenceID] else { return nil }
+            guard let status = occurrence.status else {
+                throw NotificationRebuildError.invalidOccurrenceStatus(
+                    occurrence.id,
+                    occurrence.statusRawValue
+                )
+            }
+            guard status == .pending || status == .inProgress else { return nil }
+            guard try occurrenceDate(occurrence) == today else { return nil }
+            let scheduledDate = try LocalDate(
+                date: link.scheduledAt,
+                calendar: calendar,
+                timeZone: timeZone
+            )
+            guard scheduledDate == today else { return nil }
+            return TaskNotificationRequest(
+                occurrenceID: occurrence.id,
+                kind: .snooze,
+                title: occurrence.titleSnapshot,
+                body: String(localized: "notification.snoozeBody"),
+                scheduledAt: link.scheduledAt
+            )
+        }
+        return Array(
+            valid.sorted {
+                if $0.scheduledAt != $1.scheduledAt { return $0.scheduledAt < $1.scheduledAt }
+                return $0.identifier < $1.identifier
+            }.prefix(TaskSnoozeService.maximumPendingCount)
+        )
+    }
+
     private func synchronizeLinks(
         requests: [TaskNotificationRequest],
         report: NotificationReconciliationReport,
@@ -183,9 +237,17 @@ struct NotificationRebuildService {
             )
         }
         let removed = Set(report.removedIdentifiers)
-        for link in try context.fetch(FetchDescriptor<NotificationLink>())
-        where removed.contains(link.requestIdentifier) {
-            context.delete(link)
+        let desired = Set(requests.map(\.identifier))
+        let failed = Set(report.failures.compactMap(\.identifier))
+        for link in try context.fetch(FetchDescriptor<NotificationLink>()) {
+            let isRemoved = removed.contains(link.requestIdentifier)
+            let isStaleSnooze =
+                link.kind == .snooze
+                && !desired.contains(link.requestIdentifier)
+                && !failed.contains(link.requestIdentifier)
+            if isRemoved || isStaleSnooze {
+                context.delete(link)
+            }
         }
         try context.save()
     }

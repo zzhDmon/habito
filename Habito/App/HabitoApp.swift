@@ -98,6 +98,12 @@ struct HabitoApp: App {
             calendar: calendar,
             timeZone: timeZone,
             dateProvider: dateProvider,
+            snoozeService: TaskSnoozeService(
+                context: container.mainContext,
+                scheduler: notificationScheduler,
+                calendar: calendar,
+                timeZone: timeZone
+            ),
             notificationRebuildTrigger: rebuildTrigger
         )
         taskTemplateEditorModelFactory = TaskTemplateEditorViewModelFactory(

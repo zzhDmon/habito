@@ -3,8 +3,10 @@ import SwiftUI
 /// 任务执行页的已加载内容；只渲染页面值并转发操作意图。
 struct TaskSessionLoadedView: View {
     let content: TaskSessionScreenContent
+    let snoozeState: TaskSnoozeState
     let onStartOrResume: () -> Void
     let onPause: () -> Void
+    let onSnooze: () async -> Void
     let onComplete: () -> Void
     let onUndoCompletion: () -> Void
 
@@ -15,9 +17,11 @@ struct TaskSessionLoadedView: View {
             TimelineView(.periodic(from: .now, by: 1)) { context in
                 TaskSessionTimerPanel(
                     content: content,
+                    snoozeState: snoozeState,
                     now: context.date,
                     onStartOrResume: onStartOrResume,
                     onPause: onPause,
+                    onSnooze: onSnooze,
                     onComplete: onComplete,
                     onUndoCompletion: onUndoCompletion
                 )
@@ -52,9 +56,11 @@ private struct TaskSessionIdentityPanel: View {
 
 private struct TaskSessionTimerPanel: View {
     let content: TaskSessionScreenContent
+    let snoozeState: TaskSnoozeState
     let now: Date
     let onStartOrResume: () -> Void
     let onPause: () -> Void
+    let onSnooze: () async -> Void
     let onComplete: () -> Void
     let onUndoCompletion: () -> Void
 
@@ -100,8 +106,10 @@ private struct TaskSessionTimerPanel: View {
                 TaskSessionControlsView(
                     primaryAction: content.primaryAction,
                     canComplete: content.canComplete,
+                    snoozeState: snoozeState,
                     onStartOrResume: onStartOrResume,
                     onPause: onPause,
+                    onSnooze: onSnooze,
                     onComplete: onComplete
                 )
             }
@@ -118,8 +126,10 @@ private struct TaskSessionTimerPanel: View {
 private struct TaskSessionControlsView: View {
     let primaryAction: TaskSessionScreenContent.PrimaryAction
     let canComplete: Bool
+    let snoozeState: TaskSnoozeState
     let onStartOrResume: () -> Void
     let onPause: () -> Void
+    let onSnooze: () async -> Void
     let onComplete: () -> Void
 
     var body: some View {
@@ -151,6 +161,20 @@ private struct TaskSessionControlsView: View {
             }
 
             if canComplete {
+                Button {
+                    Task { await onSnooze() }
+                } label: {
+                    Label("taskSession.snooze", systemImage: "bell.badge.fill")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity, minHeight: HabitoDesign.Layout.minimumTapSize)
+                }
+                .buttonStyle(.bordered)
+                .controlSize(.large)
+                .disabled(snoozeState == .scheduling)
+                .accessibilityIdentifier(HabitoAccessibilityID.snoozeButton)
+
+                TaskSnoozeFeedbackView(state: snoozeState)
+
                 Button(action: onComplete) {
                     Label("taskSession.complete", systemImage: "checkmark.circle.fill")
                         .font(.headline)
@@ -179,6 +203,40 @@ private struct TaskSessionControlsView: View {
         .buttonStyle(.borderedProminent)
         .controlSize(.large)
         .accessibilityIdentifier(identifier)
+    }
+}
+
+private struct TaskSnoozeFeedbackView: View {
+    let state: TaskSnoozeState
+
+    var body: some View {
+        switch state {
+        case .idle:
+            EmptyView()
+        case .scheduling:
+            Label("taskSession.snoozeScheduling", systemImage: "clock")
+                .foregroundStyle(.secondary)
+        case .scheduled:
+            Label("taskSession.snoozeScheduled", systemImage: "checkmark.circle.fill")
+                .foregroundStyle(HabitoDesign.Palette.success)
+                .accessibilityIdentifier(HabitoAccessibilityID.snoozeFeedback)
+        case .crossesMidnight:
+            Label("taskSession.snoozeMidnight", systemImage: "moon.stars.fill")
+                .foregroundStyle(.secondary)
+                .accessibilityIdentifier(HabitoAccessibilityID.snoozeFeedback)
+        case .budgetFull:
+            Label("taskSession.snoozeBudgetFull", systemImage: "bell.slash.fill")
+                .foregroundStyle(.secondary)
+                .accessibilityIdentifier(HabitoAccessibilityID.snoozeFeedback)
+        case .unavailable:
+            Label("taskSession.snoozeUnavailable", systemImage: "exclamationmark.circle.fill")
+                .foregroundStyle(.secondary)
+                .accessibilityIdentifier(HabitoAccessibilityID.snoozeFeedback)
+        case .failed:
+            Label("taskSession.snoozeFailed", systemImage: "exclamationmark.triangle.fill")
+                .foregroundStyle(.secondary)
+                .accessibilityIdentifier(HabitoAccessibilityID.snoozeFeedback)
+        }
     }
 }
 
@@ -269,8 +327,10 @@ private enum TaskSessionDurationText {
                 snapshotAt: .now,
                 completion: nil
             ),
+            snoozeState: .idle,
             onStartOrResume: {},
             onPause: {},
+            onSnooze: {},
             onComplete: {},
             onUndoCompletion: {}
         )
@@ -294,8 +354,10 @@ private enum TaskSessionDurationText {
                     source: .childManual
                 )
             ),
+            snoozeState: .idle,
             onStartOrResume: {},
             onPause: {},
+            onSnooze: {},
             onComplete: {},
             onUndoCompletion: {}
         )
