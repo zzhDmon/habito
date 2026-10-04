@@ -89,6 +89,9 @@ final class TaskTemplateEditorViewModel {
             draft = value
             notificationRebuildTrigger.requestRebuild()
             guard isCreating else { return .saved }
+            // 首轮重建可能在权限弹窗等待期间已结束；授权返回后必须显式按最新系统状态再核对。
+            // 失败也可能发生在系统已改变权限之后，因此不能只依赖弹窗是否触发 scenePhase 切换。
+            defer { notificationRebuildTrigger.requestRebuild() }
             do {
                 _ = try await notificationPermissionService.requestIfNeeded()
                 return .saved

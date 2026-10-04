@@ -38,7 +38,8 @@ struct HabitoApp: App {
                     credentialStore = uiTestCredentialStore
                     let uiTestNotificationService = UITestNotificationPermissionProvider(
                         deniesAuthorization: configuration.shouldDenyNotifications,
-                        failsScheduling: configuration.shouldFailNotificationScheduling
+                        failsScheduling: configuration.shouldFailNotificationScheduling,
+                        yieldsBeforeDiagnostics: configuration.shouldSeedTemplateOnly
                     )
                     notificationProvider = uiTestNotificationService
                     notificationScheduler = uiTestNotificationService
@@ -48,6 +49,7 @@ struct HabitoApp: App {
                         container: container,
                         shouldReset: configuration.shouldReset,
                         shouldSeedSampleData: configuration.shouldSeedSampleData,
+                        shouldSeedTemplateOnly: configuration.shouldSeedTemplateOnly,
                         now: .now,
                         calendar: calendar,
                         timeZone: timeZone

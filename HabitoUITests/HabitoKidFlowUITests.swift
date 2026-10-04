@@ -13,6 +13,32 @@ final class HabitoKidFlowUITests: XCTestCase {
         continueAfterFailure = false
     }
 
+    func testLaunchMaterializationRefreshesInitiallyEmptyToday() throws {
+        verifyLaunchMaterialization(extraArguments: [])
+    }
+
+    func testDeniedNotificationsDoNotHideNewlyMaterializedToday() throws {
+        verifyLaunchMaterialization(extraArguments: ["--habito-ui-notifications-denied"])
+    }
+
+    func testSchedulingFailureDoesNotHideNewlyMaterializedToday() throws {
+        verifyLaunchMaterialization(extraArguments: ["--habito-ui-notifications-fail"])
+    }
+
+    private func verifyLaunchMaterialization(extraArguments: [String]) {
+        XCUIDevice.shared.orientation = .landscapeLeft
+        let app = XCUIApplication()
+        app.launchArguments =
+            ["--habito-ui-testing", "--habito-ui-reset", "--habito-ui-template-only"] + extraArguments
+        app.launch()
+        // 重建会生成新的实例 UUID，按正式可访问性命名空间查找，不伪造固定样例实例。
+        let task = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "kid.today.task.")).firstMatch
+        XCTAssertTrue(task.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["阅读 15 分钟"].exists)
+        task.tap()
+        XCTAssertTrue(app.buttons["kid.session.start"].waitForExistence(timeout: 5))
+    }
+
     func testColdLaunchNotificationOpensSeededTask() throws {
         XCUIDevice.shared.orientation = .landscapeLeft
         let app = XCUIApplication()
@@ -349,7 +375,8 @@ final class HabitoKidFlowUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["闭环阅读"].waitForExistence(timeout: 5))
 
         let template = app.buttons.matching(
-            NSPredicate(format: "label CONTAINS %@", "闭环阅读")
+            // 首页及时刷新后也有同名任务；必须限定家长模板，不能点击背景孩子卡片。
+            NSPredicate(format: "identifier BEGINSWITH %@ AND label CONTAINS %@", "parent.templates.item.", "闭环阅读")
         ).firstMatch
         XCTAssertTrue(template.waitForExistence(timeout: 5))
         template.tap()
@@ -390,7 +417,7 @@ final class HabitoKidFlowUITests: XCTestCase {
 
         navigateBack(in: app, from: "日历与放假")
         let editedTemplate = app.buttons.matching(
-            NSPredicate(format: "label CONTAINS %@", "闭环阅读已编辑")
+            NSPredicate(format: "identifier BEGINSWITH %@ AND label CONTAINS %@", "parent.templates.item.", "闭环阅读已编辑")
         ).firstMatch
         editedTemplate.tap()
         let disable = app.buttons["parent.templates.lifecycle.disable"]

@@ -6,15 +6,19 @@
     {
         private let authorization: NotificationAuthorizationState
         private let failsScheduling: Bool
+        private let yieldsBeforeDiagnostics: Bool
         private var pending: [String: PendingNotificationRequestSnapshot] = [:]
 
-        init(deniesAuthorization: Bool = false, failsScheduling: Bool = false) {
+        init(deniesAuthorization: Bool = false, failsScheduling: Bool = false, yieldsBeforeDiagnostics: Bool = false) {
             authorization = deniesAuthorization ? .denied : .authorized
             self.failsScheduling = failsScheduling
+            self.yieldsBeforeDiagnostics = yieldsBeforeDiagnostics
         }
 
         func diagnostics() async -> NotificationDiagnosticSnapshot {
-            NotificationDiagnosticSnapshot(
+            // 模板无实例场景模拟系统异步边界，允许首页首次读取先发生；不靠固定秒数等待。
+            if yieldsBeforeDiagnostics { await Task.yield() }
+            return NotificationDiagnosticSnapshot(
                 authorization: authorization,
                 alerts: .enabled,
                 sounds: .enabled

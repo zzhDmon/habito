@@ -10,6 +10,7 @@
         static let enableArgument = "--habito-ui-testing"
         static let resetArgument = "--habito-ui-reset"
         static let emptyDataArgument = "--habito-ui-empty"
+        static let templateOnlyArgument = "--habito-ui-template-only"
         static let notificationRequestArgument = "--habito-ui-notification-request"
         static let delayedNotificationArgument = "--habito-ui-delayed-notification"
         static let notificationsDeniedArgument = "--habito-ui-notifications-denied"
@@ -17,6 +18,7 @@
 
         let shouldReset: Bool
         let shouldSeedSampleData: Bool
+        let shouldSeedTemplateOnly: Bool
         let notificationRequestIdentifier: String?
         /// 兼容旧参数名，但现在由测试确认首页后显式触发，不再用固定延时。
         let shouldPrepareNotificationResponse: Bool
@@ -33,6 +35,7 @@
             return UITestLaunchConfiguration(
                 shouldReset: arguments.contains(resetArgument),
                 shouldSeedSampleData: !arguments.contains(emptyDataArgument),
+                shouldSeedTemplateOnly: arguments.contains(templateOnlyArgument),
                 notificationRequestIdentifier: notificationRequestIdentifier,
                 shouldPrepareNotificationResponse: arguments.contains(delayedNotificationArgument),
                 shouldDenyNotifications: arguments.contains(notificationsDeniedArgument),

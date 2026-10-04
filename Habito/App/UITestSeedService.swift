@@ -21,6 +21,7 @@
         ///   - container: UI 测试独占的磁盘容器。
         ///   - shouldReset: 是否清空上一次测试状态。重启恢复场景必须传 `false`。
         ///   - shouldSeedSampleData: 是否写入固定样例；空数据验收只清理、不播种。
+        ///   - shouldSeedTemplateOnly: 仅保留模板，不预建实例，用于验证启动重建与首页刷新。
         ///   - now: 用于生成“今天”测试数据的绝对时间。
         ///   - calendar: 解释本地日期的日历。
         ///   - timeZone: 解释本地日期的时区。
@@ -29,6 +30,7 @@
             container: ModelContainer,
             shouldReset: Bool,
             shouldSeedSampleData: Bool = true,
+            shouldSeedTemplateOnly: Bool = false,
             now: Date,
             calendar: Calendar,
             timeZone: TimeZone
@@ -39,8 +41,9 @@
             }
             guard shouldSeedSampleData else { return }
 
+            // 重启时不要因样例实例已被停用/归档清理而再次播种，覆盖家长之前的维护结果。
             let existing = try context.fetch(
-                FetchDescriptor<TaskOccurrence>(predicate: #Predicate { $0.id == taskID })
+                FetchDescriptor<TaskTemplate>(predicate: #Predicate { $0.id == templateID })
             )
             guard existing.isEmpty else { return }
 
@@ -74,11 +77,13 @@
             )
             context.insert(template)
             context.insert(rule)
-            context.insert(occurrence)
             // 与正式创建服务一致：先入同一 context，再关联，兼容 iPadOS 17 的关系维护。
             template.reminderRule = rule
             rule.taskTemplate = template
-            occurrence.template = template
+            if !shouldSeedTemplateOnly {
+                context.insert(occurrence)
+                occurrence.template = template
+            }
             try context.save()
         }
 

@@ -9,6 +9,7 @@ final class FakeLocalNotificationService: LocalNotificationScheduling {
     var soundSetting: NotificationDeliverySettingState = .enabled
     var requestCount = 0
     var requestError: (any Error)?
+    var onRequestAuthorization: (() async throws -> Void)?
     var pendingDate: Date?
     var scheduledDate = Date(timeIntervalSince1970: 2_000_000_000)
     var scheduledScenario: NotificationProbeScenario?
@@ -26,6 +27,10 @@ final class FakeLocalNotificationService: LocalNotificationScheduling {
     func requestAuthorization() async throws -> NotificationAuthorizationState {
         requestCount += 1
         if let requestError { throw requestError }
+        if let onRequestAuthorization {
+            self.onRequestAuthorization = nil
+            try await onRequestAuthorization()
+        }
         currentAuthorizationState = requestedAuthorizationState
         return requestedAuthorizationState
     }

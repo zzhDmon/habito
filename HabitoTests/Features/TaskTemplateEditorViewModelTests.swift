@@ -6,6 +6,25 @@ import Testing
 @Suite("任务编辑器通知权限接入")
 @MainActor
 struct TaskTemplateEditorViewModelTests {
+    @Test("首次保存等待用户授权返回后再次重建，不依赖通知弹窗切换前后台")
+    func firstAuthorizationResponseRequestsFreshRebuild() async throws {
+        let fixture = try makeFixture()
+        fixture.model.load()
+        fixture.model.draft.title = "首次提醒"
+        var revisionWhileAwaiting: Int?
+        fixture.provider.onRequestAuthorization = {
+            revisionWhileAwaiting = fixture.rebuildTrigger.revision
+            let templateCount = try fixture.context.fetchCount(FetchDescriptor<TaskTemplate>())
+            #expect(templateCount == 1)
+            #expect(fixture.provider.currentAuthorizationState == .notDetermined)
+        }
+        let outcome = await fixture.model.save()
+        #expect(outcome == .saved)
+        #expect(revisionWhileAwaiting == 1)
+        #expect(fixture.provider.currentAuthorizationState == .authorized)
+        #expect(fixture.rebuildTrigger.revision == 2)
+    }
+
     @Test("权限已拒绝仍保存任务且不重复请求")
     func deniedPermissionDoesNotBlockSave() async throws {
         let fixture = try makeFixture()
@@ -17,7 +36,7 @@ struct TaskTemplateEditorViewModelTests {
 
         #expect(outcome == .saved)
         #expect(fixture.provider.requestCount == 0)
-        #expect(fixture.rebuildTrigger.revision == 1)
+        #expect(fixture.rebuildTrigger.revision == 2)
         #expect(try fixture.context.fetchCount(FetchDescriptor<TaskTemplate>()) == 1)
     }
 
@@ -31,6 +50,7 @@ struct TaskTemplateEditorViewModelTests {
         let outcome = await fixture.model.save()
 
         #expect(outcome == .savedWithNotificationWarning)
+        #expect(fixture.rebuildTrigger.revision == 2)
         #expect(try fixture.context.fetchCount(FetchDescriptor<TaskTemplate>()) == 1)
     }
 

@@ -101,6 +101,7 @@ struct RootView: View {
         }
         .onChange(of: scenePhase) { _, phase in
             guard phase == .active else { return }
+            loadToday()
             notificationRebuildTrigger.requestRebuild()
         }
         .sheet(isPresented: $isParentGatePresented, onDismiss: loadToday) {
@@ -133,6 +134,9 @@ struct RootView: View {
         do {
             let result = try await notificationRebuildService.rebuild(at: .now)
             try Task.checkCancellation()
+            // 重建会独立物化今日实例；TodayViewModel 持有只读值，不会随 SwiftData 写入自动刷新。
+            // 排程部分失败也应显示已落盘的任务，确保无通知权限时仍可手动完成。
+            loadToday()
             notificationRebuildTrigger.record(result, checkedAt: .now)
             if !result.reconciliation.isSuccessful {
                 logger.error("通知核对有 \(result.reconciliation.failures.count, privacy: .public) 项失败")

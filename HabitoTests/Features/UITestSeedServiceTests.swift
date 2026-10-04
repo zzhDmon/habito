@@ -1,0 +1,84 @@
+#if DEBUG
+    import Foundation
+    import SwiftData
+    import Testing
+    @testable import Habito
+
+    /// 验证 Debug 夹具的隔离与重启语义，避免测试播种掩盖真实业务结果。
+    @MainActor
+    @Suite("UI 测试播种边界")
+    struct UITestSeedServiceTests {
+        @Test("仅模板与常规样例使用不同实例准备方式", arguments: [true, false])
+        func initialSeedHasExpectedGraph(templateOnly: Bool) throws {
+            let fixture = try Fixture()
+            try fixture.prepare(templateOnly: templateOnly)
+            #expect(try fixture.context.fetchCount(FetchDescriptor<TaskTemplate>()) == 1)
+            #expect(try fixture.context.fetchCount(FetchDescriptor<ReminderRule>()) == 1)
+            #expect(try fixture.context.fetchCount(FetchDescriptor<TaskOccurrence>()) == (templateOnly ? 0 : 1))
+            let template = try #require(fixture.context.fetch(FetchDescriptor<TaskTemplate>()).first)
+            #expect(template.reminderRule?.taskTemplateID == template.id)
+            #expect(template.reminderRule?.taskTemplate === template)
+        }
+
+        @Test("停用或归档清理样例实例后，重启播种不得重新启用模板", arguments: [TaskTemplateLifecycleAction.disable, .archive])
+        func templateMaintenanceSurvivesRelaunchSeed(action: TaskTemplateLifecycleAction) throws {
+            let fixture = try Fixture()
+            try fixture.prepare()
+            let template = try #require(fixture.context.fetch(FetchDescriptor<TaskTemplate>()).first)
+            _ = try TaskTemplateLifecycleService(
+                context: fixture.context, calendar: fixture.calendar, timeZone: fixture.timeZone
+            ).perform(
+                templateID: template.id, action: action,
+                today: LocalDate(dateKey: "2026-09-27"), now: fixture.now)
+            #expect(try fixture.context.fetchCount(FetchDescriptor<TaskOccurrence>()) == 0)
+            try fixture.prepare()
+            #expect(template.lifecycleState == (action == .disable ? .disabled : .archived))
+            #expect(try fixture.context.fetchCount(FetchDescriptor<TaskTemplate>()) == 1)
+            #expect(try fixture.context.fetchCount(FetchDescriptor<ReminderRule>()) == 1)
+            #expect(try fixture.context.fetchCount(FetchDescriptor<TaskOccurrence>()) == 0)
+        }
+
+        @Test("重复播种不覆盖完成历史或创建第二份任务")
+        func repeatedSeedPreservesCompletionHistory() throws {
+            let fixture = try Fixture()
+            try fixture.prepare()
+            let occurrence = try #require(fixture.context.fetch(FetchDescriptor<TaskOccurrence>()).first)
+            _ = try TaskProgressService(context: fixture.context).complete(
+                occurrence, at: fixture.now, source: .childManual)
+            try fixture.prepare()
+            #expect(occurrence.status == .completed)
+            #expect(try fixture.context.fetchCount(FetchDescriptor<CompletionRecord>()) == 1)
+            #expect(try fixture.context.fetchCount(FetchDescriptor<TaskOccurrence>()) == 1)
+        }
+
+        @Test("仅模板夹具重复准备仍无实例，不替正式重建预先造数据")
+        func repeatedTemplateOnlySeedDoesNotMaterializeOccurrences() throws {
+            let fixture = try Fixture()
+            try fixture.prepare(templateOnly: true)
+            try fixture.prepare(templateOnly: true)
+            #expect(try fixture.context.fetchCount(FetchDescriptor<TaskTemplate>()) == 1)
+            #expect(try fixture.context.fetchCount(FetchDescriptor<ReminderRule>()) == 1)
+            #expect(try fixture.context.fetchCount(FetchDescriptor<TaskOccurrence>()) == 0)
+        }
+
+        private struct Fixture {
+            let container: ModelContainer
+            let now: Date
+            let calendar = Calendar(identifier: .gregorian)
+            let timeZone: TimeZone
+            var context: ModelContext { container.mainContext }
+
+            init() throws {
+                container = try AppModelContainer.make(inMemory: true)
+                now = try Date("2026-09-27T02:00:00Z", strategy: .iso8601)
+                timeZone = try #require(TimeZone(identifier: "Asia/Shanghai"))
+            }
+
+            func prepare(templateOnly: Bool = false) throws {
+                try UITestSeedService.prepare(
+                    container: container, shouldReset: false, shouldSeedTemplateOnly: templateOnly,
+                    now: now, calendar: calendar, timeZone: timeZone)
+            }
+        }
+    }
+#endif
