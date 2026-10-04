@@ -6,6 +6,95 @@ import Testing
 @Suite("通知业务重建")
 @MainActor
 struct NotificationRebuildServiceTests {
+    @Test("跨午夜清理昨日稍后与已送达卡片，不改写完成历史")
+    func midnightRebuildClearsYesterdaySnoozeAndPreservesHistory() async throws {
+        let fixture = try Fixture()
+        _ = try fixture.insertDailyTemplate()
+        _ = try fixture.insertDailyTemplate()
+        _ = try await fixture.service.rebuild(at: fixture.now)
+        let today = try fixture.context.fetch(FetchDescriptor<TaskOccurrence>()).filter { $0.dateKey == "2026-09-27" }
+        let snoozed = try #require(today.first)
+        let completed = try #require(today.first { $0.id != snoozed.id })
+        _ = try await TaskSnoozeService(
+            context: fixture.context, scheduler: fixture.scheduler, permissionProvider: fixture.permissions,
+            calendar: fixture.calendar, timeZone: fixture.timeZone
+        ).schedule(occurrenceID: snoozed.id, at: fixture.now)
+        _ = try TaskProgressService(context: fixture.context).complete(completed, at: fixture.now, source: .childManual)
+        let primaryIdentifier = NotificationRequestIdentifier(occurrenceID: snoozed.id, kind: .primary).rawValue
+        let snoozeIdentifier = NotificationRequestIdentifier(occurrenceID: snoozed.id, kind: .snooze).rawValue
+        fixture.scheduler.delivered = [primaryIdentifier, snoozeIdentifier]
+        let tomorrow = try Date("2026-09-27T16:00:01Z", strategy: .iso8601)
+        let result = try await fixture.service.rebuild(at: tomorrow)
+        #expect(result.reconciliation.isSuccessful)
+        #expect(result.scheduledSnoozeCount == 0)
+        #expect(fixture.scheduler.pending[primaryIdentifier] == nil)
+        #expect(fixture.scheduler.pending[snoozeIdentifier] == nil)
+        #expect(fixture.scheduler.delivered.isEmpty)
+        #expect(try NotificationLinkStore(context: fixture.context).links(occurrenceID: snoozed.id).isEmpty)
+        #expect(completed.status == .completed)
+        #expect(completed.dateKey == "2026-09-27")
+        #expect(try fixture.context.fetchCount(FetchDescriptor<CompletionRecord>()) == 1)
+        let identifiers = Set(fixture.scheduler.pending.keys)
+        _ = try await fixture.service.rebuild(at: tomorrow)
+        #expect(Set(fixture.scheduler.pending.keys) == identifiers)
+    }
+
+    @Test("等待系统队列时取消旧重建，不写成功检查点，后续重建可继续")
+    func cancelledRebuildDoesNotPersistStaleCheckpoint() async throws {
+        let fixture = try Fixture()
+        _ = try fixture.insertDailyTemplate()
+        let entered = AsyncStream.makeStream(of: Void.self)
+        let release = AsyncStream.makeStream(of: Void.self)
+        fixture.scheduler.onReadAsync = {
+            entered.continuation.yield(())
+            var iterator = release.stream.makeAsyncIterator()
+            _ = await iterator.next()
+        }
+        let rebuilding = Task {
+            do {
+                _ = try await fixture.service.rebuild(at: fixture.now)
+                return false
+            } catch is CancellationError {
+                return true
+            }
+        }
+        var iterator = entered.stream.makeAsyncIterator()
+        _ = await iterator.next()
+        rebuilding.cancel()
+        release.continuation.yield(())
+        #expect(try await rebuilding.value)
+        #expect(fixture.scheduler.pending.isEmpty)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<NotificationLink>()) == 0)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<AppSettings>()) == 0)
+        // 实例物化已独立保存；取消排程并不删除仍可手动完成的业务任务。
+        #expect(try fixture.context.fetchCount(FetchDescriptor<TaskOccurrence>()) == 15)
+        let retried = try await fixture.service.rebuild(at: fixture.now)
+        #expect(retried.reconciliation.isSuccessful)
+        #expect(fixture.scheduler.pending.count == 15)
+    }
+
+    @Test("磁盘重开后从映射恢复稍后提醒与主提醒，重复重建不新增")
+    func diskReopenRestoresStableSnoozeSlot() async throws {
+        let directory = URL.temporaryDirectory.appending(
+            path: "Habito-M4-\(UUID().uuidString)", directoryHint: .isDirectory)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        // SwiftData 在 iPadOS 17 延迟释放 SQLite 连接；不能在重开后立即 unlink。
+        // 使用测试沙箱随机临时目录，由沙箱清理，绝不触碰正式库。
+        let storeURL = directory.appending(path: "Habito-M4.store")
+        let (occurrenceID, scheduledAt) = try await seedNotifications(storeURL: storeURL)
+        let reopened = try Fixture(storeURL: storeURL)
+        let restored = try await reopened.service.rebuild(at: reopened.now)
+        let identifier = NotificationRequestIdentifier(occurrenceID: occurrenceID, kind: .snooze).rawValue
+        #expect(restored.reconciliation.isSuccessful)
+        #expect(restored.scheduledSnoozeCount == 1)
+        #expect(reopened.scheduler.pending.count == 16)
+        #expect(reopened.scheduler.pending[identifier]?.scheduledAt == scheduledAt)
+        #expect(try reopened.context.fetchCount(FetchDescriptor<NotificationLink>()) == 16)
+        let repeated = try await reopened.service.rebuild(at: reopened.now)
+        #expect(repeated.reconciliation.addedIdentifiers.isEmpty)
+        #expect(repeated.reconciliation.retainedIdentifiers.count == 16)
+    }
+
     @Test("拒绝通知仍生成任务但不伪造排程检查点，重新授权可恢复")
     func deniedAuthorizationPreservesManualTasksAndCanRecover() async throws {
         let fixture = try Fixture()
@@ -309,6 +398,19 @@ struct NotificationRebuildServiceTests {
 
 @MainActor
 private extension NotificationRebuildServiceTests {
+    func seedNotifications(storeURL: URL) async throws -> (UUID, Date) {
+        let fixture = try Fixture(storeURL: storeURL)
+        _ = try fixture.insertDailyTemplate()
+        _ = try await fixture.service.rebuild(at: fixture.now)
+        let occurrence = try #require(
+            fixture.context.fetch(FetchDescriptor<TaskOccurrence>()).first { $0.dateKey == "2026-09-27" })
+        let scheduledAt = try await TaskSnoozeService(
+            context: fixture.context, scheduler: fixture.scheduler, permissionProvider: fixture.permissions,
+            calendar: fixture.calendar, timeZone: fixture.timeZone
+        ).schedule(occurrenceID: occurrence.id, at: fixture.now)
+        return (occurrence.id, scheduledAt)
+    }
+
     final class Fixture {
         let context: ModelContext
         let scheduler: RebuildSchedulerFake
@@ -319,8 +421,12 @@ private extension NotificationRebuildServiceTests {
         let operationGate = NotificationOperationGate()
         let permissions = FakeLocalNotificationService()
 
-        init() throws {
-            context = ModelContext(try AppModelContainer.make(inMemory: true))
+        init(storeURL: URL? = nil) throws {
+            if let storeURL {
+                context = ModelContext(try AppModelContainer.make(storeURL: storeURL))
+            } else {
+                context = ModelContext(try AppModelContainer.make(inMemory: true))
+            }
             scheduler = RebuildSchedulerFake()
             permissions.currentAuthorizationState = .authorized
             now = try Date("2026-09-27T02:00:00Z", strategy: .iso8601)
@@ -351,10 +457,11 @@ private extension NotificationRebuildServiceTests {
                 recurrence: try .weekly(on: Set(Weekday.allCases), starting: start),
                 timeOfDayMinutes: 19 * 60 + 30
             )
-            template.reminderRule = rule
-            rule.taskTemplate = template
             context.insert(template)
             context.insert(rule)
+            // 兼容 iPadOS 17：先建立持久化归属，避免尚未入库模型的双向关系触发陷阱。
+            template.reminderRule = rule
+            rule.taskTemplate = template
             try context.save()
             return template
         }

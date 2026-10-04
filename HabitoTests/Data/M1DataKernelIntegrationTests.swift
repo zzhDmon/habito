@@ -13,7 +13,7 @@ struct M1DataKernelIntegrationTests {
             directoryHint: .isDirectory
         )
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        defer { try? FileManager.default.removeItem(at: directory) }
+        // iPadOS 17 的 SQLite 连接可能延迟释放；不 unlink 活跃库，随机目录交给测试沙箱清理。
         let storeURL = directory.appending(path: "Habito-M1.store")
         let templateID = UUID()
 
@@ -64,9 +64,10 @@ struct M1DataKernelIntegrationTests {
             timeOfDayMinutes: 19 * 60 + 30
         )
         let holiday = DayOverride(date: tuesday, dayType: .holiday, note: "家庭活动")
-        template.reminderRule = rule
         context.insert(template)
+        context.insert(rule)
         context.insert(holiday)
+        template.reminderRule = rule
         try context.save()
 
         let generated = try expander().expand(

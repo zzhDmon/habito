@@ -16,6 +16,7 @@ nonisolated enum HabitoAccessibilityID {
     static let completeButton = "kid.session.complete"
     static let undoButton = "kid.session.undo"
     static let parentEntry = "parent.gate.entry"
+    static let testingNotificationResponse = "testing.notification-response"
     static let parentPINField = "parent.gate.pin"
     static let parentPINConfirmationField = "parent.gate.pin-confirmation"
     static let parentCreateButton = "parent.gate.create"

@@ -64,9 +64,9 @@ struct ParentTaskTemplateQueryServiceTests {
             recurrence: .once(on: expiredDate),
             timeOfDayMinutes: 9 * 60
         )
+        fixture.context.insert(expiredRule)
         expired.reminderRule = expiredRule
         expiredRule.taskTemplate = expired
-        fixture.context.insert(expiredRule)
 
         let items = try fixture.items()
         let weeklyItem = try #require(items.first { $0.id == weekly.id })
@@ -120,9 +120,9 @@ struct ParentTaskTemplateQueryServiceTests {
                 ),
                 timeOfDayMinutes: minutes
             )
+            context.insert(rule)
             template.reminderRule = rule
             rule.taskTemplate = template
-            context.insert(rule)
             return template
         }
 

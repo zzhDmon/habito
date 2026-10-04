@@ -94,10 +94,11 @@ struct TaskTemplateEditingService {
             timeOfDayMinutes: draft.timeOfDayMinutes,
             isEnabled: draft.isEnabled
         )
-        template.reminderRule = rule
-        rule.taskTemplate = template
         context.insert(template)
         context.insert(rule)
+        // iPadOS 17 会在尚未入库模型的双向关系设置中触发陷阱；先确立同一 context 归属。
+        template.reminderRule = rule
+        rule.taskTemplate = template
         try materializeAndSave(template, today: today, now: now)
         return template.id
     }

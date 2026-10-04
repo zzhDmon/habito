@@ -203,10 +203,10 @@ struct ParentCalendarDayServiceTests {
                 recurrence: try .weekly(on: weekdays, starting: date),
                 timeOfDayMinutes: 19 * 60
             )
-            template.reminderRule = rule
-            rule.taskTemplate = template
             context.insert(template)
             context.insert(rule)
+            template.reminderRule = rule
+            rule.taskTemplate = template
             try context.save()
             return template
         }

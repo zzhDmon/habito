@@ -5,7 +5,7 @@
 ## 1. 验收环境与边界
 
 - 自动化：iPad Pro 13-inch (M5) 模拟器，iOS 27.0，Xcode 27、Swift 严格并发。
-- 最低部署目标：iPadOS 17；持续执行 iOS 17.2 `build-for-testing`。
+- 最低部署目标：iPadOS 17；iOS 17.2 已执行完整单元测试与关键 UI 闭环，不仅验证编译。
 - 真机：iPad A16，上一轮确认系统为 iPadOS 26.6；本轮设备离线，安装前重新读取实际版本。
 - 所有自动化数据使用内存容器或 Debug 专用独立磁盘库，禁止清空正式家庭数据。
 - 现有免费签名观察窗口已于 2026-09-29 到达预计到期时间，安装新版本前先保留旧版本启动行为与数据证据；不得把重新签名后的结果当作到期观察结果。
@@ -20,6 +20,9 @@
 | M4-F04 | 完成或删除后只移除挂起请求，通知中心已送达的旧卡片未清理 | P1 | 系统边界补充读取/移除已送达通知；清理只处理稳定 Habito 标识，探针不受影响；单条失败记录并支持重试 |
 | M4-F05 | 未授权或关闭提醒显示时，稍后操作可能误报成功 | P1 | 注入权限窄接口；孩子端显示找家长开启提醒，不自行弹权限请求；声音关闭仍可安排可见提醒；权限关闭不阻止手动完成 |
 | M4-F06 | 部分排程失败未展示给家长，且未授权仍可能保存排程覆盖检查点 | P1 | 新增共享核对状态、数量/覆盖/失败与重试入口；拒绝权限仍物化任务、清旧请求，不保存虚假排程检查点；恢复授权后幂等补齐 |
+| M4-F07 | iPadOS 17.2 在尚未入库的模板/规则双向关系设置时触发陷阱 | P0 | 确定性复现后改为先入同一 context 再关联；正式创建服务、Debug 播种与相关夹具一致修正，旧/新 runtime 均回归 |
+| M4-F08 | iPadOS 17.2 的父对象物理删除未清净拥有记录，部分旧夹具有重复注册/跨容器模型问题 | P1 | `TaskGraphDeletionService` 按稳定外键显式清理拥有记录、保留模板历史；先完整查询、拒绝跨 context、由外层事务保存，不改 schema；删除结果用新 context 验证 |
+| M4-F09 | 后台路由 UI 用例用固定两秒延迟，Accessibility 慢启动时首页已跳转而导致误失败 | 测试可靠性 | Debug 测试先确认首页，再显式触发与正式通知相同的桥；无固定等待、不改变 Release 行为，路由单测与冷/后台 UI 重跑通过 |
 
 初次回归命令用单函数过滤未实际运行用例；已改为按完整 suite 过滤并核对 `xcresult` 的真实测试数量，不能把零用例成功当作通过。修复前的有效失败日志为 9 个用例、4 条问题；外围诊断收集卡住后结束旧命令，保留日志。修复后首次通知专项为 **16/16 通过**，无 runtime warning。
 
@@ -80,3 +83,51 @@
 - 上表全部取得真机证据；系统限制与应用缺陷分开记录。
 - 应用侧 P0/P1 为零。当前真机离线，**M4-008 尚未放行**。
 - M5 的三天家庭试用、签名到期观察与长期分发决定继续保留独立验收要求。
+
+## 6. 2026-10-04 最终集成回归补充
+
+- 两个运行时的完整单元测试均为 **154/154 通过**（各 159 次参数化执行），无失败、跳过和 runtime warning：iOS 17.2 与 iOS 27.0。
+- 最后一段新增删除期间排程补偿、排队取消交还执行权、跨午夜清理、取消重建不写过期检查点，以及磁盘重开恢复稳定稍后槽位。全部使用固定时间/可控异步屏障，不靠真实等待。
+- 真实 iOS 17.2 执行发现关系设置与原生级联清理不一致，不能把它们归为模拟器握手问题。删除接口保留原有历史保护与软删除规则；物理删除统一经过服务，不期待每个 runtime 自动级联都一致。标准级联含义参考 [Apple 删除数据文档](https://developer.apple.com/documentation/swiftdata/deleting-persistent-data-from-your-app)，本项目的兼容性结论以本次失败/修复/通过证据为准。
+- 旧磁盘夹具改为创建容器后构造模型，只跨重开传稳定 ID。SwiftData 没有显式关闭 SQLite 接口，旧 runtime 会延迟释放连接；测试的随机临时库保留在测试沙箱 `tmp` 供系统回收，不立即 unlink 活跃库，不触碰正式家庭数据。
+- 全量 UI 先前有 1/11 失败，原因是固定延迟导致测试读取首页时已跳转；修复后冷启动/后台路由 2/2 通过。该失败记录保留，不能把重跑直接写成原始全量通过。
+- 修复后的独立最终全量横屏 UI **11/11 通过**（246.479 秒），结果包为 `Passed`，零失败/跳过。保留 11 条相同的全屏方向未来兼容性提示（R-009），不是业务/严格并发警告，也不是零 runtime warning。
+- iOS 17.2 上稍后提醒 UI 1/1 与空数据库家长管理 UI 1/1 已通过，后者实际完成创建、编辑、改单日、放假/撤销、停用和归档。一次命令中的家长过滤名称写错，实际只执行稍后用例；随后按准确名称独立执行家长用例，按结果包真实数量记录。
+- Release Simulator 构建、静态分析与严格格式检查通过；Debug 手动测试触发入口不会编译进 Release 包。
+- `swiftui-pro` 最终专项复核：Debug 桥保持主 actor 可观察状态、一次消费、标准本地化文字按钮和 44 pt 目标；物理删除先读取完整对象图，由用例判定范围、统一事务保存，无新增跨 context 模型传递。未发现新增需修复的问题。
+
+### 本轮最终结果包索引
+
+以下为本机临时验证产物，不提交二进制结果包；清理临时目录后可按下节复跑。
+
+| 验证 | 结果 | 本机结果包路径 |
+|---|---|---|
+| iOS 17.2 全量单元 | 154/154，159 次执行 | `/tmp/habito-m4-008-permissions-ios17/Logs/Test/Test-Habito-2026.10.04_22-35-56-+0800.xcresult` |
+| iOS 27 全量单元 | 154/154，159 次执行 | `/tmp/habito-m4-008-permissions/Logs/Test/Test-Habito-2026.10.04_22-35-57-+0800.xcresult` |
+| iOS 17.2 稍后入口 UI | 1/1 | `/tmp/habito-m4-008-permissions-ios17/Logs/Test/Test-Habito-2026.10.04_22-36-50-+0800.xcresult` |
+| iOS 17.2 空库家长闭环 UI | 1/1 | `/tmp/habito-m4-008-permissions-ios17/Logs/Test/Test-Habito-2026.10.04_22-38-25-+0800.xcresult` |
+| iOS 27 最终全量横屏 UI | 11/11 | `/tmp/habito-m4-008-permissions/Logs/Test/Test-Habito-2026.10.04_22-38-24-+0800.xcresult` |
+
+A 自动化与缺陷修复已通过；B 目标设备实际送达仍待执行，M4-008 保持 `IN_PROGRESS`。
+
+### 可复跑命令与核对方法
+
+先用 `xcrun simctl list devices available` 找可用 **模拟器** UUID，替换下方占位符；不要填物理设备 ID，避免覆盖旧免费签名观察版本。DerivedData 与 result bundle 使用新的专用临时位置。
+
+```sh
+xcodebuild test -project Habito.xcodeproj -scheme Habito \
+  -destination 'platform=iOS Simulator,id=<模拟器 UUID>' \
+  -derivedDataPath /tmp/habito-m4-recheck \
+  -parallel-testing-enabled NO -collect-test-diagnostics never \
+  -only-testing:HabitoTests
+
+xcodebuild test-without-building -project Habito.xcodeproj -scheme Habito \
+  -destination 'platform=iOS Simulator,id=<同一个模拟器 UUID>' \
+  -derivedDataPath /tmp/habito-m4-recheck \
+  -parallel-testing-enabled NO -collect-test-diagnostics never \
+  -only-testing:HabitoUITests
+
+xcrun xcresulttool get test-results summary --path <实际生成的 xcresult 目录>
+```
+
+分别在最低运行时和当前运行时执行单测；完整横屏 UI 在 iOS 27 验收，iOS 17 保留关键闭环兼容证据。核对实际测试数量（不能为 0）、失败、跳过与 runtime warning；已登记的全屏方向未来提示单独记录，不把构建退出码当成所有验收通过。Xcode 外围诊断收尾慢时，先保留原始日志并区分实际断言结果，不能擅自认定成功。

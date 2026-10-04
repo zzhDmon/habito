@@ -41,6 +41,9 @@ final class HabitoKidFlowUITests: XCTestCase {
         app.launch()
 
         XCTAssertTrue(app.buttons[seededTaskIdentifier].waitForExistence(timeout: 5))
+        let notificationResponse = app.buttons["testing.notification-response"]
+        XCTAssertTrue(notificationResponse.waitForExistence(timeout: 5))
+        notificationResponse.tap()
         XCTAssertTrue(app.buttons["kid.session.start"].waitForExistence(timeout: 5))
     }
 

@@ -120,10 +120,10 @@ struct TaskTemplateLifecycleServiceTests {
                 timeOfDayMinutes: 19 * 60 + 30,
                 isEnabled: enabled
             )
-            template.reminderRule = rule
-            rule.taskTemplate = template
             context.insert(template)
             context.insert(rule)
+            template.reminderRule = rule
+            rule.taskTemplate = template
             try context.save()
             service = TaskTemplateLifecycleService(
                 context: context,

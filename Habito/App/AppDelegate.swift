@@ -23,11 +23,8 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
             if let configuration = UITestLaunchConfiguration.current,
                 let identifier = configuration.notificationRequestIdentifier
             {
-                if configuration.shouldDelayNotificationResponse {
-                    Task { @MainActor [notificationResponseRouter] in
-                        try? await Task.sleep(for: .seconds(2))
-                        notificationResponseRouter.receive(requestIdentifier: identifier)
-                    }
+                if configuration.shouldPrepareNotificationResponse {
+                    notificationResponseRouter.prepareUITestResponse(requestIdentifier: identifier)
                 } else {
                     notificationResponseRouter.receive(requestIdentifier: identifier)
                 }

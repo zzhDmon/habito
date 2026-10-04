@@ -72,12 +72,13 @@
                 recurrence: try .weekly(on: Set(Weekday.allCases), starting: localDate),
                 timeOfDayMinutes: 19 * 60 + 30
             )
-            template.reminderRule = rule
-            rule.taskTemplate = template
-            occurrence.template = template
             context.insert(template)
             context.insert(rule)
             context.insert(occurrence)
+            // 与正式创建服务一致：先入同一 context，再关联，兼容 iPadOS 17 的关系维护。
+            template.reminderRule = rule
+            rule.taskTemplate = template
+            occurrence.template = template
             try context.save()
         }
 

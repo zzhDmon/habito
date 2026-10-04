@@ -4,6 +4,7 @@ import SwiftData
 /// 某个模板在特定本地日期上的任务实例。
 ///
 /// 快照字段保证模板后续改名或归档后，历史仍按发生当日的信息展示。
+/// 物理删除统一使用 `TaskGraphDeletionService` 清理拥有记录，不仅依赖 runtime 的级联规则。
 @Model
 final class TaskOccurrence {
     @Attribute(.unique) private(set) var id: UUID

@@ -151,6 +151,62 @@ struct TaskSnoozeServiceTests {
         #expect(try fixture.context.fetchCount(FetchDescriptor<NotificationLink>()) == 0)
     }
 
+    @Test("系统添加期间删除任务，返回后清理孤立稍后请求")
+    func deletionDuringSchedulingDoesNotLeaveRequest() async throws {
+        let fixture = try Fixture()
+        let occurrence = try fixture.makeOccurrence()
+        let occurrenceID = occurrence.id
+        fixture.scheduler.onAdd = {
+            fixture.context.delete(occurrence)
+            try fixture.context.save()
+        }
+        await #expect(throws: TaskSnoozeError.occurrenceNotFound(occurrenceID)) {
+            _ = try await fixture.service.schedule(occurrenceID: occurrenceID, at: fixture.now)
+        }
+        #expect(fixture.scheduler.pending.isEmpty)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<NotificationLink>()) == 0)
+    }
+
+    @Test("排队取消的稍后操作不写入请求，也不阻塞后续操作")
+    func cancelledQueuedOperationDoesNotBlockFollowingSchedule() async throws {
+        let fixture = try Fixture()
+        let first = try fixture.makeOccurrence(title: "先开始")
+        let cancelled = try fixture.makeOccurrence(title: "取消排队")
+        let last = try fixture.makeOccurrence(title: "继续排队")
+        let entered = AsyncStream.makeStream(of: Void.self)
+        let release = AsyncStream.makeStream(of: Void.self)
+        let queued = AsyncStream.makeStream(of: Void.self)
+        fixture.scheduler.onAddAsync = {
+            entered.continuation.yield(())
+            var iterator = release.stream.makeAsyncIterator()
+            _ = await iterator.next()
+        }
+        let firstTask = Task { try await fixture.service.schedule(occurrenceID: first.id, at: fixture.now) }
+        var enteredIterator = entered.stream.makeAsyncIterator()
+        _ = await enteredIterator.next()
+        let cancelledTask = Task {
+            queued.continuation.yield(())
+            do {
+                _ = try await fixture.service.schedule(occurrenceID: cancelled.id, at: fixture.now)
+                return false
+            } catch is CancellationError {
+                return true
+            }
+        }
+        var queuedIterator = queued.stream.makeAsyncIterator()
+        _ = await queuedIterator.next()
+        cancelledTask.cancel()
+        let lastTask = Task { try await fixture.service.schedule(occurrenceID: last.id, at: fixture.now) }
+        release.continuation.yield(())
+        _ = try await firstTask.value
+        #expect(try await cancelledTask.value)
+        _ = try await lastTask.value
+        #expect(fixture.scheduler.pending.count == 2)
+        let cancelledIdentifier = NotificationRequestIdentifier(occurrenceID: cancelled.id, kind: .snooze).rawValue
+        #expect(fixture.scheduler.pending[cancelledIdentifier] == nil)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<NotificationLink>()) == 2)
+    }
+
     @Test("七个槽位已占用时两个并发操作最多只新增一个")
     func concurrentSchedulesCannotExceedBudget() async throws {
         let fixture = try Fixture()

@@ -82,7 +82,7 @@ struct TaskOccurrenceReconciliationService {
             }
             let status = existingState.status
             if date >= today, status == .pending, !occurrence.isDetachedOverride {
-                context.delete(occurrence)
+                try TaskGraphDeletionService(context: context).stageOccurrenceDeletion(occurrence)
                 deleted += 1
             } else {
                 protected += 1

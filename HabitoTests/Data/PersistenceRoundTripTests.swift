@@ -9,32 +9,38 @@ struct PersistenceRoundTripTests {
     func persistsCrudAndRelationshipsAcrossReopen() throws {
         let directoryURL = URL.temporaryDirectory.appending(path: UUID().uuidString, directoryHint: .isDirectory)
         try FileManager.default.createDirectory(at: directoryURL, withIntermediateDirectories: true)
-        defer { try? FileManager.default.removeItem(at: directoryURL) }
+        // SwiftData 没有显式关闭接口，iPadOS 17 可能延迟释放 SQLite 文件描述符。
+        // 随机临时库交给测试沙箱清理，不能在连接仍存活时 unlink 造成完整性警告。
 
         let storeURL = directoryURL.appending(path: "Habito.store")
-        let fixture = try makeFixture()
-        try seedStore(at: storeURL, fixture: fixture)
+        let templateID = try seedStore(at: storeURL)
         try updateAndDeleteAfterReopen(at: storeURL)
-        try verifyAfterSecondReopen(at: storeURL, fixture: fixture)
+        try verifyAfterSecondReopen(at: storeURL, templateID: templateID)
     }
 
-    private func seedStore(at storeURL: URL, fixture: PersistenceFixture) throws {
+    private func seedStore(at storeURL: URL) throws -> UUID {
         let container = try AppModelContainer.make(storeURL: storeURL)
         let context = ModelContext(container)
-
-        fixture.template.reminderRule = fixture.rule
-        fixture.occurrence.template = fixture.template
-        fixture.occurrence.completionRecord = fixture.completion
-        fixture.session.occurrence = fixture.occurrence
-        fixture.link.occurrence = fixture.occurrence
+        // 先建立容器，再创建对象图；只把稳定 ID 交给下次打开，不能跨容器复用模型对象。
+        let fixture = try makeFixture()
 
         context.insert(fixture.template)
+        context.insert(fixture.rule)
         context.insert(fixture.occurrence)
+        context.insert(fixture.completion)
         context.insert(fixture.session)
         context.insert(fixture.link)
         context.insert(fixture.dayOverride)
         context.insert(fixture.settings)
+        fixture.template.reminderRule = fixture.rule
+        fixture.rule.taskTemplate = fixture.template
+        fixture.occurrence.template = fixture.template
+        fixture.occurrence.completionRecord = fixture.completion
+        fixture.completion.occurrence = fixture.occurrence
+        fixture.session.occurrence = fixture.occurrence
+        fixture.link.occurrence = fixture.occurrence
         try context.save()
+        return fixture.templateID
     }
 
     private func updateAndDeleteAfterReopen(at storeURL: URL) throws {
@@ -50,7 +56,7 @@ struct PersistenceRoundTripTests {
         try context.save()
     }
 
-    private func verifyAfterSecondReopen(at storeURL: URL, fixture: PersistenceFixture) throws {
+    private func verifyAfterSecondReopen(at storeURL: URL, templateID: UUID) throws {
         let container = try AppModelContainer.make(storeURL: storeURL)
         let context = ModelContext(container)
         let templates = try context.fetch(FetchDescriptor<TaskTemplate>())
@@ -62,11 +68,11 @@ struct PersistenceRoundTripTests {
         let appSettings = try #require(settings.first)
 
         #expect(templates.count == 1)
-        #expect(template.id == fixture.templateID)
+        #expect(template.id == templateID)
         #expect(template.title == "每天阅读")
         #expect(template.reminderRule?.scheduleType == .weekly)
         #expect(template.reminderRule?.weekdays == [.monday, .tuesday, .wednesday, .thursday, .friday])
-        #expect(occurrence.template?.id == fixture.templateID)
+        #expect(occurrence.template?.id == templateID)
         #expect(occurrence.completionRecord?.completionSource == .childManual)
         #expect(occurrence.timerSessions.count == 1)
         #expect(occurrence.notificationLinks.isEmpty)

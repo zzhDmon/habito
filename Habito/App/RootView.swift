@@ -56,6 +56,21 @@ struct RootView: View {
                 onRetry: loadToday
             )
             .toolbar {
+                #if DEBUG
+                    if notificationResponseRouter.preparedUITestRequestIdentifier != nil {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button(
+                                "testing.openNotification", systemImage: "bell",
+                                action: notificationResponseRouter.deliverPreparedUITestResponse
+                            )
+                            .frame(
+                                minWidth: HabitoDesign.Layout.minimumTapSize,
+                                minHeight: HabitoDesign.Layout.minimumTapSize
+                            )
+                            .accessibilityIdentifier(HabitoAccessibilityID.testingNotificationResponse)
+                        }
+                    }
+                #endif
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(
                         "parentGate.entry",

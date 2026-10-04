@@ -146,8 +146,6 @@ struct ParentTodayTaskManagementServiceTests {
                 recurrence: try .weekly(on: Set(Weekday.allCases), starting: date),
                 timeOfDayMinutes: 19 * 60 + 30
             )
-            template.reminderRule = rule
-            rule.taskTemplate = template
             occurrence = TaskOccurrence(
                 templateID: template.id,
                 date: date,
@@ -159,10 +157,12 @@ struct ParentTodayTaskManagementServiceTests {
                 status: status,
                 sourceRevision: template.revision
             )
-            occurrence.template = template
             context.insert(template)
             context.insert(rule)
             context.insert(occurrence)
+            template.reminderRule = rule
+            rule.taskTemplate = template
+            occurrence.template = template
             try context.save()
             service = ParentTodayTaskManagementService(
                 context: context,

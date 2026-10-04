@@ -18,7 +18,8 @@
         let shouldReset: Bool
         let shouldSeedSampleData: Bool
         let notificationRequestIdentifier: String?
-        let shouldDelayNotificationResponse: Bool
+        /// 兼容旧参数名，但现在由测试确认首页后显式触发，不再用固定延时。
+        let shouldPrepareNotificationResponse: Bool
         let shouldDenyNotifications: Bool
         let shouldFailNotificationScheduling: Bool
 
@@ -33,7 +34,7 @@
                 shouldReset: arguments.contains(resetArgument),
                 shouldSeedSampleData: !arguments.contains(emptyDataArgument),
                 notificationRequestIdentifier: notificationRequestIdentifier,
-                shouldDelayNotificationResponse: arguments.contains(delayedNotificationArgument),
+                shouldPrepareNotificationResponse: arguments.contains(delayedNotificationArgument),
                 shouldDenyNotifications: arguments.contains(notificationsDeniedArgument),
                 shouldFailNotificationScheduling: arguments.contains(notificationsFailArgument)
             )

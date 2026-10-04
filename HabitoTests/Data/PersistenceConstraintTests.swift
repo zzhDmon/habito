@@ -5,6 +5,45 @@ import Testing
 
 @Suite("SwiftData 唯一性与删除规则")
 struct PersistenceConstraintTests {
+    @Test("删除按稳定外键清理断开的拥有记录，且不触碰其他实例")
+    func explicitDeletionIsScopedAndRemovesOrphanedOwnedRecords() throws {
+        let fixture = try TodayQueryFixture()
+        let target = fixture.makeOccurrence(title: "删除目标", scheduledAt: fixture.now, status: .pending)
+        let other = fixture.makeOccurrence(title: "保留任务", scheduledAt: fixture.now, status: .pending)
+        let orphan = CompletionRecord(
+            occurrenceID: target.id, completedAt: fixture.now, activeDurationSeconds: 0, completionSource: .childManual)
+        let targetLink = NotificationLink(
+            requestIdentifier: NotificationRequestIdentifier(occurrenceID: target.id, kind: .primary).rawValue,
+            occurrenceID: target.id, kind: .primary, scheduledAt: fixture.now
+        )
+        let otherLink = NotificationLink(
+            requestIdentifier: NotificationRequestIdentifier(occurrenceID: other.id, kind: .primary).rawValue,
+            occurrenceID: other.id, kind: .primary, scheduledAt: fixture.now
+        )
+        fixture.context.insert(orphan)
+        fixture.context.insert(targetLink)
+        fixture.context.insert(otherLink)
+        try fixture.context.save()
+        try TaskGraphDeletionService(context: fixture.context).stageOccurrenceDeletion(target)
+        try fixture.context.save()
+        let occurrences = try fixture.context.fetch(FetchDescriptor<TaskOccurrence>())
+        #expect(occurrences.map(\.id) == [other.id])
+        #expect(try fixture.context.fetchCount(FetchDescriptor<CompletionRecord>()) == 0)
+        #expect(try fixture.context.fetch(FetchDescriptor<NotificationLink>()).map(\.occurrenceID) == [other.id])
+    }
+
+    @Test("跨 context 删除被拒绝，原任务与拥有记录保持不变")
+    func deletionRejectsForeignContextBeforeMutation() throws {
+        let fixture = try TodayQueryFixture()
+        let occurrence = fixture.makeOccurrence(title: "保留任务", scheduledAt: fixture.now, status: .pending)
+        try fixture.context.save()
+        let otherContext = ModelContext(fixture.context.container)
+        #expect(throws: TaskGraphDeletionError.modelNotInContext) {
+            try TaskGraphDeletionService(context: otherContext).stageOccurrenceDeletion(occurrence)
+        }
+        #expect(try fixture.context.fetchCount(FetchDescriptor<TaskOccurrence>()) == 1)
+    }
+
     @Test("相同日期的覆盖由唯一属性合并为一条")
     func dayOverrideDateKeyIsUnique() throws {
         let container = try AppModelContainer.make(inMemory: true)
@@ -64,7 +103,7 @@ struct PersistenceConstraintTests {
         #expect(try context.fetchCount(FetchDescriptor<TaskOccurrence>()) == 1)
     }
 
-    @Test("物理删除模板保留历史实例并级联删除规则")
+    @Test("统一删除服务物理删除模板时保留历史实例并清理规则")
     func templateDeletionPreservesOccurrenceHistory() throws {
         let container = try AppModelContainer.make(inMemory: true)
         let context = ModelContext(container)
@@ -95,24 +134,28 @@ struct PersistenceConstraintTests {
             sourceRevision: 1
         )
 
-        template.reminderRule = rule
-        occurrence.template = template
         context.insert(template)
+        context.insert(rule)
         context.insert(occurrence)
+        template.reminderRule = rule
+        rule.taskTemplate = template
+        occurrence.template = template
         try context.save()
 
-        context.delete(template)
+        try TaskGraphDeletionService(context: context).stageTemplateDeletionPreservingHistory(template)
         try context.save()
 
-        let remainingOccurrences = try context.fetch(FetchDescriptor<TaskOccurrence>())
-        #expect(try context.fetchCount(FetchDescriptor<TaskTemplate>()) == 0)
-        #expect(try context.fetchCount(FetchDescriptor<ReminderRule>()) == 0)
+        // 用新 context 验证落盘真相，不让旧 context 已删除对象的注册缓存影响结果。
+        let verificationContext = ModelContext(container)
+        let remainingOccurrences = try verificationContext.fetch(FetchDescriptor<TaskOccurrence>())
+        #expect(try verificationContext.fetchCount(FetchDescriptor<TaskTemplate>()) == 0)
+        #expect(try verificationContext.fetchCount(FetchDescriptor<ReminderRule>()) == 0)
         #expect(remainingOccurrences.count == 1)
         #expect(remainingOccurrences.first?.template == nil)
         #expect(remainingOccurrences.first?.templateID == templateID)
     }
 
-    @Test("物理删除实例级联清理完成计时和通知映射")
+    @Test("统一删除服务清理实例拥有的完成计时和通知映射")
     func occurrenceDeletionCascadesOwnedRecords() throws {
         let container = try AppModelContainer.make(inMemory: true)
         let context = ModelContext(container)
@@ -151,20 +194,23 @@ struct PersistenceConstraintTests {
             scheduledAt: timestamp
         )
 
-        occurrence.completionRecord = completion
-        session.occurrence = occurrence
-        link.occurrence = occurrence
         context.insert(occurrence)
+        context.insert(completion)
         context.insert(session)
         context.insert(link)
+        occurrence.completionRecord = completion
+        completion.occurrence = occurrence
+        session.occurrence = occurrence
+        link.occurrence = occurrence
         try context.save()
 
-        context.delete(occurrence)
+        try TaskGraphDeletionService(context: context).stageOccurrenceDeletion(occurrence)
         try context.save()
 
-        #expect(try context.fetchCount(FetchDescriptor<TaskOccurrence>()) == 0)
-        #expect(try context.fetchCount(FetchDescriptor<CompletionRecord>()) == 0)
-        #expect(try context.fetchCount(FetchDescriptor<TimerSession>()) == 0)
-        #expect(try context.fetchCount(FetchDescriptor<NotificationLink>()) == 0)
+        let verificationContext = ModelContext(container)
+        #expect(try verificationContext.fetchCount(FetchDescriptor<TaskOccurrence>()) == 0)
+        #expect(try verificationContext.fetchCount(FetchDescriptor<CompletionRecord>()) == 0)
+        #expect(try verificationContext.fetchCount(FetchDescriptor<TimerSession>()) == 0)
+        #expect(try verificationContext.fetchCount(FetchDescriptor<NotificationLink>()) == 0)
     }
 }

@@ -5,6 +5,7 @@ import SwiftData
 ///
 /// 删除操作使用 `archivedAt` 软删除。即使发生维护性的物理删除，历史实例也会因
 /// `.nullify` 删除规则而保留，并继续使用自己的快照和 `templateID` 展示历史。
+/// 维护性物理删除应通过 `TaskGraphDeletionService`，显式兼容旧系统的关系清理行为。
 @Model
 final class TaskTemplate {
     @Attribute(.unique) private(set) var id: UUID

@@ -45,6 +45,20 @@ struct NotificationNavigationServiceTests {
         #expect(fixture.service.destination(for: "habito.occurrence.bad.primary") == .ignored)
     }
 
+    @Test("UI 测试显式触发时才发送准备好的点击，且只发送一次")
+    func preparedResponseDoesNotRaceWithScreenReadiness() {
+        let router = NotificationResponseRouter()
+        router.prepareUITestResponse(requestIdentifier: "test-request")
+        #expect(router.revision == 0)
+        #expect(router.consumePendingRequestIdentifier() == nil)
+        router.deliverPreparedUITestResponse()
+        #expect(router.revision == 1)
+        #expect(router.preparedUITestRequestIdentifier == nil)
+        #expect(router.consumePendingRequestIdentifier() == "test-request")
+        router.deliverPreparedUITestResponse()
+        #expect(router.revision == 1)
+    }
+
     @Test("点击桥在根视图创建前保留并只消费一次标识")
     func responseRouterBuffersColdLaunchIntent() {
         let router = NotificationResponseRouter()
