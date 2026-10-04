@@ -6,6 +6,31 @@ import Testing
 @Suite("通知业务重建")
 @MainActor
 struct NotificationRebuildServiceTests {
+    @Test("预算恰好覆盖最低日期整天时，重建保存完整边界且连续核对不重复添加")
+    func exactDailyBudgetPersistsCompleteMinimumCoverage() async throws {
+        let fixture = try Fixture()
+        for _ in 0..<6 { _ = try fixture.insertDailyTemplate() }
+        let result = try await fixture.service.rebuild(at: fixture.now)
+        let boundary = try LocalDate(dateKey: "2026-10-04")
+        #expect(result.reconciliation.isSuccessful)
+        #expect(result.selection.primaryCandidates.count == 48)
+        #expect(result.selection.coverageThrough == boundary)
+        #expect(!result.selection.isCoverageBoundaryPartial)
+        #expect(result.selection.hasMinimumCoverage)
+        let settings = try #require(fixture.context.fetch(FetchDescriptor<AppSettings>()).first)
+        #expect(settings.schedulingHorizonDateKey == boundary.dateKey)
+        #expect(fixture.scheduler.pending.count == 48)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<NotificationLink>()) == 48)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<TaskOccurrence>()) == 90)
+        let identifiers = Set(fixture.scheduler.pending.keys)
+        let addCount = fixture.scheduler.addCount
+        let repeated = try await fixture.service.rebuild(at: fixture.now)
+        #expect(repeated.selection == result.selection)
+        #expect(repeated.reconciliation.retainedIdentifiers.count == 48)
+        #expect(fixture.scheduler.addCount == addCount)
+        #expect(Set(fixture.scheduler.pending.keys) == identifiers)
+    }
+
     @Test("系统添加期间停用模板并删除未来实例，旧主提醒不残留")
     func disablingTemplateDuringAddingCleansDeletedOccurrences() async throws {
         let fixture = try Fixture()

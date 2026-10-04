@@ -48,7 +48,8 @@ nonisolated struct NotificationCandidateSelector: Sendable {
         let selected = Array(future.prefix(primaryLimit))
         let wasTruncated = future.count > selected.count
         let coverageThrough = wasTruncated ? selected.last?.date ?? availableThrough : availableThrough
-        let isPartial = wasTruncated
+        // 预算截断不等于边界日缺漏；只有下一个未选候选仍在当天，才是部分日覆盖。
+        let isPartial = future.dropFirst(selected.count).first?.date == coverageThrough
         let hasMinimumCoverage =
             coverageThrough > minimumCoverageThrough
             || (coverageThrough == minimumCoverageThrough && !isPartial)
