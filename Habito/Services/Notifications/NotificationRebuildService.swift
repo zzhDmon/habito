@@ -37,6 +37,10 @@ struct NotificationRebuildService {
     }
 
     /// 生成滚动实例、选择预算内主提醒、核对系统队列并保存成功映射。
+    ///
+    /// - Important: gate 只串行通知事务，不阻止家长/孩子在系统等待期间修改业务数据。
+    ///   每轮核对后重新读取权限、物化最新配置并比较请求快照，只有稳定的一轮才保存检查点。
+    ///   连续业务事件由调用方的结构化任务取消旧重建；每轮系统等待后都检查取消。
     func rebuild(at now: Date) async throws -> NotificationRebuildResult {
         try await operationGate.perform {
             try await rebuildExclusively(at: now)
@@ -52,45 +56,69 @@ struct NotificationRebuildService {
         let availableThrough = try adding(days: horizonDays, to: today)
         let minimumCoverageThrough = try adding(days: Self.minimumCoverageDays, to: today)
 
+        var permissions = await permissionProvider.diagnostics()
+        try Task.checkCancellation()
         try materializeOccurrences(in: today...availableThrough, today: today, now: now)
-        let candidates = try notificationCandidates(in: today...availableThrough)
-        let selection = try selector.select(
-            from: candidates,
-            now: now,
-            availableThrough: availableThrough,
-            minimumCoverageThrough: minimumCoverageThrough
-        )
-        let permissions = await permissionProvider.diagnostics()
-        try Task.checkCancellation()
-        let requests: [TaskNotificationRequest]
-        if permissions.authorization.canSchedule {
-            requests =
-                try makeRequests(from: selection.primaryCandidates)
-                + snoozeRequests(at: now, today: today)
-        } else {
-            // 未授权时保留任务本身，但清理旧系统请求，不伪造已成功排程的检查点。
-            requests = []
-        }
-        let reconciliation = await coordinator.reconcile(desiredRequests: requests)
+        var selection = try selectCandidates(
+            in: today...availableThrough, at: now, minimumCoverageThrough: minimumCoverageThrough)
+        var requests = try desiredRequests(selection: selection, permissions: permissions, at: now, today: today)
 
-        // `.task(id:)` 可能因更新的业务事件取消旧重建；旧任务不再写检查点，由新任务按最新真相修复映射。
-        try Task.checkCancellation()
-        try synchronizeLinks(requests: requests, report: reconciliation, at: now)
-        if reconciliation.isSuccessful {
-            let settings = try appSettings()
-            settings.lastInstanceGenerationAt = now
-            settings.recordNotificationAuthorization(permissions.authorization)
-            settings.lastNotificationSchedulingAt = permissions.authorization.canSchedule ? now : nil
-            settings.schedulingHorizonDateKey =
-                permissions.authorization.canSchedule ? selection.coverageThrough.dateKey : nil
-            try context.save()
+        while true {
+            let reconciliation = await coordinator.reconcile(desiredRequests: requests)
+            try Task.checkCancellation()
+            let latestPermissions = await permissionProvider.diagnostics()
+            try Task.checkCancellation()
+            // 系统读取/添加都可能让出主 actor；重新物化才能看到模板编辑、放假和单日覆盖。
+            try materializeOccurrences(in: today...availableThrough, today: today, now: now)
+            let latestSelection = try selectCandidates(
+                in: today...availableThrough, at: now, minimumCoverageThrough: minimumCoverageThrough)
+            let latestRequests = try desiredRequests(
+                selection: latestSelection, permissions: latestPermissions, at: now, today: today)
+            let isStable = requests == latestRequests && permissions.authorization == latestPermissions.authorization
+            permissions = latestPermissions
+            selection = latestSelection
+            requests = latestRequests
+            guard isStable else {
+                // 尚未同步旧映射，先用最新集合补偿清理/替换；最终报告只描述稳定的这一轮。
+                continue
+            }
+
+            // 复核与落盘之间没有 await，业务操作无法再插入并让检查点落后于数据。
+            try synchronizeLinks(requests: requests, report: reconciliation, at: now)
+            if reconciliation.isSuccessful {
+                let settings = try appSettings()
+                settings.lastInstanceGenerationAt = now
+                settings.recordNotificationAuthorization(permissions.authorization)
+                settings.lastNotificationSchedulingAt = permissions.authorization.canSchedule ? now : nil
+                settings.schedulingHorizonDateKey =
+                    permissions.authorization.canSchedule ? selection.coverageThrough.dateKey : nil
+                try context.save()
+            }
+            return NotificationRebuildResult(
+                selection: selection,
+                reconciliation: reconciliation,
+                authorization: permissions.authorization,
+                scheduledSnoozeCount: requests.count { $0.kind == .snooze }
+            )
         }
-        return NotificationRebuildResult(
-            selection: selection,
-            reconciliation: reconciliation,
-            authorization: permissions.authorization,
-            scheduledSnoozeCount: requests.count { $0.kind == .snooze }
+    }
+
+    private func selectCandidates(
+        in range: ClosedRange<LocalDate>, at now: Date, minimumCoverageThrough: LocalDate
+    ) throws -> NotificationCandidateSelection {
+        try selector.select(
+            from: notificationCandidates(in: range), now: now,
+            availableThrough: range.upperBound, minimumCoverageThrough: minimumCoverageThrough
         )
+    }
+
+    private func desiredRequests(
+        selection: NotificationCandidateSelection, permissions: NotificationDiagnosticSnapshot,
+        at now: Date, today: LocalDate
+    ) throws -> [TaskNotificationRequest] {
+        // 未授权时保留任务本身，但清理旧系统请求，不伪造已成功排程的检查点。
+        guard permissions.authorization.canSchedule else { return [] }
+        return try makeRequests(from: selection.primaryCandidates) + snoozeRequests(at: now, today: today)
     }
 
     private func materializeOccurrences(

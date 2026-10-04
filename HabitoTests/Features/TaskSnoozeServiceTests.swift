@@ -6,6 +6,25 @@ import Testing
 @MainActor
 @Suite("十分钟稍后提醒")
 struct TaskSnoozeServiceTests {
+    @Test("系统添加期间关闭授权或提醒，不误报稍后成功且补偿清理请求", arguments: [true, false])
+    func permissionsChangedDuringAddingDoNotReportSuccess(revokeAuthorization: Bool) async throws {
+        let fixture = try Fixture()
+        let occurrence = try fixture.makeOccurrence()
+        fixture.scheduler.onAdd = {
+            if revokeAuthorization {
+                fixture.permissions.currentAuthorizationState = .denied
+            } else {
+                fixture.permissions.alertSetting = .disabled
+            }
+        }
+        await #expect(throws: TaskSnoozeError.notificationsUnavailable) {
+            _ = try await fixture.service.schedule(occurrenceID: occurrence.id, at: fixture.now)
+        }
+        #expect(fixture.scheduler.pending.isEmpty)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<NotificationLink>()) == 0)
+        #expect(fixture.permissions.requestCount == 0)
+    }
+
     @Test("尚未授权或已拒绝时不排程，也不向孩子弹出权限请求", arguments: [NotificationAuthorizationState.notDetermined, .denied, .unknown])
     func unavailableAuthorizationDoesNotSchedule(_ authorization: NotificationAuthorizationState) async throws {
         let fixture = try Fixture()

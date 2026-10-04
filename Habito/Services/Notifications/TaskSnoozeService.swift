@@ -108,6 +108,10 @@ struct TaskSnoozeService {
         do {
             // 添加请求期间仍可能完成或删除任务；重新查询，避免复活已处理实例的提醒。
             try Task.checkCancellation()
+            let latestPermissions = await permissionProvider.diagnostics()
+            try Task.checkCancellation()
+            // 系统 add 成功不保证权限仍有效；在保存映射前复核，失败沿用统一取消补偿。
+            guard latestPermissions.canPresentAlerts else { throw TaskSnoozeError.notificationsUnavailable }
             try validateStatus(of: fetchOccurrence(id: occurrenceID))
             try NotificationLinkStore(context: context).upsert(
                 occurrenceID: occurrence.id,

@@ -6,6 +6,137 @@ import Testing
 @Suite("通知业务重建")
 @MainActor
 struct NotificationRebuildServiceTests {
+    @Test("系统添加期间停用模板并删除未来实例，旧主提醒不残留")
+    func disablingTemplateDuringAddingCleansDeletedOccurrences() async throws {
+        let fixture = try Fixture()
+        let template = try fixture.insertDailyTemplate()
+        fixture.scheduler.onAdd = { _ in
+            _ = try TaskTemplateLifecycleService(
+                context: fixture.context, calendar: fixture.calendar, timeZone: fixture.timeZone
+            ).perform(
+                templateID: template.id, action: .disable,
+                today: LocalDate(dateKey: "2026-09-27"), now: fixture.now)
+        }
+        let result = try await fixture.service.rebuild(at: fixture.now)
+        #expect(result.reconciliation.isSuccessful)
+        #expect(result.selection.primaryCandidates.isEmpty)
+        #expect(fixture.scheduler.pending.isEmpty)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<TaskOccurrence>()) == 0)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<NotificationLink>()) == 0)
+        #expect(template.lifecycleState == .disabled)
+    }
+
+    @Test("48 主提醒与 8 稍后槽位满额时，等待期间完成任务会补齐新候选而不超预算")
+    func changedBusinessRefillsPrimaryBudgetWithoutDroppingSnoozes() async throws {
+        let fixture = try Fixture()
+        for _ in 0..<8 { _ = try fixture.insertDailyTemplate() }
+        _ = try await fixture.service.rebuild(at: fixture.now)
+        let today = try fixture.context.fetch(FetchDescriptor<TaskOccurrence>()).filter { $0.dateKey == "2026-09-27" }
+        let snooze = TaskSnoozeService(
+            context: fixture.context, scheduler: fixture.scheduler, permissionProvider: fixture.permissions,
+            calendar: fixture.calendar, timeZone: fixture.timeZone, operationGate: fixture.operationGate)
+        for occurrence in today {
+            _ = try await snooze.schedule(occurrenceID: occurrence.id, at: fixture.now)
+        }
+        #expect(fixture.scheduler.pending.count == 56)
+        let completed = try #require(today.first)
+        let before = Set(fixture.scheduler.pending.keys)
+        fixture.scheduler.onReadAsync = {
+            _ = try TaskProgressService(context: fixture.context).complete(
+                completed, at: fixture.now, source: .childManual)
+        }
+        let result = try await fixture.service.rebuild(at: fixture.now)
+        #expect(result.reconciliation.isSuccessful)
+        #expect(result.selection.primaryCandidates.count == 48)
+        #expect(result.scheduledSnoozeCount == 7)
+        #expect(fixture.scheduler.pending.count == 55)
+        #expect(try NotificationLinkStore(context: fixture.context).links(occurrenceID: completed.id).isEmpty)
+        #expect(Set(fixture.scheduler.pending.keys).subtracting(before).count == 1)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<NotificationLink>()) == 55)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<TaskOccurrence>()) == 120)
+    }
+
+    @Test("读取系统队列期间完成任务，返回成功前清理旧主提醒")
+    func completionDuringQueueReadCannotRetainOldPrimary() async throws {
+        let fixture = try Fixture()
+        _ = try fixture.insertDailyTemplate()
+        _ = try await fixture.service.rebuild(at: fixture.now)
+        let occurrence = try #require(
+            fixture.context.fetch(FetchDescriptor<TaskOccurrence>()).first { $0.dateKey == "2026-09-27" })
+        let identifier = NotificationRequestIdentifier(occurrenceID: occurrence.id, kind: .primary).rawValue
+        fixture.scheduler.onReadAsync = {
+            _ = try TaskProgressService(context: fixture.context).complete(
+                occurrence, at: fixture.now, source: .childManual)
+        }
+        let result = try await fixture.service.rebuild(at: fixture.now)
+        #expect(result.reconciliation.isSuccessful)
+        #expect(fixture.scheduler.pending[identifier] == nil)
+        #expect(try NotificationLinkStore(context: fixture.context).links(occurrenceID: occurrence.id).isEmpty)
+        #expect(result.selection.primaryCandidates.count == 14)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<CompletionRecord>()) == 1)
+    }
+
+    @Test("读取系统队列期间改单日时间，最终系统请求与映射使用新快照")
+    func rescheduleDuringQueueReadUsesLatestSnapshot() async throws {
+        let fixture = try Fixture()
+        _ = try fixture.insertDailyTemplate()
+        _ = try await fixture.service.rebuild(at: fixture.now)
+        let occurrence = try #require(
+            fixture.context.fetch(FetchDescriptor<TaskOccurrence>()).first { $0.dateKey == "2026-09-27" })
+        let identifier = NotificationRequestIdentifier(occurrenceID: occurrence.id, kind: .primary).rawValue
+        let newTime = occurrence.scheduledAt.addingTimeInterval(30 * 60)
+        fixture.scheduler.onReadAsync = {
+            try ParentTodayTaskManagementService(
+                context: fixture.context, calendar: fixture.calendar, timeZone: fixture.timeZone
+            ).reschedule(occurrenceID: occurrence.id, to: newTime, at: fixture.now)
+        }
+        let result = try await fixture.service.rebuild(at: fixture.now)
+        #expect(result.reconciliation.isSuccessful)
+        #expect(fixture.scheduler.pending[identifier]?.scheduledAt == newTime)
+        #expect(
+            try NotificationLinkStore(context: fixture.context).link(requestIdentifier: identifier)?.scheduledAt
+                == newTime)
+        #expect(result.selection.primaryCandidates.first { $0.occurrenceID == occurrence.id }?.scheduledAt == newTime)
+        #expect(fixture.scheduler.pending.count == 15)
+    }
+
+    @Test("系统添加主提醒期间完成任务，不落成功的过期映射")
+    func completionDuringAddingCannotResurrectNotification() async throws {
+        let fixture = try Fixture()
+        _ = try fixture.insertDailyTemplate()
+        var completedID: UUID?
+        fixture.scheduler.onAdd = { request in
+            let occurrence = try #require(
+                fixture.context.fetch(FetchDescriptor<TaskOccurrence>()).first { $0.id == request.occurrenceID })
+            completedID = occurrence.id
+            _ = try TaskProgressService(context: fixture.context).complete(
+                occurrence, at: fixture.now, source: .childManual)
+        }
+        let result = try await fixture.service.rebuild(at: fixture.now)
+        let occurrenceID = try #require(completedID)
+        let identifier = NotificationRequestIdentifier(occurrenceID: occurrenceID, kind: .primary).rawValue
+        #expect(result.reconciliation.isSuccessful)
+        #expect(fixture.scheduler.pending[identifier] == nil)
+        #expect(try NotificationLinkStore(context: fixture.context).links(occurrenceID: occurrenceID).isEmpty)
+        #expect(fixture.scheduler.pending.count == 14)
+    }
+
+    @Test("系统添加期间撤销授权，最终清空旧请求且不写排程成功日期")
+    func revocationDuringAddingCannotPersistAuthorizedCheckpoint() async throws {
+        let fixture = try Fixture()
+        _ = try fixture.insertDailyTemplate()
+        fixture.scheduler.onAdd = { _ in fixture.permissions.currentAuthorizationState = .denied }
+        let result = try await fixture.service.rebuild(at: fixture.now)
+        #expect(result.authorization == .denied)
+        #expect(result.reconciliation.isSuccessful)
+        #expect(fixture.scheduler.pending.isEmpty)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<NotificationLink>()) == 0)
+        let settings = try #require(fixture.context.fetch(FetchDescriptor<AppSettings>()).first)
+        #expect(settings.lastNotificationSchedulingAt == nil)
+        #expect(settings.schedulingHorizonDateKey == nil)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<TaskOccurrence>()) == 15)
+    }
+
     @Test("跨午夜清理昨日稍后与已送达卡片，不改写完成历史")
     func midnightRebuildClearsYesterdaySnoozeAndPreservesHistory() async throws {
         let fixture = try Fixture()
@@ -475,19 +606,24 @@ private extension NotificationRebuildServiceTests {
         var deliveredReadFails = false
         var deliveredRemovalFails = false
         var delivered: Set<String> = []
-        var onReadAsync: (() async -> Void)?
+        var onReadAsync: (() async throws -> Void)?
+        var onAdd: ((TaskNotificationRequest) throws -> Void)?
 
         func pendingNotificationRequests() async throws -> [PendingNotificationRequestSnapshot] {
             if readFails { throw CocoaError(.fileReadUnknown) }
             if let onReadAsync {
                 self.onReadAsync = nil
-                await onReadAsync()
+                try await onReadAsync()
             }
             return Array(pending.values)
         }
 
         func addNotificationRequest(_ request: TaskNotificationRequest) async throws {
             if addFails { throw CocoaError(.fileWriteUnknown) }
+            if let onAdd {
+                self.onAdd = nil
+                try onAdd(request)
+            }
             addCount += 1
             pending[request.identifier] = PendingNotificationRequestSnapshot(
                 identifier: request.identifier,
