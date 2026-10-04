@@ -2,4 +2,6 @@
 nonisolated struct NotificationRebuildResult: Equatable, Sendable {
     let selection: NotificationCandidateSelection
     let reconciliation: NotificationReconciliationReport
+    let authorization: NotificationAuthorizationState
+    let scheduledSnoozeCount: Int
 }

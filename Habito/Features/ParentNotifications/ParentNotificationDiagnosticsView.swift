@@ -36,6 +36,8 @@ struct ParentNotificationDiagnosticsView: View {
                         )
                     }
 
+                    NotificationSchedulingStatusView(state: model.schedulingState, onRetry: model.retryScheduling)
+
                     Section {
                         Button("notification.openSettings", systemImage: "gear", action: openSettings)
                     } footer: {

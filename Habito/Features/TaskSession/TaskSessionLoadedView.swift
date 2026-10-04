@@ -236,6 +236,10 @@ private struct TaskSnoozeFeedbackView: View {
             Label("taskSession.snoozeFailed", systemImage: "exclamationmark.triangle.fill")
                 .foregroundStyle(.secondary)
                 .accessibilityIdentifier(HabitoAccessibilityID.snoozeFeedback)
+        case .notificationsDisabled:
+            Label("taskSession.snoozeNotificationsDisabled", systemImage: "bell.slash.fill")
+                .foregroundStyle(.secondary)
+                .accessibilityIdentifier(HabitoAccessibilityID.snoozeFeedback)
         }
     }
 }

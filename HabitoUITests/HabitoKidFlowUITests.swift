@@ -104,6 +104,39 @@ final class HabitoKidFlowUITests: XCTestCase {
         XCTAssertEqual(feedback.label, "好，10 分钟后提醒你。")
     }
 
+    func testSnoozeExplainsDeniedNotificationsWithoutBlockingCompletion() throws {
+        XCUIDevice.shared.orientation = .landscapeLeft
+        let app = XCUIApplication()
+        app.launchArguments = ["--habito-ui-testing", "--habito-ui-reset", "--habito-ui-notifications-denied"]
+        app.launch()
+        let task = app.buttons[seededTaskIdentifier]
+        XCTAssertTrue(task.waitForExistence(timeout: 5))
+        task.tap()
+        let snooze = app.buttons["kid.session.snooze"]
+        XCTAssertTrue(snooze.waitForExistence(timeout: 5))
+        snooze.tap()
+        let feedback = app.descendants(matching: .any)["kid.session.snooze-feedback"]
+        XCTAssertTrue(feedback.waitForExistence(timeout: 5))
+        XCTAssertEqual(feedback.label, "提醒还没打开，请找家长打开。")
+        app.buttons["kid.session.complete"].tap()
+        XCTAssertTrue(app.buttons["kid.session.undo"].waitForExistence(timeout: 5))
+    }
+
+    func testParentCanRetryFailedNotificationScheduling() throws {
+        XCUIDevice.shared.orientation = .landscapeLeft
+        let app = XCUIApplication()
+        app.launchArguments = ["--habito-ui-testing", "--habito-ui-reset", "--habito-ui-notifications-fail"]
+        app.launch()
+        unlockParent(in: app)
+        app.buttons["parent.notifications.open"].tap()
+        let failure = app.descendants(matching: .any)["parent.notifications.scheduling-error"]
+        XCTAssertTrue(failure.waitForExistence(timeout: 5))
+        let retry = app.buttons["parent.notifications.scheduling-retry"]
+        XCTAssertTrue(retry.waitForExistence(timeout: 5))
+        retry.tap()
+        XCTAssertTrue(failure.waitForExistence(timeout: 5))
+    }
+
     func testParentGateOpensWithTapAndPersistsCredentialAcrossRelaunch() throws {
         XCUIDevice.shared.orientation = .landscapeLeft
         let app = XCUIApplication()
@@ -237,7 +270,8 @@ final class HabitoKidFlowUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["通知权限"].exists)
         XCTAssertTrue(app.staticTexts["提醒显示"].exists)
         XCTAssertTrue(app.staticTexts["提醒声音"].exists)
-        XCTAssertTrue(app.buttons["前往系统设置"].exists)
+        XCTAssertTrue(app.staticTexts["parent.notifications.primary-count"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["parent.notifications.scheduling-retry"].exists)
     }
 
     func testParentCanPreviewHolidayAndRestoreTasksByRemovingOverride() throws {

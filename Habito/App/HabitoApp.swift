@@ -36,7 +36,10 @@ struct HabitoApp: App {
                         try uiTestCredentialStore.removeCredential()
                     }
                     credentialStore = uiTestCredentialStore
-                    let uiTestNotificationService = UITestNotificationPermissionProvider()
+                    let uiTestNotificationService = UITestNotificationPermissionProvider(
+                        deniesAuthorization: configuration.shouldDenyNotifications,
+                        failsScheduling: configuration.shouldFailNotificationScheduling
+                    )
                     notificationProvider = uiTestNotificationService
                     notificationScheduler = uiTestNotificationService
                     let calendar = Calendar(identifier: .gregorian)
@@ -78,6 +81,7 @@ struct HabitoApp: App {
         notificationRebuildService = NotificationRebuildService(
             context: container.mainContext,
             scheduler: notificationScheduler,
+            permissionProvider: notificationProvider,
             calendar: calendar,
             timeZone: timeZone,
             operationGate: notificationOperationGate
@@ -103,6 +107,7 @@ struct HabitoApp: App {
             snoozeService: TaskSnoozeService(
                 context: container.mainContext,
                 scheduler: notificationScheduler,
+                permissionProvider: notificationProvider,
                 calendar: calendar,
                 timeZone: timeZone,
                 operationGate: notificationOperationGate
@@ -151,7 +156,8 @@ struct HabitoApp: App {
         )
         _parentNotificationModel = State(
             initialValue: ParentNotificationDiagnosticsViewModel(
-                service: notificationPermissionService
+                service: notificationPermissionService,
+                rebuildTrigger: rebuildTrigger
             )
         )
     }

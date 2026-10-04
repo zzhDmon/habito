@@ -9,4 +9,5 @@ enum TaskSnoozeState: Equatable, Sendable {
     case budgetFull
     case unavailable
     case failed
+    case notificationsDisabled
 }

@@ -68,6 +68,8 @@ final class TaskSessionViewModel {
             snoozeState = .crossesMidnight
         } catch TaskSnoozeError.pendingLimitReached {
             snoozeState = .budgetFull
+        } catch TaskSnoozeError.notificationsUnavailable {
+            snoozeState = .notificationsDisabled
         } catch is TaskSnoozeError {
             snoozeState = .unavailable
         } catch {

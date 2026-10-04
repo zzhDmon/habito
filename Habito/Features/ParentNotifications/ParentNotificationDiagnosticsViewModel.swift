@@ -7,10 +7,22 @@ import OSLog
 final class ParentNotificationDiagnosticsViewModel {
     private(set) var state: ParentNotificationDiagnosticsState = .loading
     private let service: NotificationPermissionService
+    private let rebuildTrigger: NotificationRebuildTrigger
     private let logger = Logger(subsystem: "com.zhangzehua.Habito", category: "NotificationDiagnostics")
 
-    init(service: NotificationPermissionService) {
+    init(
+        service: NotificationPermissionService,
+        rebuildTrigger: NotificationRebuildTrigger = NotificationRebuildTrigger()
+    ) {
         self.service = service
+        self.rebuildTrigger = rebuildTrigger
+    }
+
+    var schedulingState: NotificationRebuildState { rebuildTrigger.state }
+
+    /// 页面只发出重建意图，排程与持久化仍由组合根注入的服务负责。
+    func retryScheduling() {
+        rebuildTrigger.requestRebuild()
     }
 
     func refresh() async {

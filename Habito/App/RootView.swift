@@ -114,11 +114,18 @@ struct RootView: View {
     }
 
     private func rebuildNotifications() async {
+        notificationRebuildTrigger.recordStarted()
         do {
-            _ = try await notificationRebuildService.rebuild(at: .now)
+            let result = try await notificationRebuildService.rebuild(at: .now)
+            try Task.checkCancellation()
+            notificationRebuildTrigger.record(result, checkedAt: .now)
+            if !result.reconciliation.isSuccessful {
+                logger.error("通知核对有 \(result.reconciliation.failures.count, privacy: .public) 项失败")
+            }
         } catch is CancellationError {
             return
         } catch {
+            notificationRebuildTrigger.recordFailure()
             logger.error("通知重建失败：\(String(describing: type(of: error)), privacy: .public)")
         }
     }

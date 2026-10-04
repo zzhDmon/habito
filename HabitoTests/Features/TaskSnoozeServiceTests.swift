@@ -6,6 +6,40 @@ import Testing
 @MainActor
 @Suite("十分钟稍后提醒")
 struct TaskSnoozeServiceTests {
+    @Test("尚未授权或已拒绝时不排程，也不向孩子弹出权限请求", arguments: [NotificationAuthorizationState.notDetermined, .denied, .unknown])
+    func unavailableAuthorizationDoesNotSchedule(_ authorization: NotificationAuthorizationState) async throws {
+        let fixture = try Fixture()
+        let occurrence = try fixture.makeOccurrence()
+        fixture.permissions.currentAuthorizationState = authorization
+
+        await #expect(throws: TaskSnoozeError.notificationsUnavailable) {
+            _ = try await fixture.service.schedule(occurrenceID: occurrence.id, at: fixture.now)
+        }
+        #expect(fixture.permissions.requestCount == 0)
+        #expect(fixture.scheduler.pending.isEmpty)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<NotificationLink>()) == 0)
+    }
+
+    @Test("提醒显示已关闭时不给出虚假的稍后提醒成功反馈")
+    func disabledAlertsDoNotSchedule() async throws {
+        let fixture = try Fixture()
+        let occurrence = try fixture.makeOccurrence()
+        fixture.permissions.alertSetting = .disabled
+        await #expect(throws: TaskSnoozeError.notificationsUnavailable) {
+            _ = try await fixture.service.schedule(occurrenceID: occurrence.id, at: fixture.now)
+        }
+        #expect(fixture.scheduler.pending.isEmpty)
+    }
+
+    @Test("只关闭声音仍可安排可见提醒")
+    func disabledSoundsStillAllowVisibleReminder() async throws {
+        let fixture = try Fixture()
+        let occurrence = try fixture.makeOccurrence()
+        fixture.permissions.soundSetting = .disabled
+        _ = try await fixture.service.schedule(occurrenceID: occurrence.id, at: fixture.now)
+        #expect(fixture.scheduler.pending.count == 1)
+    }
+
     @Test("同一实例连续操作只保留最新请求和一个映射")
     func repeatedScheduleReplacesStableSlot() async throws {
         let fixture = try Fixture()
@@ -200,10 +234,12 @@ private extension TaskSnoozeServiceTests {
         let now: Date
         let calendar: Calendar
         let timeZone: TimeZone
+        let permissions = FakeLocalNotificationService()
 
         init(now: Date? = nil) throws {
             context = ModelContext(try AppModelContainer.make(inMemory: true))
             scheduler = SnoozeSchedulerFake()
+            permissions.currentAuthorizationState = .authorized
             if let now {
                 self.now = now
             } else {
@@ -214,6 +250,7 @@ private extension TaskSnoozeServiceTests {
             service = TaskSnoozeService(
                 context: context,
                 scheduler: scheduler,
+                permissionProvider: permissions,
                 calendar: calendar,
                 timeZone: timeZone
             )

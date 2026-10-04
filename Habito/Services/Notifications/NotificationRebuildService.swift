@@ -10,6 +10,7 @@ struct NotificationRebuildService {
     private let context: ModelContext
     private let coordinator: NotificationReconciliationCoordinator
     private let operationGate: NotificationOperationGate
+    private let permissionProvider: any NotificationPermissionProviding
     private let selector = NotificationCandidateSelector()
     private let resolver = TaskCandidateOverrideResolver()
     private var calendar: Calendar
@@ -19,6 +20,7 @@ struct NotificationRebuildService {
     init(
         context: ModelContext,
         scheduler: any NotificationRequestScheduling,
+        permissionProvider: any NotificationPermissionProviding,
         calendar: Calendar,
         timeZone: TimeZone,
         horizonDays: Int = Self.defaultHorizonDays,
@@ -27,6 +29,7 @@ struct NotificationRebuildService {
         self.context = context
         coordinator = NotificationReconciliationCoordinator(scheduler: scheduler)
         self.operationGate = operationGate
+        self.permissionProvider = permissionProvider
         self.calendar = calendar
         self.timeZone = timeZone
         self.horizonDays = horizonDays
@@ -57,9 +60,17 @@ struct NotificationRebuildService {
             availableThrough: availableThrough,
             minimumCoverageThrough: minimumCoverageThrough
         )
-        let requests =
-            try makeRequests(from: selection.primaryCandidates)
-            + snoozeRequests(at: now, today: today)
+        let permissions = await permissionProvider.diagnostics()
+        try Task.checkCancellation()
+        let requests: [TaskNotificationRequest]
+        if permissions.authorization.canSchedule {
+            requests =
+                try makeRequests(from: selection.primaryCandidates)
+                + snoozeRequests(at: now, today: today)
+        } else {
+            // 未授权时保留任务本身，但清理旧系统请求，不伪造已成功排程的检查点。
+            requests = []
+        }
         let reconciliation = await coordinator.reconcile(desiredRequests: requests)
 
         // `.task(id:)` 可能因更新的业务事件取消旧重建；旧任务不再写检查点，由新任务按最新真相修复映射。
@@ -68,13 +79,17 @@ struct NotificationRebuildService {
         if reconciliation.isSuccessful {
             let settings = try appSettings()
             settings.lastInstanceGenerationAt = now
-            settings.lastNotificationSchedulingAt = now
-            settings.schedulingHorizonDateKey = selection.coverageThrough.dateKey
+            settings.recordNotificationAuthorization(permissions.authorization)
+            settings.lastNotificationSchedulingAt = permissions.authorization.canSchedule ? now : nil
+            settings.schedulingHorizonDateKey =
+                permissions.authorization.canSchedule ? selection.coverageThrough.dateKey : nil
             try context.save()
         }
         return NotificationRebuildResult(
             selection: selection,
-            reconciliation: reconciliation
+            reconciliation: reconciliation,
+            authorization: permissions.authorization,
+            scheduledSnoozeCount: requests.count { $0.kind == .snooze }
         )
     }
 

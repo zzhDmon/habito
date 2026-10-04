@@ -6,6 +6,34 @@ import Testing
 @MainActor
 @Suite("任务执行页计时恢复")
 struct TaskSessionViewModelTests {
+    @Test("通知被拒绝时展示可理解反馈并请求核对，仍能手动完成")
+    func deniedSnoozeKeepsManualCompletionAvailable() async throws {
+        let fixture = try TodayQueryFixture()
+        let occurrence = fixture.makeOccurrence(title: "阅读", scheduledAt: fixture.now, status: .pending)
+        try fixture.context.save()
+        let provider = UITestNotificationPermissionProvider(deniesAuthorization: true)
+        let trigger = NotificationRebuildTrigger()
+        let model = TaskSessionViewModel(
+            occurrenceID: occurrence.id,
+            context: fixture.context,
+            calendar: fixture.calendar,
+            timeZone: fixture.timeZone,
+            dateProvider: FixedDateProvider(value: fixture.now),
+            snoozeService: TaskSnoozeService(
+                context: fixture.context, scheduler: provider, permissionProvider: provider,
+                calendar: fixture.calendar, timeZone: fixture.timeZone
+            ),
+            notificationRebuildTrigger: trigger
+        )
+        model.load()
+        await model.snooze()
+        #expect(model.snoozeState == .notificationsDisabled)
+        #expect(trigger.revision == 1)
+        model.completeTask()
+        #expect(try loadedContent(from: model.state).task.status == .completed)
+        #expect(model.snoozeState == .idle)
+    }
+
     @Test("开始任务只创建一个活动会话")
     func startCreatesOnlyOneActiveSession() throws {
         let fixture = try TodayQueryFixture()

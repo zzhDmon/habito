@@ -681,6 +681,48 @@
         }
       }
     },
+    "notification.schedulingTitle" : {
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "提醒排程" } } }
+    },
+    "notification.schedulingUnchecked" : {
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "还没有核对提醒。" } } }
+    },
+    "notification.schedulingChecking" : {
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "正在核对提醒…" } } }
+    },
+    "notification.schedulingPrimaryCount" : {
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "主提醒数量" } } }
+    },
+    "notification.schedulingSnoozeCount" : {
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "稍后提醒数量" } } }
+    },
+    "notification.schedulingNoTasks" : {
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "当前没有需要安排的提醒。" } } }
+    },
+    "notification.schedulingCoverage" : {
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "提醒覆盖到" } } }
+    },
+    "notification.schedulingPartialDay" : {
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "该日期只覆盖了部分任务。" } } }
+    },
+    "notification.schedulingLimitedCoverage" : {
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "近期提醒较多，覆盖不足 7 天，请定期打开 App。" } } }
+    },
+    "notification.schedulingCheckedAt" : {
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "最近核对" } } }
+    },
+    "notification.schedulingDisabled" : {
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "通知未开启，任务仍可手动完成。" } } }
+    },
+    "notification.schedulingFailed" : {
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "部分提醒未安排成功，请重试。" } } }
+    },
+    "notification.schedulingRetry" : {
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "重新核对提醒" } } }
+    },
+    "notification.schedulingFooter" : {
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "这里只显示 App 的排程核对结果。通知实际显示时间仍受系统权限、专注模式和通知摘要影响。" } } }
+    },
     "notification.openSettings" : {
       "localizations" : {
         "zh-Hans" : {
@@ -2926,6 +2968,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在安排提醒…"
+          }
+        }
+      }
+    },
+    "taskSession.snoozeNotificationsDisabled" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "提醒还没打开，请找家长打开。"
           }
         }
       }

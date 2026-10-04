@@ -6,6 +6,82 @@ import Testing
 @Suite("通知业务重建")
 @MainActor
 struct NotificationRebuildServiceTests {
+    @Test("拒绝通知仍生成任务但不伪造排程检查点，重新授权可恢复")
+    func deniedAuthorizationPreservesManualTasksAndCanRecover() async throws {
+        let fixture = try Fixture()
+        _ = try fixture.insertDailyTemplate()
+        fixture.permissions.currentAuthorizationState = .denied
+        let denied = try await fixture.service.rebuild(at: fixture.now)
+        #expect(denied.authorization == .denied)
+        #expect(denied.reconciliation.isSuccessful)
+        #expect(fixture.scheduler.pending.isEmpty)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<TaskOccurrence>()) == 15)
+        let settings = try #require(fixture.context.fetch(FetchDescriptor<AppSettings>()).first)
+        #expect(settings.lastNotificationSchedulingAt == nil)
+        #expect(settings.schedulingHorizonDateKey == nil)
+        #expect(fixture.permissions.requestCount == 0)
+
+        fixture.permissions.currentAuthorizationState = .authorized
+        let restored = try await fixture.service.rebuild(at: fixture.now)
+        #expect(restored.reconciliation.addedIdentifiers.count == 15)
+        #expect(fixture.scheduler.pending.count == 15)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<TaskOccurrence>()) == 15)
+        #expect(settings.lastNotificationSchedulingAt == fixture.now)
+    }
+
+    @Test("关闭通知清理旧排程，不丢失完成历史与手动任务")
+    func revokingAuthorizationCleansRequestsWithoutLosingProgress() async throws {
+        let fixture = try Fixture()
+        _ = try fixture.insertDailyTemplate()
+        _ = try await fixture.service.rebuild(at: fixture.now)
+        let occurrence = try #require(fixture.context.fetch(FetchDescriptor<TaskOccurrence>()).first)
+        _ = try TaskProgressService(context: fixture.context).complete(
+            occurrence, at: fixture.now, source: .childManual)
+        fixture.permissions.currentAuthorizationState = .denied
+        let result = try await fixture.service.rebuild(at: fixture.now)
+        #expect(result.reconciliation.removedIdentifiers.count == 15)
+        #expect(fixture.scheduler.pending.isEmpty)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<NotificationLink>()) == 0)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<TaskOccurrence>()) == 15)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<CompletionRecord>()) == 1)
+        #expect(occurrence.status == .completed)
+    }
+
+    @Test("系统单条失败不覆盖成功检查点，家长诊断可发起重试")
+    func partialFailureExposesRetryAndPreservesCheckpoint() async throws {
+        let fixture = try Fixture()
+        let template = try fixture.insertDailyTemplate()
+        let success = try await fixture.service.rebuild(at: fixture.now)
+        let trigger = NotificationRebuildTrigger()
+        let model = ParentNotificationDiagnosticsViewModel(
+            service: NotificationPermissionService(context: fixture.context, provider: fixture.permissions),
+            rebuildTrigger: trigger
+        )
+        #expect(model.schedulingState == .idle)
+        trigger.recordStarted()
+        #expect(model.schedulingState == .rebuilding)
+        trigger.record(success, checkedAt: fixture.now)
+        #expect(model.schedulingState == .completed(success, checkedAt: fixture.now))
+
+        template.title = "修改后的阅读"
+        try fixture.context.save()
+        fixture.scheduler.addFails = true
+        let later = fixture.now.addingTimeInterval(60)
+        let failed = try await fixture.service.rebuild(at: later)
+        #expect(!failed.reconciliation.isSuccessful)
+        trigger.record(failed, checkedAt: later)
+        #expect(model.schedulingState == .failed)
+        let settings = try #require(fixture.context.fetch(FetchDescriptor<AppSettings>()).first)
+        #expect(settings.lastNotificationSchedulingAt == fixture.now)
+        model.retryScheduling()
+        #expect(trigger.revision == 1)
+        fixture.scheduler.addFails = false
+        let retried = try await fixture.service.rebuild(at: later)
+        trigger.record(retried, checkedAt: later)
+        #expect(model.schedulingState == .completed(retried, checkedAt: later))
+        #expect(settings.lastNotificationSchedulingAt == later)
+    }
+
     @Test("连续五次重建仅首次添加且记录覆盖检查点")
     func fiveRebuildsAreIdempotent() async throws {
         let fixture = try Fixture()
@@ -96,6 +172,7 @@ struct NotificationRebuildServiceTests {
         let snoozeService = TaskSnoozeService(
             context: fixture.context,
             scheduler: fixture.scheduler,
+            permissionProvider: fixture.permissions,
             calendar: fixture.calendar,
             timeZone: fixture.timeZone
         )
@@ -140,6 +217,7 @@ struct NotificationRebuildServiceTests {
         )
         _ = try await TaskSnoozeService(
             context: fixture.context, scheduler: fixture.scheduler,
+            permissionProvider: fixture.permissions,
             calendar: fixture.calendar, timeZone: fixture.timeZone
         ).schedule(occurrenceID: occurrence.id, at: fixture.now)
         _ = try TaskProgressService(context: fixture.context).complete(
@@ -158,6 +236,34 @@ struct NotificationRebuildServiceTests {
         #expect(try NotificationLinkStore(context: fixture.context).links(occurrenceID: occurrence.id).isEmpty)
     }
 
+    @Test("已送达集合读取失败时保留完成任务映射，重试后才清理")
+    func failedDeliveredReadPreservesTraceableLinks() async throws {
+        let fixture = try Fixture()
+        _ = try fixture.insertDailyTemplate()
+        _ = try await fixture.service.rebuild(at: fixture.now)
+        let occurrence = try #require(fixture.context.fetch(FetchDescriptor<TaskOccurrence>()).first)
+        let identifier = NotificationRequestIdentifier(occurrenceID: occurrence.id, kind: .primary).rawValue
+        fixture.scheduler.delivered = [identifier]
+        _ = try TaskProgressService(context: fixture.context).complete(
+            occurrence, at: fixture.now, source: .childManual)
+        fixture.scheduler.deliveredReadFails = true
+        let failed = try await fixture.service.rebuild(at: fixture.now)
+        #expect(failed.reconciliation.failures.contains { $0.operation == .readDelivered })
+        #expect(fixture.scheduler.pending[identifier] == nil)
+        #expect(try NotificationLinkStore(context: fixture.context).link(requestIdentifier: identifier) != nil)
+
+        fixture.scheduler.deliveredReadFails = false
+        fixture.scheduler.deliveredRemovalFails = true
+        let retryFailed = try await fixture.service.rebuild(at: fixture.now)
+        #expect(retryFailed.reconciliation.failures.contains { $0.operation == .removeDelivered })
+        #expect(try NotificationLinkStore(context: fixture.context).link(requestIdentifier: identifier) != nil)
+        fixture.scheduler.deliveredRemovalFails = false
+        let restored = try await fixture.service.rebuild(at: fixture.now)
+        #expect(restored.reconciliation.isSuccessful)
+        #expect(fixture.scheduler.delivered.isEmpty)
+        #expect(try NotificationLinkStore(context: fixture.context).link(requestIdentifier: identifier) == nil)
+    }
+
     @Test("前台重建等待系统队列时创建稍后提醒不会丢失")
     func rebuildAndSnoozeShareOneTransactionBoundary() async throws {
         let fixture = try Fixture()
@@ -168,6 +274,7 @@ struct NotificationRebuildServiceTests {
         )
         let snooze = TaskSnoozeService(
             context: fixture.context, scheduler: fixture.scheduler,
+            permissionProvider: fixture.permissions,
             calendar: fixture.calendar, timeZone: fixture.timeZone,
             operationGate: fixture.operationGate
         )
@@ -210,16 +317,19 @@ private extension NotificationRebuildServiceTests {
         let calendar: Calendar
         let timeZone: TimeZone
         let operationGate = NotificationOperationGate()
+        let permissions = FakeLocalNotificationService()
 
         init() throws {
             context = ModelContext(try AppModelContainer.make(inMemory: true))
             scheduler = RebuildSchedulerFake()
+            permissions.currentAuthorizationState = .authorized
             now = try Date("2026-09-27T02:00:00Z", strategy: .iso8601)
             calendar = Calendar(identifier: .gregorian)
             timeZone = try #require(TimeZone(identifier: "Asia/Shanghai"))
             service = NotificationRebuildService(
                 context: context,
                 scheduler: scheduler,
+                permissionProvider: permissions,
                 calendar: calendar,
                 timeZone: timeZone,
                 operationGate: operationGate
@@ -254,6 +364,9 @@ private extension NotificationRebuildServiceTests {
         var pending: [String: PendingNotificationRequestSnapshot] = [:]
         var addCount = 0
         var readFails = false
+        var addFails = false
+        var deliveredReadFails = false
+        var deliveredRemovalFails = false
         var delivered: Set<String> = []
         var onReadAsync: (() async -> Void)?
 
@@ -267,6 +380,7 @@ private extension NotificationRebuildServiceTests {
         }
 
         func addNotificationRequest(_ request: TaskNotificationRequest) async throws {
+            if addFails { throw CocoaError(.fileWriteUnknown) }
             addCount += 1
             pending[request.identifier] = PendingNotificationRequestSnapshot(
                 identifier: request.identifier,
@@ -280,9 +394,13 @@ private extension NotificationRebuildServiceTests {
             pending[identifier] = nil
         }
 
-        func deliveredNotificationIdentifiers() async throws -> [String] { Array(delivered) }
+        func deliveredNotificationIdentifiers() async throws -> [String] {
+            if deliveredReadFails { throw CocoaError(.fileReadUnknown) }
+            return Array(delivered)
+        }
 
         func removeDeliveredNotificationRequest(identifier: String) async throws {
+            if deliveredRemovalFails { throw CocoaError(.fileWriteUnknown) }
             delivered.remove(identifier)
         }
     }

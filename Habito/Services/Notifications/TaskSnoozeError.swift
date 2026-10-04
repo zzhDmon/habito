@@ -8,4 +8,5 @@ nonisolated enum TaskSnoozeError: Error, Equatable, Sendable {
     case occurrenceIsNotToday(UUID)
     case crossesLocalMidnight
     case pendingLimitReached(Int)
+    case notificationsUnavailable
 }

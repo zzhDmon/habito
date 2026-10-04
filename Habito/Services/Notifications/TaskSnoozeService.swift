@@ -13,6 +13,7 @@ struct TaskSnoozeService {
 
     private let context: ModelContext
     private let scheduler: any NotificationRequestScheduling
+    private let permissionProvider: any NotificationPermissionProviding
     private let operationGate: NotificationOperationGate
     private let logger = Logger(subsystem: "com.zhangzehua.Habito", category: "TaskSnooze")
     private var calendar: Calendar
@@ -21,12 +22,14 @@ struct TaskSnoozeService {
     init(
         context: ModelContext,
         scheduler: any NotificationRequestScheduling,
+        permissionProvider: any NotificationPermissionProviding,
         calendar: Calendar,
         timeZone: TimeZone,
         operationGate: NotificationOperationGate = NotificationOperationGate()
     ) {
         self.context = context
         self.scheduler = scheduler
+        self.permissionProvider = permissionProvider
         self.operationGate = operationGate
         self.calendar = calendar
         self.timeZone = timeZone
@@ -39,7 +42,7 @@ struct TaskSnoozeService {
     ///   - occurrenceID: 当前任务实例的稳定 ID。
     ///   - now: 用户操作时刻，由调用方注入以便测试午夜与预算边界。
     /// - Returns: 实际安排的绝对触发时间。
-    /// - Throws: 任务不是今天、已经处理、跨本地午夜、预算已满或系统排程失败时抛错。
+    /// - Throws: 任务不是今天、已经处理、跨本地午夜、提醒不可用、预算已满或系统排程失败时抛错。
     func schedule(occurrenceID: UUID, at now: Date) async throws -> Date {
         try await operationGate.perform {
             try await scheduleExclusively(occurrenceID: occurrenceID, at: now)
@@ -72,6 +75,12 @@ struct TaskSnoozeService {
             throw TaskSnoozeError.crossesLocalMidnight
         }
 
+        // 系统接受请求并不代表提醒会显示；孩子端不能把关闭权限当作安排成功。
+        let permissions = await permissionProvider.diagnostics()
+        guard permissions.canPresentAlerts else {
+            throw TaskSnoozeError.notificationsUnavailable
+        }
+
         let identifier = NotificationRequestIdentifier(
             occurrenceID: occurrence.id,
             kind: .snooze
@@ -86,6 +95,7 @@ struct TaskSnoozeService {
 
         // `pendingNotificationRequests()` 是异步系统边界；返回后重新核对状态，降低等待期间完成任务的竞态窗口。
         try validateStatus(of: occurrence)
+        try Task.checkCancellation()
         let request = TaskNotificationRequest(
             occurrenceID: occurrence.id,
             kind: .snooze,
