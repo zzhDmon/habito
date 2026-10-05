@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AB1000000000000000000106 /* NotificationSubmissionEpochUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000106 /* NotificationSubmissionEpochUpdate.swift */; };
 		AB1000000000000000000092 /* HabitoSchemaV4+TaskTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000092 /* HabitoSchemaV4+TaskTemplate.swift */; };
 		AB1000000000000000000093 /* HabitoSchemaV4+ReminderRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000093 /* HabitoSchemaV4+ReminderRule.swift */; };
 		AB1000000000000000000094 /* HabitoSchemaV4+TaskOccurrence.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000094 /* HabitoSchemaV4+TaskOccurrence.swift */; };
@@ -344,6 +345,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AB2000000000000000000106 /* NotificationSubmissionEpochUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NotificationSubmissionEpochUpdate.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000092 /* HabitoSchemaV4+TaskTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV4+TaskTemplate.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000093 /* HabitoSchemaV4+ReminderRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV4+ReminderRule.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000094 /* HabitoSchemaV4+TaskOccurrence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV4+TaskOccurrence.swift"; sourceTree = "<group>"; };
@@ -1179,6 +1181,7 @@
 			isa = PBXGroup;
 			children = (
 				Y2000000000000000000000F /* NotificationLinkStore.swift */,
+				AB2000000000000000000106 /* NotificationSubmissionEpochUpdate.swift */,
 				Y2000000000000000000000E /* NotificationLinkStoreError.swift */,
 				Y2000000000000000000000D /* NotificationRequestIdentifier.swift */,
 			);
@@ -1595,6 +1598,7 @@
 				Y1000000000000000000000D /* NotificationRequestIdentifier.swift in Sources */,
 				Y1000000000000000000000E /* NotificationLinkStoreError.swift in Sources */,
 				Y1000000000000000000000F /* NotificationLinkStore.swift in Sources */,
+				AB1000000000000000000106 /* NotificationSubmissionEpochUpdate.swift in Sources */,
 				Y10000000000000000000011 /* NotificationSchedulingCandidate.swift in Sources */,
 				Y10000000000000000000012 /* NotificationCandidateSelectionError.swift in Sources */,
 				Y10000000000000000000013 /* NotificationCandidateSelection.swift in Sources */,

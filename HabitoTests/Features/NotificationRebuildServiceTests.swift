@@ -6,6 +6,229 @@ import Testing
 @Suite("通知业务重建")
 @MainActor
 struct NotificationRebuildServiceTests {
+    @Test("等待清理时读取/取消/已送达读删失败，映射保留可追溯，下次成功再清理", arguments: [0, 1, 2, 3])
+    func waitingCleanupFailuresRemainTraceable(kind: Int) async throws {
+        let (fixture, occurrence) = try await approvalSetup()
+        _ = try await snoozeService(fixture).schedule(occurrenceID: occurrence.id, at: fixture.now)
+        let identifiers = Set(
+            [NotificationKind.primary, .snooze].map {
+                NotificationRequestIdentifier(occurrenceID: occurrence.id, kind: $0).rawValue
+            })
+        fixture.scheduler.delivered = identifiers
+        _ = try TaskSubmissionService(context: fixture.context).submit(occurrence, at: fixture.now)
+        if kind == 0 { fixture.scheduler.readFails = true }
+        if kind == 1 { fixture.scheduler.pendingRemovalFails = true }
+        if kind == 2 { fixture.scheduler.deliveredReadFails = true }
+        if kind == 3 { fixture.scheduler.deliveredRemovalFails = true }
+        let failed = try await fixture.service.rebuild(at: fixture.now.addingTimeInterval(1))
+        #expect(!failed.reconciliation.isSuccessful)
+        #expect(try NotificationLinkStore(context: fixture.context).links(occurrenceID: occurrence.id).count == 2)
+        let settings = try #require(fixture.context.fetch(FetchDescriptor<AppSettings>()).first)
+        #expect(settings.lastNotificationSchedulingAt == fixture.now)
+        fixture.scheduler.readFails = false
+        fixture.scheduler.pendingRemovalFails = false
+        fixture.scheduler.deliveredReadFails = false
+        fixture.scheduler.deliveredRemovalFails = false
+        let recovered = try await fixture.service.rebuild(at: fixture.now.addingTimeInterval(2))
+        #expect(recovered.reconciliation.isSuccessful)
+        #expect(try NotificationLinkStore(context: fixture.context).links(occurrenceID: occurrence.id).isEmpty)
+        for identifier in identifiers {
+            #expect(fixture.scheduler.pending[identifier] == nil && !fixture.scheduler.delivered.contains(identifier))
+        }
+        #expect(try RewardLedgerService(context: fixture.context).balance() == RewardBalance(effectiveXP: 0, coins: 0))
+    }
+
+    @Test("多次系统等待依次提交与退回/重提，最终等待事实不能留下旧提醒", arguments: [false, true])
+    func multipleBusinessChangesUseFinalFacts(resubmit: Bool) async throws {
+        let (fixture, occurrence) = try await approvalSetup()
+        _ = try await snoozeService(fixture).schedule(occurrenceID: occurrence.id, at: fixture.now)
+        let primary = NotificationRequestIdentifier(occurrenceID: occurrence.id, kind: .primary).rawValue
+        let snooze = NotificationRequestIdentifier(occurrenceID: occurrence.id, kind: .snooze).rawValue
+        fixture.scheduler.pending[primary] = nil
+        fixture.scheduler.onReadAsync = {
+            let row = try TaskSubmissionService(context: fixture.context).submit(occurrence, at: fixture.now)
+            fixture.scheduler.onAdd = { _ in
+                _ = try TaskSubmissionReviewService(context: fixture.context).returnForRevision(
+                    occurrence, submissionID: row.submissionID, at: fixture.now)
+                if resubmit {
+                    _ = try TaskSubmissionService(context: fixture.context).submit(occurrence, at: fixture.now)
+                }
+            }
+        }
+        let result = try await fixture.service.rebuild(at: fixture.now)
+        #expect(result.reconciliation.isSuccessful)
+        #expect((fixture.scheduler.pending[primary] != nil) == !resubmit)
+        #expect(fixture.scheduler.pending[snooze] == nil)
+        let history = TaskSubmissionHistory(context: fixture.context)
+        #expect(try history.records(for: occurrence.id).count == (resubmit ? 2 : 1))
+        #expect(try history.latest(for: occurrence)?.reviewState == (resubmit ? .waiting : .returned))
+    }
+
+    @Test("坏等待审计在系统操作前明确拒绝，旧卡片点击安全回首页")
+    func corruptWaitingFailsWithoutSystemMutation() async throws {
+        let (fixture, occurrence) = try await approvalSetup()
+        let row = try TaskSubmissionService(context: fixture.context).submit(occurrence, at: fixture.now)
+        let latest = try TaskSubmissionHistory(context: fixture.context).latest(for: occurrence)
+        let record = try #require(latest)
+        record.reviewStateRawValue = "corrupt"
+        try fixture.context.save()
+        let requests = fixture.scheduler.pending
+        let addCount = fixture.scheduler.addCount
+        await #expect(throws: TaskSubmissionError.corruptHistory(occurrence.id)) {
+            _ = try await fixture.service.rebuild(at: fixture.now)
+        }
+        #expect(fixture.scheduler.pending == requests && fixture.scheduler.addCount == addCount)
+        let identifier = NotificationRequestIdentifier(occurrenceID: occurrence.id, kind: .primary).rawValue
+        #expect(NotificationNavigationService(context: fixture.context).destination(for: identifier) == .home)
+        #expect(record.id == row.submissionID)
+    }
+
+    @Test("等待/退回旧稍后/退回新稍后真实磁盘重开，按事实恢复且不补奖", arguments: [0, 1, 2])
+    func diskRestartRespectsWaitingAndSnoozeEpoch(outcome: Int) async throws {
+        let url = try V0MigrationFixture.temporaryStoreURL()
+        let (occurrenceID, submissionID) = try await seedApprovalNotifications(at: url, outcome: outcome)
+        for _ in 0..<2 {
+            let fixture = try Fixture(storeURL: url)
+            let occurrence = try #require(
+                fixture.context.fetch(FetchDescriptor<TaskOccurrence>()).first { $0.id == occurrenceID })
+            let result = try await fixture.service.rebuild(at: fixture.now)
+            let primary = NotificationRequestIdentifier(occurrenceID: occurrenceID, kind: .primary).rawValue
+            let snooze = NotificationRequestIdentifier(occurrenceID: occurrenceID, kind: .snooze).rawValue
+            #expect(result.reconciliation.isSuccessful)
+            #expect((fixture.scheduler.pending[primary] != nil) == (outcome != 0))
+            #expect((fixture.scheduler.pending[snooze] != nil) == (outcome == 2))
+            let link = try NotificationLinkStore(context: fixture.context).link(requestIdentifier: snooze)
+            #expect(link?.submissionIDAtScheduling == (outcome == 2 ? submissionID : nil))
+            #expect(try TaskSubmissionHistory(context: fixture.context).latest(for: occurrence)?.id == submissionID)
+            #expect(try fixture.context.fetchCount(FetchDescriptor<CompletionRecord>()) == 0)
+            #expect(
+                try RewardLedgerService(context: fixture.context).balance() == RewardBalance(effectiveXP: 0, coins: 0))
+        }
+    }
+
+    @Test("提交等待清理两种提醒和已送达卡片，旧点击安全回家；通过才到账", arguments: [false, true])
+    func waitingAndApprovalCleanNotificationsWithoutPrematureRewards(zero: Bool) async throws {
+        let (fixture, occurrence) = try await approvalSetup(zero: zero)
+        _ = try await snoozeService(fixture).schedule(occurrenceID: occurrence.id, at: fixture.now)
+        let identifiers = Set(
+            [NotificationKind.primary, .snooze].map {
+                NotificationRequestIdentifier(occurrenceID: occurrence.id, kind: $0).rawValue
+            })
+        fixture.scheduler.delivered = identifiers
+        let submission = try TaskSubmissionService(context: fixture.context).submit(occurrence, at: fixture.now)
+        let navigation = NotificationNavigationService(context: fixture.context)
+        for identifier in identifiers { #expect(navigation.destination(for: identifier) == .home) }
+        let waiting = try await fixture.service.rebuild(at: fixture.now)
+        #expect(waiting.reconciliation.isSuccessful && waiting.scheduledSnoozeCount == 0)
+        for identifier in identifiers { #expect(fixture.scheduler.pending[identifier] == nil) }
+        #expect(fixture.scheduler.delivered.isEmpty)
+        #expect(try NotificationLinkStore(context: fixture.context).links(occurrenceID: occurrence.id).isEmpty)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<CompletionRecord>()) == 0)
+        #expect(try RewardLedgerService(context: fixture.context).balance() == RewardBalance(effectiveXP: 0, coins: 0))
+        let review = TaskSubmissionReviewService(context: fixture.context)
+        _ = try review.approve(occurrence, submissionID: submission.submissionID, at: fixture.now)
+        let approved = try await fixture.service.rebuild(at: fixture.now)
+        #expect(approved.reconciliation.isSuccessful && occurrence.status == .completed)
+        #expect(
+            try RewardLedgerService(context: fixture.context).balance()
+                == RewardBalance(effectiveXP: zero ? 0 : 11, coins: zero ? 0 : 10))
+        let repeated = try review.approve(occurrence, submissionID: submission.submissionID, at: fixture.now)
+        #expect(!repeated.didReview)
+        let addCount = fixture.scheduler.addCount
+        _ = try await fixture.service.rebuild(at: fixture.now)
+        #expect(fixture.scheduler.addCount == addCount)
+        for identifier in identifiers { #expect(navigation.destination(for: identifier) == .home) }
+    }
+
+    @Test("退回只恢复未来主提醒，到点/过期/跨日不补发，也不恢复提交前稍后", arguments: [0, 1, 2, 3])
+    func returnOnlyRestoresFuturePrimary(boundary: Int) async throws {
+        let (fixture, occurrence) = try await approvalSetup()
+        _ = try await snoozeService(fixture).schedule(occurrenceID: occurrence.id, at: fixture.now)
+        let primary = NotificationRequestIdentifier(occurrenceID: occurrence.id, kind: .primary).rawValue
+        let snooze = NotificationRequestIdentifier(occurrenceID: occurrence.id, kind: .snooze).rawValue
+        fixture.scheduler.delivered = [primary, snooze]
+        let submission = try TaskSubmissionService(context: fixture.context).submit(occurrence, at: fixture.now)
+        let returnedAt: Date =
+            switch boundary {
+            case 0: fixture.now
+            case 1: occurrence.scheduledAt
+            case 2: occurrence.scheduledAt.addingTimeInterval(1)
+            default: fixture.now.addingTimeInterval(86400)
+            }
+        _ = try TaskSubmissionReviewService(context: fixture.context).returnForRevision(
+            occurrence, submissionID: submission.submissionID, at: returnedAt)
+        let rebuilt = try await fixture.service.rebuild(at: returnedAt)
+        #expect(rebuilt.reconciliation.isSuccessful)
+        #expect((fixture.scheduler.pending[primary] != nil) == (boundary == 0))
+        #expect(fixture.scheduler.pending[snooze] == nil)
+        #expect(!fixture.scheduler.delivered.contains(snooze))
+        #expect(try NotificationLinkStore(context: fixture.context).link(requestIdentifier: snooze) == nil)
+        #expect(occurrence.status == .pending && occurrence.completionRecord == nil)
+        #expect(try TaskSubmissionHistory(context: fixture.context).records(for: occurrence.id).count == 1)
+        #expect(try RewardLedgerService(context: fixture.context).balance() == RewardBalance(effectiveXP: 0, coins: 0))
+        _ = try await fixture.service.rebuild(at: returnedAt)
+        #expect(fixture.scheduler.pending[snooze] == nil)
+    }
+
+    @Test("同一时刻多轮提交退回，旧稍后不复活；退回后明确新稍后在重建中保留世代")
+    func fastReturnsRejectOldSnoozeButKeepExplicitNewEpoch() async throws {
+        let (fixture, occurrence) = try await approvalSetup()
+        let snooze = snoozeService(fixture)
+        let store = NotificationLinkStore(context: fixture.context)
+        let identifier = NotificationRequestIdentifier(occurrenceID: occurrence.id, kind: .snooze).rawValue
+        _ = try await snooze.schedule(occurrenceID: occurrence.id, at: fixture.now)
+        #expect(try store.link(requestIdentifier: identifier)?.submissionIDAtScheduling == nil)
+        for _ in 0..<2 {
+            let row = try TaskSubmissionService(context: fixture.context).submit(occurrence, at: fixture.now)
+            _ = try TaskSubmissionReviewService(context: fixture.context).returnForRevision(
+                occurrence, submissionID: row.submissionID, at: fixture.now)
+            _ = try await fixture.service.rebuild(at: fixture.now)
+            #expect(fixture.scheduler.pending[identifier] == nil)
+            _ = try await snooze.schedule(occurrenceID: occurrence.id, at: fixture.now)
+            for _ in 0..<3 {
+                let result = try await fixture.service.rebuild(at: fixture.now)
+                #expect(result.reconciliation.isSuccessful && result.scheduledSnoozeCount == 1)
+                let savedLink = try store.link(requestIdentifier: identifier)
+                let link = try #require(savedLink)
+                #expect(link.submissionIDAtScheduling == row.submissionID && link.createdAt == fixture.now)
+                #expect(link.scheduledAt == fixture.now.addingTimeInterval(600))
+            }
+        }
+        #expect(try TaskSubmissionHistory(context: fixture.context).records(for: occurrence.id).count == 2)
+        #expect(try RewardLedgerService(context: fixture.context).balance() == RewardBalance(effectiveXP: 0, coins: 0))
+    }
+
+    @Test("系统读取或添加等待期间提交/通过/退回，最终队列按最新事实稳定", arguments: [false, true], [0, 1, 2])
+    func reviewDuringSystemAwaitUsesLatestFacts(duringAdding: Bool, outcome: Int) async throws {
+        let (fixture, occurrence) = try await approvalSetup()
+        _ = try await snoozeService(fixture).schedule(occurrenceID: occurrence.id, at: fixture.now)
+        let primary = NotificationRequestIdentifier(occurrenceID: occurrence.id, kind: .primary).rawValue
+        let snooze = NotificationRequestIdentifier(occurrenceID: occurrence.id, kind: .snooze).rawValue
+        let change = {
+            let row = try TaskSubmissionService(context: fixture.context).submit(occurrence, at: fixture.now)
+            let review = TaskSubmissionReviewService(context: fixture.context)
+            if outcome == 1 { _ = try review.approve(occurrence, submissionID: row.submissionID, at: fixture.now) }
+            if outcome == 2 {
+                _ = try review.returnForRevision(occurrence, submissionID: row.submissionID, at: fixture.now)
+            }
+        }
+        if duringAdding {
+            fixture.scheduler.pending[primary] = nil
+            fixture.scheduler.onAdd = { _ in try change() }
+        } else {
+            fixture.scheduler.onReadAsync = { try change() }
+        }
+        let result = try await fixture.service.rebuild(at: fixture.now)
+        #expect(result.reconciliation.isSuccessful)
+        #expect((fixture.scheduler.pending[primary] != nil) == (outcome == 2))
+        #expect(fixture.scheduler.pending[snooze] == nil)
+        #expect(try NotificationLinkStore(context: fixture.context).link(requestIdentifier: snooze) == nil)
+        #expect(
+            try RewardLedgerService(context: fixture.context).balance()
+                == RewardBalance(effectiveXP: outcome == 1 ? 11 : 0, coins: outcome == 1 ? 10 : 0))
+        #expect(try TaskSubmissionHistory(context: fixture.context).records(for: occurrence.id).count == 1)
+    }
+
     @Test("新完成清理两种提醒，审计撤销仅恢复未过期主提醒", arguments: [false, true])
     func auditedUndoRestoresOnlyFuturePrimary(afterReminder: Bool) async throws {
         let fixture = try Fixture()
@@ -669,6 +892,41 @@ struct NotificationRebuildServiceTests {
 
 @MainActor
 private extension NotificationRebuildServiceTests {
+    func seedApprovalNotifications(at url: URL, outcome: Int) async throws -> (UUID, UUID) {
+        let (fixture, occurrence) = try await approvalSetup(storeURL: url)
+        _ = try await snoozeService(fixture).schedule(occurrenceID: occurrence.id, at: fixture.now)
+        let row = try TaskSubmissionService(context: fixture.context).submit(occurrence, at: fixture.now)
+        if outcome != 0 {
+            _ = try TaskSubmissionReviewService(context: fixture.context).returnForRevision(
+                occurrence, submissionID: row.submissionID, at: fixture.now)
+            if outcome == 2 {
+                _ = try await snoozeService(fixture).schedule(occurrenceID: occurrence.id, at: fixture.now)
+            }
+        }
+        return (occurrence.id, row.submissionID)
+    }
+
+    /// 显式合成 V1 配置，不依赖尚未接入的模板编辑器，也不把 11/7/3 当产品默认。
+    func approvalSetup(zero: Bool = false, storeURL: URL? = nil) async throws -> (Fixture, TaskOccurrence) {
+        let fixture = try Fixture(storeURL: storeURL)
+        _ = try fixture.insertDailyTemplate()
+        _ = try await fixture.service.rebuild(at: fixture.now)
+        let occurrence = try #require(
+            fixture.context.fetch(FetchDescriptor<TaskOccurrence>()).first { $0.dateKey == "2026-09-27" })
+        occurrence.verificationTypeSnapshotRawValue = TaskVerificationType.parentApproval.rawValue
+        occurrence.xpRewardSnapshot = zero ? 0 : 11
+        occurrence.coinRewardSnapshot = zero ? 0 : 7
+        occurrence.activeBonusCoinSnapshot = zero ? 0 : 3
+        try fixture.context.save()
+        return (fixture, occurrence)
+    }
+
+    func snoozeService(_ fixture: Fixture) -> TaskSnoozeService {
+        TaskSnoozeService(
+            context: fixture.context, scheduler: fixture.scheduler, permissionProvider: fixture.permissions,
+            calendar: fixture.calendar, timeZone: fixture.timeZone, operationGate: fixture.operationGate)
+    }
+
     func seedNotifications(storeURL: URL) async throws -> (UUID, Date) {
         let fixture = try Fixture(storeURL: storeURL)
         _ = try fixture.insertDailyTemplate()
@@ -745,6 +1003,7 @@ private extension NotificationRebuildServiceTests {
         var addFails = false
         var deliveredReadFails = false
         var deliveredRemovalFails = false
+        var pendingRemovalFails = false
         var delivered: Set<String> = []
         var onReadAsync: (() async throws -> Void)?
         var onAdd: ((TaskNotificationRequest) throws -> Void)?
@@ -774,6 +1033,7 @@ private extension NotificationRebuildServiceTests {
         }
 
         func removePendingNotificationRequest(identifier: String) async throws {
+            if pendingRemovalFails { throw CocoaError(.fileWriteUnknown) }
             pending[identifier] = nil
         }
 

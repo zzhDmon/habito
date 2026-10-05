@@ -6,6 +6,64 @@ import Testing
 @MainActor
 @Suite("十分钟稍后提醒")
 struct TaskSnoozeServiceTests {
+    @Test("稍后操作跨等待快提交/快退回，同一时刻也拒绝跨世代旧请求", arguments: [0, 1, 2, 3, 4])
+    func fastReturnDuringSchedulingCannotLaunderOldEpoch(stage: Int) async throws {
+        let fixture = try Fixture()
+        let occurrence = try fixture.makeOccurrence()
+        occurrence.verificationTypeSnapshotRawValue = TaskVerificationType.parentApproval.rawValue
+        try fixture.context.save()
+        let submitAndReturn = {
+            let row = try TaskSubmissionService(context: fixture.context).submit(occurrence, at: fixture.now)
+            _ = try TaskSubmissionReviewService(context: fixture.context).returnForRevision(
+                occurrence, submissionID: row.submissionID, at: fixture.now)
+        }
+        let duringDiagnostics: () async -> Void = {
+            do { try submitAndReturn() } catch { Issue.record(error) }
+        }
+        if stage == 2 {
+            fixture.scheduler.onAdd = submitAndReturn
+        } else if stage == 4 {
+            fixture.scheduler.onAdd = { fixture.permissions.onDiagnostics = duringDiagnostics }
+        } else if stage == 3 {
+            fixture.scheduler.onRead = { fixture.permissions.onDiagnostics = duringDiagnostics }
+        } else if stage == 1 {
+            fixture.scheduler.onRead = submitAndReturn
+        } else {
+            fixture.permissions.onDiagnostics = duringDiagnostics
+        }
+        await #expect(throws: TaskSnoozeError.submissionChanged(occurrence.id)) {
+            _ = try await fixture.service.schedule(occurrenceID: occurrence.id, at: fixture.now)
+        }
+        #expect(fixture.scheduler.addCount == (stage == 2 || stage == 4 ? 1 : 0))
+        #expect(fixture.scheduler.pending.isEmpty)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<NotificationLink>()) == 0)
+        #expect(occurrence.status == .pending)
+        #expect(try TaskSubmissionHistory(context: fixture.context).latest(for: occurrence)?.reviewState == .returned)
+        #expect(try RewardLedgerService(context: fixture.context).balance() == RewardBalance(effectiveXP: 0, coins: 0))
+    }
+
+    @Test("已有退回轮次的稍后添加中又提交退回，不能把第一轮标记洗成第二轮")
+    func secondReturnDuringAddingDoesNotRelabelFirstEpoch() async throws {
+        let fixture = try Fixture()
+        let occurrence = try fixture.makeOccurrence()
+        occurrence.verificationTypeSnapshotRawValue = TaskVerificationType.parentApproval.rawValue
+        try fixture.context.save()
+        let service = TaskSubmissionService(context: fixture.context)
+        let review = TaskSubmissionReviewService(context: fixture.context)
+        let first = try service.submit(occurrence, at: fixture.now)
+        _ = try review.returnForRevision(occurrence, submissionID: first.submissionID, at: fixture.now)
+        fixture.scheduler.onAdd = {
+            let second = try service.submit(occurrence, at: fixture.now)
+            _ = try review.returnForRevision(occurrence, submissionID: second.submissionID, at: fixture.now)
+        }
+        await #expect(throws: TaskSnoozeError.submissionChanged(occurrence.id)) {
+            _ = try await fixture.service.schedule(occurrenceID: occurrence.id, at: fixture.now)
+        }
+        #expect(fixture.scheduler.pending.isEmpty)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<NotificationLink>()) == 0)
+        #expect(try TaskSubmissionHistory(context: fixture.context).records(for: occurrence.id).count == 2)
+    }
+
     @Test("稍后操作等待期间提交，不能复活等待实例的通知", arguments: [0, 1, 2])
     func submissionDuringSchedulingCannotLeaveRequest(stage: Int) async throws {
         let fixture = try Fixture()

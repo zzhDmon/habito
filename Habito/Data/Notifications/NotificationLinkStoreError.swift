@@ -6,4 +6,5 @@ nonisolated enum NotificationLinkStoreError: Error, Equatable {
     case invalidIdentifier(String)
     case invalidKind(identifier: String, rawValue: String)
     case inconsistentMapping(identifier: String)
+    case unsavedChanges
 }

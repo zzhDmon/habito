@@ -52,6 +52,7 @@ struct TaskSnoozeService {
     private func scheduleExclusively(occurrenceID: UUID, at now: Date) async throws -> Date {
         let occurrence = try fetchOccurrence(id: occurrenceID)
         try validateStatus(of: occurrence)
+        let submissionID = try TaskSubmissionHistory(context: context).latest(for: occurrence)?.id
         try Task.checkCancellation()
 
         let today = try LocalDate(date: now, calendar: calendar, timeZone: timeZone)
@@ -103,6 +104,7 @@ struct TaskSnoozeService {
         // 已删除的 SwiftData 对象仍可能保留缓存属性；必须按稳定 ID 重查，不能以旧对象状态证明实例存在。
         let latestOccurrence = try fetchOccurrence(id: occurrenceID)
         try validateStatus(of: latestOccurrence)
+        try validateSubmissionEpoch(of: latestOccurrence, expected: submissionID)
         let request = TaskNotificationRequest(
             occurrenceID: occurrenceID,
             kind: .snooze,
@@ -119,12 +121,15 @@ struct TaskSnoozeService {
             try Task.checkCancellation()
             // 系统 add 成功不保证权限仍有效；在保存映射前复核，失败沿用统一取消补偿。
             guard latestPermissions.canPresentAlerts else { throw TaskSnoozeError.notificationsUnavailable }
-            try validateStatus(of: fetchOccurrence(id: occurrenceID))
+            let latestOccurrence = try fetchOccurrence(id: occurrenceID)
+            try validateStatus(of: latestOccurrence)
+            try validateSubmissionEpoch(of: latestOccurrence, expected: submissionID)
             try NotificationLinkStore(context: context).upsert(
                 occurrenceID: occurrenceID,
                 kind: .snooze,
                 scheduledAt: scheduledAt,
-                createdAt: now
+                createdAt: now,
+                submissionEpochUpdate: .replace(submissionID)
             )
         } catch {
             // 系统请求已成功但映射失败时立即移除，避免留下无法审计和清理的孤立提醒。
@@ -136,6 +141,13 @@ struct TaskSnoozeService {
             throw error
         }
         return scheduledAt
+    }
+
+    /// 同一次稍后操作跨 await 仍必须属于同一提交轮次；快提交/快退回不能把旧 add 洗成新请求。
+    private func validateSubmissionEpoch(of occurrence: TaskOccurrence, expected: UUID?) throws {
+        guard try TaskSubmissionHistory(context: context).latest(for: occurrence)?.id == expected else {
+            throw TaskSnoozeError.submissionChanged(occurrence.id)
+        }
     }
 
     private func fetchOccurrence(id: UUID) throws -> TaskOccurrence {

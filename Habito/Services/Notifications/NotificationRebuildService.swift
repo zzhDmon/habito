@@ -191,6 +191,10 @@ struct NotificationRebuildService {
                 )
             }
             guard status == .pending else { return nil }
+            // waiting 没有另存一套实例状态，必须由已验证提交事实排除。
+            guard try TaskSubmissionHistory(context: context).latest(for: occurrence)?.reviewState != .waiting else {
+                return nil
+            }
             return NotificationSchedulingCandidate(
                 occurrenceID: occurrence.id,
                 date: date,
@@ -248,6 +252,11 @@ struct NotificationRebuildService {
                 )
             }
             guard status == .pending || status == .inProgress else { return nil }
+            let latestSubmission = try TaskSubmissionHistory(context: context).latest(for: occurrence)
+            // 同时解决等待清理与快退回复活：只有明确属于最新提交世代的槽位可以恢复。
+            guard latestSubmission?.reviewState != .waiting,
+                link.submissionIDAtScheduling == latestSubmission?.id
+            else { return nil }
             guard try occurrenceDate(occurrence) == today else { return nil }
             let scheduledDate = try LocalDate(
                 date: link.scheduledAt,
