@@ -6,6 +6,55 @@ import Testing
 @Suite("通知业务重建")
 @MainActor
 struct NotificationRebuildServiceTests {
+    @Test("新完成清理两种提醒，审计撤销仅恢复未过期主提醒", arguments: [false, true])
+    func auditedUndoRestoresOnlyFuturePrimary(afterReminder: Bool) async throws {
+        let fixture = try Fixture()
+        let template = try fixture.insertDailyTemplate()
+        template.xpReward = 11
+        template.coinReward = 7
+        template.activeBonusCoin = 3
+        try fixture.context.save()
+        _ = try await fixture.service.rebuild(at: fixture.now)
+        let occurrence = try #require(
+            fixture.context.fetch(FetchDescriptor<TaskOccurrence>()).first { $0.dateKey == "2026-09-27" })
+        let primary = NotificationRequestIdentifier(occurrenceID: occurrence.id, kind: .primary).rawValue
+        let snooze = NotificationRequestIdentifier(occurrenceID: occurrence.id, kind: .snooze).rawValue
+        _ = try await TaskSnoozeService(
+            context: fixture.context, scheduler: fixture.scheduler, permissionProvider: fixture.permissions,
+            calendar: fixture.calendar, timeZone: fixture.timeZone
+        ).schedule(occurrenceID: occurrence.id, at: fixture.now)
+        fixture.scheduler.delivered = [primary, snooze]
+        let completedAt = afterReminder ? occurrence.scheduledAt.addingTimeInterval(1) : fixture.now
+        let trigger = NotificationRebuildTrigger()
+        let model = TaskSessionViewModel(
+            occurrenceID: occurrence.id, context: fixture.context, calendar: fixture.calendar,
+            timeZone: fixture.timeZone, dateProvider: FixedDateProvider(value: completedAt),
+            notificationRebuildTrigger: trigger)
+        model.load()
+        model.completeTask()
+        #expect(trigger.revision == 1 && occurrence.status == .completed)
+        let result = try await fixture.service.rebuild(at: completedAt)
+        #expect(result.reconciliation.isSuccessful)
+        #expect(fixture.scheduler.pending[primary] == nil && fixture.scheduler.pending[snooze] == nil)
+        #expect(fixture.scheduler.delivered.isEmpty)
+        #expect(try NotificationLinkStore(context: fixture.context).links(occurrenceID: occurrence.id).isEmpty)
+        let undoAt = completedAt.addingTimeInterval(1)
+        let undoModel = TaskSessionViewModel(
+            occurrenceID: occurrence.id, context: fixture.context, calendar: fixture.calendar,
+            timeZone: fixture.timeZone, dateProvider: FixedDateProvider(value: undoAt),
+            notificationRebuildTrigger: trigger)
+        undoModel.load()
+        undoModel.undoCompletion()
+        #expect(trigger.revision == 2 && occurrence.status == .pending)
+        let restored = try await fixture.service.rebuild(at: undoAt)
+        #expect(restored.reconciliation.isSuccessful)
+        #expect((fixture.scheduler.pending[primary] != nil) == !afterReminder)
+        #expect(fixture.scheduler.pending[snooze] == nil && fixture.scheduler.delivered.isEmpty)
+        let record = try #require(fixture.context.fetch(FetchDescriptor<CompletionRecord>()).first)
+        #expect(record.revokedAt == undoAt && record.rewardSettlementVersion == 1)
+        #expect(try RewardLedgerService(context: fixture.context).balance() == RewardBalance(effectiveXP: 0, coins: 0))
+    }
+
     @Test("提前开始后清理主提醒，但已安排的稍后槽位仍按进行中规则保留")
     func startingTaskClearsPrimaryAndPreservesEligibleSnooze() async throws {
         let fixture = try Fixture()

@@ -84,6 +84,9 @@ struct HabitoApp: App {
         let timeZone = TimeZone.autoupdatingCurrent
         let rebuildTrigger = NotificationRebuildTrigger()
         let notificationOperationGate = NotificationOperationGate()
+        // 全家账本与完成/撤销共用主写上下文；服务通过工厂注入页面，不由 View 发奖。
+        let completionService = TaskCompletionService(context: container.mainContext)
+        let undoService = TaskCompletionUndoService(context: container.mainContext)
         _notificationRebuildTrigger = State(initialValue: rebuildTrigger)
         notificationRebuildService = NotificationRebuildService(
             context: container.mainContext,
@@ -119,7 +122,9 @@ struct HabitoApp: App {
                 timeZone: timeZone,
                 operationGate: notificationOperationGate
             ),
-            notificationRebuildTrigger: rebuildTrigger
+            notificationRebuildTrigger: rebuildTrigger,
+            completionService: completionService,
+            undoService: undoService
         )
         taskTemplateEditorModelFactory = TaskTemplateEditorViewModelFactory(
             context: container.mainContext,
@@ -149,7 +154,8 @@ struct HabitoApp: App {
                 calendar: calendar,
                 timeZone: timeZone,
                 dateProvider: dateProvider,
-                notificationRebuildTrigger: rebuildTrigger
+                notificationRebuildTrigger: rebuildTrigger,
+                completionService: completionService
             )
         )
         _parentCalendarModel = State(

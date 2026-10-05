@@ -7,11 +7,16 @@ struct ParentTodayTaskManagementService {
     private let context: ModelContext
     private var calendar: Calendar
     private let timeZone: TimeZone
+    private let completionService: TaskCompletionService
 
-    init(context: ModelContext, calendar: Calendar, timeZone: TimeZone) {
+    init(
+        context: ModelContext, calendar: Calendar, timeZone: TimeZone,
+        completionService: TaskCompletionService? = nil
+    ) {
         self.context = context
         self.calendar = calendar
         self.timeZone = timeZone
+        self.completionService = completionService ?? TaskCompletionService(context: context)
         self.calendar.timeZone = timeZone
     }
 
@@ -51,8 +56,7 @@ struct ParentTodayTaskManagementService {
 
     /// 由家长把待处理或已跳过实例更正为完成，不伪造计时时长。
     ///
-    /// 已跳过实例需要先恢复为待处理。两步操作共享同一未提交上下文；任一步失败时
-    /// 回滚整个事务，避免留下“已恢复但未完成”的中间状态。
+    /// 已跳过实例的恢复由完成用例拥有原子保存边界，不在本服务先改状态。
     func correctAsCompleted(occurrenceID: UUID, at now: Date) throws {
         let occurrence = try occurrence(id: occurrenceID)
         let status = try validatedStatus(of: occurrence)
@@ -68,20 +72,7 @@ struct ParentTodayTaskManagementService {
             )
         }
 
-        do {
-            if status == .skipped {
-                occurrence.statusRawValue = try status.applying(.restore).rawValue
-                occurrence.updatedAt = now
-            }
-            _ = try TaskProgressService(context: context).complete(
-                occurrence,
-                at: now,
-                source: .parentCorrection
-            )
-        } catch {
-            context.rollback()
-            throw error
-        }
+        _ = try completionService.correctAsCompleted(occurrence, at: now)
     }
 
     private func apply(

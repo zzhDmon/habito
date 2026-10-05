@@ -9,11 +9,15 @@ import SwiftData
 final class TaskSessionViewModel {
     private(set) var state: TaskSessionViewState = .loading
     private(set) var snoozeState: TaskSnoozeState = .idle
+    private(set) var actionFailure: TaskSessionActionFailure?
+    var isActionErrorPresented = false
 
     private let occurrenceID: UUID
     private let context: ModelContext
     private let queryService: TodayTaskQueryService
     private let progressService: TaskProgressService
+    private let completionService: TaskCompletionService
+    private let undoService: TaskCompletionUndoService
     private let dateProvider: any DateProviding
     private let snoozeService: TaskSnoozeService?
     private let notificationRebuildTrigger: NotificationRebuildTrigger
@@ -27,7 +31,9 @@ final class TaskSessionViewModel {
         timeZone: TimeZone,
         dateProvider: any DateProviding,
         snoozeService: TaskSnoozeService? = nil,
-        notificationRebuildTrigger: NotificationRebuildTrigger = NotificationRebuildTrigger()
+        notificationRebuildTrigger: NotificationRebuildTrigger = NotificationRebuildTrigger(),
+        completionService: TaskCompletionService? = nil,
+        undoService: TaskCompletionUndoService? = nil
     ) {
         self.occurrenceID = occurrenceID
         self.context = context
@@ -37,6 +43,8 @@ final class TaskSessionViewModel {
             timeZone: timeZone
         )
         progressService = TaskProgressService(context: context)
+        self.completionService = completionService ?? TaskCompletionService(context: context)
+        self.undoService = undoService ?? TaskCompletionUndoService(context: context)
         self.dateProvider = dateProvider
         self.snoozeService = snoozeService
         self.notificationRebuildTrigger = notificationRebuildTrigger
@@ -130,21 +138,22 @@ final class TaskSessionViewModel {
         }
     }
 
-    /// 由孩子手动完成任务，并把所有计时段的实际活动时长写入唯一完成记录。
+    /// 由孩子手动完成，计时、事实和奖励同一次保存，成功后才重建通知。
     func completeTask() {
         guard case let .loaded(content) = state, content.canComplete else { return }
 
         do {
-            _ = try progressService.complete(
+            let result = try completionService.complete(
                 fetchOccurrence(),
                 at: dateProvider.now(),
                 source: .childManual
             )
-            notificationRebuildTrigger.requestRebuild()
+            if result.didComplete { notificationRebuildTrigger.requestRebuild() }
             snoozeState = .idle
+            clearActionFailure()
             reload(showLoading: false)
         } catch {
-            handle(error)
+            handleActionFailure(error)
         }
     }
 
@@ -152,18 +161,39 @@ final class TaskSessionViewModel {
     func undoCompletion() {
         guard case let .loaded(content) = state else { return }
         let now = dateProvider.now()
-        guard content.canUndoCompletion(at: now) else {
+        guard content.canUndoCompletion(at: now), let completion = content.completion else {
             reload(showLoading: false)
             return
         }
 
         do {
-            try progressService.undoCompletion(of: fetchOccurrence(), at: now)
-            notificationRebuildTrigger.requestRebuild()
+            let result = try undoService.undo(fetchOccurrence(), completionID: completion.id, at: now)
+            if result.didUndo { notificationRebuildTrigger.requestRebuild() }
+            clearActionFailure()
             reload(showLoading: false)
         } catch {
-            handle(error)
+            handleActionFailure(error)
         }
+    }
+
+    private func clearActionFailure() {
+        actionFailure = nil
+        isActionErrorPresented = false
+    }
+
+    private func handleActionFailure(_ error: Error) {
+        logger.error("完成或撤销失败：\(String(describing: type(of: error)), privacy: .public)")
+        if case RewardLedgerError.insufficientCoins = error {
+            actionFailure = .insufficientCoins
+        } else if error is TaskCompletionServiceError || error is TaskCompletionUndoError
+            || error is TaskProgressServiceError || error is TaskSessionViewModelError || error is RewardLedgerError
+        {
+            actionFailure = .unavailable
+        } else {
+            actionFailure = .saveFailed
+        }
+        // 事务已保证失败不半写入，保留原页面事实，不能把已完成误显示成丢失。
+        isActionErrorPresented = true
     }
 
     private func reload(showLoading: Bool) {

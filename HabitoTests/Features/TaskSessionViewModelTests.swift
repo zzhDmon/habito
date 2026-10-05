@@ -198,7 +198,7 @@ struct TaskSessionViewModelTests {
         #expect(rebuildTrigger.revision == 1)
     }
 
-    @Test("完成后五秒内撤销会删除完成记录并恢复待处理")
+    @Test("完成后五秒内撤销保留审计记录并恢复待处理")
     func undoWithinWindowRestoresPendingState() throws {
         let fixture = try TodayQueryFixture()
         let occurrence = fixture.makeOccurrence(
@@ -227,7 +227,8 @@ struct TaskSessionViewModelTests {
         let content = try loadedContent(from: undoModel.state)
         #expect(content.task.status == .pending)
         #expect(content.completion == nil)
-        #expect(try completionRecords(in: fixture.context, occurrenceID: occurrence.id).isEmpty)
+        let records = try completionRecords(in: fixture.context, occurrenceID: occurrence.id)
+        #expect(records.count == 1 && records.first?.revokedAt == undoAt)
         #expect(try snapshot(in: fixture, at: undoAt).completedCount == 0)
         #expect(rebuildTrigger.revision == 1)
     }
@@ -257,6 +258,106 @@ struct TaskSessionViewModelTests {
         #expect(try loadedContent(from: expiredModel.state).task.status == .completed)
         #expect(try completionRecords(in: fixture.context, occurrenceID: occurrence.id).count == 1)
         #expect(try snapshot(in: fixture, at: expiredAt).completedCount == 1)
+    }
+
+    @Test("页面完成显式奖励只结算一次，撤销重完保留历史且今日只取当前事实")
+    func rewardCompletionUndoAndRecompletionUseCurrentFact() throws {
+        let fixture = try TodayQueryFixture()
+        let occurrence = fixture.makeOccurrence(
+            title: "显式奖励", scheduledAt: fixture.now.addingTimeInterval(60), status: .pending)
+        occurrence.xpRewardSnapshot = 11
+        occurrence.coinRewardSnapshot = 7
+        occurrence.activeBonusCoinSnapshot = 3
+        try fixture.context.save()
+        let trigger = NotificationRebuildTrigger()
+        let model = makeModel(
+            for: occurrence.id, fixture: fixture, now: fixture.now, notificationRebuildTrigger: trigger)
+        model.load()
+        model.completeTask()
+        let originalID = try #require(try loadedContent(from: model.state).completion?.id)
+        model.completeTask()
+        #expect(trigger.revision == 1)
+        #expect(
+            try RewardLedgerService(context: fixture.context).balance() == RewardBalance(effectiveXP: 11, coins: 10))
+        model.undoCompletion()
+        #expect(trigger.revision == 2 && occurrence.status == .pending)
+        #expect(try snapshot(in: fixture).completedCount == 0)
+        model.completeTask()
+        #expect(trigger.revision == 3)
+        let current = try #require(try loadedContent(from: model.state).completion)
+        #expect(current.id != originalID)
+        let history = try completionRecords(in: fixture.context, occurrenceID: occurrence.id)
+        #expect(history.count == 2 && history.count { $0.revokedAt != nil } == 1)
+        #expect(try snapshot(in: fixture).completedCount == 1)
+        #expect(
+            try RewardLedgerService(context: fixture.context).balance() == RewardBalance(effectiveXP: 11, coins: 10))
+    }
+
+    @Test("币不足撤销展示独立提示，原完成仍显示且不重建成功通知")
+    func insufficientCoinsKeepCompletedPageAndReportReason() throws {
+        let fixture = try TodayQueryFixture()
+        let occurrence = fixture.makeOccurrence(title: "已用奖励", scheduledAt: fixture.now, status: .pending)
+        occurrence.coinRewardSnapshot = 7
+        try fixture.context.save()
+        let trigger = NotificationRebuildTrigger()
+        let model = makeModel(
+            for: occurrence.id, fixture: fixture, now: fixture.now, notificationRebuildTrigger: trigger)
+        model.load()
+        model.completeTask()
+        let id = try #require(try loadedContent(from: model.state).completion?.id)
+        _ = try RewardLedgerService(context: fixture.context).spendCoins(
+            sourceID: V0MigrationFixture.pendingID, cost: 2, at: fixture.now)
+        model.undoCompletion()
+        #expect(model.actionFailure == .insufficientCoins && model.isActionErrorPresented)
+        #expect(try loadedContent(from: model.state).completion?.id == id)
+        #expect(occurrence.status == .completed && trigger.revision == 1)
+        #expect(try RewardLedgerService(context: fixture.context).balance().coins == 5)
+    }
+
+    @Test("完成和撤销保存失败保留原页面事实，明确未保存且不触发重建", arguments: [false, true])
+    func failedSaveDoesNotPublishSuccess(undo: Bool) throws {
+        let fixture = try TodayQueryFixture()
+        let occurrence = fixture.makeOccurrence(title: "保存边界", scheduledAt: fixture.now, status: .pending)
+        try fixture.context.save()
+        if undo {
+            _ = try TaskCompletionService(context: fixture.context).complete(
+                occurrence, at: fixture.now, source: .childManual)
+        }
+        let trigger = NotificationRebuildTrigger()
+        let save: (ModelContext) throws -> Void = { _ in throw NSError(domain: "HabitoSyntheticSave", code: 1) }
+        let model = TaskSessionViewModel(
+            occurrenceID: occurrence.id, context: fixture.context, calendar: fixture.calendar,
+            timeZone: fixture.timeZone, dateProvider: FixedDateProvider(value: fixture.now),
+            notificationRebuildTrigger: trigger,
+            completionService: TaskCompletionService(context: fixture.context, saveChanges: save),
+            undoService: TaskCompletionUndoService(context: fixture.context, saveChanges: save))
+        model.load()
+        if undo { model.undoCompletion() } else { model.completeTask() }
+        #expect(model.actionFailure == .saveFailed && model.isActionErrorPresented)
+        #expect(trigger.revision == 0 && !fixture.context.hasChanges)
+        #expect(try loadedContent(from: model.state).task.status == (undo ? .completed : .pending))
+        #expect(occurrence.status == (undo ? .completed : .pending))
+    }
+
+    @Test("旧页面撤销请求捕获原 ID，不误撤外部重完的新事实")
+    func stalePageUndoCannotRevokeNewFact() throws {
+        let fixture = try TodayQueryFixture()
+        let occurrence = fixture.makeOccurrence(title: "原事件", scheduledAt: fixture.now, status: .pending)
+        try fixture.context.save()
+        let completion = try TaskCompletionService(context: fixture.context).complete(
+            occurrence, at: fixture.now, source: .childManual)
+        let trigger = NotificationRebuildTrigger()
+        let model = makeModel(
+            for: occurrence.id, fixture: fixture, now: fixture.now, notificationRebuildTrigger: trigger)
+        model.load()
+        _ = try TaskCompletionUndoService(context: fixture.context).undo(
+            occurrence, completionID: completion.completionID, at: fixture.now)
+        let latest = try TaskCompletionService(context: fixture.context).complete(
+            occurrence, at: fixture.now, source: .childManual)
+        model.undoCompletion()
+        #expect(occurrence.status == .completed && occurrence.completionRecord?.id == latest.completionID)
+        #expect(try loadedContent(from: model.state).completion?.id == latest.completionID)
+        #expect(trigger.revision == 0 && !model.isActionErrorPresented)
     }
 
     private func makeModel(

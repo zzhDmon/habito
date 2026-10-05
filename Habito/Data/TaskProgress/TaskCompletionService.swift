@@ -3,7 +3,7 @@ import SwiftData
 
 /// 自行确认原子事务：计时终态、完成快照、XP 和 Coin 同时保存，失败同时回滚。
 ///
-/// 暂不用于正式 App 入口，须等审计撤销与查询/通知集成完成后统一切换。
+/// App 完成与家长自行确认更正共用此事务；通知与页面反馈只能在返回后触发。
 @MainActor
 struct TaskCompletionService {
     private let context: ModelContext
@@ -24,6 +24,21 @@ struct TaskCompletionService {
     /// - Returns: 保存后的稳定收据，didComplete 为 false 表示已有事实，不应重复庆祝。
     /// - Throws: 非自行确认、损坏、金额/时间无效、余额溢出或保存错误，状态不半成功。
     func complete(_ occurrence: TaskOccurrence, at now: Date, source: CompletionSource) throws -> TaskCompletionResult {
+        try perform(occurrence, at: now, source: source, restoringSkipped: false)
+    }
+
+    /// 家长更正允许恢复已跳过实例，但恢复、完成和奖励必须一次保存。
+    ///
+    /// - Important: 不先保存 pending 中间态；失败仍保持原 skipped 和奖励余额。
+    /// - Returns: 一次保存后的更正收据，沿用 parentCorrection 来源。
+    /// - Throws: 与普通完成一致的验证/保存错误，不能绕过家长验收配置。
+    func correctAsCompleted(_ occurrence: TaskOccurrence, at now: Date) throws -> TaskCompletionResult {
+        try perform(occurrence, at: now, source: .parentCorrection, restoringSkipped: true)
+    }
+
+    private func perform(
+        _ occurrence: TaskOccurrence, at now: Date, source: CompletionSource, restoringSkipped: Bool
+    ) throws -> TaskCompletionResult {
         guard occurrence.modelContext === context else { throw TaskCompletionServiceError.modelNotInContext }
         guard !context.hasChanges else { throw RewardLedgerError.pendingContextChanges }
         guard now.timeIntervalSinceReferenceDate.isFinite else { throw RewardLedgerError.invalidTimestamp }
@@ -39,7 +54,13 @@ struct TaskCompletionService {
             )
         ).map { ($0, $0.accumulatedActiveSeconds, $0.stateRawValue, $0.endedAt) }
         var stagedRecord: CompletionRecord?
+        var restoredSkipped = false
         do {
+            if restoringSkipped, occurrence.status == .skipped {
+                occurrence.statusRawValue = try TaskOccurrenceStatus.skipped.applying(.restore).rawValue
+                occurrence.updatedAt = now
+                restoredSkipped = true
+            }
             let progress = TaskProgressService(context: context)
             if let existing = try progress.completionRecord(for: occurrence), occurrence.status == .completed {
                 // 先由计时服务验证状态一致性；不读取当前奖励配置来重解释原提交。
@@ -71,6 +92,8 @@ struct TaskCompletionService {
             if let stagedRecord {
                 occurrence.completionRecord = nil
                 stagedRecord.occurrence = nil
+            }
+            if stagedRecord != nil || restoredSkipped {
                 // 旧 runtime 不总会同步恢复 Swift 层标量缓存；先恢复本事务实际修改的字段，
                 // 再回滚持久化边界。没有补偿性 save，也不会覆盖其他用户未提交编辑。
                 occurrence.statusRawValue = originalStatus

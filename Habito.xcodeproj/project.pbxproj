@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AB1000000000000000000065 /* TaskSessionActionFailure.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000065 /* TaskSessionActionFailure.swift */; };
 		AB1000000000000000000059 /* CompletionUndoPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000059 /* CompletionUndoPolicy.swift */; };
 		AB1000000000000000000060 /* TaskCompletionUndoResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000060 /* TaskCompletionUndoResult.swift */; };
 		AB1000000000000000000061 /* TaskCompletionUndoError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000061 /* TaskCompletionUndoError.swift */; };
@@ -303,6 +304,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AB2000000000000000000065 /* TaskSessionActionFailure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskSessionActionFailure.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000059 /* CompletionUndoPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CompletionUndoPolicy.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000060 /* TaskCompletionUndoResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskCompletionUndoResult.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000061 /* TaskCompletionUndoError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskCompletionUndoError.swift"; sourceTree = "<group>"; };
@@ -980,6 +982,7 @@
 				I20000000000000000000008 /* KidTaskSessionView.swift */,
 				M20000000000000000000006 /* TaskSessionLoadedView.swift */,
 				M20000000000000000000001 /* TaskSessionScreenContent.swift */,
+				AB2000000000000000000065 /* TaskSessionActionFailure.swift */,
 				Z20000000000000000000003 /* TaskSnoozeState.swift */,
 				M20000000000000000000002 /* TaskSessionViewState.swift */,
 				M20000000000000000000004 /* TaskSessionViewModel.swift */,
@@ -1376,6 +1379,7 @@
 				I10000000000000000000008 /* KidTaskSessionView.swift in Sources */,
 				M10000000000000000000006 /* TaskSessionLoadedView.swift in Sources */,
 				M10000000000000000000001 /* TaskSessionScreenContent.swift in Sources */,
+				AB1000000000000000000065 /* TaskSessionActionFailure.swift in Sources */,
 				M10000000000000000000002 /* TaskSessionViewState.swift in Sources */,
 				M10000000000000000000004 /* TaskSessionViewModel.swift in Sources */,
 				M10000000000000000000003 /* TaskSessionViewModelError.swift in Sources */,

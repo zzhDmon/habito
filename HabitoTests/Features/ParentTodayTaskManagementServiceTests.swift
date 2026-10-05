@@ -122,6 +122,71 @@ struct ParentTodayTaskManagementServiceTests {
         #expect(fixture.occurrence.completionRecord == nil)
     }
 
+    @Test("家长跳过更正显式奖励原子入账，来源和自主边界仍明确")
+    func skippedCorrectionSettlesExplicitRewards() throws {
+        let fixture = try Fixture(status: .skipped)
+        fixture.occurrence.xpRewardSnapshot = 11
+        fixture.occurrence.coinRewardSnapshot = 7
+        fixture.occurrence.activeBonusCoinSnapshot = 3
+        try fixture.context.save()
+        try fixture.service.correctAsCompleted(occurrenceID: fixture.occurrence.id, at: fixture.now)
+        let record = try #require(fixture.occurrence.completionRecord)
+        #expect(record.completionSource == .parentCorrection && record.completionTiming == .beforeReminder)
+        #expect(record.rewardSettlementVersion == 1 && record.settledCoinSnapshot == 10)
+        #expect(
+            try RewardLedgerService(context: fixture.context).balance() == RewardBalance(effectiveXP: 11, coins: 10))
+    }
+
+    @Test("家长跳过更正保存失败恢复 skipped，不留下中间恢复和奖励")
+    func failedSkippedCorrectionRestoresSkipped() throws {
+        let fixture = try Fixture(status: .skipped)
+        let originalUpdatedAt = fixture.occurrence.updatedAt
+        let service = ParentTodayTaskManagementService(
+            context: fixture.context, calendar: Calendar(identifier: .gregorian), timeZone: fixture.timeZone,
+            completionService: TaskCompletionService(
+                context: fixture.context,
+                saveChanges: { _ in
+                    throw NSError(domain: "HabitoSyntheticSave", code: 1)
+                }))
+        #expect(throws: NSError.self) {
+            try service.correctAsCompleted(occurrenceID: fixture.occurrence.id, at: fixture.now)
+        }
+        #expect(fixture.occurrence.status == .skipped && fixture.occurrence.updatedAt == originalUpdatedAt)
+        #expect(fixture.occurrence.completionRecord == nil && !fixture.context.hasChanges)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<CompletionRecord>()) == 0)
+        #expect(try RewardLedgerService(context: fixture.context).balance() == RewardBalance(effectiveXP: 0, coins: 0))
+    }
+
+    @Test("家长更正失败不触发通知重建且可见操作错误")
+    func failedParentCorrectionDoesNotRequestRebuild() throws {
+        let fixture = try Fixture(status: .skipped)
+        let trigger = NotificationRebuildTrigger()
+        let model = ParentTodayTaskViewModel(
+            context: fixture.context, calendar: Calendar(identifier: .gregorian), timeZone: fixture.timeZone,
+            dateProvider: FixedDateProvider(value: fixture.now), notificationRebuildTrigger: trigger,
+            completionService: TaskCompletionService(
+                context: fixture.context,
+                saveChanges: { _ in
+                    throw NSError(domain: "HabitoSyntheticSave", code: 1)
+                }))
+        model.load()
+        model.correctAsCompleted(occurrenceID: fixture.occurrence.id)
+        #expect(model.isActionErrorPresented && trigger.revision == 0)
+        #expect(fixture.occurrence.status == .skipped && !fixture.context.hasChanges)
+    }
+
+    @Test("家长更正不能绕过验收配置，拒绝后仍为原 skipped")
+    func skippedCorrectionCannotBypassApproval() throws {
+        let fixture = try Fixture(status: .skipped)
+        fixture.occurrence.verificationTypeSnapshotRawValue = TaskVerificationType.parentApproval.rawValue
+        try fixture.context.save()
+        #expect(throws: TaskCompletionServiceError.requiresParentApproval(fixture.occurrence.id)) {
+            try fixture.service.correctAsCompleted(occurrenceID: fixture.occurrence.id, at: fixture.now)
+        }
+        #expect(fixture.occurrence.status == .skipped && !fixture.context.hasChanges)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<CompletionRecord>()) == 0)
+    }
+
     private final class Fixture {
         let context: ModelContext
         let template: TaskTemplate

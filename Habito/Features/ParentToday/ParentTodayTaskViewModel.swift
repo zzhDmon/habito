@@ -23,7 +23,8 @@ final class ParentTodayTaskViewModel {
         calendar: Calendar,
         timeZone: TimeZone,
         dateProvider: any DateProviding,
-        notificationRebuildTrigger: NotificationRebuildTrigger = NotificationRebuildTrigger()
+        notificationRebuildTrigger: NotificationRebuildTrigger = NotificationRebuildTrigger(),
+        completionService: TaskCompletionService? = nil
     ) {
         var configuredCalendar = calendar
         configuredCalendar.timeZone = timeZone
@@ -35,7 +36,8 @@ final class ParentTodayTaskViewModel {
         managementService = ParentTodayTaskManagementService(
             context: context,
             calendar: configuredCalendar,
-            timeZone: timeZone
+            timeZone: timeZone,
+            completionService: completionService
         )
         self.dateProvider = dateProvider
         self.notificationRebuildTrigger = notificationRebuildTrigger

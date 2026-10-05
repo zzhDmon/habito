@@ -12,6 +12,7 @@ struct KidTaskSessionView: View {
     }
 
     var body: some View {
+        @Bindable var model = model
         Group {
             switch model.state {
             case .loading:
@@ -43,6 +44,10 @@ struct KidTaskSessionView: View {
         .navigationTitle("kidTask.navigationTitle")
         .navigationBarTitleDisplayMode(.inline)
         .background(.background)
+        .alert("taskSession.actionErrorTitle", isPresented: $model.isActionErrorPresented) {
+        } message: {
+            Text(LocalizedStringKey(model.actionFailure?.messageKey ?? "taskSession.actionSaveFailed"))
+        }
         .task(model.load)
         .onChange(of: scenePhase) { _, newPhase in
             if newPhase == .active {

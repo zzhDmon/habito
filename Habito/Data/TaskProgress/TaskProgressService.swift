@@ -103,7 +103,9 @@ struct TaskProgressService {
         return try activeDuration(of: (session, state), at: now)
     }
 
-    /// 完成任务并写入唯一完成记录；重复完成返回原记录。
+    /// 兼容 V0 夹具的无结算完成入口；正式 App 使用 TaskCompletionService。
+    ///
+    /// - Important: 不发奖，仅用于旧历史/迁移测试，不能与新奖励撤销入口混用。
     func complete(
         _ occurrence: TaskOccurrence,
         at now: Date,
@@ -118,7 +120,7 @@ struct TaskProgressService {
     /// 暂存完成和计时终态，让新结算用例与两种资产共享一次保存。
     ///
     /// - Important: 不自行保存；调用方必须拥有自动保存关闭与失败回滚边界。
-    ///   不传 rewardSnapshot 仍走旧零/未知写路径，App 入口暂不切换。
+    ///   不传 rewardSnapshot 仍走旧零/未知写路径，仅供旧历史兼容测试。
     func stageCompletion(
         _ occurrence: TaskOccurrence,
         at now: Date,
@@ -183,7 +185,7 @@ struct TaskProgressService {
         return record
     }
 
-    /// 撤销完成事实并把任务恢复为待处理；旧计时会话保持终态。
+    /// 兼容 V0 的删除式撤销，仅限旧夹具；正式 App 使用审计撤销服务。
     @discardableResult
     func undoCompletion(of occurrence: TaskOccurrence, at now: Date) throws -> Bool {
         let status = try validatedStatus(of: occurrence)

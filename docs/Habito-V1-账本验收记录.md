@@ -33,3 +33,14 @@
 - 新增 14 项撤销测试（18 次执行）；连同完成/计时/账本专项两系统各 **54/54（72 次）通过**，结果包：17.2 `/tmp/habito-v1-m1-001-ios17/Logs/Test/Test-Habito-2026.10.05_23-30-32-+0800.xcresult`；27 `/tmp/habito-v1-m1-001-ios27/Logs/Test/Test-Habito-2026.10.05_23-30-33-+0800.xcresult`。
 - 最终全量各 **256/256（316 次）通过**：17.2 `/tmp/habito-v1-m1-001-ios17/Logs/Test/Test-Habito-2026.10.05_23-31-15-+0800.xcresult`；27 `/tmp/habito-v1-m1-001-ios27/Logs/Test/Test-Habito-2026.10.05_23-31-16-+0800.xcresult`。零失败/跳过/runtime warning；Release 横屏构建、静态分析、严格格式、工程解析和差异检查通过。
 - swiftui-pro 数据/Swift/卫生复核：稳定事件 ID、可测试时间、主 actor 事务、只读 Sendable 收据、明确错误/中文边界注释，无第三方、无新默认。005 DONE；未改 schema、未切 App/通知入口，本卡无新 UI 证据。006 再统一切换与完整 UI 验收；正式家庭库/Keychain/旧包未操作。
+
+## 4. V1-M1-006：App 入口与通知集成
+
+- App 组合根装配同主 context 的完成/审计撤销服务，经工厂注入孩子页面与家长更正服务。App 无旧完成/删除撤销调用，旧入口只为 V0 夹具保留兼容说明。didComplete/didUndo 为真且保存返回后才发通知重建事件，重复点击不重复成功事件。
+- 家长 skipped 更正的恢复由完成服务拥有：原 skipped → 暂存 pending → 完成/奖励一次保存；失败（含配置要求家长验收）恢复 skipped 与原更新时刻，不保存中间态。原来源 parentCorrection 和实际计时语义保留，不能绕过验收配置。
+- Today 查询仅取未撤销事实，只读完成值带事件 ID。旧页面抓到旧事实后，外部撤销/重完不会让旧请求误撤新事实。撤销后当前进度不包含旧历史；重完可同时保留两条审计事实。
+- 页面错误不覆盖已加载事实：Coin 不足解释奖励已使用；保存失败说明任务/奖励未变；不支持操作另有提示。系统 alert/简体中文目录、语义按钮与 @Bindable 原生数据流，没有 View 账本写入、新依赖或新增未确认数值。
+- 通知显式奖励集成验证主提醒/稍后/已送达卡片清理；审计撤销仅恢复未来主提醒，不补发过期主提醒，不复活旧稍后提醒；失败不触发成功重建。没有把系统提醒排程当作真机实际送达。
+- 最终两系统完整单测各 **265/265（327 次）通过**：17.2 `/tmp/habito-v1-m1-001-ios17/Logs/Test/Test-Habito-2026.10.05_23-45-10-+0800.xcresult`；27 `/tmp/habito-v1-m1-001-ios27/Logs/Test/Test-Habito-2026.10.05_23-46-03-+0800.xcresult`。零失败/跳过/runtime warning。
+- 完整横屏 UI 各 **16/16 通过**：17.2 `/tmp/habito-v1-m1-001-ios17/Logs/Test/Test-Habito-2026.10.05_23-40-10-+0800.xcresult`（239.365 秒）；27 `/tmp/habito-v1-m1-001-ios27/Logs/Test/Test-Habito-2026.10.05_23-40-11-+0800.xcresult`（321.507 秒）。17 无 runtime warning；27 保留 16 条已登记 R-009，不修改已确认横屏策略。UI 后补通知/旧页面/验收拒绝单测与缺失任务错误分类，最终单测再次跑完；未改变 UI 布局。
+- Release 横屏构建、静态分析、工程解析、JSON 中文目录检查、严格格式与差异检查通过。swiftui-pro 专项复核：主 actor/@Observable 数据流、原生可访问 alert、共享撤销领域窗口、事实 ID、保存后反馈与原子家长更正；已修旧入口“App 尚未切换”的失效注释。006 DONE；奖励反馈 UI/家长验收/宠物/统计仍待后续，正式家庭数据/凭据/旧包未操作。

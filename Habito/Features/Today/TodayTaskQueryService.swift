@@ -194,7 +194,7 @@ struct TodayTaskQueryService {
     private func completion(for occurrence: TaskOccurrence) throws -> TodayTaskCompletion? {
         let occurrenceID = occurrence.id
         let descriptor = FetchDescriptor<CompletionRecord>(
-            predicate: #Predicate { $0.occurrenceID == occurrenceID }
+            predicate: #Predicate { $0.occurrenceID == occurrenceID && $0.revokedAt == nil }
         )
         let records = try context.fetch(descriptor)
         guard records.count <= 1 else {
@@ -214,6 +214,7 @@ struct TodayTaskQueryService {
             )
         }
         return TodayTaskCompletion(
+            id: record.id,
             completedAt: record.completedAt,
             activeDurationSeconds: record.activeDurationSeconds,
             source: source

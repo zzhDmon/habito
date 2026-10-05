@@ -2821,6 +2821,50 @@
         }
       }
     },
+    "taskSession.actionErrorTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这次操作没有完成"
+          }
+        }
+      }
+    },
+    "taskSession.actionSaveFailed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "没有保存成功，任务和奖励没有改变。请再试一次。"
+          }
+        }
+      }
+    },
+    "taskSession.actionUnavailable" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "现在不能这样操作。任务和奖励没有改变，请刷新或请家长帮忙。"
+          }
+        }
+      }
+    },
+    "taskSession.undoInsufficientCoins" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "奖励币已经用了，剩下的币不够撤销。打卡仍然保留，请家长帮忙。"
+          }
+        }
+      }
+    },
     "taskSession.errorDescription" : {
       "extractionState" : "manual",
       "localizations" : {

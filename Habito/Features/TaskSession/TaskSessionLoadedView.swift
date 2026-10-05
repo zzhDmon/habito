@@ -355,6 +355,7 @@ private enum TaskSessionDurationText {
                 activeDurationAtSnapshot: 780,
                 snapshotAt: .now,
                 completion: TodayTaskCompletion(
+                    id: UUID(uuid: (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1)),
                     completedAt: .now,
                     activeDurationSeconds: 780,
                     source: .childManual

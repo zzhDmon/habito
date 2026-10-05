@@ -19,8 +19,6 @@ struct TaskSessionScreenContent: Equatable, Sendable {
     let snapshotAt: Date
     let completion: TodayTaskCompletion?
 
-    private static let undoWindow: TimeInterval = 5
-
     var primaryAction: PrimaryAction {
         switch (task.status, activeSessionState) {
         case (.pending, nil):
@@ -45,13 +43,13 @@ struct TaskSessionScreenContent: Equatable, Sendable {
     /// 孩子侧撤销窗口以持久化完成时间为起点，页面重建不会重置倒计时。
     func canUndoCompletion(at now: Date) -> Bool {
         guard task.status == .completed, let completion else { return false }
-        return now < completion.completedAt.addingTimeInterval(Self.undoWindow)
+        return CompletionUndoPolicy.canUndo(completedAt: completion.completedAt, now: now)
     }
 
     /// 返回撤销按钮应显示的剩余整秒数，窗口外固定为零。
     func undoRemainingSeconds(at now: Date) -> Int {
-        guard let completion else { return 0 }
-        let deadline = completion.completedAt.addingTimeInterval(Self.undoWindow)
+        guard canUndoCompletion(at: now), let completion else { return 0 }
+        let deadline = completion.completedAt.addingTimeInterval(CompletionUndoPolicy.window)
         return max(0, Int(ceil(deadline.timeIntervalSince(now))))
     }
 
