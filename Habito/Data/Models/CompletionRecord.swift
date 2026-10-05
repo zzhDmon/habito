@@ -23,8 +23,13 @@ final class CompletionRecord {
     private(set) var settledCoinSnapshot: Int = 0
     /// 0 表示旧写路径，1 表示新事务已冻结并结算；不以金额是否为零判断是否结算。
     private(set) var rewardSettlementVersion: Int = 0
-    /// 撤销保留原记录与事件 ID；具体业务合法性由下一阶段撤销用例校验。
+    /// 撤销保留原记录与事件 ID；审计撤销用例负责校验余额、窗口与原交易。
     var revokedAt: Date?
+
+    /// 家长验收关联哪次提交；旧记录保持空，不能从当前配置补造提交。
+    private(set) var submissionID: UUID?
+    /// 真实入账时刻与 completedAt 的提交事实分开；旧自行确认仍按原完成时刻核对。
+    private(set) var rewardSettledAt: Date?
 
     var occurrence: TaskOccurrence?
 
@@ -46,7 +51,9 @@ final class CompletionRecord {
         activeBonusCoinSnapshot: Int = 0,
         settledCoinSnapshot: Int = 0,
         rewardSettlementVersion: Int = 0,
-        revokedAt: Date? = nil
+        revokedAt: Date? = nil,
+        submissionID: UUID? = nil,
+        rewardSettledAt: Date? = nil
     ) {
         self.id = id
         self.occurrenceID = occurrenceID
@@ -63,6 +70,8 @@ final class CompletionRecord {
         self.settledCoinSnapshot = settledCoinSnapshot
         self.rewardSettlementVersion = rewardSettlementVersion
         self.revokedAt = revokedAt
+        self.submissionID = submissionID
+        self.rewardSettledAt = rewardSettledAt
     }
 
     var completionTiming: CompletionTiming? { CompletionTiming(rawValue: completionTimingRawValue) }

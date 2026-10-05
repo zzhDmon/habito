@@ -3,11 +3,12 @@ import Testing
 
 @Suite("SwiftData 容器")
 struct AppModelContainerTests {
-    @Test("内存容器包含当前八个任务模型与两个交易模型")
+    @Test("内存容器包含八个任务模型、两个交易模型与提交审计模型")
     func createsInMemoryContainerWithCompleteSchema() throws {
         _ = try AppModelContainer.make(inMemory: true)
 
-        #expect(AppModelContainer.schema.entities.count == 10)
+        #expect(AppModelContainer.schema.entities.count == 11)
+        #expect(HabitoSchemaV3.models.count == 10)
     }
 
     @Test("家长 PIN 只记录固定 Keychain 账户引用")

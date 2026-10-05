@@ -7,6 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AB1000000000000000000066 /* HabitoSchemaV4.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000066 /* HabitoSchemaV4.swift */; };
+		AB1000000000000000000067 /* SubmissionReviewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000067 /* SubmissionReviewState.swift */; };
+		AB1000000000000000000068 /* TaskSubmission.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000068 /* TaskSubmission.swift */; };
+		AB1000000000000000000069 /* HabitoSchemaV3+TaskTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000069 /* HabitoSchemaV3+TaskTemplate.swift */; };
+		AB1000000000000000000070 /* HabitoSchemaV3+ReminderRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000070 /* HabitoSchemaV3+ReminderRule.swift */; };
+		AB1000000000000000000071 /* HabitoSchemaV3+TaskOccurrence.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000071 /* HabitoSchemaV3+TaskOccurrence.swift */; };
+		AB1000000000000000000072 /* HabitoSchemaV3+CompletionRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000072 /* HabitoSchemaV3+CompletionRecord.swift */; };
+		AB1000000000000000000073 /* HabitoSchemaV3+TimerSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000073 /* HabitoSchemaV3+TimerSession.swift */; };
+		AB1000000000000000000074 /* HabitoSchemaV3+DayOverride.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000074 /* HabitoSchemaV3+DayOverride.swift */; };
+		AB1000000000000000000075 /* HabitoSchemaV3+NotificationLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000075 /* HabitoSchemaV3+NotificationLink.swift */; };
+		AB1000000000000000000076 /* HabitoSchemaV3+AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000076 /* HabitoSchemaV3+AppSettings.swift */; };
+		AB1000000000000000000077 /* HabitoSchemaV3+XPTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000077 /* HabitoSchemaV3+XPTransaction.swift */; };
+		AB1000000000000000000078 /* HabitoSchemaV3+CoinTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000078 /* HabitoSchemaV3+CoinTransaction.swift */; };
+		AB1000000000000000000079 /* V3MigrationFixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000079 /* V3MigrationFixture.swift */; };
+		AB1000000000000000000080 /* SubmissionAuditMigrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000080 /* SubmissionAuditMigrationTests.swift */; };
 		AB1000000000000000000065 /* TaskSessionActionFailure.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000065 /* TaskSessionActionFailure.swift */; };
 		AB1000000000000000000059 /* CompletionUndoPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000059 /* CompletionUndoPolicy.swift */; };
 		AB1000000000000000000060 /* TaskCompletionUndoResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000060 /* TaskCompletionUndoResult.swift */; };
@@ -304,6 +319,21 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AB2000000000000000000066 /* HabitoSchemaV4.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV4.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000067 /* SubmissionReviewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SubmissionReviewState.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000068 /* TaskSubmission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskSubmission.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000069 /* HabitoSchemaV3+TaskTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV3+TaskTemplate.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000070 /* HabitoSchemaV3+ReminderRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV3+ReminderRule.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000071 /* HabitoSchemaV3+TaskOccurrence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV3+TaskOccurrence.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000072 /* HabitoSchemaV3+CompletionRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV3+CompletionRecord.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000073 /* HabitoSchemaV3+TimerSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV3+TimerSession.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000074 /* HabitoSchemaV3+DayOverride.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV3+DayOverride.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000075 /* HabitoSchemaV3+NotificationLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV3+NotificationLink.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000076 /* HabitoSchemaV3+AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV3+AppSettings.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000077 /* HabitoSchemaV3+XPTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV3+XPTransaction.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000078 /* HabitoSchemaV3+CoinTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV3+CoinTransaction.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000079 /* V3MigrationFixture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "V3MigrationFixture.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000080 /* SubmissionAuditMigrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SubmissionAuditMigrationTests.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000065 /* TaskSessionActionFailure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskSessionActionFailure.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000059 /* CompletionUndoPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CompletionUndoPolicy.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000060 /* TaskCompletionUndoResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskCompletionUndoResult.swift"; sourceTree = "<group>"; };
@@ -611,6 +641,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AB5000000000000000000006 /* SchemaV3 */ = {
+			isa = PBXGroup;
+			children = (
+				AB2000000000000000000069 /* HabitoSchemaV3+TaskTemplate.swift */,
+				AB2000000000000000000070 /* HabitoSchemaV3+ReminderRule.swift */,
+				AB2000000000000000000071 /* HabitoSchemaV3+TaskOccurrence.swift */,
+				AB2000000000000000000072 /* HabitoSchemaV3+CompletionRecord.swift */,
+				AB2000000000000000000073 /* HabitoSchemaV3+TimerSession.swift */,
+				AB2000000000000000000074 /* HabitoSchemaV3+DayOverride.swift */,
+				AB2000000000000000000075 /* HabitoSchemaV3+NotificationLink.swift */,
+				AB2000000000000000000076 /* HabitoSchemaV3+AppSettings.swift */,
+				AB2000000000000000000077 /* HabitoSchemaV3+XPTransaction.swift */,
+				AB2000000000000000000078 /* HabitoSchemaV3+CoinTransaction.swift */,
+			);
+			path = SchemaV3;
+			sourceTree = "<group>";
+		};
 		AB5000000000000000000005 /* SchemaV2 */ = {
 			isa = PBXGroup;
 			children = (
@@ -736,6 +783,8 @@
 			isa = PBXGroup;
 			children = (
 				A20000000000000000000004 /* AppModelContainer.swift */,
+				AB2000000000000000000066 /* HabitoSchemaV4.swift */,
+				AB5000000000000000000006 /* SchemaV3 */,
 				AB2000000000000000000051 /* HabitoSchemaV3.swift */,
 				AB5000000000000000000005 /* SchemaV2 */,
 				AB2000000000000000000027 /* HabitoSchemaV2.swift */,
@@ -1118,6 +1167,7 @@
 			isa = PBXGroup;
 			children = (
 				C20000000000000000000004 /* CompletionSource.swift */,
+				AB2000000000000000000067 /* SubmissionReviewState.swift */,
 				AB2000000000000000000059 /* CompletionUndoPolicy.swift */,
 				AB2000000000000000000060 /* TaskCompletionUndoResult.swift */,
 				AB2000000000000000000055 /* TaskCompletionResult.swift */,
@@ -1165,6 +1215,7 @@
 				AB2000000000000000000030 /* XPTransaction.swift */,
 				AB2000000000000000000031 /* CoinTransaction.swift */,
 				D20000000000000000000006 /* CompletionRecord.swift */,
+				AB2000000000000000000068 /* TaskSubmission.swift */,
 				D20000000000000000000008 /* DayOverride.swift */,
 				D20000000000000000000009 /* NotificationLink.swift */,
 				D20000000000000000000004 /* ReminderRule.swift */,
@@ -1202,6 +1253,8 @@
 				AB2000000000000000000064 /* TaskCompletionUndoServiceTests.swift */,
 				AB2000000000000000000052 /* CompletionAuditMigrationTests.swift */,
 				AB2000000000000000000053 /* V2MigrationFixture.swift */,
+				AB2000000000000000000079 /* V3MigrationFixture.swift */,
+				AB2000000000000000000080 /* SubmissionAuditMigrationTests.swift */,
 				AB2000000000000000000010 /* V0MigrationFixture.swift */,
 				AB2000000000000000000011 /* HabitoSchemaV0Tests.swift */,
 				H20000000000000000000002 /* M1DataKernelIntegrationTests.swift */,
@@ -1524,6 +1577,19 @@
 				K10000000000000000000005 /* TodayViewModel.swift in Sources */,
 				C10000000000000000000003 /* Weekday.swift in Sources */,
 				A10000000000000000000004 /* AppModelContainer.swift in Sources */,
+				AB1000000000000000000066 /* HabitoSchemaV4.swift in Sources */,
+				AB1000000000000000000067 /* SubmissionReviewState.swift in Sources */,
+				AB1000000000000000000068 /* TaskSubmission.swift in Sources */,
+				AB1000000000000000000069 /* HabitoSchemaV3+TaskTemplate.swift in Sources */,
+				AB1000000000000000000070 /* HabitoSchemaV3+ReminderRule.swift in Sources */,
+				AB1000000000000000000071 /* HabitoSchemaV3+TaskOccurrence.swift in Sources */,
+				AB1000000000000000000072 /* HabitoSchemaV3+CompletionRecord.swift in Sources */,
+				AB1000000000000000000073 /* HabitoSchemaV3+TimerSession.swift in Sources */,
+				AB1000000000000000000074 /* HabitoSchemaV3+DayOverride.swift in Sources */,
+				AB1000000000000000000075 /* HabitoSchemaV3+NotificationLink.swift in Sources */,
+				AB1000000000000000000076 /* HabitoSchemaV3+AppSettings.swift in Sources */,
+				AB1000000000000000000077 /* HabitoSchemaV3+XPTransaction.swift in Sources */,
+				AB1000000000000000000078 /* HabitoSchemaV3+CoinTransaction.swift in Sources */,
 				AB1000000000000000000059 /* CompletionUndoPolicy.swift in Sources */,
 				AB1000000000000000000060 /* TaskCompletionUndoResult.swift in Sources */,
 				AB1000000000000000000061 /* TaskCompletionUndoError.swift in Sources */,
@@ -1594,6 +1660,8 @@
 				AB1000000000000000000064 /* TaskCompletionUndoServiceTests.swift in Sources */,
 				AB1000000000000000000052 /* CompletionAuditMigrationTests.swift in Sources */,
 				AB1000000000000000000053 /* V2MigrationFixture.swift in Sources */,
+				AB1000000000000000000079 /* V3MigrationFixture.swift in Sources */,
+				AB1000000000000000000080 /* SubmissionAuditMigrationTests.swift in Sources */,
 				AB1000000000000000000010 /* V0MigrationFixture.swift in Sources */,
 				AB1000000000000000000011 /* HabitoSchemaV0Tests.swift in Sources */,
 				W10000000000000000000006 /* ParentCalendarDayServiceTests.swift in Sources */,

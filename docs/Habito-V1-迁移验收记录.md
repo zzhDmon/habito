@@ -60,3 +60,15 @@
 - 新测试只验证合成结构允许多条历史，未实现真实撤销/重完事务；没有把手工模型写入说成发奖或冲正完成。未来 004B/005/006 的原子写入、计时、窗口、通知和入口各有验收。未读取家庭库、真实 PIN 或修改真机包。
 - 补齐“改单日提醒/奖励不能改写已提交快照”后，最终全量重新运行，两系统仍各 **226/226（279 次）**，零失败/跳过/runtime warning：17.2 `/tmp/habito-v1-m1-001-ios17/Logs/Test/Test-Habito-2026.10.05_22-47-32-+0800.xcresult`；27 `/tmp/habito-v1-m1-001-ios27/Logs/Test/Test-Habito-2026.10.05_22-48-32-+0800.xcresult`。
 - 完整横屏 UI 各 **16/16**，零失败/跳过：17.2 `/tmp/habito-v1-m1-001-ios17/Logs/Test/Test-Habito-2026.10.05_22-42-45-+0800.xcresult`（237.437 秒、无 runtime warning）；27 `/tmp/habito-v1-m1-001-ios27/Logs/Test/Test-Habito-2026.10.05_22-42-46-+0800.xcresult`（319.146 秒、保留 16 条 R-009）。自动化桥仍不代替真机送达证据。swiftui-pro 数据/并发/卫生复核与严格格式通过，004A DONE。
+
+## 5. V1-M3-001A：家长提交审计兼容结构
+
+- 从 6ac9c83 独立冻结结构 4.0.0 十模型到 SchemaV3；逐一提取后去除命名空间缩进与源文本机械核对通过，字段/约束/关系/默认未变。1～3 结构定义未动。当前结构 5.0.0 增 TaskSubmission，完成事实新增可空 submissionID/rewardSettledAt；迁移顺序明确 1 → 2 → 3 → 4 → 5。
+- 每次提交有稳定 ID/实例外键、递增序号和业务键、原提交/提醒/奖励/时长快照及 waiting/approved/returned 结果。提交快照外部只读，审核结果由后续用例维护；同时间提交用序号区分，不靠时间排序。没有级联关系，实例删除不抹掉提交审计；待审核实例保护由 003 接入，不在本卡开放提交入口。
+- completedAt 保留孩子真实提交事实，rewardSettledAt 单列家长实际结算时刻；自主性绝不使用审核时间。旧记录两个新增字段均空，不补造旧提交、审核或奖励，不改旧任务 status 原始值；等待状态以后由提交事实派生，不另建一套可漂移任务状态。
+- 独立 V0/2.0.0/3.0.0/4.0.0 SQLite 迁移与三次重开：原完成 ID/关系、已发及已冲正账本的稳定交易 ID/金额、撤销记录、暂停计时、PIN 非敏感引用保持；提交为空。另覆盖空旧库、合成多次提交/审核关联/快照重开、相同提交时刻、实例删除保留审计、waiting 零奖励重开仍无完成与无到账且自主已知。
+- 手工合成审核关联只证明结构持久化，不冒充真实通过/结算事务，尤其不因关联存在就补账；001B/002 将验证计时、状态、奖励的一次保存。无家庭 DB、真实 Keychain 或旧包操作，未设置默认产品数值。
+- 注册阶段曾误将 SchemaV3 group 放入 source build phase，两系统工程解析失败、尚未执行测试；已修为 group 只在目录树，源码列表只放 BuildFile。该失败不是迁移失败、不算通过；随后真实双系统迁移专项各 **14/14（23 次）通过**：17.2 `/tmp/habito-v1-m1-001-ios17/Logs/Test/Test-Habito-2026.10.05_23-58-45-+0800.xcresult`；27 `/tmp/habito-v1-m1-001-ios27/Logs/Test/Test-Habito-2026.10.05_23-58-47-+0800.xcresult`，零失败/跳过/runtime warning。
+- 后补固定交易 ID 与 waiting 重开断言后，最终完整两系统各 **270/270（335 次）通过**：17.2 `/tmp/habito-v1-m1-001-ios17/Logs/Test/Test-Habito-2026.10.06_00-05-53-+0800.xcresult`；27 `/tmp/habito-v1-m1-001-ios27/Logs/Test/Test-Habito-2026.10.06_00-07-25-+0800.xcresult`，零失败/跳过/runtime warning。
+- 完整横屏 UI 各 **16/16**：17.2 `/tmp/habito-v1-m1-001-ios17/Logs/Test/Test-Habito-2026.10.06_00-00-53-+0800.xcresult`（235.166 秒，无 runtime warning）；27 `/tmp/habito-v1-m1-001-ios27/Logs/Test/Test-Habito-2026.10.06_00-00-54-+0800.xcresult`（318.298 秒，保留 16 条 R-009），零失败/跳过。UI 后仅补结构单测及修正失效注释，没有改 App 行为或布局；最终单测再次运行覆盖新增断言。
+- Release 横屏构建、静态分析、严格格式、工程解析/差异检查通过；swiftui-pro 数据/Swift/卫生复核保持主 actor 模型/上下文、固定时间、原生 SwiftData、稳定外键与中文 DocC，更新当前撤销字段失效注释，不改冻结历史。001A DONE；待验收 UI、审批事务和更强反馈仍未完成，V0 真机 B 不放行。
