@@ -27,3 +27,15 @@
 | DayOverride | 628fe01b64c1d8b625b2592e33aebdf578a6b53801b0dcc107cd71365feb4937 |
 | NotificationLink | 88e35fc3184b6e090acbbc1bde8d1aea4dfb020f5bde7df71d0f7e6f968c1058 |
 | AppSettings | 2707162b902ca3519590304f494181cf1a35432c554abc3cd89f2beccfd7f99c |
+
+## 2. V1-M1-002：兼容字段与显式轻量迁移
+
+- HabitoSchemaV1 使用结构版本 2.0.0，显式计划从独立 HabitoSchemaV0 的 1.0.0 演进。正式容器组合根接入该计划；没有删库重建、迁移失败重试覆盖或真实家庭库读取。AppSettings.schemaVersion 原业务值保持 1，不冒充 SwiftData 版本元数据。
+- 模板新增分类/时间段/验收原始值及三项显式奖励配置；实例有对应独立快照和可空计划/截止；规则保留原提醒字段并增可空计划/截止分钟；完成增加自主性原始值。兼容默认只为 unassigned/allDay/selfConfirm/0/unknown，未预埋分类奖励、食物或宠物参数。
+- 领域四类型独立文件、英文标识和中文 DocC；无效原始值返回 nil，不用合法旧库默认掩盖损坏。自主判定纯函数只接受提交与提醒快照，严格早于才自主。
+- 冻结 V0 保持不变。原第一阶段的“当前 V0 反向读取”已取得历史证据；当前 App 已演进，旧生成器必须继续使用独立 V0 类型，不能使用更新后的 AppModelContainer 冒充原 schema。原先对象图重开测试继续验证完整旧字段、关系和稳定 ID，不删除以掩盖迁移问题。
+- 专项双系统各 **10/10（20 次执行）通过**，包含旧库/空库的非版本与版本元数据、新库显式配置持久化/模板编辑后实例保持、损坏原始值、三个时间边界、损坏磁盘文件拒绝且主文件不变，以及冻结 schema 的完整对象图回归。17.2 `/tmp/habito-v1-m1-001-ios17/Logs/Test/Test-Habito-2026.10.05_21-58-39-+0800.xcresult`；27 `/tmp/habito-v1-m1-001-ios27/Logs/Test/Test-Habito-2026.10.05_21-58-40-+0800.xcresult`；零失败/跳过/runtime warning。
+- 完整单测双系统各 **203/203（242 次执行）通过**，零失败/跳过/runtime warning：17.2 `/tmp/habito-v1-m1-001-ios17/Logs/Test/Test-Habito-2026.10.05_21-59-59-+0800.xcresult`；27 `/tmp/habito-v1-m1-001-ios27/Logs/Test/Test-Habito-2026.10.05_22-00-00-+0800.xcresult`。静态分析、Release 横屏构建、严格格式与工程解析通过；完整横屏 UI 收尾中。
+- 不将数据层快照当成业务提交事务：当前 UI 仍是 V0 完成入口，实际新提交自主性写入、奖励结算、提交历史与家长验收在后续用例卡接入。此阶段只提供可持久化参数和纯判定，不宣称验收/奖励已可用；测试的 11/7/3 等显式输入不是产品默认。
+- 下次模型变更前要先冻结本版八模型，避免当前 HabitoSchemaV1 的类型随未来字段变化而改写结构版本 2.0.0。后续账本 schema 卡必须以稳定旧版本为输入，保留这次迁移结果再验证。
+- 最终横屏 UI 双系统各 **16/16**，零失败/跳过：17.2 `/tmp/habito-v1-m1-001-ios17/Logs/Test/Test-Habito-2026.10.05_22-00-33-+0800.xcresult`（238.422 秒，无 runtime warning）；27 `/tmp/habito-v1-m1-001-ios27/Logs/Test/Test-Habito-2026.10.05_22-00-34-+0800.xcresult`（实际时长见包摘要，保留 16 条 R-009 全屏方向提示）。未以 UI 点击桥代替系统送达，未以成功命令代替断言数量。swiftui-pro 复核数据流、严格并发和系统边界通过，App UI 本次未新增页面。

@@ -16,6 +16,9 @@ final class ReminderRule {
     var startDateKey: String
     var endDateKey: String?
     var isEnabled: Bool
+    /// 计划与截止可空；原 timeOfDayMinutes 仍是提醒，新增属性不重新解释旧时刻。
+    var plannedTimeOfDayMinutes: Int?
+    var deadlineTimeOfDayMinutes: Int?
 
     var taskTemplate: TaskTemplate?
 
@@ -24,7 +27,9 @@ final class ReminderRule {
         taskTemplateID: UUID,
         recurrence: TaskRecurrence,
         timeOfDayMinutes: Int,
-        isEnabled: Bool = true
+        isEnabled: Bool = true,
+        plannedTimeOfDayMinutes: Int? = nil,
+        deadlineTimeOfDayMinutes: Int? = nil
     ) {
         self.id = id
         self.taskTemplateID = taskTemplateID
@@ -37,6 +42,8 @@ final class ReminderRule {
         self.startDateKey = recurrence.startDate.dateKey
         self.endDateKey = recurrence.endDate?.dateKey
         self.isEnabled = isEnabled
+        self.plannedTimeOfDayMinutes = plannedTimeOfDayMinutes
+        self.deadlineTimeOfDayMinutes = deadlineTimeOfDayMinutes
     }
 
     /// 无法识别的原始值返回 `nil`，让数据迁移或诊断层明确处理，而不是静默猜测。

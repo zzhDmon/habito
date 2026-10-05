@@ -11,6 +11,8 @@ final class CompletionRecord {
     var completionSourceRawValue: String
     var createdAt: Date
     var updatedAt: Date
+    /// 旧记录缺少自主性证据，迁移保持未知；新用例须提供提交时刻的判定，不能回算旧历史。
+    var completionTimingRawValue: String = "unknown"
 
     var occurrence: TaskOccurrence?
 
@@ -21,7 +23,8 @@ final class CompletionRecord {
         activeDurationSeconds: TimeInterval,
         completionSource: CompletionSource,
         createdAt: Date = .now,
-        updatedAt: Date = .now
+        updatedAt: Date = .now,
+        completionTiming: CompletionTiming = .unknown
     ) {
         self.id = id
         self.occurrenceID = occurrenceID
@@ -30,7 +33,10 @@ final class CompletionRecord {
         self.completionSourceRawValue = completionSource.rawValue
         self.createdAt = createdAt
         self.updatedAt = updatedAt
+        self.completionTimingRawValue = completionTiming.rawValue
     }
+
+    var completionTiming: CompletionTiming? { CompletionTiming(rawValue: completionTimingRawValue) }
 
     var completionSource: CompletionSource? {
         CompletionSource(rawValue: completionSourceRawValue)

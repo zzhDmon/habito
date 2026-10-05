@@ -19,6 +19,14 @@ final class TaskTemplate {
     var updatedAt: Date
     var archivedAt: Date?
 
+    // 迁移必须有已确认的兼容默认；零奖励不是新的产品奖励方案，配置值后续由家长显式填写。
+    var categoryRawValue: String = "unassigned"
+    var timePeriodRawValue: String = "allDay"
+    var verificationTypeRawValue: String = "selfConfirm"
+    var xpReward: Int = 0
+    var coinReward: Int = 0
+    var activeBonusCoin: Int = 0
+
     @Relationship(deleteRule: .cascade, inverse: \ReminderRule.taskTemplate)
     var reminderRule: ReminderRule?
 
@@ -35,7 +43,13 @@ final class TaskTemplate {
         revision: Int = 1,
         createdAt: Date = .now,
         updatedAt: Date = .now,
-        archivedAt: Date? = nil
+        archivedAt: Date? = nil,
+        category: TaskCategory = .unassigned,
+        timePeriod: TaskTimePeriod = .allDay,
+        verificationType: TaskVerificationType = .selfConfirm,
+        xpReward: Int = 0,
+        coinReward: Int = 0,
+        activeBonusCoin: Int = 0
     ) {
         self.id = id
         self.title = title
@@ -47,7 +61,18 @@ final class TaskTemplate {
         self.createdAt = createdAt
         self.updatedAt = updatedAt
         self.archivedAt = archivedAt
+        self.categoryRawValue = category.rawValue
+        self.timePeriodRawValue = timePeriod.rawValue
+        self.verificationTypeRawValue = verificationType.rawValue
+        self.xpReward = xpReward
+        self.coinReward = coinReward
+        self.activeBonusCoin = activeBonusCoin
     }
+
+    /// 损坏原始值返回空，由用例诊断；不能把无效分类静默变成合法“待设置”。
+    var category: TaskCategory? { TaskCategory(rawValue: categoryRawValue) }
+    var timePeriod: TaskTimePeriod? { TaskTimePeriod(rawValue: timePeriodRawValue) }
+    var verificationType: TaskVerificationType? { TaskVerificationType(rawValue: verificationTypeRawValue) }
 
     /// 由持久化字段得到模板当前生命周期，避免各页面重复解释布尔值和归档时间。
     var lifecycleState: TaskTemplateLifecycleState {

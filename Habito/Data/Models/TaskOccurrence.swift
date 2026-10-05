@@ -22,6 +22,16 @@ final class TaskOccurrence {
     var createdAt: Date
     var updatedAt: Date
 
+    /// 实例配置快照与原提醒并存；提交阶段还要冻结该次提交，不从模板回算历史奖励。
+    var categorySnapshotRawValue: String = "unassigned"
+    var timePeriodSnapshotRawValue: String = "allDay"
+    var verificationTypeSnapshotRawValue: String = "selfConfirm"
+    var xpRewardSnapshot: Int = 0
+    var coinRewardSnapshot: Int = 0
+    var activeBonusCoinSnapshot: Int = 0
+    var plannedAt: Date?
+    var deadlineAt: Date?
+
     var template: TaskTemplate?
 
     @Relationship(deleteRule: .cascade, inverse: \CompletionRecord.occurrence)
@@ -46,7 +56,15 @@ final class TaskOccurrence {
         sourceRevision: Int,
         isDetachedOverride: Bool = false,
         createdAt: Date = .now,
-        updatedAt: Date = .now
+        updatedAt: Date = .now,
+        categorySnapshot: TaskCategory = .unassigned,
+        timePeriodSnapshot: TaskTimePeriod = .allDay,
+        verificationTypeSnapshot: TaskVerificationType = .selfConfirm,
+        xpRewardSnapshot: Int = 0,
+        coinRewardSnapshot: Int = 0,
+        activeBonusCoinSnapshot: Int = 0,
+        plannedAt: Date? = nil,
+        deadlineAt: Date? = nil
     ) {
         self.id = id
         self.uniquenessKey = Self.makeUniquenessKey(templateID: templateID, dateKey: date.dateKey)
@@ -62,6 +80,20 @@ final class TaskOccurrence {
         self.isDetachedOverride = isDetachedOverride
         self.createdAt = createdAt
         self.updatedAt = updatedAt
+        self.categorySnapshotRawValue = categorySnapshot.rawValue
+        self.timePeriodSnapshotRawValue = timePeriodSnapshot.rawValue
+        self.verificationTypeSnapshotRawValue = verificationTypeSnapshot.rawValue
+        self.xpRewardSnapshot = xpRewardSnapshot
+        self.coinRewardSnapshot = coinRewardSnapshot
+        self.activeBonusCoinSnapshot = activeBonusCoinSnapshot
+        self.plannedAt = plannedAt
+        self.deadlineAt = deadlineAt
+    }
+
+    var categorySnapshot: TaskCategory? { TaskCategory(rawValue: categorySnapshotRawValue) }
+    var timePeriodSnapshot: TaskTimePeriod? { TaskTimePeriod(rawValue: timePeriodSnapshotRawValue) }
+    var verificationTypeSnapshot: TaskVerificationType? {
+        TaskVerificationType(rawValue: verificationTypeSnapshotRawValue)
     }
 
     /// 持久化原始值损坏时返回 `nil`，由调用方显示可诊断错误。

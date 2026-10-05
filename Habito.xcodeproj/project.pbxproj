@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AB1000000000000000000012 /* TaskCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000012 /* TaskCategory.swift */; };
+		AB1000000000000000000013 /* TaskTimePeriod.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000013 /* TaskTimePeriod.swift */; };
+		AB1000000000000000000014 /* TaskVerificationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000014 /* TaskVerificationType.swift */; };
+		AB1000000000000000000015 /* CompletionTiming.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000015 /* CompletionTiming.swift */; };
+		AB1000000000000000000016 /* HabitoSchemaV1.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000016 /* HabitoSchemaV1.swift */; };
+		AB1000000000000000000017 /* HabitoSchemaMigrationPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000017 /* HabitoSchemaMigrationPlan.swift */; };
+		AB1000000000000000000018 /* HabitoSchemaMigrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000018 /* HabitoSchemaMigrationTests.swift */; };
 		AB1000000000000000000001 /* HabitoSchemaV0.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000001 /* HabitoSchemaV0.swift */; };
 		AB1000000000000000000002 /* HabitoSchemaV0+TaskTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000002 /* HabitoSchemaV0+TaskTemplate.swift */; };
 		AB1000000000000000000003 /* HabitoSchemaV0+ReminderRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000003 /* HabitoSchemaV0+ReminderRule.swift */; };
@@ -250,6 +257,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AB2000000000000000000012 /* TaskCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCategory.swift; sourceTree = "<group>"; };
+		AB2000000000000000000013 /* TaskTimePeriod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskTimePeriod.swift; sourceTree = "<group>"; };
+		AB2000000000000000000014 /* TaskVerificationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskVerificationType.swift; sourceTree = "<group>"; };
+		AB2000000000000000000015 /* CompletionTiming.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletionTiming.swift; sourceTree = "<group>"; };
+		AB2000000000000000000016 /* HabitoSchemaV1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitoSchemaV1.swift; sourceTree = "<group>"; };
+		AB2000000000000000000017 /* HabitoSchemaMigrationPlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitoSchemaMigrationPlan.swift; sourceTree = "<group>"; };
+		AB2000000000000000000018 /* HabitoSchemaMigrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitoSchemaMigrationTests.swift; sourceTree = "<group>"; };
 		AB2000000000000000000001 /* HabitoSchemaV0.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV0.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000002 /* HabitoSchemaV0+TaskTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV0+TaskTemplate.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000003 /* HabitoSchemaV0+ReminderRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV0+ReminderRule.swift"; sourceTree = "<group>"; };
@@ -574,6 +588,8 @@
 			isa = PBXGroup;
 			children = (
 				A20000000000000000000004 /* AppModelContainer.swift */,
+				AB2000000000000000000016 /* HabitoSchemaV1.swift */,
+				AB2000000000000000000017 /* HabitoSchemaMigrationPlan.swift */,
 				AB5000000000000000000001 /* SchemaV0 */,
 				Z20000000000000000000008 /* TaskGraphDeletionService.swift */,
 				Z20000000000000000000009 /* TaskGraphDeletionError.swift */,
@@ -948,6 +964,10 @@
 			isa = PBXGroup;
 			children = (
 				C20000000000000000000004 /* CompletionSource.swift */,
+				AB2000000000000000000012 /* TaskCategory.swift */,
+				AB2000000000000000000013 /* TaskTimePeriod.swift */,
+				AB2000000000000000000014 /* TaskVerificationType.swift */,
+				AB2000000000000000000015 /* CompletionTiming.swift */,
 				C20000000000000000000005 /* DomainStateTransitionError.swift */,
 				D20000000000000000000002 /* NotificationKind.swift */,
 				C20000000000000000000006 /* TaskOccurrenceAction.swift */,
@@ -1013,6 +1033,7 @@
 			isa = PBXGroup;
 			children = (
 				A20000000000000000000006 /* AppModelContainerTests.swift */,
+				AB2000000000000000000018 /* HabitoSchemaMigrationTests.swift */,
 				AB2000000000000000000010 /* V0MigrationFixture.swift */,
 				AB2000000000000000000011 /* HabitoSchemaV0Tests.swift */,
 				H20000000000000000000002 /* M1DataKernelIntegrationTests.swift */,
@@ -1329,6 +1350,12 @@
 				K10000000000000000000005 /* TodayViewModel.swift in Sources */,
 				C10000000000000000000003 /* Weekday.swift in Sources */,
 				A10000000000000000000004 /* AppModelContainer.swift in Sources */,
+				AB1000000000000000000012 /* TaskCategory.swift in Sources */,
+				AB1000000000000000000013 /* TaskTimePeriod.swift in Sources */,
+				AB1000000000000000000014 /* TaskVerificationType.swift in Sources */,
+				AB1000000000000000000015 /* CompletionTiming.swift in Sources */,
+				AB1000000000000000000016 /* HabitoSchemaV1.swift in Sources */,
+				AB1000000000000000000017 /* HabitoSchemaMigrationPlan.swift in Sources */,
 				AB1000000000000000000001 /* HabitoSchemaV0.swift in Sources */,
 				AB1000000000000000000002 /* HabitoSchemaV0+TaskTemplate.swift in Sources */,
 				AB1000000000000000000003 /* HabitoSchemaV0+ReminderRule.swift in Sources */,
@@ -1346,6 +1373,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A10000000000000000000006 /* AppModelContainerTests.swift in Sources */,
+				AB1000000000000000000018 /* HabitoSchemaMigrationTests.swift in Sources */,
 				AB1000000000000000000010 /* V0MigrationFixture.swift in Sources */,
 				AB1000000000000000000011 /* HabitoSchemaV0Tests.swift in Sources */,
 				W10000000000000000000006 /* ParentCalendarDayServiceTests.swift in Sources */,

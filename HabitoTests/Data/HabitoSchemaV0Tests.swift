@@ -57,7 +57,7 @@ struct HabitoSchemaV0Tests {
         try verifyFrozenStore(at: url, timerState: timerState, versioned: versioned)
     }
 
-    @Test("当前 V0 可读取独立冻结模型生成的磁盘库且不丢对象", arguments: [TimerSessionState.running, .paused], [true, false])
+    @Test("当前 App 可读取独立冻结模型生成的磁盘库且不丢对象", arguments: [TimerSessionState.running, .paused], [true, false])
     func currentV0ReadsFrozenStore(timerState: TimerSessionState, versioned: Bool) throws {
         let url = try V0MigrationFixture.temporaryStoreURL()
         try V0MigrationFixture.seed(at: url, timerState: timerState, versioned: versioned)
@@ -65,7 +65,7 @@ struct HabitoSchemaV0Tests {
         try verifyCurrentStore(at: url, timerState: timerState)
     }
 
-    @Test("原非版本 App schema 写入的数据库能由冻结模型读取")
+    @Test("原非版本八模型 schema 写入的数据库能由冻结模型读取")
     func frozenSchemaReadsOriginalUnversionedStore() throws {
         let url = try V0MigrationFixture.temporaryStoreURL()
         try seedOriginalAppStore(at: url)
@@ -80,13 +80,14 @@ struct HabitoSchemaV0Tests {
     }
 
     private func seedOriginalAppStore(at url: URL) throws {
-        let context = ModelContext(try AppModelContainer.make(storeURL: url))
+        // 第一阶段已经实证与原 AppModelContainer 兼容；此后当前模型进入 V1，不能用新模型冒充旧库。
+        let context = ModelContext(try V0MigrationFixture.container(at: url))
         context.autosaveEnabled = false
         let now = try V0MigrationFixture.instant("2026-09-20T01:00:00Z")
-        let template = TaskTemplate(
+        let template = HabitoSchemaV0.TaskTemplate(
             id: V0MigrationFixture.templateID, title: "合成原版模板", iconName: "book.fill", colorToken: "reading",
             targetDurationSeconds: 900, createdAt: now, updatedAt: now)
-        let rule = ReminderRule(
+        let rule = HabitoSchemaV0.ReminderRule(
             id: V0MigrationFixture.ruleID, taskTemplateID: template.id,
             recurrence: .once(on: try V0MigrationFixture.date("2026-09-21")),
             timeOfDayMinutes: 19 * 60 + 30)
