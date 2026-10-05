@@ -7,6 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AB1000000000000000000118 /* ParentReviewQueueItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000118 /* ParentReviewQueueItem.swift */; };
+		AB1000000000000000000119 /* ParentReviewQueueError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000119 /* ParentReviewQueueError.swift */; };
+		AB1000000000000000000120 /* ParentReviewFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000120 /* ParentReviewFeedback.swift */; };
+		AB1000000000000000000121 /* ParentReviewViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000121 /* ParentReviewViewState.swift */; };
+		AB1000000000000000000122 /* ParentReviewActionFailure.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000122 /* ParentReviewActionFailure.swift */; };
+		AB1000000000000000000123 /* ParentReviewQueueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000123 /* ParentReviewQueueService.swift */; };
+		AB1000000000000000000124 /* ParentReviewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000124 /* ParentReviewViewModel.swift */; };
+		AB1000000000000000000125 /* ParentReviewFixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000125 /* ParentReviewFixture.swift */; };
+		AB1000000000000000000126 /* ParentReviewQueueServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000126 /* ParentReviewQueueServiceTests.swift */; };
+		AB1000000000000000000127 /* ParentReviewViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000127 /* ParentReviewViewModelTests.swift */; };
 		AB1000000000000000000108 /* TaskCompletionSnapshotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000108 /* TaskCompletionSnapshotView.swift */; };
 		AB1000000000000000000109 /* TaskSessionActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000109 /* TaskSessionActionButton.swift */; };
 		AB1000000000000000000110 /* TaskSessionControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000110 /* TaskSessionControlsView.swift */; };
@@ -356,6 +366,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AB2000000000000000000118 /* ParentReviewQueueItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ParentReviewQueueItem.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000119 /* ParentReviewQueueError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ParentReviewQueueError.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000120 /* ParentReviewFeedback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ParentReviewFeedback.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000121 /* ParentReviewViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ParentReviewViewState.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000122 /* ParentReviewActionFailure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ParentReviewActionFailure.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000123 /* ParentReviewQueueService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ParentReviewQueueService.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000124 /* ParentReviewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ParentReviewViewModel.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000125 /* ParentReviewFixture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ParentReviewFixture.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000126 /* ParentReviewQueueServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ParentReviewQueueServiceTests.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000127 /* ParentReviewViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ParentReviewViewModelTests.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000108 /* TaskCompletionSnapshotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskCompletionSnapshotView.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000109 /* TaskSessionActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskSessionActionButton.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000110 /* TaskSessionControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskSessionControlsView.swift"; sourceTree = "<group>"; };
@@ -715,6 +735,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AC5000000000000000000001 /* ParentReview */ = {
+			isa = PBXGroup;
+			children = (
+				AB2000000000000000000118 /* ParentReviewQueueItem.swift */,
+				AB2000000000000000000119 /* ParentReviewQueueError.swift */,
+				AB2000000000000000000120 /* ParentReviewFeedback.swift */,
+				AB2000000000000000000121 /* ParentReviewViewState.swift */,
+				AB2000000000000000000122 /* ParentReviewActionFailure.swift */,
+				AB2000000000000000000123 /* ParentReviewQueueService.swift */,
+				AB2000000000000000000124 /* ParentReviewViewModel.swift */,
+			);
+			path = ParentReview;
+			sourceTree = "<group>";
+		};
 		AB5000000000000000000007 /* SchemaV4 */ = {
 			isa = PBXGroup;
 			children = (
@@ -970,6 +1004,7 @@
 				Y50000000000000000000001 /* ParentNotifications */,
 				P50000000000000000000003 /* ParentGate */,
 				V50000000000000000000001 /* ParentToday */,
+				AC5000000000000000000001 /* ParentReview */,
 				R50000000000000000000001 /* ParentTaskTemplates */,
 				I50000000000000000000004 /* TaskSession */,
 				I50000000000000000000005 /* Today */,
@@ -1190,6 +1225,9 @@
 				T20000000000000000000004 /* TaskTemplateEditingServiceTests.swift */,
 				U20000000000000000000005 /* TaskTemplateLifecycleServiceTests.swift */,
 				M20000000000000000000007 /* TaskSessionViewModelTests.swift */,
+				AB2000000000000000000125 /* ParentReviewFixture.swift */,
+				AB2000000000000000000126 /* ParentReviewQueueServiceTests.swift */,
+				AB2000000000000000000127 /* ParentReviewViewModelTests.swift */,
 				Z20000000000000000000004 /* TaskSnoozeServiceTests.swift */,
 				J20000000000000000000006 /* TodayQueryFixture.swift */,
 				J20000000000000000000007 /* TodayTaskQueryServiceTests.swift */,
@@ -1560,6 +1598,13 @@
 				AB1000000000000000000115 /* TaskSnoozeFeedbackView.swift in Sources */,
 				AB1000000000000000000116 /* TaskSubmissionStatusView.swift in Sources */,
 				AB1000000000000000000117 /* UITestTaskScenario.swift in Sources */,
+				AB1000000000000000000118 /* ParentReviewQueueItem.swift in Sources */,
+				AB1000000000000000000119 /* ParentReviewQueueError.swift in Sources */,
+				AB1000000000000000000120 /* ParentReviewFeedback.swift in Sources */,
+				AB1000000000000000000121 /* ParentReviewViewState.swift in Sources */,
+				AB1000000000000000000122 /* ParentReviewActionFailure.swift in Sources */,
+				AB1000000000000000000123 /* ParentReviewQueueService.swift in Sources */,
+				AB1000000000000000000124 /* ParentReviewViewModel.swift in Sources */,
 				M10000000000000000000001 /* TaskSessionScreenContent.swift in Sources */,
 				AB1000000000000000000107 /* TaskSessionCompletionFeedback.swift in Sources */,
 				AB1000000000000000000065 /* TaskSessionActionFailure.swift in Sources */,
@@ -1840,6 +1885,9 @@
 				T10000000000000000000004 /* TaskTemplateEditingServiceTests.swift in Sources */,
 				U10000000000000000000005 /* TaskTemplateLifecycleServiceTests.swift in Sources */,
 				M10000000000000000000007 /* TaskSessionViewModelTests.swift in Sources */,
+				AB1000000000000000000125 /* ParentReviewFixture.swift in Sources */,
+				AB1000000000000000000126 /* ParentReviewQueueServiceTests.swift in Sources */,
+				AB1000000000000000000127 /* ParentReviewViewModelTests.swift in Sources */,
 				Z10000000000000000000004 /* TaskSnoozeServiceTests.swift in Sources */,
 				C10000000000000000000010 /* LocalDateTests.swift in Sources */,
 				N10000000000000000000004 /* LocalizationCatalogTests.swift in Sources */,
