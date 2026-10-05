@@ -3,6 +3,7 @@ import SwiftUI
 /// 家长中心的任务模板列表、空态和错误态。
 struct ParentTaskTemplateListView: View {
     @State private var model: ParentTaskTemplateListViewModel
+    let onShowReview: () -> Void
     let onShowToday: () -> Void
     let onShowCalendar: () -> Void
     let onShowNotifications: () -> Void
@@ -11,6 +12,7 @@ struct ParentTaskTemplateListView: View {
 
     init(
         model: ParentTaskTemplateListViewModel,
+        onShowReview: @escaping () -> Void,
         onShowToday: @escaping () -> Void,
         onShowCalendar: @escaping () -> Void,
         onShowNotifications: @escaping () -> Void,
@@ -18,6 +20,7 @@ struct ParentTaskTemplateListView: View {
         onSelect: @escaping (UUID) -> Void
     ) {
         _model = State(initialValue: model)
+        self.onShowReview = onShowReview
         self.onShowToday = onShowToday
         self.onShowCalendar = onShowCalendar
         self.onShowNotifications = onShowNotifications
@@ -33,6 +36,15 @@ struct ParentTaskTemplateListView: View {
             onRetry: model.load
         )
         .navigationTitle("parentTemplates.navigationTitle")
+        .safeAreaInset(edge: .top) {
+            Button("parentReview.open", systemImage: "checkmark.seal", action: onShowReview)
+                .buttonStyle(.borderedProminent)
+                .frame(maxWidth: .infinity, minHeight: HabitoDesign.Layout.minimumTapSize)
+                .padding(.horizontal, HabitoDesign.Spacing.medium)
+                .padding(.vertical, HabitoDesign.Spacing.small)
+                .background(.bar)
+                .accessibilityIdentifier(HabitoAccessibilityID.parentReviewOpen)
+        }
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Button("parentToday.open", systemImage: "list.bullet", action: onShowToday)
@@ -51,6 +63,8 @@ struct ParentTaskTemplateListView: View {
                     .accessibilityIdentifier(HabitoAccessibilityID.parentTemplateCreate)
             }
         }
+        // 新增 safeAreaInset 按钮不能继承外层标识，否则会覆盖它的独立审核入口 identifier。
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier(HabitoAccessibilityID.parentUnlocked)
         .task(model.load)
     }

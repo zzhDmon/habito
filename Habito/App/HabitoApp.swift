@@ -20,6 +20,7 @@ struct HabitoApp: App {
     @State private var parentGateModel: ParentGateViewModel
     @State private var parentTaskTemplatesModel: ParentTaskTemplateListViewModel
     @State private var parentTodayModel: ParentTodayTaskViewModel
+    @State private var parentReviewModel: ParentReviewViewModel
     @State private var parentCalendarModel: ParentCalendarDayViewModel
     @State private var parentNotificationModel: ParentNotificationDiagnosticsViewModel
 
@@ -89,6 +90,12 @@ struct HabitoApp: App {
         let completionService = TaskCompletionService(context: container.mainContext)
         let undoService = TaskCompletionUndoService(context: container.mainContext)
         let submissionService = TaskSubmissionService(context: container.mainContext)
+        #if DEBUG
+            let reviewService = UITestReviewServiceFactory.make(
+                context: container.mainContext, arguments: ProcessInfo.processInfo.arguments)
+        #else
+            let reviewService = TaskSubmissionReviewService(context: container.mainContext)
+        #endif
         _notificationRebuildTrigger = State(initialValue: rebuildTrigger)
         notificationRebuildService = NotificationRebuildService(
             context: container.mainContext,
@@ -170,6 +177,11 @@ struct HabitoApp: App {
                 notificationRebuildTrigger: rebuildTrigger
             )
         )
+        _parentReviewModel = State(
+            initialValue: ParentReviewViewModel(
+                context: container.mainContext, dateProvider: dateProvider,
+                notificationRebuildTrigger: rebuildTrigger, reviewService: reviewService)
+        )
         _parentNotificationModel = State(
             initialValue: ParentNotificationDiagnosticsViewModel(
                 service: notificationPermissionService,
@@ -186,6 +198,7 @@ struct HabitoApp: App {
                 parentGateModel: parentGateModel,
                 parentTaskTemplatesModel: parentTaskTemplatesModel,
                 parentTodayModel: parentTodayModel,
+                parentReviewModel: parentReviewModel,
                 parentCalendarModel: parentCalendarModel,
                 parentNotificationModel: parentNotificationModel,
                 taskTemplateEditorModelFactory: taskTemplateEditorModelFactory,

@@ -6,6 +6,7 @@ struct ParentGateView: View {
     @State private var model: ParentGateViewModel
     @State private var taskTemplatesModel: ParentTaskTemplateListViewModel
     @State private var parentTodayModel: ParentTodayTaskViewModel
+    @State private var parentReviewModel: ParentReviewViewModel
     @State private var parentCalendarModel: ParentCalendarDayViewModel
     @State private var parentNotificationModel: ParentNotificationDiagnosticsViewModel
     @State private var path: [ParentRoute] = []
@@ -18,6 +19,7 @@ struct ParentGateView: View {
         model: ParentGateViewModel,
         taskTemplatesModel: ParentTaskTemplateListViewModel,
         parentTodayModel: ParentTodayTaskViewModel,
+        parentReviewModel: ParentReviewViewModel,
         parentCalendarModel: ParentCalendarDayViewModel,
         parentNotificationModel: ParentNotificationDiagnosticsViewModel,
         taskTemplateEditorModelFactory: TaskTemplateEditorViewModelFactory
@@ -25,6 +27,7 @@ struct ParentGateView: View {
         _model = State(initialValue: model)
         _taskTemplatesModel = State(initialValue: taskTemplatesModel)
         _parentTodayModel = State(initialValue: parentTodayModel)
+        _parentReviewModel = State(initialValue: parentReviewModel)
         _parentCalendarModel = State(initialValue: parentCalendarModel)
         _parentNotificationModel = State(initialValue: parentNotificationModel)
         self.taskTemplateEditorModelFactory = taskTemplateEditorModelFactory
@@ -43,6 +46,7 @@ struct ParentGateView: View {
                 case .unlocked:
                     ParentTaskTemplateListView(
                         model: taskTemplatesModel,
+                        onShowReview: { path.append(.review) },
                         onShowToday: { path.append(.today) },
                         onShowCalendar: { path.append(.calendar) },
                         onShowNotifications: { path.append(.notifications) },
@@ -63,10 +67,18 @@ struct ParentGateView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("parentGate.close", action: dismiss.callAsFunction)
+                        .accessibilityIdentifier(HabitoAccessibilityID.parentClose)
                 }
             }
             .navigationDestination(for: ParentRoute.self) { route in
                 switch route {
+                case .review:
+                    // 审核路由只注册在家长栈；即使保留旧 path，也不能跨越本次 PIN 验证。
+                    if model.state == .unlocked {
+                        ParentReviewView(model: parentReviewModel)
+                    } else {
+                        ContentUnavailableView("parentGate.verifyTitle", systemImage: "lock.fill")
+                    }
                 case .today:
                     ParentTodayTaskListView(model: parentTodayModel)
                 case .calendar:

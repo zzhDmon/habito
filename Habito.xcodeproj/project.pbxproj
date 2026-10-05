@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AB1000000000000000000136 /* ParentReviewSnapshotFieldStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000136 /* ParentReviewSnapshotFieldStyle.swift */; };
+		AB1000000000000000000128 /* ParentReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000128 /* ParentReviewView.swift */; };
+		AB1000000000000000000129 /* ParentReviewContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000129 /* ParentReviewContentView.swift */; };
+		AB1000000000000000000130 /* ParentReviewQueueRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000130 /* ParentReviewQueueRow.swift */; };
+		AB1000000000000000000131 /* ParentReviewSnapshotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000131 /* ParentReviewSnapshotView.swift */; };
+		AB1000000000000000000132 /* ParentReviewFeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000132 /* ParentReviewFeedbackView.swift */; };
+		AB1000000000000000000133 /* ParentReviewActionErrorMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000133 /* ParentReviewActionErrorMessageView.swift */; };
+		AB1000000000000000000134 /* ParentReviewPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000134 /* ParentReviewPreview.swift */; };
+		AB1000000000000000000135 /* UITestReviewServiceFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000135 /* UITestReviewServiceFactory.swift */; };
 		AB1000000000000000000118 /* ParentReviewQueueItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000118 /* ParentReviewQueueItem.swift */; };
 		AB1000000000000000000119 /* ParentReviewQueueError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000119 /* ParentReviewQueueError.swift */; };
 		AB1000000000000000000120 /* ParentReviewFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000120 /* ParentReviewFeedback.swift */; };
@@ -366,6 +375,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AB2000000000000000000136 /* ParentReviewSnapshotFieldStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ParentReviewSnapshotFieldStyle.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000128 /* ParentReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ParentReviewView.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000129 /* ParentReviewContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ParentReviewContentView.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000130 /* ParentReviewQueueRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ParentReviewQueueRow.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000131 /* ParentReviewSnapshotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ParentReviewSnapshotView.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000132 /* ParentReviewFeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ParentReviewFeedbackView.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000133 /* ParentReviewActionErrorMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ParentReviewActionErrorMessageView.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000134 /* ParentReviewPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ParentReviewPreview.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000135 /* UITestReviewServiceFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITestReviewServiceFactory.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000118 /* ParentReviewQueueItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ParentReviewQueueItem.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000119 /* ParentReviewQueueError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ParentReviewQueueError.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000120 /* ParentReviewFeedback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ParentReviewFeedback.swift"; sourceTree = "<group>"; };
@@ -738,6 +756,14 @@
 		AC5000000000000000000001 /* ParentReview */ = {
 			isa = PBXGroup;
 			children = (
+				AB2000000000000000000136 /* ParentReviewSnapshotFieldStyle.swift */,
+				AB2000000000000000000128 /* ParentReviewView.swift */,
+				AB2000000000000000000129 /* ParentReviewContentView.swift */,
+				AB2000000000000000000130 /* ParentReviewQueueRow.swift */,
+				AB2000000000000000000131 /* ParentReviewSnapshotView.swift */,
+				AB2000000000000000000132 /* ParentReviewFeedbackView.swift */,
+				AB2000000000000000000133 /* ParentReviewActionErrorMessageView.swift */,
+				AB2000000000000000000134 /* ParentReviewPreview.swift */,
 				AB2000000000000000000118 /* ParentReviewQueueItem.swift */,
 				AB2000000000000000000119 /* ParentReviewQueueError.swift */,
 				AB2000000000000000000120 /* ParentReviewFeedback.swift */,
@@ -888,6 +914,7 @@
 				N20000000000000000000001 /* UITestLaunchConfiguration.swift */,
 				N20000000000000000000002 /* UITestSeedService.swift */,
 				AB2000000000000000000117 /* UITestTaskScenario.swift */,
+				AB2000000000000000000135 /* UITestReviewServiceFactory.swift */,
 				Y20000000000000000000006 /* UITestNotificationPermissionProvider.swift */,
 			);
 			path = App;
@@ -1598,6 +1625,15 @@
 				AB1000000000000000000115 /* TaskSnoozeFeedbackView.swift in Sources */,
 				AB1000000000000000000116 /* TaskSubmissionStatusView.swift in Sources */,
 				AB1000000000000000000117 /* UITestTaskScenario.swift in Sources */,
+				AB1000000000000000000128 /* ParentReviewView.swift in Sources */,
+				AB1000000000000000000129 /* ParentReviewContentView.swift in Sources */,
+				AB1000000000000000000130 /* ParentReviewQueueRow.swift in Sources */,
+				AB1000000000000000000131 /* ParentReviewSnapshotView.swift in Sources */,
+				AB1000000000000000000136 /* ParentReviewSnapshotFieldStyle.swift in Sources */,
+				AB1000000000000000000132 /* ParentReviewFeedbackView.swift in Sources */,
+				AB1000000000000000000133 /* ParentReviewActionErrorMessageView.swift in Sources */,
+				AB1000000000000000000134 /* ParentReviewPreview.swift in Sources */,
+				AB1000000000000000000135 /* UITestReviewServiceFactory.swift in Sources */,
 				AB1000000000000000000118 /* ParentReviewQueueItem.swift in Sources */,
 				AB1000000000000000000119 /* ParentReviewQueueError.swift in Sources */,
 				AB1000000000000000000120 /* ParentReviewFeedback.swift in Sources */,

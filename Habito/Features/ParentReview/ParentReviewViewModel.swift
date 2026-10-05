@@ -38,6 +38,14 @@ final class ParentReviewViewModel {
         reload(showLoading: true)
     }
 
+    /// 每次进入受保护页面开启新的展示周期，不重播上次页面保留的成功收据。
+    func prepareForPresentation() {
+        feedback = nil
+        actionFailure = nil
+        isActionErrorPresented = false
+        load()
+    }
+
     func refresh() {
         reload(showLoading: false)
     }

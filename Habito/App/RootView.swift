@@ -9,6 +9,7 @@ struct RootView: View {
     @State private var parentGateModel: ParentGateViewModel
     @State private var parentTaskTemplatesModel: ParentTaskTemplateListViewModel
     @State private var parentTodayModel: ParentTodayTaskViewModel
+    @State private var parentReviewModel: ParentReviewViewModel
     @State private var parentCalendarModel: ParentCalendarDayViewModel
     @State private var parentNotificationModel: ParentNotificationDiagnosticsViewModel
     @State private var notificationRebuildTrigger: NotificationRebuildTrigger
@@ -27,6 +28,7 @@ struct RootView: View {
         parentGateModel: ParentGateViewModel,
         parentTaskTemplatesModel: ParentTaskTemplateListViewModel,
         parentTodayModel: ParentTodayTaskViewModel,
+        parentReviewModel: ParentReviewViewModel,
         parentCalendarModel: ParentCalendarDayViewModel,
         parentNotificationModel: ParentNotificationDiagnosticsViewModel,
         taskTemplateEditorModelFactory: TaskTemplateEditorViewModelFactory,
@@ -41,6 +43,7 @@ struct RootView: View {
         _parentGateModel = State(initialValue: parentGateModel)
         _parentTaskTemplatesModel = State(initialValue: parentTaskTemplatesModel)
         _parentTodayModel = State(initialValue: parentTodayModel)
+        _parentReviewModel = State(initialValue: parentReviewModel)
         _parentCalendarModel = State(initialValue: parentCalendarModel)
         _parentNotificationModel = State(initialValue: parentNotificationModel)
         _notificationRebuildTrigger = State(initialValue: notificationRebuildTrigger)
@@ -112,6 +115,7 @@ struct RootView: View {
                 model: parentGateModel,
                 taskTemplatesModel: parentTaskTemplatesModel,
                 parentTodayModel: parentTodayModel,
+                parentReviewModel: parentReviewModel,
                 parentCalendarModel: parentCalendarModel,
                 parentNotificationModel: parentNotificationModel,
                 taskTemplateEditorModelFactory: taskTemplateEditorModelFactory

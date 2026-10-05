@@ -1,6 +1,347 @@
 {
   "sourceLanguage" : "zh-Hans",
   "strings" : {
+    "parentReview.open" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "待家长验收"
+          }
+        }
+      }
+    },
+    "parentReview.navigationTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "待验收"
+          }
+        }
+      }
+    },
+    "parentReview.loading" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在读取待验收任务…"
+          }
+        }
+      }
+    },
+    "parentReview.emptyTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "没有待验收任务"
+          }
+        }
+      }
+    },
+    "parentReview.emptyDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "孩子提交需要验收的任务后，会出现在这里。"
+          }
+        }
+      }
+    },
+    "parentReview.queueDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这里保留所有未验收的提交，包括之前日期的任务。"
+          }
+        }
+      }
+    },
+    "parentReview.errorTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暂时无法读取待验收任务"
+          }
+        }
+      }
+    },
+    "parentReview.errorDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "任务记录仍保留。请重试；如果问题持续，不要重复提交或清空数据。"
+          }
+        }
+      }
+    },
+    "parentReview.retry" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重新读取"
+          }
+        }
+      }
+    },
+    "parentReview.taskDate" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "任务所属日期"
+          }
+        }
+      }
+    },
+    "parentReview.submittedAt" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "孩子提交时间"
+          }
+        }
+      }
+    },
+    "parentReview.reminderAt" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "原提醒时间"
+          }
+        }
+      }
+    },
+    "parentReview.duration" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "累计计时"
+          }
+        }
+      }
+    },
+    "parentReview.autonomous" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在提醒前主动提交"
+          }
+        }
+      }
+    },
+    "parentReview.afterReminder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "提交时已到提醒时间"
+          }
+        }
+      }
+    },
+    "parentReview.expectedDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "以下是通过后的预期奖励，现在还没有到账。"
+          }
+        }
+      }
+    },
+    "parentReview.expectedXP" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "通过后 XP"
+          }
+        }
+      }
+    },
+    "parentReview.expectedCoins" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "通过后金币"
+          }
+        }
+      }
+    },
+    "parentReview.expectedAutonomyCoins" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "其中自主奖励金币"
+          }
+        }
+      }
+    },
+    "parentReview.approve" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确认通过"
+          }
+        }
+      }
+    },
+    "parentReview.return" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请孩子再完善"
+          }
+        }
+      }
+    },
+    "parentReview.approvedTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已确认通过"
+          }
+        }
+      }
+    },
+    "parentReview.approvedDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "完成记录已保存，可以回到孩子模式查看。"
+          }
+        }
+      }
+    },
+    "parentReview.returnedTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已请孩子再完善"
+          }
+        }
+      }
+    },
+    "parentReview.returnedDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "累计计时已经保留。和孩子一起再看看，准备好后重新提交。"
+          }
+        }
+      }
+    },
+    "parentReview.dismissFeedback" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "知道了"
+          }
+        }
+      }
+    },
+    "parentReview.actionErrorTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这次验收没有完成"
+          }
+        }
+      }
+    },
+    "parentReview.changedSubmission" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这次提交已变化或被处理。请重新读取后查看当前提交，不能把旧请求用于新一轮。"
+          }
+        }
+      }
+    },
+    "parentReview.unavailable" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "当前记录或状态无法验收，内容仍保留。请重新读取；有未保存编辑时先处理编辑。"
+          }
+        }
+      }
+    },
+    "parentReview.saveFailed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "验收没有保存成功，任务仍在等待，没有发放奖励。请稍后重试。"
+          }
+        }
+      }
+    },
+    "parentReview.previewTask" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "阅读 15 分钟"
+          }
+        }
+      }
+    },
     "kidTask.statusAwaitingReview" : {
       "extractionState" : "manual",
       "localizations" : {

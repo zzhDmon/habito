@@ -6,6 +6,41 @@ import Testing
 @MainActor
 @Suite("家长审核页面用例状态")
 struct ParentReviewViewModelTests {
+    @Test("同一模型重新进入受保护页面，不重播旧审核或保留旧错误")
+    func presentationStartsNewFeedbackCycle() throws {
+        let fixture = try ParentReviewFixture()
+        let occurrence = try fixture.makeWaiting()
+        let model = fixture.model()
+        model.prepareForPresentation()
+        let item = try fixture.item(for: occurrence)
+        model.approve(item)
+        #expect(model.feedback != nil)
+        model.returnForRevision(item)
+        #expect(model.isActionErrorPresented)
+        model.prepareForPresentation()
+        #expect(model.feedback == nil && model.actionFailure == nil && !model.isActionErrorPresented)
+        #expect(try fixture.items(from: model).isEmpty)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<CompletionRecord>()) == 1)
+    }
+
+    #if DEBUG
+        @Test("审核失败注入只有测试开关和专用参数同时存在才启用", arguments: [false, true], [false, true])
+        func failureInjectionNeverAffectsNormalLaunch(enabled: Bool, failure: Bool) throws {
+            let fixture = try ParentReviewFixture()
+            let occurrence = try fixture.makeWaiting()
+            let arguments =
+                (enabled ? [UITestLaunchConfiguration.enableArgument] : [])
+                + (failure ? [UITestReviewServiceFactory.failureArgument] : [])
+            let model = ParentReviewViewModel(
+                context: fixture.context, dateProvider: FixedDateProvider(value: fixture.now),
+                reviewService: UITestReviewServiceFactory.make(context: fixture.context, arguments: arguments))
+            model.load()
+            model.approve(try fixture.item(for: occurrence))
+            #expect(model.isActionErrorPresented == (enabled && failure))
+            #expect(occurrence.status == (enabled && failure ? .pending : .completed))
+        }
+    #endif
+
     @Test("次日真实通过刷新队列且仅发布一次收据通知，零奖励仍保留事实", arguments: [false, true])
     func approvalPublishesOnce(zero: Bool) throws {
         let fixture = try ParentReviewFixture()

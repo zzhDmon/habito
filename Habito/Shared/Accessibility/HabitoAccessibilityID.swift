@@ -22,6 +22,7 @@ nonisolated enum HabitoAccessibilityID {
     static let rewardCoins = "kid.session.reward-coins"
     static let undoButton = "kid.session.undo"
     static let parentEntry = "parent.gate.entry"
+    static let parentClose = "parent.gate.close"
     static let testingNotificationResponse = "testing.notification-response"
     static let parentPINField = "parent.gate.pin"
     static let parentPINConfirmationField = "parent.gate.pin-confirmation"
@@ -31,6 +32,15 @@ nonisolated enum HabitoAccessibilityID {
     static let parentUnlocked = "parent.gate.unlocked"
     static let parentTemplateCreate = "parent.templates.create"
     static let parentTodayOpen = "parent.today.open"
+    static let parentReviewOpen = "parent.review.open"
+    static let parentReviewScreen = "parent.review.screen"
+    static let parentReviewFeedback = "parent.review.feedback"
+    static let parentReviewDismissFeedback = "parent.review.dismiss-feedback"
+    static let parentReviewRetry = "parent.review.retry"
+    static let parentReviewXP = "parent.review.reward-xp"
+    static let parentReviewCoins = "parent.review.reward-coins"
+    static let parentReviewSubmittedAt = "parent.review.snapshot-submitted"
+    static let parentReviewExpectedCoins = "parent.review.snapshot-coins"
     static let parentTodayScreen = "parent.today.screen"
     static let parentTodayTimeSave = "parent.today.time.save"
     static let parentCalendarOpen = "parent.calendar.open"
@@ -68,5 +78,17 @@ nonisolated enum HabitoAccessibilityID {
 
     static func parentTodayActions(_ id: UUID) -> String {
         "parent.today.actions.\(id.uuidString.lowercased())"
+    }
+
+    static func parentReviewItem(_ id: UUID) -> String {
+        "parent.review.item.\(id.uuidString.lowercased())"
+    }
+
+    static func parentReviewApprove(_ id: UUID) -> String {
+        "parent.review.approve.\(id.uuidString.lowercased())"
+    }
+
+    static func parentReviewReturn(_ id: UUID) -> String {
+        "parent.review.return.\(id.uuidString.lowercased())"
     }
 }

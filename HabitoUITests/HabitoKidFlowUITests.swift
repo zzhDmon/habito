@@ -595,13 +595,220 @@ final class HabitoKidFlowUITests: XCTestCase {
         XCTAssertFalse(app.staticTexts["已提交！"].exists)
     }
 
-    private func launchScenario(_ scenario: String) -> XCUIApplication {
+    func testParentReviewRequiresPINAndApprovesOriginalSnapshotOnce() throws {
+        let app = submitSeededTaskForReview()
+        XCTAssertFalse(app.buttons["parent.review.open"].exists)
+        unlockParent(in: app)
+        openParentReview(in: app)
+        XCTAssertTrue(app.staticTexts["以下是通过后的预期奖励，现在还没有到账。"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["在提醒前主动提交"].exists)
+        XCTAssertFalse(app.descendants(matching: .any)["parent.review.reward-xp"].exists)
+        let approve = reviewAction("approve", in: app)
+        approve.tap()
+        XCTAssertTrue(app.staticTexts["已确认通过"].waitForExistence(timeout: 5))
+        XCTAssertEqual(app.staticTexts["parent.review.reward-xp"].label, "+11 XP 已到账")
+        XCTAssertEqual(app.staticTexts["parent.review.reward-coins"].label, "+10 金币已到账")
+        XCTAssertFalse(reviewActions("approve", in: app).element.exists)
+        keepScreenshot(app, name: "PIN 后真实验收到账")
+        navigateBack(in: app, from: "待验收")
+        openParentReview(in: app)
+        XCTAssertTrue(app.staticTexts["没有待验收任务"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.staticTexts["已确认通过"].exists)
+        XCTAssertFalse(app.descendants(matching: .any)["parent.review.reward-coins"].exists)
+
+        app.terminate()
+        app.launchArguments = ["--habito-ui-testing"]
+        app.launch()
+        XCTAssertTrue(app.staticTexts["今天的任务都完成了。"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.buttons["parent.review.open"].exists)
+        unlockExistingParent(in: app, verifyWrongPIN: true)
+        openParentReview(in: app)
+        XCTAssertTrue(app.staticTexts["没有待验收任务"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.staticTexts["已确认通过"].exists)
+    }
+
+    func testParentReviewReturnKeepsTaskAndDoesNotGrantReward() throws {
+        let app = submitSeededTaskForReview()
+        unlockParent(in: app)
+        openParentReview(in: app)
+        reviewAction("return", in: app).tap()
+        XCTAssertTrue(app.staticTexts["已请孩子再完善"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["累计计时已经保留。和孩子一起再看看，准备好后重新提交。"].exists)
+        XCTAssertFalse(app.descendants(matching: .any)["parent.review.reward-xp"].exists)
+        XCTAssertFalse(app.descendants(matching: .any)["parent.review.reward-coins"].exists)
+        XCTAssertFalse(reviewActions("return", in: app).element.exists)
+        keepScreenshot(app, name: "家长退回不惩罚")
+        // 家长关闭按钮属于管理首页；审核详情先沿原导航返回，不假设根工具栏跨目的页保留。
+        navigateBack(in: app, from: "待验收")
+        app.buttons["parent.gate.close"].tap()
+        let task = app.buttons[seededTaskIdentifier]
+        XCTAssertTrue(task.waitForExistence(timeout: 5))
+        XCTAssertTrue(task.label.contains("再完善一下"))
+        task.tap()
+        XCTAssertTrue(app.buttons["kid.session.start"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["kid.session.submit"].exists)
+        XCTAssertFalse(app.descendants(matching: .any)["kid.session.reward-xp"].exists)
+    }
+
+    func testParentReviewEmptyQueueDoesNotGuessLegacyTaskNeedsApproval() throws {
+        let app = launchScenario("legacy")
+        unlockParent(in: app)
+        openParentReview(in: app)
+        XCTAssertTrue(app.staticTexts["没有待验收任务"].waitForExistence(timeout: 5))
+        XCTAssertFalse(reviewActions("approve", in: app).element.exists)
+        XCTAssertFalse(reviewActions("return", in: app).element.exists)
+        keepScreenshot(app, name: "待验收空队列")
+    }
+
+    func testParentReviewFailedApprovalKeepsWaitingAndCanRetryAfterRelaunch() throws {
+        verifyFailedParentReview(action: "approve")
+    }
+
+    func testParentReviewFailedReturnKeepsWaitingAndCanRetryAfterRelaunch() throws {
+        verifyFailedParentReview(action: "return")
+    }
+
+    /// 系统字号由外部 simctl 原生设置；实际审核/关闭断言，不能仅靠存在判断可达。
+    func testParentReviewActionsRemainReachableWithSystemTextSize() throws {
+        let app = submitSeededTaskForReview()
+        unlockParent(in: app)
+        openParentReview(in: app)
+        let submitted = app.descendants(matching: .any)["parent.review.snapshot-submitted"]
+        scrollFullyIntoReviewViewport(submitted, in: app)
+        XCTAssertTrue(submitted.label.contains("孩子提交时间") && submitted.label.contains("2026"))
+        let expectedCoins = app.descendants(matching: .any)["parent.review.snapshot-coins"]
+        scrollFullyIntoReviewViewport(expectedCoins, in: app)
+        XCTAssertTrue(expectedCoins.label.contains("通过后金币") && expectedCoins.label.contains("10"))
+        keepScreenshot(app, name: "系统大字审核明细")
+        let approve = reviewAction("approve", in: app)
+        scrollFullyIntoReviewViewport(approve, in: app)
+        XCTAssertEqual(approve.label, "确认通过")
+        XCTAssertGreaterThanOrEqual(approve.frame.height, 44)
+        let returned = reviewAction("return", in: app)
+        scrollFullyIntoReviewViewport(returned, in: app)
+        XCTAssertEqual(returned.label, "请孩子再完善")
+        XCTAssertGreaterThanOrEqual(returned.frame.height, 44)
+        keepScreenshot(app, name: "系统大字审核操作")
+        scrollFullyIntoReviewViewport(approve, in: app)
+        approve.tap()
+        XCTAssertTrue(app.staticTexts["已确认通过"].waitForExistence(timeout: 5))
+        let dismiss = app.buttons["parent.review.dismiss-feedback"]
+        scrollFullyIntoReviewViewport(dismiss, in: app)
+        XCTAssertGreaterThanOrEqual(dismiss.frame.height, 44)
+        keepScreenshot(app, name: "系统大字真实审核结果")
+        dismiss.tap()
+        XCTAssertFalse(dismiss.exists)
+        XCTAssertFalse(app.staticTexts["已确认通过"].exists)
+    }
+
+    private func verifyFailedParentReview(action: String) {
+        let app = submitSeededTaskForReview(extraArguments: ["--habito-ui-review-save-fail"])
+        unlockParent(in: app)
+        openParentReview(in: app)
+        reviewAction(action, in: app).tap()
+        let alert = app.alerts["这次验收没有完成"]
+        XCTAssertTrue(alert.waitForExistence(timeout: 5))
+        XCTAssertTrue(alert.staticTexts["验收没有保存成功，任务仍在等待，没有发放奖励。请稍后重试。"].exists)
+        keepScreenshot(app, name: "审核保存失败保留等待-\(action)")
+        alert.buttons.element(boundBy: 0).tap()
+        XCTAssertTrue(reviewAction(action, in: app).exists)
+        XCTAssertFalse(app.descendants(matching: .any)["parent.review.reward-xp"].exists)
+        XCTAssertFalse(app.staticTexts["已确认通过"].exists)
+        XCTAssertFalse(app.staticTexts["已请孩子再完善"].exists)
+        app.terminate()
+        // 去掉失败注入但不 reset，真正从同一磁盘等待事实重试。
+        app.launchArguments = ["--habito-ui-testing"]
+        app.launch()
+        unlockExistingParent(in: app)
+        openParentReview(in: app)
+        reviewAction(action, in: app).tap()
+        let expectedTitle = action == "approve" ? "已确认通过" : "已请孩子再完善"
+        XCTAssertTrue(app.staticTexts[expectedTitle].waitForExistence(timeout: 5))
+        XCTAssertFalse(reviewActions(action, in: app).element.exists)
+    }
+
+    private func submitSeededTaskForReview(extraArguments: [String] = []) -> XCUIApplication {
+        let app = launchScenario("parent-approval", extraArguments: extraArguments)
+        openSeededTask(in: app)
+        let submit = app.buttons["kid.session.submit"]
+        scrollFullyIntoSessionViewport(submit, in: app)
+        submit.tap()
+        assertWaitingWithoutOldActions(in: app)
+        let back = app.navigationBars["任务"].buttons["今日"]
+        XCTAssertTrue(back.waitForExistence(timeout: 5))
+        back.tap()
+        return app
+    }
+
+    private func openParentReview(in app: XCUIApplication) {
+        let open = app.buttons["parent.review.open"]
+        XCTAssertTrue(open.waitForExistence(timeout: 5))
+        open.tap()
+        XCTAssertTrue(app.scrollViews["parent.review.screen"].waitForExistence(timeout: 5))
+    }
+
+    private func reviewActions(_ action: String, in app: XCUIApplication) -> XCUIElementQuery {
+        app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "parent.review.\(action)."))
+    }
+
+    private func reviewAction(_ action: String, in app: XCUIApplication) -> XCUIElement {
+        let actions = reviewActions(action, in: app)
+        XCTAssertTrue(actions.element(boundBy: 0).waitForExistence(timeout: 5))
+        XCTAssertEqual(actions.count, 1, "合成队列只有一条，不能宽泛取第一条掩盖重复")
+        return actions.element(boundBy: 0)
+    }
+
+    private func unlockExistingParent(in app: XCUIApplication, verifyWrongPIN: Bool = false) {
+        let entry = app.buttons["parent.gate.entry"]
+        XCTAssertTrue(entry.waitForExistence(timeout: 5))
+        entry.tap()
+        let pin = app.secureTextFields["parent.gate.pin"]
+        XCTAssertTrue(pin.waitForExistence(timeout: 5))
+        XCTAssertFalse(app.buttons["parent.review.open"].exists)
+        XCTAssertFalse(app.secureTextFields["parent.gate.pin-confirmation"].exists)
+        if verifyWrongPIN {
+            pin.tap()
+            pin.typeText("0000")
+            app.buttons["parent.gate.unlock"].tap()
+            XCTAssertFalse(app.buttons["parent.review.open"].exists)
+        }
+        pin.tap()
+        pin.typeText("1357")
+        app.buttons["parent.gate.unlock"].tap()
+        XCTAssertTrue(app.buttons["parent.review.open"].waitForExistence(timeout: 5))
+    }
+
+    /// 大字长字段会被整屏 swipe 越过；按实际窗口中心小幅拖动，仍要求内容完整可见。
+    private func scrollFullyIntoReviewViewport(_ element: XCUIElement, in app: XCUIApplication) {
+        XCTAssertTrue(element.waitForExistence(timeout: 5))
+        let viewport = app.scrollViews["parent.review.screen"]
+        XCTAssertTrue(viewport.exists)
+        for _ in 0..<10 {
+            if element.isHittable, viewport.frame.contains(element.frame) { return }
+            let distance = (element.frame.midY - viewport.frame.midY) / viewport.frame.height
+            let displacement = min(max(abs(distance), 0.08), 0.25) * (distance < 0 ? 1.0 : -1.0)
+            let start = viewport.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+            let end = viewport.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5 + displacement))
+            start.press(forDuration: 0.1, thenDragTo: end)
+        }
+        let diagnostic = XCTAttachment(
+            string:
+                "元素：\(element.identifier)\n元素 frame：\(element.frame)\n窗口 frame：\(viewport.frame)\n\(element.debugDescription)"
+        )
+        diagnostic.name = "审核滚动边界诊断"
+        diagnostic.lifetime = .keepAlways
+        add(diagnostic)
+        keepScreenshot(app, name: "审核滚动失败视图")
+        XCTAssertTrue(element.isHittable && viewport.frame.contains(element.frame), "审核动作应能完整滚动到可视区域")
+    }
+
+    private func launchScenario(_ scenario: String, extraArguments: [String] = []) -> XCUIApplication {
         XCUIDevice.shared.orientation = .landscapeLeft
         let app = makeApplication()
         app.launchArguments =
             [
                 "--habito-ui-testing", "--habito-ui-reset", "--habito-ui-task-scenario", scenario,
-            ]
+            ] + extraArguments
         app.launch()
         return app
     }
