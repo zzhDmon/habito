@@ -6,6 +6,40 @@ import Testing
 @MainActor
 @Suite("十分钟稍后提醒")
 struct TaskSnoozeServiceTests {
+    @Test("稍后操作等待期间提交，不能复活等待实例的通知", arguments: [0, 1, 2])
+    func submissionDuringSchedulingCannotLeaveRequest(stage: Int) async throws {
+        let fixture = try Fixture()
+        let occurrence = try fixture.makeOccurrence()
+        occurrence.verificationTypeSnapshotRawValue = TaskVerificationType.parentApproval.rawValue
+        try fixture.context.save()
+        let submit = {
+            _ = try TaskSubmissionService(context: fixture.context).submit(occurrence, at: fixture.now)
+        }
+        if stage == 2 {
+            fixture.scheduler.onAdd = submit
+        } else {
+            let duringDiagnostics: () async -> Void = {
+                do { try submit() } catch { Issue.record(error) }
+            }
+            if stage == 0 {
+                fixture.permissions.onDiagnostics = duringDiagnostics
+            } else {
+                fixture.scheduler.onRead = { fixture.permissions.onDiagnostics = duringDiagnostics }
+            }
+        }
+        await #expect(throws: TaskSubmissionError.awaitingReview(occurrence.id)) {
+            _ = try await fixture.service.schedule(occurrenceID: occurrence.id, at: fixture.now)
+        }
+        // add 已成功才发现等待时必须补偿取消；更早发现则不应触碰系统排程。
+        #expect(fixture.scheduler.addCount == (stage == 2 ? 1 : 0))
+        #expect(fixture.scheduler.pending.isEmpty)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<NotificationLink>()) == 0)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<TaskSubmission>()) == 1)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<CompletionRecord>()) == 0)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<XPTransaction>()) == 0)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<CoinTransaction>()) == 0)
+    }
+
     @Test("添加前权限复核期间完成或删除任务，重新查询后拒绝旧请求", arguments: [true, false])
     func businessChangesDuringPreAddDiagnosticsDoNotAddRequest(deleteOccurrence: Bool) async throws {
         let fixture = try Fixture()

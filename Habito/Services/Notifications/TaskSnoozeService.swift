@@ -147,6 +147,8 @@ struct TaskSnoozeService {
     }
 
     private func validateStatus(of occurrence: TaskOccurrence) throws {
+        // 所有 await 后的复核共用此等待保护，避免提交期间稍后请求被复活。
+        try TaskSubmissionHistory(context: context).requireNotWaiting(occurrence.id)
         guard let status = occurrence.status else {
             throw TaskSnoozeError.invalidOccurrenceStatus(
                 occurrence.id,

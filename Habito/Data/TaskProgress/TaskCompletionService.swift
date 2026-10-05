@@ -42,6 +42,7 @@ struct TaskCompletionService {
         guard occurrence.modelContext === context else { throw TaskCompletionServiceError.modelNotInContext }
         guard !context.hasChanges else { throw RewardLedgerError.pendingContextChanges }
         guard now.timeIntervalSinceReferenceDate.isFinite else { throw RewardLedgerError.invalidTimestamp }
+        try TaskSubmissionHistory(context: context).requireNotWaiting(occurrence.id)
         let previousAutosave = context.autosaveEnabled
         context.autosaveEnabled = false
         defer { context.autosaveEnabled = previousAutosave }

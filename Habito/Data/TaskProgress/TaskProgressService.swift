@@ -185,6 +185,67 @@ struct TaskProgressService {
         return record
     }
 
+    /// 提交等待时只结束计时并恢复基础 pending；等待语义来自独立提交事实，不是确认完成。
+    ///
+    /// - Returns: 所有计时段截至提交时刻的有效累计秒数。
+    /// - Important: 仅暂存，调用方负责关闭自动保存、提交事实与一次 save/失败恢复。
+    func stageSubmissionTimingEnd(_ occurrence: TaskOccurrence, at now: Date) throws -> TimeInterval {
+        let status = try validatedStatus(of: occurrence)
+        guard status == .pending || status == .inProgress, try completionRecord(for: occurrence) == nil else {
+            throw TaskSubmissionError.unavailableState(occurrence.id)
+        }
+        let sessions = try validatedSessions(for: occurrence)
+        let active = try activeSession(in: sessions, occurrenceID: occurrence.id)
+        guard status != .pending || active == nil else { throw TaskSubmissionError.corruptHistory(occurrence.id) }
+        let total = try submissionDuration(of: sessions, occurrenceID: occurrence.id, at: now)
+        if let active {
+            active.session.accumulatedActiveSeconds = try activeDuration(of: active, at: now)
+            active.session.stateRawValue = TimerSessionState.ended.rawValue
+            active.session.endedAt = now
+        }
+        occurrence.statusRawValue = TaskOccurrenceStatus.pending.rawValue
+        occurrence.updatedAt = now
+        return total
+    }
+
+    /// 只读验证全部计时段，等待重试用原提交时刻校验，不能接受后来悄悄增长的时长。
+    ///
+    /// - Returns: 时间线合法的累计活动秒数，不改写会话。
+    /// - Throws: 非有限/倒退时间、矛盾终态或无效时长，不能用正常数值掩盖坏关系。
+    func submissionDuration(for occurrence: TaskOccurrence, at now: Date) throws -> TimeInterval {
+        try submissionDuration(of: validatedSessions(for: occurrence), occurrenceID: occurrence.id, at: now)
+    }
+
+    private func submissionDuration(of sessions: [SessionState], occurrenceID: UUID, at now: Date) throws
+        -> TimeInterval
+    {
+        var total: TimeInterval = 0
+        for entry in sessions {
+            let session = entry.session
+            guard session.startedAt.timeIntervalSinceReferenceDate.isFinite,
+                session.lastResumedAt.timeIntervalSinceReferenceDate.isFinite,
+                session.lastResumedAt >= session.startedAt
+            else { throw TaskProgressServiceError.inconsistentOccurrenceAndSessionState(occurrenceID: occurrenceID) }
+            guard now >= session.lastResumedAt else {
+                throw TaskProgressServiceError.timeBeforeLastResume(sessionID: session.id)
+            }
+            if entry.state == .ended {
+                guard let endedAt = session.endedAt, endedAt.timeIntervalSinceReferenceDate.isFinite,
+                    endedAt >= session.lastResumedAt, endedAt <= now
+                else {
+                    throw TaskProgressServiceError.inconsistentOccurrenceAndSessionState(occurrenceID: occurrenceID)
+                }
+            } else {
+                guard session.endedAt == nil else {
+                    throw TaskProgressServiceError.inconsistentOccurrenceAndSessionState(occurrenceID: occurrenceID)
+                }
+            }
+            total += try activeDuration(of: entry, at: now)
+        }
+        guard total.isFinite, total >= 0 else { throw TaskCompletionServiceError.invalidDuration(occurrenceID) }
+        return total
+    }
+
     /// 兼容 V0 的删除式撤销，仅限旧夹具；正式 App 使用审计撤销服务。
     @discardableResult
     func undoCompletion(of occurrence: TaskOccurrence, at now: Date) throws -> Bool {
@@ -226,6 +287,7 @@ struct TaskProgressService {
     private typealias SessionState = (session: TimerSession, state: TimerSessionState)
 
     private func validatedStatus(of occurrence: TaskOccurrence) throws -> TaskOccurrenceStatus {
+        try TaskSubmissionHistory(context: context).requireNotWaiting(occurrence.id)
         guard let status = occurrence.status else {
             throw TaskProgressServiceError.invalidOccurrenceStatus(
                 occurrenceID: occurrence.id,
