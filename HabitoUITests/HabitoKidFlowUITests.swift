@@ -73,6 +73,58 @@ final class HabitoKidFlowUITests: XCTestCase {
         XCTAssertTrue(app.buttons["kid.session.start"].waitForExistence(timeout: 5))
     }
 
+    func testColdLaunchOldNotificationForCompletedTaskReturnsHomeWithoutReseeding() throws {
+        XCUIDevice.shared.orientation = .landscapeLeft
+        let app = makeApplication()
+        app.launchArguments = ["--habito-ui-testing", "--habito-ui-reset"]
+        app.launch()
+        let task = app.buttons[seededTaskIdentifier]
+        XCTAssertTrue(task.waitForExistence(timeout: 5))
+        task.tap()
+        let complete = app.buttons["kid.session.complete"]
+        XCTAssertTrue(complete.waitForExistence(timeout: 5))
+        complete.tap()
+        XCTAssertTrue(app.buttons["kid.session.undo"].waitForExistence(timeout: 2))
+
+        // 不传 reset：旧通知路由必须读取刚才已保存的完成事实，而不是测试进程内快照。
+        relaunchWithOldSeededNotification(app)
+        XCTAssertTrue(app.staticTexts["今天的任务都完成了。"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.buttons["kid.session.start"].exists)
+        XCTAssertFalse(app.buttons["kid.session.complete"].exists)
+        XCTAssertFalse(task.exists)
+        XCTAssertTrue(app.buttons["parent.gate.entry"].exists)
+    }
+
+    func testColdLaunchOldNotificationForDeletedTaskReturnsHomeWithoutReseeding() throws {
+        XCUIDevice.shared.orientation = .landscapeLeft
+        let app = makeApplication()
+        app.launchArguments = ["--habito-ui-testing", "--habito-ui-reset"]
+        app.launch()
+        XCTAssertTrue(app.buttons[seededTaskIdentifier].waitForExistence(timeout: 5))
+        unlockParent(in: app)
+        let template = app.buttons[seededTemplateIdentifier]
+        XCTAssertTrue(template.waitForExistence(timeout: 5))
+        template.tap()
+        let archive = app.buttons["parent.templates.lifecycle.archive"]
+        if !archive.exists {
+            app.swipeUp()
+            app.swipeUp()
+        }
+        XCTAssertTrue(archive.waitForExistence(timeout: 5))
+        archive.tap()
+        let confirm = app.buttons["parent.templates.lifecycle.confirm"].firstMatch
+        XCTAssertTrue(confirm.waitForExistence(timeout: 5))
+        confirm.tap()
+        XCTAssertTrue(app.staticTexts["还没有任务"].waitForExistence(timeout: 5))
+
+        // 软删除保留模板历史，但移除其待处理实例；重启播种不能使旧 identifier 再次有效。
+        relaunchWithOldSeededNotification(app)
+        XCTAssertTrue(app.staticTexts["今天没有任务啊"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.buttons["kid.session.start"].exists)
+        XCTAssertFalse(app.buttons[seededTaskIdentifier].exists)
+        XCTAssertTrue(app.buttons["parent.gate.entry"].exists)
+    }
+
     func testStartPauseRelaunchResumeCompleteAndUndo() throws {
         XCUIDevice.shared.orientation = .landscapeLeft
         let app = makeApplication()
@@ -442,6 +494,16 @@ final class HabitoKidFlowUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchEnvironment["HABITO_UI_SYSTEM_REFERENCE"] = String(Date.now.timeIntervalSince1970)
         return app
+    }
+
+    private func relaunchWithOldSeededNotification(_ app: XCUIApplication) {
+        app.terminate()
+        app.launchArguments = [
+            "--habito-ui-testing",
+            "--habito-ui-notification-request",
+            "habito.occurrence.c5412144-2fb8-4e96-9f7a-6a42e0803d11.primary",
+        ]
+        app.launch()
     }
 
     private func unlockParent(in app: XCUIApplication) {

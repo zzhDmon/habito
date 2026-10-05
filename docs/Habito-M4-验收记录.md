@@ -216,3 +216,12 @@ xcrun xcresulttool get test-results summary --path <实际生成的 xcresult 目
 - 双系统全量单测各 **183/183（201 次执行）**，零失败/跳过/runtime warning：17.2 `/tmp/habito-m4-008-permissions-ios17/Logs/Test/Test-Habito-2026.10.05_18-24-13-+0800.xcresult`；27 `/tmp/habito-m4-008-permissions/Logs/Test/Test-Habito-2026.10.05_18-24-14-+0800.xcresult`。严格格式、差异检查、静态分析与 Release 构建通过；完整横屏 UI 待最终结果核对。
 - `swiftui-pro` 并发复核：新 await 后先检查取消，再按稳定 ID 重查，不把主 actor 当成跨 await 事务；排程 gate 与添加后补偿保持不变。只读设备检查仍 unavailable，未覆盖安装真机或推送远端。
 - 最终完整横屏 UI 各 **14/14**，零失败/跳过：17.2 `/tmp/habito-m4-008-permissions-ios17/Logs/Test/Test-Habito-2026.10.05_18-25-03-+0800.xcresult`（204.039 秒，零 runtime warning）；27 `/tmp/habito-m4-008-permissions/Logs/Test/Test-Habito-2026.10.05_18-25-04-+0800.xcresult`（275.779 秒，保留 14 条 R-009 提示）。A 本阶段通过，B 仍待真实设备。
+
+## 14. 2026-10-05 旧通知冷启动后的状态集成
+
+- 新增两项 App 进程级 UI 场景：孩子正式完成样例任务，或家长通过正式 UI 软删除样例模板，再终止 App；重启不传 reset，用既有 Debug 桥发送同一旧 primary identifier。
+- 完成场景回到“今天的任务都完成了”首页，执行/完成按钮和待处理卡片不存在；删除场景回到“今天没有任务啊”首页，旧实例不可进入。两者均可打开家长入口，不因重启播种复活任务。未修改正式导航、schema、播种或通知政策。
+- 新增专项两系统均 **2/2**：17.2 `/tmp/habito-m4-008-permissions-ios17/Logs/Test/Test-Habito-2026.10.05_18-31-43-+0800.xcresult`（31.402 秒，零 runtime warning）；27 `/tmp/habito-m4-008-permissions/Logs/Test/Test-Habito-2026.10.05_18-31-44-+0800.xcresult`（48.350 秒，保留两条 R-009 提示）。此为路由/持久化集成证据，不能代替实际送达或系统点击回调测试。
+- 最终完整横屏 **两系统各 16/16**，零失败/跳过：17.2 `/tmp/habito-m4-008-permissions-ios17/Logs/Test/Test-Habito-2026.10.05_18-32-40-+0800.xcresult`（235.694 秒，无 runtime warning）；27 `/tmp/habito-m4-008-permissions/Logs/Test/Test-Habito-2026.10.05_18-33-32-+0800.xcresult`（317.879 秒，保留 16 条 R-009 提示）。
+- 阶段收尾全量单测 **各 183/183（201 次执行）**，零失败/跳过/runtime warning：17.2 `/tmp/habito-m4-008-permissions-ios17/Logs/Test/Test-Habito-2026.10.05_18-37-23-+0800.xcresult`；27 `/tmp/habito-m4-008-permissions/Logs/Test/Test-Habito-2026.10.05_18-33-04-+0800.xcresult`。App 代码保持 `e0b865a` 基线，Release/静态分析证据继续有效；严格格式、工程解析、差异检查通过。
+- `swiftui-pro` 复核：既有类型安全导航、主 actor 路由桥和持久化事实保持，不因测试新增正式 API 或 UI 功能。真机收尾检查仍 unavailable；B 及 M5 观察项尚未执行，未推送、安装或卸载真机旧包。待用户动作见独立清单，M4-008 保持 `IN_PROGRESS`。
