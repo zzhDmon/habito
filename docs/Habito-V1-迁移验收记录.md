@@ -48,3 +48,15 @@
 - 开发时夹具错误地直接设置只读 PIN 字段，编译拒绝；已改用冻结模型既有 `hasParentPIN` 初始化参数，不放宽正式模型或冻结定义。修前两个系统构建失败不是迁移失败，也不算通过证据。
 - 修后两系统专项各 **14/14（25 次执行）通过**，零失败/跳过/runtime warning：17.2 `/tmp/habito-v1-m1-001-ios17/Logs/Test/Test-Habito-2026.10.05_22-19-49-+0800.xcresult`；27 `/tmp/habito-v1-m1-001-ios27/Logs/Test/Test-Habito-2026.10.05_22-19-50-+0800.xcresult`。全量和构建验收正在进行，不提前标记整卡 DONE。
 - 最终完整单测两系统各 **207/207（247 次执行）通过**，零失败/跳过/runtime warning：17.2 `/tmp/habito-v1-m1-001-ios17/Logs/Test/Test-Habito-2026.10.05_22-20-29-+0800.xcresult`；27 `/tmp/habito-v1-m1-001-ios27/Logs/Test/Test-Habito-2026.10.05_22-20-30-+0800.xcresult`。Release 横屏工程构建、静态分析、全工程严格格式、工程解析及差异检查通过，003A DONE。无新 UI 或真机送达证据；上一卡 UI 通过不重写成此次新证据。
+
+## 4. V1-M1-004A：完成快照与多次审计兼容结构
+
+- 结构 3.0.0 的十模型独立冻结自 `45a7172`，逐一机械 `diff -w` 对照通过；1.0.0/2.0.0 定义未动。当前结构 4.0.0 增完成记录的提醒/XP/基础 Coin/自主加成/实际 Coin 快照、结算版本和撤销时刻。
+- 旧字段保持，新增提醒/撤销时刻为空、金额/结算版本为零，旧自主性原值不改。即使已有账本，也不从它倒灌新快照或把旧事实冒充新事务结算；不补奖。新提交包括零奖励旧任务将由后续用例正常判断，unknown 仅保护旧历史证据不足。
+- 保留完成 ID 唯一；移除 occurrenceID 的存储唯一约束，以便原撤销记录与新完成共存。TaskOccurrence.completionRecord 仍单值，指向当前未撤销事实；撤销历史可断开活跃关系但稳定外键保留。活动事实唯一性由后续业务事务校验。旧 App 写路径尚未切换，不创建新多记录历史，不声明新奖励 UI 可用。
+- Apple 示例说明新增唯一约束需要特别迁移处理，不据此推断移除约束必然兼容；本项目以独立真实磁盘旧库与双系统验证为准。[Apple WWDC23 schema migration](https://developer.apple.com/videos/play/wwdc2023/10195/)
+- 首轮迁移专项两系统各 **16/16（29 次）通过**：17.2 `/tmp/habito-v1-m1-001-ios17/Logs/Test/Test-Habito-2026.10.05_22-40-45-+0800.xcresult`；27 `/tmp/habito-v1-m1-001-ios27/Logs/Test/Test-Habito-2026.10.05_22-40-46-+0800.xcresult`，零失败/跳过/runtime warning。随后补固定账本交易 ID 断言，最终全量同时覆盖。
+- 最终完整单测两系统各 **226/226（279 次）通过**：17.2 `/tmp/habito-v1-m1-001-ios17/Logs/Test/Test-Habito-2026.10.05_22-41-58-+0800.xcresult`；27 `/tmp/habito-v1-m1-001-ios27/Logs/Test/Test-Habito-2026.10.05_22-41-59-+0800.xcresult`，零失败/跳过/runtime warning。Release 横屏构建、静态分析、严格格式、工程解析与差异检查通过；完整 UI 在运行，整卡仍 IN_PROGRESS。
+- 新测试只验证合成结构允许多条历史，未实现真实撤销/重完事务；没有把手工模型写入说成发奖或冲正完成。未来 004B/005/006 的原子写入、计时、窗口、通知和入口各有验收。未读取家庭库、真实 PIN 或修改真机包。
+- 补齐“改单日提醒/奖励不能改写已提交快照”后，最终全量重新运行，两系统仍各 **226/226（279 次）**，零失败/跳过/runtime warning：17.2 `/tmp/habito-v1-m1-001-ios17/Logs/Test/Test-Habito-2026.10.05_22-47-32-+0800.xcresult`；27 `/tmp/habito-v1-m1-001-ios27/Logs/Test/Test-Habito-2026.10.05_22-48-32-+0800.xcresult`。
+- 完整横屏 UI 各 **16/16**，零失败/跳过：17.2 `/tmp/habito-v1-m1-001-ios17/Logs/Test/Test-Habito-2026.10.05_22-42-45-+0800.xcresult`（237.437 秒、无 runtime warning）；27 `/tmp/habito-v1-m1-001-ios27/Logs/Test/Test-Habito-2026.10.05_22-42-46-+0800.xcresult`（319.146 秒、保留 16 条 R-009）。自动化桥仍不代替真机送达证据。swiftui-pro 数据/并发/卫生复核与严格格式通过，004A DONE。

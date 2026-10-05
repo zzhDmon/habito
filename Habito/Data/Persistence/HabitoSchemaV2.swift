@@ -1,6 +1,6 @@
 import SwiftData
 
-/// 在结构 2.0.0 基础上增加空 XP/Coin 审计账本，不在迁移时补发历史奖励。
+/// 独立冻结的结构 3.0.0：八个任务模型与两个账本模型，不能随当前模型演进。
 nonisolated enum HabitoSchemaV2: VersionedSchema {
     static let versionIdentifier = Schema.Version(3, 0, 0)
 
