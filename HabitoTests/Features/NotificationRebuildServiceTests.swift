@@ -906,18 +906,22 @@ private extension NotificationRebuildServiceTests {
         return (occurrence.id, row.submissionID)
     }
 
-    /// 显式合成 V1 配置，不依赖尚未接入的模板编辑器，也不把 11/7/3 当产品默认。
+    /// 显式合成模板经正式物化传播配置；11/7/3 不是产品默认，也不绕过普通实例核对。
     func approvalSetup(zero: Bool = false, storeURL: URL? = nil) async throws -> (Fixture, TaskOccurrence) {
         let fixture = try Fixture(storeURL: storeURL)
-        _ = try fixture.insertDailyTemplate()
+        let template = try fixture.insertDailyTemplate()
+        template.verificationTypeRawValue = TaskVerificationType.parentApproval.rawValue
+        template.xpReward = zero ? 0 : 11
+        template.coinReward = zero ? 0 : 7
+        template.activeBonusCoin = zero ? 0 : 3
+        try fixture.context.save()
         _ = try await fixture.service.rebuild(at: fixture.now)
         let occurrence = try #require(
             fixture.context.fetch(FetchDescriptor<TaskOccurrence>()).first { $0.dateKey == "2026-09-27" })
-        occurrence.verificationTypeSnapshotRawValue = TaskVerificationType.parentApproval.rawValue
-        occurrence.xpRewardSnapshot = zero ? 0 : 11
-        occurrence.coinRewardSnapshot = zero ? 0 : 7
-        occurrence.activeBonusCoinSnapshot = zero ? 0 : 3
-        try fixture.context.save()
+        #expect(occurrence.verificationTypeSnapshot == .parentApproval)
+        #expect(occurrence.xpRewardSnapshot == (zero ? 0 : 11))
+        #expect(occurrence.coinRewardSnapshot == (zero ? 0 : 7) && occurrence.activeBonusCoinSnapshot == (zero ? 0 : 3))
+        #expect(!fixture.context.hasChanges)
         return (fixture, occurrence)
     }
 

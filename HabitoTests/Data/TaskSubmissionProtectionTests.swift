@@ -6,6 +6,117 @@ import Testing
 @MainActor
 @Suite("等待事实保护与只读查询")
 struct TaskSubmissionProtectionTests {
+    @Test("模板配置传播不改写等待、退回、审核冲正或通过实例", arguments: Array(0..<4))
+    func reconciliationKeepsAllAuditedConfiguration(outcome: Int) throws {
+        let fixture = try Fixture()
+        if outcome == 3 {
+            _ = try fixture.review.approve(fixture.occurrence, submissionID: fixture.submissionID, at: fixture.now)
+        } else {
+            try fixture.applyOutcome(outcome)
+        }
+        let ordinary = try fixture.makeOccurrence(date: V0MigrationFixture.date("2026-09-23"))
+        let originalTime = fixture.occurrence.scheduledAt
+        let originalUpdatedAt = fixture.occurrence.updatedAt
+        fixture.template.title = "新模板不重算旧提交"
+        fixture.template.categoryRawValue = TaskCategory.challenge.rawValue
+        fixture.template.timePeriodRawValue = TaskTimePeriod.afterSchool.rawValue
+        fixture.template.verificationTypeRawValue = TaskVerificationType.selfConfirm.rawValue
+        fixture.template.xpReward = 41
+        fixture.template.coinReward = 23
+        fixture.template.activeBonusCoin = 9
+        fixture.template.revision = 2
+        try fixture.context.save()
+        let end = try V0MigrationFixture.date("2026-09-23")
+        let desired = [fixture.date, end].map {
+            ResolvedTaskCandidate(
+                date: $0, scheduledAt: fixture.now.addingTimeInterval(7200), origin: .generated(templateRevision: 2))
+        }
+        let report = try TaskOccurrenceReconciliationService(context: fixture.context).reconcile(
+            template: fixture.template, candidates: desired, in: fixture.date...end,
+            today: fixture.date, now: fixture.now.addingTimeInterval(10))
+        #expect(report.updatedCount == 1 && report.protectedCount == 1)
+        #expect(
+            ordinary.xpRewardSnapshot == 41 && ordinary.coinRewardSnapshot == 23
+                && ordinary.activeBonusCoinSnapshot == 9)
+        #expect(ordinary.categorySnapshot == .challenge && ordinary.timePeriodSnapshot == .afterSchool)
+        #expect(ordinary.verificationTypeSnapshot == .selfConfirm)
+        #expect(fixture.occurrence.categorySnapshot == .unassigned && fixture.occurrence.timePeriodSnapshot == .allDay)
+        #expect(fixture.occurrence.verificationTypeSnapshot == .parentApproval)
+        #expect(
+            fixture.occurrence.xpRewardSnapshot == 11 && fixture.occurrence.coinRewardSnapshot == 7
+                && fixture.occurrence.activeBonusCoinSnapshot == 3)
+        #expect(fixture.occurrence.scheduledAt == originalTime && fixture.occurrence.updatedAt == originalUpdatedAt)
+        #expect(fixture.occurrence.sourceRevision == 1 && fixture.occurrence.titleSnapshot == "合成验收")
+        let row = try #require(fixture.context.fetch(FetchDescriptor<TaskSubmission>()).first)
+        #expect(
+            row.id == fixture.submissionID && row.xpRewardSnapshot == 11 && row.coinRewardSnapshot == 7
+                && row.activeBonusCoinSnapshot == 3)
+        #expect(row.reminderAtSnapshot == originalTime)
+        #expect(!fixture.context.hasChanges)
+    }
+
+    @Test("实际运行或暂停计时保留旧配置与会话，不被新模板改变", arguments: [false, true])
+    func reconciliationKeepsLiveTimerConfiguration(paused: Bool) throws {
+        let fixture = try Fixture()
+        let date = try V0MigrationFixture.date("2026-09-23")
+        let occurrence = try fixture.makeOccurrence(date: date)
+        let progress = TaskProgressService(context: fixture.context)
+        let session = try progress.startTiming(for: occurrence, at: fixture.now)
+        if paused { _ = try progress.pauseTiming(for: occurrence, at: fixture.now.addingTimeInterval(30)) }
+        let originalUpdatedAt = occurrence.updatedAt
+        fixture.template.verificationTypeRawValue = TaskVerificationType.parentApproval.rawValue
+        fixture.template.xpReward = 11
+        fixture.template.coinReward = 7
+        fixture.template.activeBonusCoin = 3
+        try fixture.context.save()
+        let report = try TaskOccurrenceReconciliationService(context: fixture.context).reconcile(
+            template: fixture.template,
+            candidates: [
+                .init(
+                    date: date, scheduledAt: fixture.now.addingTimeInterval(7200),
+                    origin: .generated(templateRevision: 1))
+            ],
+            in: date...date, today: fixture.date, now: fixture.now.addingTimeInterval(60))
+        #expect(report.protectedCount == 1 && report.updatedCount == 0)
+        #expect(occurrence.verificationTypeSnapshot == .selfConfirm && occurrence.xpRewardSnapshot == 0)
+        #expect(occurrence.coinRewardSnapshot == 0 && occurrence.activeBonusCoinSnapshot == 0)
+        #expect(occurrence.updatedAt == originalUpdatedAt && occurrence.status == .inProgress)
+        #expect(session.state == (paused ? .paused : .running))
+        #expect(session.accumulatedActiveSeconds == (paused ? 30 : 0))
+        #expect(session.endedAt == nil && !fixture.context.hasChanges)
+    }
+
+    @Test("自行确认撤销后的完成审计同样保护实例配置，不借 pending 重算")
+    func reconciliationKeepsRevokedSelfConfirmationConfiguration() throws {
+        let fixture = try Fixture()
+        let date = try V0MigrationFixture.date("2026-09-23")
+        let occurrence = try fixture.makeOccurrence(date: date)
+        let completed = try TaskCompletionService(context: fixture.context).complete(
+            occurrence, at: fixture.now, source: .childManual)
+        _ = try TaskCompletionUndoService(context: fixture.context).undo(
+            occurrence, completionID: completed.completionID, at: fixture.now.addingTimeInterval(1))
+        let originalUpdatedAt = occurrence.updatedAt
+        fixture.template.verificationTypeRawValue = TaskVerificationType.parentApproval.rawValue
+        fixture.template.xpReward = 41
+        fixture.template.coinReward = 23
+        fixture.template.activeBonusCoin = 9
+        try fixture.context.save()
+        let report = try TaskOccurrenceReconciliationService(context: fixture.context).reconcile(
+            template: fixture.template,
+            candidates: [
+                .init(
+                    date: date, scheduledAt: fixture.now.addingTimeInterval(7200),
+                    origin: .generated(templateRevision: 1))
+            ],
+            in: date...date, today: fixture.date, now: fixture.now.addingTimeInterval(60))
+        #expect(report.protectedCount == 1 && report.updatedCount == 0)
+        #expect(occurrence.verificationTypeSnapshot == .selfConfirm && occurrence.xpRewardSnapshot == 0)
+        #expect(occurrence.coinRewardSnapshot == 0 && occurrence.activeBonusCoinSnapshot == 0)
+        #expect(occurrence.updatedAt == originalUpdatedAt && occurrence.status == .pending)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<CompletionRecord>()) == 1)
+        #expect(!fixture.context.hasChanges)
+    }
+
     @Test("模板修订不更新等待实例，空候选不删除审计实例而普通未来实例仍可清理")
     func reconciliationPreservesWaitingAndKeepsOrdinaryBehavior() throws {
         let fixture = try Fixture()
@@ -210,6 +321,28 @@ struct TaskSubmissionProtectionTests {
                 id: occurrence.id, at: now)
             #expect(item.submission?.id == submissionID && item.isAwaitingReview == (outcome == 0))
             #expect(item.status == .pending && item.completion == nil)
+            let template = try #require(context.fetch(FetchDescriptor<TaskTemplate>()).first)
+            template.categoryRawValue = TaskCategory.challenge.rawValue
+            template.timePeriodRawValue = TaskTimePeriod.evening.rawValue
+            template.verificationTypeRawValue = TaskVerificationType.selfConfirm.rawValue
+            template.xpReward = 41
+            template.coinReward = 23
+            template.activeBonusCoin = 9
+            template.revision = 2
+            try context.save()
+            let updated = try TaskOccurrenceReconciliationService(context: context).reconcile(
+                template: template,
+                candidates: [
+                    .init(
+                        date: date, scheduledAt: now.addingTimeInterval(7200), origin: .generated(templateRevision: 2))
+                ],
+                in: date...date, today: date, now: now)
+            #expect(updated.protectedCount == 1 && updated.updatedCount == 0)
+            #expect(occurrence.categorySnapshot == .unassigned && occurrence.timePeriodSnapshot == .allDay)
+            #expect(occurrence.verificationTypeSnapshot == .parentApproval && occurrence.sourceRevision == 1)
+            #expect(
+                occurrence.xpRewardSnapshot == 11 && occurrence.coinRewardSnapshot == 7
+                    && occurrence.activeBonusCoinSnapshot == 3)
             #expect(throws: TaskGraphDeletionError.protectedHistory(occurrence.id)) {
                 try TaskGraphDeletionService(context: context).stageOccurrenceDeletion(occurrence)
             }

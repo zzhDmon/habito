@@ -24,7 +24,7 @@ struct TaskOccurrenceReconciliationService {
     ///   - savesChanges: 是否在本次核对后立即保存。复合事务可传入 `false`，
     ///     待多个模板全部核对成功后由外层统一提交。
     /// - Returns: 实际插入、更新、删除和受保护的数量。
-    /// - Throws: 输入冲突、存量状态损坏或 SwiftData 保存失败。
+    /// - Throws: 输入冲突、模板配置/奖励或存量状态损坏，以及 SwiftData 保存失败。
     func reconcile(
         template: TaskTemplate,
         candidates: [ResolvedTaskCandidate],
@@ -36,6 +36,9 @@ struct TaskOccurrenceReconciliationService {
         guard template.lifecycleState == .active || candidates.isEmpty else {
             throw OccurrenceReconciliationError.inactiveTemplateHasCandidates
         }
+
+        // 配置先整体验证，不能在候选遍历中才发现坏奖励并留下前几天的半更新。
+        try validateConfiguration(of: template)
 
         let desired = try validatedCandidates(
             candidates,
@@ -59,8 +62,9 @@ struct TaskOccurrenceReconciliationService {
             if let existingState = existingByDate.removeValue(forKey: candidate.date.dateKey) {
                 let occurrence = existingState.occurrence
                 let status = existingState.status
+                // 退回或撤销后仍保留原实例配置；pending 并不代表从未提交或完成。
                 guard candidate.date >= today, status == .pending, !occurrence.isDetachedOverride,
-                    !existingState.isWaiting
+                    !existingState.preservesHistory
                 else {
                     protected += 1
                     continue
@@ -102,13 +106,36 @@ struct TaskOccurrenceReconciliationService {
         )
     }
 
+    /// 只允许已支持的分类/时段/P0 验收，并确保任何自主提交都能安全加总 Coin。
+    ///
+    /// - Throws: 损坏类型、负金额或 Coin 总额溢出；不修复、截断或猜测产品默认值。
+    private func validateConfiguration(of template: TaskTemplate) throws {
+        for (field, rawValue, isValid) in [
+            ("category", template.categoryRawValue, template.category != nil),
+            ("timePeriod", template.timePeriodRawValue, template.timePeriod != nil),
+            ("verificationType", template.verificationTypeRawValue, template.verificationType != nil),
+        ] {
+            guard isValid else {
+                throw OccurrenceReconciliationError.invalidTemplateConfiguration(
+                    templateID: template.id, field: field, rawValue: rawValue)
+            }
+        }
+        guard template.xpReward >= 0, template.coinReward >= 0, template.activeBonusCoin >= 0 else {
+            throw RewardLedgerError.invalidAmount
+        }
+        // 即使本次提醒已过，也检查最大可能到账；未来自主完成不能才发现配置不可结算。
+        guard !template.coinReward.addingReportingOverflow(template.activeBonusCoin).overflow else {
+            throw RewardLedgerError.integerOverflow
+        }
+    }
+
     private func validatedExistingOccurrences(
         _ occurrences: [TaskOccurrence]
     ) throws -> [String: (
-        occurrence: TaskOccurrence, date: LocalDate, status: TaskOccurrenceStatus, isWaiting: Bool,
+        occurrence: TaskOccurrence, date: LocalDate, status: TaskOccurrenceStatus,
         preservesHistory: Bool
     )] {
-        var result: [String: (TaskOccurrence, LocalDate, TaskOccurrenceStatus, Bool, Bool)] = [:]
+        var result: [String: (TaskOccurrence, LocalDate, TaskOccurrenceStatus, Bool)] = [:]
         let history = TaskSubmissionHistory(context: context)
         for occurrence in occurrences {
             let date: LocalDate
@@ -127,9 +154,8 @@ struct TaskOccurrenceReconciliationService {
                 )
             }
             // 修改前验证全部等待事实；坏历史不能导致先改一半实例再报错。
-            let isWaiting = try history.latest(for: occurrence)?.reviewState == .waiting
             let preservesHistory = try history.preservesOccurrenceHistory(occurrence)
-            result[occurrence.dateKey] = (occurrence, date, status, isWaiting, preservesHistory)
+            result[occurrence.dateKey] = (occurrence, date, status, preservesHistory)
         }
         return result
     }
@@ -178,8 +204,15 @@ struct TaskOccurrenceReconciliationService {
             sourceRevision: sourceRevision(for: candidate, template: template),
             isDetachedOverride: candidate.origin == .detachedOverride,
             createdAt: now,
-            updatedAt: now
+            updatedAt: now,
+            xpRewardSnapshot: template.xpReward,
+            coinRewardSnapshot: template.coinReward,
+            activeBonusCoinSnapshot: template.activeBonusCoin
         )
+        // 已在修改前验证原始值；直接复制能保留明确输入，不用后来的模板回算已生成实例。
+        occurrence.categorySnapshotRawValue = template.categoryRawValue
+        occurrence.timePeriodSnapshotRawValue = template.timePeriodRawValue
+        occurrence.verificationTypeSnapshotRawValue = template.verificationTypeRawValue
         occurrence.template = template
         return occurrence
     }
@@ -195,6 +228,12 @@ struct TaskOccurrenceReconciliationService {
         occurrence.iconSnapshot = template.iconName
         occurrence.colorSnapshot = template.colorToken
         occurrence.targetDurationSnapshot = template.targetDurationSeconds
+        occurrence.categorySnapshotRawValue = template.categoryRawValue
+        occurrence.timePeriodSnapshotRawValue = template.timePeriodRawValue
+        occurrence.verificationTypeSnapshotRawValue = template.verificationTypeRawValue
+        occurrence.xpRewardSnapshot = template.xpReward
+        occurrence.coinRewardSnapshot = template.coinReward
+        occurrence.activeBonusCoinSnapshot = template.activeBonusCoin
         occurrence.sourceRevision = sourceRevision(for: candidate, template: template)
         occurrence.isDetachedOverride = candidate.origin == .detachedOverride
         occurrence.updatedAt = now
@@ -211,6 +250,12 @@ struct TaskOccurrenceReconciliationService {
             || occurrence.iconSnapshot != template.iconName
             || occurrence.colorSnapshot != template.colorToken
             || occurrence.targetDurationSnapshot != template.targetDurationSeconds
+            || occurrence.categorySnapshotRawValue != template.categoryRawValue
+            || occurrence.timePeriodSnapshotRawValue != template.timePeriodRawValue
+            || occurrence.verificationTypeSnapshotRawValue != template.verificationTypeRawValue
+            || occurrence.xpRewardSnapshot != template.xpReward
+            || occurrence.coinRewardSnapshot != template.coinReward
+            || occurrence.activeBonusCoinSnapshot != template.activeBonusCoin
             || occurrence.sourceRevision != sourceRevision(for: candidate, template: template)
             || occurrence.isDetachedOverride != (candidate.origin == .detachedOverride)
             || occurrence.template?.id != template.id

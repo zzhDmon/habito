@@ -7,6 +7,7 @@ enum OccurrenceReconciliationError: Error, Equatable, Sendable {
     case candidateBeforeToday(LocalDate)
     case candidateRevisionMismatch(candidate: Int, template: Int)
     case inactiveTemplateHasCandidates
+    case invalidTemplateConfiguration(templateID: UUID, field: String, rawValue: String)
     case invalidStoredDateKey(occurrenceID: UUID, dateKey: String)
     case invalidStoredStatus(occurrenceID: UUID, rawValue: String)
 }
