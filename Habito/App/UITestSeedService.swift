@@ -59,9 +59,9 @@
                 createdAt: now,
                 updatedAt: now,
                 verificationType: scenario.verificationType,
-                xpReward: scenario == .legacy ? 0 : 11,
-                coinReward: scenario == .legacy ? 0 : 7,
-                activeBonusCoin: scenario == .legacy ? 0 : 3
+                xpReward: scenario.hasSyntheticReward ? 11 : 0,
+                coinReward: scenario.hasSyntheticReward ? 7 : 0,
+                activeBonusCoin: scenario.hasSyntheticReward ? 3 : 0
             )
             let occurrence = TaskOccurrence(
                 id: taskID,

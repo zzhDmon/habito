@@ -6,6 +6,7 @@
         case legacy
         case rewardSelfConfirm = "reward-self-confirm"
         case parentApproval = "parent-approval"
+        case zeroRewardParentApproval = "zero-reward-parent-approval"
         case returnedSubmission = "returned-submission"
 
         static let argument = "--habito-ui-task-scenario"
@@ -22,8 +23,13 @@
         var verificationType: TaskVerificationType {
             switch self {
             case .legacy, .rewardSelfConfirm: .selfConfirm
-            case .parentApproval, .returnedSubmission: .parentApproval
+            case .parentApproval, .zeroRewardParentApproval, .returnedSubmission: .parentApproval
             }
+        }
+
+        /// 零奖励审核同样完整跑业务闭环，不靠旧任务自行确认替代家长审核验收。
+        var hasSyntheticReward: Bool {
+            self != .legacy && self != .zeroRewardParentApproval
         }
     }
 #endif

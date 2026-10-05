@@ -3,7 +3,7 @@ import Observation
 import OSLog
 import SwiftData
 
-/// 主 actor 内协调队列与审核事务；PIN 权限由下一卡的家长组合根/受保护导航负责。
+/// 主 actor 内协调队列与审核事务；PIN 权限由家长组合根与受保护导航负责。
 ///
 /// View 只转交捕获的纯值请求。重新取实例但始终使用原提交 ID，不自动审核最新轮次。
 /// @Observable 让页面只订阅它读取的队列/错误/反馈；生命周期由受保护页面持有，不保存成历史庆祝。

@@ -701,6 +701,91 @@ final class HabitoKidFlowUITests: XCTestCase {
         XCTAssertFalse(app.staticTexts["已确认通过"].exists)
     }
 
+    func testTimedReviewReturnResubmissionApprovalAndRelaunchKeepOneReward() throws {
+        verifyReviewRoundTrip(zeroReward: false)
+    }
+
+    func testZeroRewardReviewRoundTripStillConfirmsEffortWithoutInventingCurrency() throws {
+        verifyReviewRoundTrip(zeroReward: true)
+    }
+
+    /// 两轮都由实际孩子/家长页面提交；重启不 reset，避免播种替代真实状态恢复。
+    private func verifyReviewRoundTrip(zeroReward: Bool) {
+        let app = launchScenario(zeroReward ? "zero-reward-parent-approval" : "parent-approval")
+        openSeededTask(in: app)
+        app.buttons["kid.session.start"].tap()
+        let pause = app.buttons["kid.session.pause"]
+        XCTAssertTrue(pause.waitForExistence(timeout: 5))
+        pause.tap()
+        app.buttons["kid.session.submit"].tap()
+        assertWaitingWithoutOldActions(in: app)
+        returnToTodayFromTask(in: app)
+        unlockParent(in: app)
+        openParentReview(in: app)
+        let firstRequestID = reviewAction("approve", in: app).identifier
+        reviewAction("return", in: app).tap()
+        XCTAssertTrue(app.staticTexts["已请孩子再完善"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.staticTexts["parent.review.reward-xp"].exists)
+        XCTAssertFalse(app.staticTexts["parent.review.reward-coins"].exists)
+        navigateBack(in: app, from: "待验收")
+        app.buttons["parent.gate.close"].tap()
+
+        app.terminate()
+        app.launchArguments = ["--habito-ui-testing"]
+        app.launch()
+        let task = app.buttons[seededTaskIdentifier]
+        XCTAssertTrue(task.waitForExistence(timeout: 5))
+        XCTAssertTrue(task.label.contains("再完善一下"))
+        XCTAssertFalse(app.buttons["parent.review.open"].exists)
+        task.tap()
+        XCTAssertTrue(app.buttons["kid.session.start"].waitForExistence(timeout: 5))
+        app.buttons["kid.session.start"].tap()
+        XCTAssertTrue(pause.waitForExistence(timeout: 5))
+        pause.tap()
+        app.buttons["kid.session.submit"].tap()
+        assertWaitingWithoutOldActions(in: app)
+        returnToTodayFromTask(in: app)
+        unlockExistingParent(in: app)
+        openParentReview(in: app)
+        let secondRequest = reviewAction("approve", in: app)
+        XCTAssertNotEqual(secondRequest.identifier, firstRequestID, "重提必须审核新 ID，不能重用退回请求")
+        // UI 操作可能跨过真实 60 秒提醒；结算需跟随第二次提交快照，不能硬假设仍自主。
+        let secondWasAutonomous = app.staticTexts["在提醒前主动提交"].exists
+        if !secondWasAutonomous { XCTAssertTrue(app.staticTexts["提交时已到提醒时间"].exists) }
+        secondRequest.tap()
+        XCTAssertTrue(app.staticTexts["已确认通过"].waitForExistence(timeout: 5))
+        if zeroReward {
+            XCTAssertFalse(app.staticTexts["parent.review.reward-xp"].exists)
+            XCTAssertFalse(app.staticTexts["parent.review.reward-coins"].exists)
+        } else {
+            XCTAssertEqual(app.staticTexts["parent.review.reward-xp"].label, "+11 XP 已到账")
+            XCTAssertEqual(
+                app.staticTexts["parent.review.reward-coins"].label,
+                secondWasAutonomous ? "+10 金币已到账" : "+7 金币已到账")
+        }
+        XCTAssertFalse(reviewActions("approve", in: app).element.exists)
+        keepScreenshot(app, name: zeroReward ? "零奖励两轮真实审核完成" : "计时退回重提真实审核完成")
+        navigateBack(in: app, from: "待验收")
+        app.buttons["parent.gate.close"].tap()
+        XCTAssertTrue(app.staticTexts["今天的任务都完成了。"].waitForExistence(timeout: 5))
+
+        relaunchWithOldSeededNotification(app)
+        XCTAssertTrue(app.staticTexts["今天的任务都完成了。"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.staticTexts["你做到了！"].exists)
+        XCTAssertFalse(app.descendants(matching: .any)["kid.session.reward-xp"].exists)
+        unlockExistingParent(in: app, verifyWrongPIN: true)
+        openParentReview(in: app)
+        XCTAssertTrue(app.staticTexts["没有待验收任务"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.staticTexts["已确认通过"].exists)
+        XCTAssertFalse(reviewActions("approve", in: app).element.exists)
+    }
+
+    private func returnToTodayFromTask(in app: XCUIApplication) {
+        let back = app.navigationBars["任务"].buttons["今日"]
+        XCTAssertTrue(back.waitForExistence(timeout: 5))
+        back.tap()
+    }
+
     private func verifyFailedParentReview(action: String) {
         let app = submitSeededTaskForReview(extraArguments: ["--habito-ui-review-save-fail"])
         unlockParent(in: app)

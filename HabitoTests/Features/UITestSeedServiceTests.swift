@@ -67,9 +67,13 @@
             try fixture.prepare(scenario: scenario)
             let occurrence = try #require(fixture.context.fetch(FetchDescriptor<TaskOccurrence>()).first)
             #expect(occurrence.verificationTypeSnapshot == scenario.verificationType)
-            #expect(occurrence.xpRewardSnapshot == (scenario == .legacy ? 0 : 11))
-            #expect(occurrence.coinRewardSnapshot == (scenario == .legacy ? 0 : 7))
-            #expect(occurrence.activeBonusCoinSnapshot == (scenario == .legacy ? 0 : 3))
+            #expect(
+                scenario.hasSyntheticReward
+                    == (scenario == .rewardSelfConfirm || scenario == .parentApproval
+                        || scenario == .returnedSubmission))
+            #expect(occurrence.xpRewardSnapshot == (scenario.hasSyntheticReward ? 11 : 0))
+            #expect(occurrence.coinRewardSnapshot == (scenario.hasSyntheticReward ? 7 : 0))
+            #expect(occurrence.activeBonusCoinSnapshot == (scenario.hasSyntheticReward ? 3 : 0))
             #expect(occurrence.scheduledAt == fixture.now.addingTimeInterval(scenario == .legacy ? -60 : 60))
             let submissions = try fixture.context.fetch(FetchDescriptor<TaskSubmission>())
             #expect(submissions.count == (scenario == .returnedSubmission ? 1 : 0))

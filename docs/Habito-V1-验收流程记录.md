@@ -86,6 +86,19 @@
 - 最终大字各三张截图导出 /tmp/habito-004d-large17-details-final 与 /tmp/habito-004d-large27-details-final，核对可见明细/审核/真实收据文本。查看工具有既有方向/展示异常，不据其单独判断全幅像素布局；原生完整 frame、至少 44 pt 和真实点击/关闭断言通过。两台字号均恢复并读回 large，真机 VoiceOver 手势仍待设备。
 - 大字适配使用 adapt 时发现其完整流程依赖未安装的 teach-impeccable，未扩品牌设计；回退项目已确认的原生语义字体/44 pt 规则，swiftui-pro 继续作为实现基线。专项修复标识继承、日期年份/显式 LocalizedStringKey、长信息上下排列与重复进入状态；独立组件、主 actor 状态、纯值渲染、系统减少动态效果、不提前到账保持。
 - 最终完整单测两系各 **367/367（523 次）通过**，零失败/跳过/runtime warning：17 /tmp/habito-v1-m1-001-ios17/Logs/Test/Test-Habito-2026.10.06_03-15-44-+0800.xcresult；27 /tmp/habito-v1-m1-001-ios27/Logs/Test/Test-Habito-2026.10.06_03-21-26-+0800.xcresult。最终 Release/分析和严格格式/工程解析/差异检查通过，31 个本地化键 manual/中文 translated 校验通过。
-- 最终完整横屏 UI 各 **27/27 通过**、零失败/跳过：17 /tmp/habito-v1-m1-001-ios17/Logs/Test/Test-Habito-2026.10.06_03-20-11-+0800.xcresult（474.185 秒），无 runtime warning；27 /tmp/habito-v1-m1-001-ios27/Logs/Test/Test-Habito-2026.10.06_03-21-56-+0800.xcresult（601.548 秒），仅 27 条已登记 R-009 全屏方向提示。新增六项保护/真实通过/退回/空态/两种保存失败重启重试/可达，以及原 21 项计时/通知/家长管理/孩子反馈全部保留通过。各导出 14 张截图至 /tmp/habito-004d-ui17-final、ui27-final，复核真实 +11 XP/+10 Coin、退回无金额及保存失败原等待。
+- 最终完整横屏 UI 各 **27/27 通过**、零失败/跳过：17 /tmp/habito-v1-m1-001-ios17/Logs/Test/Test-Habito-2026.10.06_03-20-11-+0800.xcresult（474.185 秒），无 runtime warning；27 /tmp/habito-v1-m1-001-ios27/Logs/Test/Test-Habito-2026.10.06_03-21-56-+0800.xcresult（601.548 秒），仅 27 条已登记 R-009 全屏方向提示。新增六项保护/真实通过/退回/空态/两种保存失败重启重试/可达，以及原 21 项计时/通知/家长管理/孩子反馈全部保留通过。各导出 13 张截图至 /tmp/habito-004d-ui17-final、ui27-final（E 按 manifest 核对，更正原手工计数 14），复核真实 +11 XP/+10 Coin、退回无金额及保存失败原等待。
 - 用最终小幅滚动辅助方法在 17 再次最大字号 **1/1 通过**，零失败/跳过/runtime warning：/tmp/habito-v1-m1-001-ios17/Logs/Test/Test-Habito-2026.10.06_03-29-11-+0800.xcresult（36.190 秒）。三张截图另存 /tmp/habito-004d-large17-current-helper-final，实际审核/关闭及完整 frame 断言通过，字号再恢复并读回 large；27 的最终方法已在 _03-20-10 最大字号通过。
 - 004D DONE；E 后验证完整退回重提闭环。强庆祝、审核后孩子一次性展示、正式编辑器 V1 参数传播与宠物仍后续；数值等 OPEN、真机 B 未放行，无推送。
+
+## 9. V1-M3-004E：两轮计时验收与重启闭环
+
+- ReviewRoundTripTests 通过真正使用孩子工厂/ViewModel 和家长 ViewModel 协作：固定时刻第一轮活动 30 秒、暂停/提交/退回，独立容器重开后第二轮继续至累计 50 秒、重提新 ID、次日通过；最后两次重开保留两个结束计时、两份原审计、一个确认完成和一对结算。旧审核请求不能用于新提交；通过保留原提交时刻/提醒、自主与金额，保存后的通知事件 revision 精确断言，重试不重复结算/重播局部收据。
+- 首专项 17 _03-36-51、27 _03-36-52 各 9/10（22 次通过/1 失败）：新增测试误以为零奖励不应有交易行，而既有账本合同为零金额也保留成对审计冻结输入。修正为一对交易的类型、来源、0 金额、真实审核时间和 0 余额，未改结算服务；非零参数原已通过。修复专项各 **10/10（23 次）通过**、零失败/跳过/runtime warning：17 /tmp/habito-v1-m1-001-ios17/Logs/Test/Test-Habito-2026.10.06_03-38-30-+0800.xcresult；27 /tmp/habito-v1-m1-001-ios27/Logs/Test/Test-Habito-2026.10.06_03-38-31-+0800.xcresult。
+- Debug 增明确 zero-reward-parent-approval 场景；合成奖励标记有独立枚举期望断言，旧 legacy、自行确认与原退回场景保持。仅测试容器播种，重开不 reset、不用播种覆盖正式审核事实。原审核 ViewModel 注释从“下一卡负责 PIN”更新为已接入的保护职责。
+- 新增两项真实 UI：开始/暂停/提交→PIN 内退回→不 reset 重启→继续/暂停/重提→现有 PIN 进入新 ID 审核→真实通过→旧通知重启完成事实→错误 PIN 拒绝/正确 PIN 空队列且不重播。非零收据按第二次提交快照的自主标记核对 10 或 7 币；UI 真实经过时间可能跨过 60 秒提醒，不能硬假设一直自主，固定边界由领域单测保证。零金额不显示伪造 +XP/Coin，仍确认努力。
+- 最终全量单测各 **368/368（527 次）通过**、零失败/跳过/runtime warning：17 /tmp/habito-v1-m1-001-ios17/Logs/Test/Test-Habito-2026.10.06_03-39-20-+0800.xcresult；27 /tmp/habito-v1-m1-001-ios27/Logs/Test/Test-Habito-2026.10.06_03-39-21-+0800.xcresult。Release/静态分析、工程解析/严格格式/差异检查通过。
+- 最终完整横屏 UI 两系各 **29/29 通过**、零失败/跳过：17 /tmp/habito-v1-m1-001-ios17/Logs/Test/Test-Habito-2026.10.06_03-40-04-+0800.xcresult（600.983 秒），无 runtime warning；27 /tmp/habito-v1-m1-001-ios27/Logs/Test/Test-Habito-2026.10.06_03-40-05-+0800.xcresult（753.364 秒），仅 29 条已登记 R-009 全屏方向提示。原 27 项与新增两种两轮真实流程全部保留，未放宽金额/新 ID/PIN/旧通知/不重播断言。
+- 各 15 张截图导出 /tmp/habito-004e-ui17-final、ui27-final（按 manifest 实数核对），两系新增非零与零金额真实通过截图复核：非零实际奖励可见、零金额有完成确认但无虚假 +XP/Coin。工具既有方向/展示异常不单独作为全幅布局证据；本卡没有改变布局，D 最大辅助字号证据保持，不冒充本卡新跑过最大字号或真机手势。
+- 正式 TaskTemplateDraft/EditingService 尚不读写验收/奖励/分类字段；实例物化 make/apply/needsUpdate 也尚未传播，合成场景的 detached 标记不能当正式产品入口验收。后续正式快照传播、显式编辑与可信强反馈在任务卡独立拆分，当前不顺手实现，不设默认数值。
+- doc-coauthoring 无上下文读者仅只读复核文档，准确还原唯一 E、下一卡依赖、未交付正式配置、后置参数、审计保护、真实反馈/真机边界。“UI 不回归”与过时的下一建议任务两处歧义已修正，独立复核通过；未委派代码实现或据此跳过产品测试。
+- swiftui-pro 数据/Swift/卫生部分复核保持固定时间、主 actor、纯值跨重开、不等待真实计时器、明确审核 ID、真实结算来源；修正零金额审计预期、UI 跨提醒边界金额假设与过时职责注释，没有产品默认或第三方。004E DONE；下一卡为正式快照传播，审核后孩子一次性收据、分层强反馈/宠物与计划/截止仍未交付。数值等 OPEN，真机 B 未放行，正式家庭库/真实凭据/旧包未动，无推送。
