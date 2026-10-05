@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AB1000000000000000000034 /* RewardLedgerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000034 /* RewardLedgerError.swift */; };
+		AB1000000000000000000035 /* RewardBalance.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000035 /* RewardBalance.swift */; };
+		AB1000000000000000000036 /* RewardLedgerMutation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000036 /* RewardLedgerMutation.swift */; };
+		AB1000000000000000000037 /* RewardLedgerKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000037 /* RewardLedgerKey.swift */; };
+		AB1000000000000000000038 /* RewardLedgerSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000038 /* RewardLedgerSnapshot.swift */; };
+		AB1000000000000000000039 /* RewardLedgerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000039 /* RewardLedgerService.swift */; };
+		AB1000000000000000000040 /* RewardLedgerServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000040 /* RewardLedgerServiceTests.swift */; };
 		AB1000000000000000000019 /* HabitoSchemaV1+TaskTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000019 /* HabitoSchemaV1+TaskTemplate.swift */; };
 		AB1000000000000000000020 /* HabitoSchemaV1+ReminderRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000020 /* HabitoSchemaV1+ReminderRule.swift */; };
 		AB1000000000000000000021 /* HabitoSchemaV1+TaskOccurrence.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000021 /* HabitoSchemaV1+TaskOccurrence.swift */; };
@@ -272,6 +279,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AB2000000000000000000034 /* RewardLedgerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RewardLedgerError.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000035 /* RewardBalance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RewardBalance.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000036 /* RewardLedgerMutation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RewardLedgerMutation.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000037 /* RewardLedgerKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RewardLedgerKey.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000038 /* RewardLedgerSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RewardLedgerSnapshot.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000039 /* RewardLedgerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RewardLedgerService.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000040 /* RewardLedgerServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RewardLedgerServiceTests.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000019 /* HabitoSchemaV1+TaskTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV1+TaskTemplate.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000020 /* HabitoSchemaV1+ReminderRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV1+ReminderRule.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000021 /* HabitoSchemaV1+TaskOccurrence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV1+TaskOccurrence.swift"; sourceTree = "<group>"; };
@@ -547,6 +561,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AB5000000000000000000003 /* Rewards */ = {
+			isa = PBXGroup;
+			children = (
+				AB2000000000000000000034 /* RewardLedgerError.swift */,
+				AB2000000000000000000035 /* RewardBalance.swift */,
+				AB2000000000000000000036 /* RewardLedgerMutation.swift */,
+				AB2000000000000000000037 /* RewardLedgerKey.swift */,
+			);
+			path = Rewards;
+			sourceTree = "<group>";
+		};
+		AB5000000000000000000004 /* Rewards */ = {
+			isa = PBXGroup;
+			children = (
+				AB2000000000000000000038 /* RewardLedgerSnapshot.swift */,
+				AB2000000000000000000039 /* RewardLedgerService.swift */,
+			);
+			path = Rewards;
+			sourceTree = "<group>";
+		};
 		AB5000000000000000000002 /* SchemaV1 */ = {
 			isa = PBXGroup;
 			children = (
@@ -625,6 +659,7 @@
 				Y50000000000000000000002 /* Notifications */,
 				A50000000000000000000005 /* Persistence */,
 				G50000000000000000000001 /* TaskProgress */,
+				AB5000000000000000000004 /* Rewards */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -992,6 +1027,7 @@
 				P50000000000000000000001 /* Security */,
 				E50000000000000000000001 /* Scheduling */,
 				C50000000000000000000003 /* Tasks */,
+				AB5000000000000000000003 /* Rewards */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
@@ -1087,6 +1123,7 @@
 				AB2000000000000000000018 /* HabitoSchemaMigrationTests.swift */,
 				AB2000000000000000000032 /* V1MigrationFixture.swift */,
 				AB2000000000000000000033 /* LedgerModelMigrationTests.swift */,
+				AB2000000000000000000040 /* RewardLedgerServiceTests.swift */,
 				AB2000000000000000000010 /* V0MigrationFixture.swift */,
 				AB2000000000000000000011 /* HabitoSchemaV0Tests.swift */,
 				H20000000000000000000002 /* M1DataKernelIntegrationTests.swift */,
@@ -1403,6 +1440,12 @@
 				K10000000000000000000005 /* TodayViewModel.swift in Sources */,
 				C10000000000000000000003 /* Weekday.swift in Sources */,
 				A10000000000000000000004 /* AppModelContainer.swift in Sources */,
+				AB1000000000000000000034 /* RewardLedgerError.swift in Sources */,
+				AB1000000000000000000035 /* RewardBalance.swift in Sources */,
+				AB1000000000000000000036 /* RewardLedgerMutation.swift in Sources */,
+				AB1000000000000000000037 /* RewardLedgerKey.swift in Sources */,
+				AB1000000000000000000038 /* RewardLedgerSnapshot.swift in Sources */,
+				AB1000000000000000000039 /* RewardLedgerService.swift in Sources */,
 				AB1000000000000000000019 /* HabitoSchemaV1+TaskTemplate.swift in Sources */,
 				AB1000000000000000000020 /* HabitoSchemaV1+ReminderRule.swift in Sources */,
 				AB1000000000000000000021 /* HabitoSchemaV1+TaskOccurrence.swift in Sources */,
@@ -1442,6 +1485,7 @@
 				AB1000000000000000000018 /* HabitoSchemaMigrationTests.swift in Sources */,
 				AB1000000000000000000032 /* V1MigrationFixture.swift in Sources */,
 				AB1000000000000000000033 /* LedgerModelMigrationTests.swift in Sources */,
+				AB1000000000000000000040 /* RewardLedgerServiceTests.swift in Sources */,
 				AB1000000000000000000010 /* V0MigrationFixture.swift in Sources */,
 				AB1000000000000000000011 /* HabitoSchemaV0Tests.swift in Sources */,
 				W10000000000000000000006 /* ParentCalendarDayServiceTests.swift in Sources */,
