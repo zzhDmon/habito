@@ -18,9 +18,30 @@ struct TaskSessionScreenContent: Equatable, Sendable {
     let activeDurationAtSnapshot: TimeInterval
     let snapshotAt: Date
     let completion: TodayTaskCompletion?
+    let submission: TaskSubmissionSnapshot?
+    let verificationType: TaskVerificationType
+
+    init(
+        task: KidTaskNavigationItem, targetDurationSeconds: TimeInterval, activeSessionState: TimerSessionState?,
+        activeDurationAtSnapshot: TimeInterval, snapshotAt: Date, completion: TodayTaskCompletion?,
+        submission: TaskSubmissionSnapshot? = nil, verificationType: TaskVerificationType = .selfConfirm
+    ) {
+        self.task = task
+        self.targetDurationSeconds = targetDurationSeconds
+        self.activeSessionState = activeSessionState
+        self.activeDurationAtSnapshot = activeDurationAtSnapshot
+        self.snapshotAt = snapshotAt
+        self.completion = completion
+        self.submission = submission
+        self.verificationType = verificationType
+    }
+
+    /// 等待是审计快照的派生值，不用仍为 pending 的旧状态开放操作。
+    var isAwaitingReview: Bool { submission?.state == .waiting }
 
     var primaryAction: PrimaryAction {
-        switch (task.status, activeSessionState) {
+        guard !isAwaitingReview else { return .none }
+        return switch (task.status, activeSessionState) {
         case (.pending, nil):
             .start
         case (.inProgress, .running):
@@ -37,12 +58,12 @@ struct TaskSessionScreenContent: Equatable, Sendable {
     }
 
     var canComplete: Bool {
-        task.status == .pending || task.status == .inProgress
+        !isAwaitingReview && (task.status == .pending || task.status == .inProgress)
     }
 
     /// 孩子侧撤销窗口以持久化完成时间为起点，页面重建不会重置倒计时。
     func canUndoCompletion(at now: Date) -> Bool {
-        guard task.status == .completed, let completion else { return false }
+        guard !isAwaitingReview, task.status == .completed, let completion else { return false }
         return CompletionUndoPolicy.canUndo(completedAt: completion.completedAt, now: now)
     }
 

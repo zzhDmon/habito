@@ -6,6 +6,238 @@ import Testing
 @MainActor
 @Suite("任务执行页计时恢复")
 struct TaskSessionViewModelTests {
+    @Test("孩子提交后等待或退回真实磁盘重开，页面派生正确且不重播收据", arguments: [false, true])
+    func diskReentryDoesNotReplaySubmissionFeedback(returned: Bool) throws {
+        let url = try V0MigrationFixture.temporaryStoreURL()
+        let submissionID = try seedSubmissionPage(at: url, returned: returned)
+        let now = try Date("2026-09-23T04:00:01Z", strategy: .iso8601)
+        let calendar = Calendar(identifier: .gregorian)
+        let zone = try #require(TimeZone(identifier: "Asia/Shanghai"))
+        for _ in 0..<2 {
+            let context = ModelContext(try AppModelContainer.make(storeURL: url))
+            let model = TaskSessionViewModel(
+                occurrenceID: V0MigrationFixture.pendingID, context: context,
+                calendar: calendar, timeZone: zone, dateProvider: FixedDateProvider(value: now))
+            model.load()
+            let content = try loadedContent(from: model.state)
+            #expect(content.isAwaitingReview == !returned && content.canComplete == returned)
+            #expect(content.submission?.id == submissionID && content.verificationType == .parentApproval)
+            #expect(content.submission?.expectedXP == 11 && content.submission?.expectedCoins == 10)
+            #expect(model.completionFeedback == nil)
+            #expect(try context.fetchCount(FetchDescriptor<CompletionRecord>()) == 0)
+            #expect(try RewardLedgerService(context: context).balance() == RewardBalance(effectiveXP: 0, coins: 0))
+        }
+    }
+
+    @Test("家长验收页面提交只等待且禁旧动作，零奖励也正常判自主", arguments: [false, true])
+    func approvalTaskProducesSubmissionNotReward(zero: Bool) async throws {
+        let fixture = try TodayQueryFixture()
+        let occurrence = fixture.makeOccurrence(
+            title: "合成家长验收", scheduledAt: fixture.now.addingTimeInterval(60), status: .pending)
+        occurrence.verificationTypeSnapshotRawValue = TaskVerificationType.parentApproval.rawValue
+        occurrence.xpRewardSnapshot = zero ? 0 : 11
+        occurrence.coinRewardSnapshot = zero ? 0 : 7
+        occurrence.activeBonusCoinSnapshot = zero ? 0 : 3
+        try fixture.context.save()
+        let trigger = NotificationRebuildTrigger()
+        let model = makeModel(
+            for: occurrence.id, fixture: fixture, now: fixture.now, notificationRebuildTrigger: trigger)
+        model.load()
+        #expect(try loadedContent(from: model.state).verificationType == .parentApproval)
+        model.completeTask()
+        let waiting = try loadedContent(from: model.state)
+        #expect(waiting.isAwaitingReview && !waiting.canComplete && waiting.primaryAction == .none)
+        #expect(!waiting.canUndoCompletion(at: fixture.now) && waiting.completion == nil)
+        guard case let .submitted(receipt) = model.completionFeedback else {
+            Issue.record("提交不能发布已到账反馈"); return
+        }
+        #expect(receipt.didSubmit && receipt.timing == .beforeReminder)
+        #expect(waiting.submission?.id == receipt.submissionID)
+        #expect(waiting.submission?.expectedXP == (zero ? 0 : 11))
+        #expect(waiting.submission?.expectedCoins == (zero ? 0 : 10))
+        model.completeTask()
+        model.startOrResume()
+        model.pause()
+        model.undoCompletion()
+        await model.snooze()
+        #expect(trigger.revision == 1 && !model.isActionErrorPresented)
+        #expect(try sessions(in: fixture.context, occurrenceID: occurrence.id).isEmpty)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<TaskSubmission>()) == 1)
+        #expect(try completionRecords(in: fixture.context, occurrenceID: occurrence.id).isEmpty)
+        #expect(try RewardLedgerService(context: fixture.context).balance() == RewardBalance(effectiveXP: 0, coins: 0))
+        model.dismissCompletionFeedback()
+        model.refresh()
+        #expect(model.completionFeedback == nil)
+        let reentered = makeModel(for: occurrence.id, fixture: fixture, now: fixture.now)
+        reentered.load()
+        #expect(try loadedContent(from: reentered.state).isAwaitingReview && reentered.completionFeedback == nil)
+    }
+
+    @Test("运行或暂停的家长任务提交结束计时并保留累计时长", arguments: [TimerSessionState.running, .paused])
+    func approvalSubmissionEndsTiming(state: TimerSessionState) throws {
+        let fixture = try TodayQueryFixture()
+        let occurrence = fixture.makeOccurrence(
+            title: "计时后提交", scheduledAt: fixture.now.addingTimeInterval(60), status: .pending)
+        occurrence.verificationTypeSnapshotRawValue = TaskVerificationType.parentApproval.rawValue
+        try fixture.context.save()
+        let progress = TaskProgressService(context: fixture.context)
+        _ = try progress.startTiming(for: occurrence, at: fixture.now.addingTimeInterval(-120))
+        if state == .paused { _ = try progress.pauseTiming(for: occurrence, at: fixture.now.addingTimeInterval(-60)) }
+        let model = makeModel(for: occurrence.id, fixture: fixture, now: fixture.now)
+        model.load()
+        model.completeTask()
+        let content = try loadedContent(from: model.state)
+        #expect(content.isAwaitingReview && content.activeSessionState == nil)
+        #expect(content.activeDurationAtSnapshot == (state == .running ? 120 : 60))
+        #expect(content.submission?.activeDurationSeconds == content.activeDurationAtSnapshot)
+        #expect(try sessions(in: fixture.context, occurrenceID: occurrence.id).first?.state == .ended)
+    }
+
+    @Test("自行确认反馈只包含实际收据，零奖励仍是真实完成；撤销后清空旧事件", arguments: [false, true])
+    func completedFeedbackContainsActualReceipt(zero: Bool) throws {
+        let fixture = try TodayQueryFixture()
+        let occurrence = fixture.makeOccurrence(
+            title: "真实完成反馈", scheduledAt: fixture.now.addingTimeInterval(60), status: .pending)
+        occurrence.xpRewardSnapshot = zero ? 0 : 11
+        occurrence.coinRewardSnapshot = zero ? 0 : 7
+        occurrence.activeBonusCoinSnapshot = zero ? 0 : 3
+        try fixture.context.save()
+        let model = makeModel(for: occurrence.id, fixture: fixture, now: fixture.now)
+        model.load()
+        model.completeTask()
+        guard case let .completed(receipt) = model.completionFeedback else {
+            Issue.record("自行确认应发布真实完成收据"); return
+        }
+        #expect(receipt.didComplete && receipt.xp == (zero ? 0 : 11) && receipt.coins == (zero ? 0 : 10))
+        #expect(receipt.completionID == (try loadedContent(from: model.state).completion?.id))
+        model.undoCompletion()
+        #expect(model.completionFeedback == nil && occurrence.status == .pending)
+        model.completeTask()
+        #expect(model.completionFeedback?.id != receipt.completionID)
+        model.dismissCompletionFeedback()
+        model.refresh()
+        model.completeTask()
+        #expect(model.completionFeedback == nil)
+    }
+
+    @Test("页面加载后验收类型变更，以重新读取配置路由，不用旧页面判断", arguments: [false, true])
+    func staleConfigurationUsesCurrentVerification(wasApproval: Bool) throws {
+        let fixture = try TodayQueryFixture()
+        let occurrence = fixture.makeOccurrence(title: "陈旧配置页面", scheduledAt: fixture.now, status: .pending)
+        occurrence.verificationTypeSnapshotRawValue =
+            (wasApproval ? TaskVerificationType.parentApproval : .selfConfirm).rawValue
+        try fixture.context.save()
+        let model = makeModel(for: occurrence.id, fixture: fixture, now: fixture.now)
+        model.load()
+        occurrence.verificationTypeSnapshotRawValue =
+            (wasApproval ? TaskVerificationType.selfConfirm : .parentApproval).rawValue
+        try fixture.context.save()
+        model.completeTask()
+        #expect(!model.isActionErrorPresented)
+        #expect((occurrence.status == .completed) == wasApproval)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<TaskSubmission>()) == (wasApproval ? 0 : 1))
+    }
+
+    @Test("陈旧页面遇到外部提交/通过，只刷新当前事实，不发布新成功事件", arguments: [false, true])
+    func stalePageDoesNotRepeatExternalSubmissionOrApproval(approve: Bool) throws {
+        let fixture = try TodayQueryFixture()
+        let occurrence = fixture.makeOccurrence(title: "另页已操作", scheduledAt: fixture.now, status: .pending)
+        occurrence.verificationTypeSnapshotRawValue = TaskVerificationType.parentApproval.rawValue
+        try fixture.context.save()
+        let trigger = NotificationRebuildTrigger()
+        let model = makeModel(
+            for: occurrence.id, fixture: fixture, now: fixture.now, notificationRebuildTrigger: trigger)
+        model.load()
+        let row = try TaskSubmissionService(context: fixture.context).submit(occurrence, at: fixture.now)
+        if approve {
+            _ = try TaskSubmissionReviewService(context: fixture.context).approve(
+                occurrence, submissionID: row.submissionID, at: fixture.now)
+        }
+        // 等待时后来改为自行确认仍不能绕过原审核事实。
+        occurrence.verificationTypeSnapshotRawValue = TaskVerificationType.selfConfirm.rawValue
+        try fixture.context.save()
+        model.completeTask()
+        #expect(trigger.revision == 0 && model.completionFeedback == nil && !model.isActionErrorPresented)
+        #expect(try loadedContent(from: model.state).isAwaitingReview == !approve)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<TaskSubmission>()) == 1)
+        #expect(try completionRecords(in: fixture.context, occurrenceID: occurrence.id).count == (approve ? 1 : 0))
+    }
+
+    @Test("退回后刷新释放动作，重提新轮次，不重播原提交反馈")
+    func returnedTaskCanResumeAndResubmitWithNewEvent() throws {
+        let fixture = try TodayQueryFixture()
+        let occurrence = fixture.makeOccurrence(
+            title: "再完善一下", scheduledAt: fixture.now.addingTimeInterval(60), status: .pending)
+        occurrence.verificationTypeSnapshotRawValue = TaskVerificationType.parentApproval.rawValue
+        try fixture.context.save()
+        let trigger = NotificationRebuildTrigger()
+        let model = makeModel(
+            for: occurrence.id, fixture: fixture, now: fixture.now, notificationRebuildTrigger: trigger)
+        model.load()
+        model.completeTask()
+        let firstID = try #require(model.completionFeedback?.id)
+        _ = try TaskSubmissionReviewService(context: fixture.context).returnForRevision(
+            occurrence, submissionID: firstID, at: fixture.now)
+        model.refresh()
+        let returned = try loadedContent(from: model.state)
+        #expect(!returned.isAwaitingReview && returned.canComplete && returned.primaryAction == .start)
+        #expect(model.completionFeedback == nil && returned.submission?.state == .returned)
+        model.startOrResume()
+        model.completeTask()
+        #expect(try loadedContent(from: model.state).isAwaitingReview)
+        #expect(model.completionFeedback?.id != firstID && trigger.revision == 3)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<TaskSubmission>()) == 2)
+        #expect(try RewardLedgerService(context: fixture.context).balance() == RewardBalance(effectiveXP: 0, coins: 0))
+    }
+
+    @Test("提交保存失败不发布反馈或重建，原执行事实保留且可重试", arguments: [false, true])
+    func submissionSaveFailureDoesNotPublishSuccess(active: Bool) throws {
+        let fixture = try TodayQueryFixture()
+        let occurrence = fixture.makeOccurrence(title: "提交保存边界", scheduledAt: fixture.now, status: .pending)
+        occurrence.verificationTypeSnapshotRawValue = TaskVerificationType.parentApproval.rawValue
+        try fixture.context.save()
+        if active {
+            _ = try TaskProgressService(context: fixture.context).startTiming(
+                for: occurrence, at: fixture.now.addingTimeInterval(-60))
+        }
+        let trigger = NotificationRebuildTrigger()
+        let model = TaskSessionViewModel(
+            occurrenceID: occurrence.id, context: fixture.context, calendar: fixture.calendar,
+            timeZone: fixture.timeZone, dateProvider: FixedDateProvider(value: fixture.now),
+            notificationRebuildTrigger: trigger,
+            submissionService: TaskSubmissionService(
+                context: fixture.context, saveChanges: { _ in throw CocoaError(.fileWriteUnknown) }))
+        model.load()
+        model.completeTask()
+        #expect(model.actionFailure == .saveFailed && model.isActionErrorPresented)
+        #expect(model.completionFeedback == nil && trigger.revision == 0)
+        #expect(
+            try loadedContent(from: model.state).canComplete && occurrence.status == (active ? .inProgress : .pending))
+        if active { #expect(try sessions(in: fixture.context, occurrenceID: occurrence.id).first?.state == .running) }
+        #expect(try fixture.context.fetchCount(FetchDescriptor<TaskSubmission>()) == 0)
+        #expect(!fixture.context.hasChanges)
+    }
+
+    @Test("坏验收配置加载明确失败，加载后损坏也不能静默按自行确认发奖")
+    func invalidVerificationDoesNotFallback() throws {
+        let fixture = try TodayQueryFixture()
+        let occurrence = fixture.makeOccurrence(title: "配置损坏", scheduledAt: fixture.now, status: .pending)
+        try fixture.context.save()
+        let model = makeModel(for: occurrence.id, fixture: fixture, now: fixture.now)
+        model.load()
+        occurrence.verificationTypeSnapshotRawValue = "corrupt"
+        try fixture.context.save()
+        model.completeTask()
+        #expect(model.actionFailure == .unavailable && model.isActionErrorPresented && model.completionFeedback == nil)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<XPTransaction>()) == 0)
+        model.refresh()
+        #expect(model.state == .failed)
+        #expect(throws: TodayTaskQueryError.invalidVerificationType(occurrenceID: occurrence.id, value: "corrupt")) {
+            try TodayTaskQueryService(context: fixture.context, calendar: fixture.calendar, timeZone: fixture.timeZone)
+                .item(id: occurrence.id, at: fixture.now)
+        }
+    }
+
     @Test("计时显示与完成撤销判断共用注入时钟")
     func renderedTimeUsesSameClockAsBusinessWrites() throws {
         let fixture = try TodayQueryFixture()
@@ -358,6 +590,35 @@ struct TaskSessionViewModelTests {
         #expect(occurrence.status == .completed && occurrence.completionRecord?.id == latest.completionID)
         #expect(try loadedContent(from: model.state).completion?.id == latest.completionID)
         #expect(trigger.revision == 0 && !model.isActionErrorPresented)
+    }
+
+    /// 固定合成磁盘库与时刻，不使用真实家庭容器或历史记录构造虚假 UI 成功事件。
+    private func seedSubmissionPage(at url: URL, returned: Bool) throws -> UUID {
+        let context = ModelContext(try AppModelContainer.make(storeURL: url))
+        let now = try Date("2026-09-23T04:00:00Z", strategy: .iso8601)
+        let occurrence = TaskOccurrence(
+            id: V0MigrationFixture.pendingID, templateID: V0MigrationFixture.templateID,
+            date: try LocalDate(dateKey: "2026-09-23"), scheduledAt: now.addingTimeInterval(60),
+            titleSnapshot: "合成提交页面", iconSnapshot: "book.fill", colorSnapshot: "reading", targetDurationSnapshot: 900,
+            sourceRevision: 1, createdAt: now, updatedAt: now, verificationTypeSnapshot: .parentApproval,
+            xpRewardSnapshot: 11, coinRewardSnapshot: 7, activeBonusCoinSnapshot: 3)
+        context.insert(occurrence)
+        try context.save()
+        let zone = try #require(TimeZone(identifier: "Asia/Shanghai"))
+        let model = TaskSessionViewModel(
+            occurrenceID: occurrence.id, context: context,
+            calendar: Calendar(identifier: .gregorian), timeZone: zone, dateProvider: FixedDateProvider(value: now))
+        model.load()
+        model.completeTask()
+        guard case let .submitted(receipt) = model.completionFeedback else {
+            Issue.record("合成页面应实际提交成功")
+            throw TaskSessionViewModelTestError.expectedLoadedState
+        }
+        if returned {
+            _ = try TaskSubmissionReviewService(context: context).returnForRevision(
+                occurrence, submissionID: receipt.submissionID, at: now.addingTimeInterval(1))
+        }
+        return receipt.submissionID
     }
 
     private func makeModel(

@@ -10,6 +10,7 @@ final class TaskSessionViewModel {
     private(set) var state: TaskSessionViewState = .loading
     private(set) var snoozeState: TaskSnoozeState = .idle
     private(set) var actionFailure: TaskSessionActionFailure?
+    private(set) var completionFeedback: TaskSessionCompletionFeedback?
     var isActionErrorPresented = false
 
     private let occurrenceID: UUID
@@ -17,6 +18,7 @@ final class TaskSessionViewModel {
     private let queryService: TodayTaskQueryService
     private let progressService: TaskProgressService
     private let completionService: TaskCompletionService
+    private let submissionService: TaskSubmissionService
     private let undoService: TaskCompletionUndoService
     private let dateProvider: any DateProviding
     private let snoozeService: TaskSnoozeService?
@@ -33,7 +35,8 @@ final class TaskSessionViewModel {
         snoozeService: TaskSnoozeService? = nil,
         notificationRebuildTrigger: NotificationRebuildTrigger = NotificationRebuildTrigger(),
         completionService: TaskCompletionService? = nil,
-        undoService: TaskCompletionUndoService? = nil
+        undoService: TaskCompletionUndoService? = nil,
+        submissionService: TaskSubmissionService? = nil
     ) {
         self.occurrenceID = occurrenceID
         self.context = context
@@ -44,6 +47,7 @@ final class TaskSessionViewModel {
         )
         progressService = TaskProgressService(context: context)
         self.completionService = completionService ?? TaskCompletionService(context: context)
+        self.submissionService = submissionService ?? TaskSubmissionService(context: context)
         self.undoService = undoService ?? TaskCompletionUndoService(context: context)
         self.dateProvider = dateProvider
         self.snoozeService = snoozeService
@@ -138,23 +142,57 @@ final class TaskSessionViewModel {
         }
     }
 
-    /// 由孩子手动完成，计时、事实和奖励同一次保存，成功后才重建通知。
+    /// 重新读取实例验收方式路由事务；提交只等待，自行确认才真正完成并结算。
+    ///
+    /// 保存成功且确为新事件才发布反馈/通知；旧页面或幂等重试不能重复庆祝。
     func completeTask() {
         guard case let .loaded(content) = state, content.canComplete else { return }
 
         do {
-            let result = try completionService.complete(
-                fetchOccurrence(),
-                at: dateProvider.now(),
-                source: .childManual
-            )
-            if result.didComplete { notificationRebuildTrigger.requestRebuild() }
+            let occurrence = try fetchOccurrence()
+            let latestSubmission = try TaskSubmissionHistory(context: context).latest(for: occurrence)
+            if latestSubmission?.reviewState == .waiting {
+                // 另一页面已经提交；沿用幂等原收据，不因后来验收配置变化误走自行完成。
+                _ = try submissionService.submit(occurrence, at: dateProvider.now())
+                snoozeState = .idle
+                clearActionFailure()
+                reload(showLoading: false)
+                return
+            }
+            if occurrence.status == .completed {
+                // 家长/另一页面已确认完成时只刷新，不能对当前完成再创建一次提交或奖励反馈。
+                clearActionFailure()
+                reload(showLoading: false)
+                return
+            }
+            guard let verification = occurrence.verificationTypeSnapshot else {
+                throw TaskCompletionServiceError.invalidConfiguration(occurrence.id)
+            }
+            switch verification {
+            case .selfConfirm:
+                let result = try completionService.complete(occurrence, at: dateProvider.now(), source: .childManual)
+                if result.didComplete {
+                    completionFeedback = .completed(result)
+                    notificationRebuildTrigger.requestRebuild()
+                }
+            case .parentApproval:
+                let result = try submissionService.submit(occurrence, at: dateProvider.now())
+                if result.didSubmit {
+                    completionFeedback = .submitted(result)
+                    notificationRebuildTrigger.requestRebuild()
+                }
+            }
             snoozeState = .idle
             clearActionFailure()
             reload(showLoading: false)
         } catch {
             handleActionFailure(error)
         }
+    }
+
+    /// 显示层消费或孩子关闭反馈后清空；以后刷新/重复调用不能用历史记录重播。
+    func dismissCompletionFeedback() {
+        completionFeedback = nil
     }
 
     /// 在完成时间后的 5 秒窗口内撤销；过期操作只刷新页面，不改写完成事实。
@@ -187,6 +225,7 @@ final class TaskSessionViewModel {
             actionFailure = .insufficientCoins
         } else if error is TaskCompletionServiceError || error is TaskCompletionUndoError
             || error is TaskProgressServiceError || error is TaskSessionViewModelError || error is RewardLedgerError
+            || error is TaskSubmissionError
         {
             actionFailure = .unavailable
         } else {
@@ -201,6 +240,7 @@ final class TaskSessionViewModel {
         do {
             let now = dateProvider.now()
             let item = try queryService.item(id: occurrenceID, at: now)
+            reconcileFeedback(with: item)
             state = .loaded(
                 TaskSessionScreenContent(
                     task: KidTaskNavigationItem(item: item, calendar: calendar),
@@ -208,11 +248,24 @@ final class TaskSessionViewModel {
                     activeSessionState: item.activeSessionState,
                     activeDurationAtSnapshot: item.activeDurationSeconds,
                     snapshotAt: now,
-                    completion: item.completion
+                    completion: item.completion,
+                    submission: item.submission,
+                    verificationType: item.verificationType
                 )
             )
         } catch {
             handle(error)
+        }
+    }
+
+    /// 原提交被审核/退回或原完成被撤销时，不在页面上保留已经过期的结果反馈。
+    private func reconcileFeedback(with item: TodayTaskItem) {
+        switch completionFeedback {
+        case let .submitted(result):
+            if !item.isAwaitingReview || item.submission?.id != result.submissionID { completionFeedback = nil }
+        case let .completed(result):
+            if item.completion?.id != result.completionID { completionFeedback = nil }
+        case nil: break
         }
     }
 

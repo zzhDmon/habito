@@ -5,6 +5,7 @@ enum TodayTaskQueryError: Error, Equatable, Sendable {
     case occurrenceNotFound(occurrenceID: UUID)
     case invalidOccurrenceDate(occurrenceID: UUID, value: String)
     case invalidOccurrenceStatus(occurrenceID: UUID, value: String)
+    case invalidVerificationType(occurrenceID: UUID, value: String)
     case invalidTargetDuration(occurrenceID: UUID, value: TimeInterval)
     case invalidSessionState(sessionID: UUID, value: String)
     case invalidSessionTimeline(sessionID: UUID)

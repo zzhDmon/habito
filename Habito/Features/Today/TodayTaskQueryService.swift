@@ -107,6 +107,11 @@ struct TodayTaskQueryService {
             )
         }
 
+        guard let verification = occurrence.verificationTypeSnapshot else {
+            throw TodayTaskQueryError.invalidVerificationType(
+                occurrenceID: occurrence.id, value: occurrence.verificationTypeSnapshotRawValue)
+        }
+
         let sessions = try sessions(for: occurrence, at: now)
         let activeSessions = sessions.filter { $0.state != .ended }
         guard activeSessions.count <= 1 else {
@@ -137,7 +142,8 @@ struct TodayTaskQueryService {
             activeSessionState: activeSessions.first?.state,
             activeDurationSeconds: displayedDuration,
             completion: completion,
-            submission: submission
+            submission: submission,
+            verificationType: verification
         )
     }
 
