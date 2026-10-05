@@ -35,6 +35,7 @@
 | M4-F19 | 计时渲染读 TimelineView 系统日期，与注入业务时钟脱节 | 数据流/测试可靠性 | TimelineView 仅驱动刷新，计时进度和撤销窗口改读模型时钟；双系统单测及完整 UI 回归通过 |
 | M4-F20 | 提前开始任务后没有重建事件，旧主提醒仍等待到点展示 | P1 | 开始成功后触发一次核对；重复点击/暂停/继续不重复触发、失败不发事件；清主槽且保留有效稍后槽位的集成通过 |
 | M4-F21 | 稍后预算读取期间关闭权限，仍尝试添加系统请求，系统拒绝时可能只显示泛化失败 | P1 | 添加前重新读取展示能力、检查取消，再重查实例；四参数场景及新等待点业务变化/取消回归通过，不弹权限请求 |
+| M4-F22 | 任务触发器缺少日历/时区，未完整编码业务绝对时刻；旧挂起请求可能继续保留 | P1（编码一致性） | 显式公历 UTC 单次编码；缺上下文旧请求用既有增量替换；固定时刻、DST 双小时、安全归档、失败重试和探针隔离回归通过，实际送达仍待真机 |
 
 初次回归命令用单函数过滤未实际运行用例；已改为按完整 suite 过滤并核对 `xcresult` 的真实测试数量，不能把零用例成功当作通过。修复前的有效失败日志为 9 个用例、4 条问题；外围诊断收集卡住后结束旧命令，保留日志。修复后首次通知专项为 **16/16 通过**，无 runtime warning。
 
@@ -225,3 +226,15 @@ xcrun xcresulttool get test-results summary --path <实际生成的 xcresult 目
 - 最终完整横屏 **两系统各 16/16**，零失败/跳过：17.2 `/tmp/habito-m4-008-permissions-ios17/Logs/Test/Test-Habito-2026.10.05_18-32-40-+0800.xcresult`（235.694 秒，无 runtime warning）；27 `/tmp/habito-m4-008-permissions/Logs/Test/Test-Habito-2026.10.05_18-33-32-+0800.xcresult`（317.879 秒，保留 16 条 R-009 提示）。
 - 阶段收尾全量单测 **各 183/183（201 次执行）**，零失败/跳过/runtime warning：17.2 `/tmp/habito-m4-008-permissions-ios17/Logs/Test/Test-Habito-2026.10.05_18-37-23-+0800.xcresult`；27 `/tmp/habito-m4-008-permissions/Logs/Test/Test-Habito-2026.10.05_18-33-04-+0800.xcresult`。App 代码保持 `e0b865a` 基线，Release/静态分析证据继续有效；严格格式、工程解析、差异检查通过。
 - `swiftui-pro` 复核：既有类型安全导航、主 actor 路由桥和持久化事实保持，不因测试新增正式 API 或 UI 功能。真机收尾检查仍 unavailable；B 及 M5 观察项尚未执行，未推送、安装或卸载真机旧包。待用户动作见独立清单，M4-008 保持 `IN_PROGRESS`。
+
+## 15. 2026-10-05 系统触发器的绝对时间编码与旧请求替换
+
+- 用户要求继续后，仍在 M4-008 A 检查真实系统框架对象，而非只验证业务替身的 scheduledAt。抽出纯构造/快照入口，系统提交仍由 LocalNotificationService 统一处理，没有引入新的服务协议或依赖。
+- 修前 iOS 17.2 新专项 1 通过、3 失败（2 次参数执行通过、7 次失败），结果包 `/tmp/habito-m4-008-permissions-ios17/Logs/Test/Test-Habito-2026.10.05_18-48-14-+0800.xcresult`。实际观察为日历为空、组件 date 为空；7 次失败中包含 1 次小数秒字符串夹具解析失败，不把该次当产品缺陷。修复后 `18-49-54` 仅剩夹具解析 1 次失败（8 次通过），iOS 27 同代码 `18-49-55` 全部通过。夹具改为固定整秒加 0.123 秒，两系统不再依赖解析策略差异。
+- 技术依据：[Apple DateComponents.calendar](https://developer.apple.com/documentation/foundation/datecomponents/calendar) 指出未指定日历时 API 可能采用不同解释；[timeZone](https://developer.apple.com/documentation/foundation/datecomponents/timezone) 必须结合其日历理解；[UNCalendarNotificationTrigger](https://developer.apple.com/documentation/usernotifications/uncalendarnotificationtrigger) 以组件匹配时刻。系统设置变化带来的送达风险属于基于编码与文档的推断，本轮没有模拟真实错误送达，也没有改设备日历或时区。
+- 系统边界将已确定的绝对 scheduledAt 编为完整公历 UTC 年月日时分秒，并显式携带 calendar/timeZone。业务层仍按注入本地时区展开主提醒，时区变化后统一重建更新未来时刻；不是把家长本地计划改成 UTC 墙上时间。稍后仍固定加 600 秒，保留跨本地午夜拒绝；秒级编码误差小于 1 秒，沿用协调器已有容差。
+- 旧的浮动日历、重复、不完整或其他任务触发器在挂起快照中返回空时间，使协调器沿既有替换路径规范化；非 Habito 标识及 M0 探针仍隔离。新快照直接还原明确组件日期，不依赖 nextTriggerDate 的真实当前时刻。替换失败报告保留，下一轮重试后只有一次成功添加，再次重建保留同标识。
+- 新用例覆盖正常/DST 春进与回拨/年末、两种任务槽位、丢失上下文与重复、未知触发器、安全归档重开和旧请求失败重试。安全归档只验证框架对象序列化，不冒充通知中心持久化或实际送达。开发时归档断言遗漏宏内 throwing 调用的 try，`18-51-09`/`18-51-10` 为编译失败、未执行测试；已拆开解码与断言并重新验证。
+- 最终双系统单测各 **193/193（222 次执行）**，零失败/跳过/runtime warning：17.2 `/tmp/habito-m4-008-permissions-ios17/Logs/Test/Test-Habito-2026.10.05_18-54-52-+0800.xcresult`；27 `/tmp/habito-m4-008-permissions/Logs/Test/Test-Habito-2026.10.05_18-54-53-+0800.xcresult`。静态分析与 Release 构建通过，全工程严格格式、工程解析与差异检查通过。
+- 最终完整横屏 UI **两系统各 16/16**，已读取 xcresult 摘要核对 Passed 与实际数量，零失败/跳过：17.2 `/tmp/habito-m4-008-permissions-ios17/Logs/Test/Test-Habito-2026.10.05_18-56-46-+0800.xcresult`（234.784 秒，零 runtime warning）；27 `/tmp/habito-m4-008-permissions/Logs/Test/Test-Habito-2026.10.05_18-56-47-+0800.xcresult`（322.081 秒，保留 16 条已登记 R-009 提示）。
+- `swiftui-pro` 时间/并发与代码卫生专项复核：系统转换不重新解释本地产品规则、不依赖真实时钟；不跨 await 信任可变模型，没有新增业务协议、强制解包或忽略错误。只有固定框架对象与隔离数据参与自动化；本阶段没有取得通知中心实际送达证据，B 仍待真机。19:06 收尾只读设备检查仍 unavailable，未覆盖安装或卸载旧包。

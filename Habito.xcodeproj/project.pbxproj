@@ -118,6 +118,7 @@
 		Z1000000000000000000000B /* AppDelegateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = Z2000000000000000000000B /* AppDelegateTests.swift */; };
 		Z1000000000000000000000C /* UITestDateProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = Z2000000000000000000000C /* UITestDateProvider.swift */; };
 		Z1000000000000000000000D /* UITestDateProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = Z2000000000000000000000D /* UITestDateProviderTests.swift */; };
+		Z1000000000000000000000E /* LocalNotificationRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = Z2000000000000000000000E /* LocalNotificationRequestTests.swift */; };
 		G10000000000000000000001 /* TaskProgressServiceError.swift in Sources */ = {isa = PBXBuildFile; fileRef = G20000000000000000000001 /* TaskProgressServiceError.swift */; };
 		G10000000000000000000002 /* TaskProgressService.swift in Sources */ = {isa = PBXBuildFile; fileRef = G20000000000000000000002 /* TaskProgressService.swift */; };
 		G10000000000000000000003 /* TaskProgressServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = G20000000000000000000003 /* TaskProgressServiceTests.swift */; };
@@ -351,6 +352,7 @@
 		Z2000000000000000000000B /* AppDelegateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegateTests.swift; sourceTree = "<group>"; };
 		Z2000000000000000000000C /* UITestDateProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestDateProvider.swift; sourceTree = "<group>"; };
 		Z2000000000000000000000D /* UITestDateProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestDateProviderTests.swift; sourceTree = "<group>"; };
+		Z2000000000000000000000E /* LocalNotificationRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationRequestTests.swift; sourceTree = "<group>"; };
 		G20000000000000000000001 /* TaskProgressServiceError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskProgressServiceError.swift; sourceTree = "<group>"; };
 		G20000000000000000000002 /* TaskProgressService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskProgressService.swift; sourceTree = "<group>"; };
 		G20000000000000000000003 /* TaskProgressServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskProgressServiceTests.swift; sourceTree = "<group>"; };
@@ -815,6 +817,7 @@
 				Z2000000000000000000000A /* UITestSeedServiceTests.swift */,
 				Z2000000000000000000000B /* AppDelegateTests.swift */,
 				Z2000000000000000000000D /* UITestDateProviderTests.swift */,
+				Z2000000000000000000000E /* LocalNotificationRequestTests.swift */,
 				Y2000000000000000000000B /* TaskTemplateEditorViewModelTests.swift */,
 				W20000000000000000000006 /* ParentCalendarDayServiceTests.swift */,
 				Q20000000000000000000001 /* InMemoryParentPINCredentialStore.swift */,
@@ -1302,6 +1305,7 @@
 				Z1000000000000000000000A /* UITestSeedServiceTests.swift in Sources */,
 				Z1000000000000000000000B /* AppDelegateTests.swift in Sources */,
 				Z1000000000000000000000D /* UITestDateProviderTests.swift in Sources */,
+				Z1000000000000000000000E /* LocalNotificationRequestTests.swift in Sources */,
 				Y1000000000000000000000B /* TaskTemplateEditorViewModelTests.swift in Sources */,
 				L10000000000000000000001 /* FixedDateProvider.swift in Sources */,
 				Q10000000000000000000001 /* InMemoryParentPINCredentialStore.swift in Sources */,

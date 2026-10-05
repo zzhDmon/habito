@@ -1,9 +1,46 @@
 import Foundation
 import Testing
+import UserNotifications
 @testable import Habito
 
 @MainActor
 struct NotificationReconciliationCoordinatorTests {
+    @Test("旧浮动请求替换后保持幂等，替换失败可重试且不触碰探针", arguments: [true, false])
+    func legacyFloatingRequestIsNormalizedAndRetryable(failsFirstReplacement: Bool) async throws {
+        let desired = request(index: 1)
+        let normalized = LocalNotificationService.makeTaskNotificationRequest(desired)
+        var components = try #require(normalized.trigger as? UNCalendarNotificationTrigger).dateComponents
+        components.calendar = nil
+        components.timeZone = nil
+        let legacy = UNNotificationRequest(
+            identifier: normalized.identifier, content: normalized.content,
+            trigger: UNCalendarNotificationTrigger(dateMatching: components, repeats: false))
+        let legacySnapshot = LocalNotificationService.makePendingNotificationSnapshot(legacy)
+        let foreign = PendingNotificationRequestSnapshot(
+            identifier: LocalNotificationService.probeIdentifier, title: "probe", body: "probe", scheduledAt: nil)
+        let scheduler = FakeNotificationRequestScheduler(pending: [legacySnapshot, foreign])
+        if failsFirstReplacement { scheduler.failingAddIdentifiers = [desired.identifier] }
+        let coordinator = NotificationReconciliationCoordinator(scheduler: scheduler)
+        let first = await coordinator.reconcile(desiredRequests: [desired])
+        #expect(first.retainedIdentifiers.isEmpty)
+        if failsFirstReplacement {
+            #expect(first.failures.first?.operation == .replace)
+            #expect(!first.isSuccessful)
+            scheduler.failingAddIdentifiers = []
+        } else {
+            #expect(first.replacedIdentifiers == [desired.identifier])
+            #expect(first.isSuccessful)
+        }
+        let second = await coordinator.reconcile(desiredRequests: [desired])
+        let third = await coordinator.reconcile(desiredRequests: [desired])
+        #expect(second.isSuccessful && third.isSuccessful)
+        #expect(third.retainedIdentifiers == [desired.identifier])
+        #expect(scheduler.addedIdentifiers == [desired.identifier])
+        #expect(scheduler.pending[desired.identifier]?.scheduledAt == desired.scheduledAt)
+        #expect(scheduler.pending[foreign.identifier] == foreign)
+        #expect(scheduler.pending.count == 2)
+    }
+
     @Test("相同集合连续核对五次只在首次添加")
     func fiveRunsAreIdempotent() async {
         let scheduler = FakeNotificationRequestScheduler()

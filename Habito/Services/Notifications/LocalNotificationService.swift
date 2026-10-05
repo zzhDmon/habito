@@ -84,17 +84,35 @@ final class LocalNotificationService: LocalNotificationScheduling, NotificationR
     }
 
     func pendingNotificationRequests() async throws -> [PendingNotificationRequestSnapshot] {
-        await center.pendingNotificationRequests().map { request in
-            PendingNotificationRequestSnapshot(
-                identifier: request.identifier,
-                title: request.content.title,
-                body: request.content.body,
-                scheduledAt: Self.nextTriggerDate(for: request.trigger)
-            )
-        }
+        await center.pendingNotificationRequests().map(Self.makePendingNotificationSnapshot)
+    }
+
+    /// 把系统挂起请求变成只读快照；旧的浮动时区请求必须在下一次核对时替换。
+    ///
+    /// - Parameter request: 系统队列返回的请求，不代表通知已经送达。
+    /// - Returns: 只有完整公历 UTC 单次触发器才包含可信绝对时间；其他触发器返回空时间，
+    ///   由协调器沿用已有替换路径处理。非 Habito 标识仍由协调器隔离，探针不受影响。
+    static func makePendingNotificationSnapshot(_ request: UNNotificationRequest) -> PendingNotificationRequestSnapshot
+    {
+        PendingNotificationRequestSnapshot(
+            identifier: request.identifier,
+            title: request.content.title,
+            body: request.content.body,
+            scheduledAt: absoluteTaskDate(for: request.trigger)
+        )
     }
 
     func addNotificationRequest(_ request: TaskNotificationRequest) async throws {
+        try await center.add(Self.makeTaskNotificationRequest(request))
+    }
+
+    /// 构造任务系统请求而不访问通知中心，便于固定时间验证边界转换。
+    ///
+    /// - Parameter request: 业务层已计算好的绝对计划时间与稳定标识。
+    /// - Returns: 尚未提交系统的单次通知请求；不会请求权限或改动设备设置。
+    /// - Important: 本地重复时刻已由业务层解释为绝对时间；此处用公历 UTC 无歧义编码。
+    ///   时区改变后的主提醒仍由统一重建重新计算，不在系统触发器内再次解释业务规则。
+    static func makeTaskNotificationRequest(_ request: TaskNotificationRequest) -> UNNotificationRequest {
         let content = UNMutableNotificationContent()
         content.title = request.title
         content.body = request.body
@@ -105,20 +123,20 @@ final class LocalNotificationService: LocalNotificationScheduling, NotificationR
         ]
 
         var calendar = Calendar(identifier: .gregorian)
-        calendar.timeZone = .current
+        calendar.timeZone = .gmt
+        var components = calendar.dateComponents(
+            [.year, .month, .day, .hour, .minute, .second], from: request.scheduledAt)
+        // 不传时区会随设备设置重新解释，夏令时回拨的两个同名小时也会丢失绝对时刻区别。
+        components.calendar = calendar
+        components.timeZone = calendar.timeZone
         let trigger = UNCalendarNotificationTrigger(
-            dateMatching: calendar.dateComponents(
-                [.year, .month, .day, .hour, .minute, .second],
-                from: request.scheduledAt
-            ),
+            dateMatching: components,
             repeats: false
         )
-        try await center.add(
-            UNNotificationRequest(
-                identifier: request.identifier,
-                content: content,
-                trigger: trigger
-            )
+        return UNNotificationRequest(
+            identifier: request.identifier,
+            content: content,
+            trigger: trigger
         )
     }
 
@@ -134,15 +152,17 @@ final class LocalNotificationService: LocalNotificationScheduling, NotificationR
         center.removeDeliveredNotifications(withIdentifiers: [identifier])
     }
 
-    /// `UNNotificationTrigger` 基类不暴露触发日期；仅已知系统触发器可还原，未知类型交由协调器替换。
-    private static func nextTriggerDate(for trigger: UNNotificationTrigger?) -> Date? {
-        switch trigger {
-        case let trigger as UNCalendarNotificationTrigger:
-            trigger.nextTriggerDate()
-        case let trigger as UNTimeIntervalNotificationTrigger:
-            trigger.nextTriggerDate()
-        default:
-            nil
-        }
+    /// 任务只使用完整 UTC 单次日历触发；不能以旧请求当前看似匹配证明它在时区变化后仍正确。
+    private static func absoluteTaskDate(for trigger: UNNotificationTrigger?) -> Date? {
+        guard let trigger = trigger as? UNCalendarNotificationTrigger, !trigger.repeats else { return nil }
+        let components = trigger.dateComponents
+        guard
+            components.calendar?.identifier == .gregorian,
+            components.timeZone == .gmt,
+            components.year != nil, components.month != nil, components.day != nil,
+            components.hour != nil, components.minute != nil, components.second != nil
+        else { return nil }
+        // 还原明确绝对时刻，不用 nextTriggerDate 的真实当前时间影响固定测试或挂起队列核对。
+        return components.date
     }
 }
