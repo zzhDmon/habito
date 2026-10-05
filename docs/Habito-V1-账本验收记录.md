@@ -23,3 +23,13 @@
 - 补真实磁盘失败后重开、暂存时间匹配后，双系统专项各 **39/39（53 次）通过**：17.2 `/tmp/habito-v1-m1-001-ios17/Logs/Test/Test-Habito-2026.10.05_23-06-07-+0800.xcresult`；27 `/tmp/habito-v1-m1-001-ios27/Logs/Test/Test-Habito-2026.10.05_23-06-08-+0800.xcresult`。零失败/跳过/runtime warning；随后再补旧撤销保护断言，最终全量覆盖。
 - 最终完整两系统各 **242/242（298 次）通过**：17.2 `/tmp/habito-v1-m1-001-ios17/Logs/Test/Test-Habito-2026.10.05_23-10-01-+0800.xcresult`；27 `/tmp/habito-v1-m1-001-ios27/Logs/Test/Test-Habito-2026.10.05_23-10-02-+0800.xcresult`。零失败/跳过/runtime warning；Release 横屏构建、静态分析、严格格式、工程解析及差异检查通过。
 - swiftui-pro 复核保持时间注入、业务/View 分层、主 actor、只读 Sendable 收据和中文 DocC；真实旧系统问题用兼容回滚保护修复，没有提高最低版本、关闭检查或新依赖。004B DONE；无新 schema/default/UI 发奖入口，没有把上卡 UI 证据冒充此次新 UI 运行。下一卡 005 审计撤销，随后 006 统一入口与通知/完整 UI 回归。
+
+## 3. V1-M1-005：保留事实式撤销
+
+- CompletionUndoPolicy 固定现行五秒严格窗口：完成时刻可撤销，等于五秒关闭；时间倒退拒绝。请求携带原完成 ID，重复请求返回原撤销时刻，即使后来再次完成，也不误撤新的完成事实。
+- TaskCompletionUndoService 保留原 CompletionRecord 与奖励快照，断开活动关系后恢复 pending；原 XP/Coin 精确冲正，消费记录永不删除。币不足时状态、关系、XP、原奖励与消费都保持原样，后续等级以剩余有效 XP 重算。
+- 旧版本 0 无原账不捏造交易，有明确原账则按原账冲正、不从新模板推断。共享 TaskCompletionAuditValidator 验证新快照/原交易及撤销时刻/反向交易一致；坏账不自动补奖。
+- 同一主 actor 干净上下文、关闭自动保存、一次 save；保存失败先恢复本事务原标量与既有关系再 rollback，不补偿保存。真实 17/27 内存失败与磁盘重开均验证恢复，无新回滚崩溃。
+- 新增 14 项撤销测试（18 次执行）；连同完成/计时/账本专项两系统各 **54/54（72 次）通过**，结果包：17.2 `/tmp/habito-v1-m1-001-ios17/Logs/Test/Test-Habito-2026.10.05_23-30-32-+0800.xcresult`；27 `/tmp/habito-v1-m1-001-ios27/Logs/Test/Test-Habito-2026.10.05_23-30-33-+0800.xcresult`。
+- 最终全量各 **256/256（316 次）通过**：17.2 `/tmp/habito-v1-m1-001-ios17/Logs/Test/Test-Habito-2026.10.05_23-31-15-+0800.xcresult`；27 `/tmp/habito-v1-m1-001-ios27/Logs/Test/Test-Habito-2026.10.05_23-31-16-+0800.xcresult`。零失败/跳过/runtime warning；Release 横屏构建、静态分析、严格格式、工程解析和差异检查通过。
+- swiftui-pro 数据/Swift/卫生复核：稳定事件 ID、可测试时间、主 actor 事务、只读 Sendable 收据、明确错误/中文边界注释，无第三方、无新默认。005 DONE；未改 schema、未切 App/通知入口，本卡无新 UI 证据。006 再统一切换与完整 UI 验收；正式家庭库/Keychain/旧包未操作。

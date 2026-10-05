@@ -87,27 +87,8 @@ struct TaskCompletionService {
     }
 
     private func validateExisting(_ record: CompletionRecord) throws {
-        guard record.revokedAt == nil, record.completionSource != nil, record.completionTiming != nil,
-            record.completedAt.timeIntervalSinceReferenceDate.isFinite,
-            record.activeDurationSeconds.isFinite, record.activeDurationSeconds >= 0
-        else { throw TaskCompletionServiceError.invalidStoredCompletion(record.id) }
-        // 迁移旧完成只保留事实，不尝试从当前任务或已有账本补写新快照。
-        if record.rewardSettlementVersion == 0 { return }
-        guard record.rewardSettlementVersion == 1, let reminderAt = record.reminderAtSnapshot else {
-            throw TaskCompletionServiceError.invalidStoredCompletion(record.id)
-        }
-        let snapshot = try CompletionRewardSnapshot(
-            submittedAt: record.completedAt, reminderAt: reminderAt,
-            xp: record.xpRewardSnapshot, baseCoins: record.coinRewardSnapshot,
-            autonomyBonusCoins: record.activeBonusCoinSnapshot)
-        let ledger = try RewardLedgerSnapshot(context: context)
-        guard record.completionTiming == snapshot.timing, record.settledCoinSnapshot == snapshot.settledCoins,
-            let xp = ledger.xp[RewardLedgerKey.xpReward(record.id)],
-            let coin = ledger.coin[RewardLedgerKey.coinReward(record.id)],
-            xp.amount == snapshot.xp, coin.amount == snapshot.settledCoins,
-            xp.createdAt == record.completedAt, coin.createdAt == record.completedAt,
-            ledger.xp[RewardLedgerKey.xpReversal(record.id)] == nil
-        else { throw TaskCompletionServiceError.invalidStoredCompletion(record.id) }
+        guard record.revokedAt == nil else { throw TaskCompletionServiceError.invalidStoredCompletion(record.id) }
+        _ = try TaskCompletionAuditValidator(context: context).validate(record)
     }
 
     private func result(_ record: CompletionRecord, didComplete: Bool) throws -> TaskCompletionResult {
