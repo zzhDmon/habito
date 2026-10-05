@@ -70,7 +70,9 @@ struct ParentCalendarDayService {
                             value: occurrence.statusRawValue
                         )
                     }
-                    if status == .pending, !occurrence.isDetachedOverride {
+                    let preservesHistory = try TaskSubmissionHistory(context: context).preservesOccurrenceHistory(
+                        occurrence)
+                    if status == .pending, !occurrence.isDetachedOverride, !preservesHistory {
                         deleted += 1
                     } else {
                         protected += 1
@@ -86,7 +88,9 @@ struct ParentCalendarDayService {
                             value: occurrence.statusRawValue
                         )
                     }
-                    if status != .pending || occurrence.isDetachedOverride {
+                    let isWaiting =
+                        try TaskSubmissionHistory(context: context).latest(for: occurrence)?.reviewState == .waiting
+                    if status != .pending || occurrence.isDetachedOverride || isWaiting {
                         protected += 1
                     }
                 }
@@ -111,6 +115,8 @@ struct ParentCalendarDayService {
         now: Date
     ) throws -> OccurrenceReconciliationReport {
         guard date >= today else { throw ParentCalendarDayError.historicalDate(date) }
+        // 先验证全部保护事实再修改日期覆盖；坏等待不能导致 17 的覆盖标量缓存留下半更新。
+        _ = try preview(action, on: date, today: today)
 
         do {
             try updateOverride(action, on: date, now: now)

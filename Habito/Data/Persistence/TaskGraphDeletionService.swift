@@ -4,7 +4,7 @@ import SwiftData
 /// 将任务对象图的维护性物理删除集中到同一个主 actor/context。
 ///
 /// iPadOS 17 的级联删除在回归中留下拥有记录，因此显式按稳定外键清理，不只依赖关系缓存。
-/// 本服务不决定哪些实例允许删除；历史/进行中/单日覆盖保护仍由调用用例判断。
+/// 历史/进行中/单日覆盖保护由调用用例判断；审计记录保护在此边界再检查，防止维护入口绕过。
 @MainActor
 struct TaskGraphDeletionService {
     private let context: ModelContext
@@ -16,11 +16,14 @@ struct TaskGraphDeletionService {
     /// 清理实例拥有的完成、计时与通知映射，再暂存实例删除。
     ///
     /// - Parameter occurrence: 调用方已判定可物理删除、且属于该 context 的实例。
-    /// - Throws: 对象不属于本 context 或读取拥有记录失败时抛错；完整读取前不修改对象图。
+    /// - Throws: 外 context、有 V1 审计历史或读取失败时抛错；完整读取前不修改对象图。
     /// - Important: 不调用 `save()`，由外层事务统一保存/回滚并触发通知重建。
     ///   映射删除不会直接操作系统通知；系统残留仍通过稳定 identifier 核对清理。
     func stageOccurrenceDeletion(_ occurrence: TaskOccurrence) throws {
         guard occurrence.modelContext === context else { throw TaskGraphDeletionError.modelNotInContext }
+        guard try !TaskSubmissionHistory(context: context).preservesOccurrenceHistory(occurrence) else {
+            throw TaskGraphDeletionError.protectedHistory(occurrence.id)
+        }
         let occurrenceID = occurrence.id
         let completions = try context.fetch(
             FetchDescriptor<CompletionRecord>(predicate: #Predicate { $0.occurrenceID == occurrenceID })

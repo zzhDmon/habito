@@ -51,10 +51,12 @@ struct TaskTemplateLifecycleService {
                 )
             }
             latestDate = max(latestDate ?? date, date)
+            let preservesHistory = try TaskSubmissionHistory(context: context).preservesOccurrenceHistory(occurrence)
             if action != .enable,
                 date >= today,
                 status == .pending,
-                !occurrence.isDetachedOverride
+                !occurrence.isDetachedOverride,
+                !preservesHistory
             {
                 removableCount += 1
             }

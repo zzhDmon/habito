@@ -72,4 +72,53 @@ struct TaskSubmissionHistory {
             throw TaskSubmissionError.awaitingReview(occurrenceID)
         }
     }
+
+    /// 验证等待确实对应停止计时、未确认完成的实例，供原服务保护和页面查询共用。
+    ///
+    /// - Returns: 主 actor 内的最新审计记录；无提交时为空，不回填旧历史。
+    /// - Throws: 等待与任务/计时事实不一致；不能仅凭 pending 状态推断可操作。
+    func latest(for occurrence: TaskOccurrence) throws -> TaskSubmission? {
+        guard occurrence.modelContext === context else { throw TaskCompletionServiceError.modelNotInContext }
+        let row = try records(for: occurrence.id).last
+        if let row, row.reviewState == .waiting {
+            let occurrenceID = occurrence.id
+            let sessions = try context.fetch(
+                FetchDescriptor<TimerSession>(predicate: #Predicate { $0.occurrenceID == occurrenceID }))
+            let progress = TaskProgressService(context: context)
+            guard occurrence.status == .pending, try progress.completionRecord(for: occurrence) == nil,
+                sessions.allSatisfy({ $0.state == .ended }),
+                try progress.submissionDuration(for: occurrence, at: row.submittedAt) == row.activeDurationSeconds
+            else { throw TaskSubmissionError.corruptHistory(occurrence.id) }
+        }
+        return row
+    }
+
+    /// V1 审计实例不能物理删除；退回或冲正不等于从未发生过提交/完成。
+    ///
+    /// - Note: 旧 V0 维护性删除夹具仍验证原对象图清理；普通 UI 的历史日期/完成状态保护不变。
+    func preservesOccurrenceHistory(_ occurrence: TaskOccurrence) throws -> Bool {
+        if try latest(for: occurrence) != nil { return true }
+        let occurrenceID = occurrence.id
+        return try context.fetchCount(
+            FetchDescriptor<CompletionRecord>(
+                predicate: #Predicate { $0.occurrenceID == occurrenceID && $0.rewardSettlementVersion > 0 })) > 0
+    }
+
+    /// 构造不持有 SwiftData 对象的只读值，预期奖励不得用作“已到账”反馈。
+    ///
+    /// - Returns: 最新提交快照，旧实例没有提交时为空。
+    /// - Throws: 与 latest 共用完整事实验证，不静默隐藏坏等待关系。
+    func snapshot(for occurrence: TaskOccurrence) throws -> TaskSubmissionSnapshot? {
+        guard let row = try latest(for: occurrence), let state = row.reviewState,
+            let timing = row.completionTiming
+        else { return nil }
+        let reward = try CompletionRewardSnapshot(
+            submittedAt: row.submittedAt, reminderAt: row.reminderAtSnapshot,
+            xp: row.xpRewardSnapshot, baseCoins: row.coinRewardSnapshot, autonomyBonusCoins: row.activeBonusCoinSnapshot
+        )
+        return TaskSubmissionSnapshot(
+            id: row.id, submittedAt: row.submittedAt, state: state, reviewedAt: row.reviewedAt,
+            timing: timing, activeDurationSeconds: row.activeDurationSeconds,
+            expectedXP: reward.xp, expectedCoins: reward.settledCoins)
+    }
 }

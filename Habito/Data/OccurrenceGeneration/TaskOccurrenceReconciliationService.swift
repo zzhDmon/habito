@@ -59,7 +59,9 @@ struct TaskOccurrenceReconciliationService {
             if let existingState = existingByDate.removeValue(forKey: candidate.date.dateKey) {
                 let occurrence = existingState.occurrence
                 let status = existingState.status
-                guard candidate.date >= today, status == .pending, !occurrence.isDetachedOverride else {
+                guard candidate.date >= today, status == .pending, !occurrence.isDetachedOverride,
+                    !existingState.isWaiting
+                else {
                     protected += 1
                     continue
                 }
@@ -81,7 +83,7 @@ struct TaskOccurrenceReconciliationService {
                 continue
             }
             let status = existingState.status
-            if date >= today, status == .pending, !occurrence.isDetachedOverride {
+            if date >= today, status == .pending, !occurrence.isDetachedOverride, !existingState.preservesHistory {
                 try TaskGraphDeletionService(context: context).stageOccurrenceDeletion(occurrence)
                 deleted += 1
             } else {
@@ -102,8 +104,12 @@ struct TaskOccurrenceReconciliationService {
 
     private func validatedExistingOccurrences(
         _ occurrences: [TaskOccurrence]
-    ) throws -> [String: (occurrence: TaskOccurrence, date: LocalDate, status: TaskOccurrenceStatus)] {
-        var result: [String: (TaskOccurrence, LocalDate, TaskOccurrenceStatus)] = [:]
+    ) throws -> [String: (
+        occurrence: TaskOccurrence, date: LocalDate, status: TaskOccurrenceStatus, isWaiting: Bool,
+        preservesHistory: Bool
+    )] {
+        var result: [String: (TaskOccurrence, LocalDate, TaskOccurrenceStatus, Bool, Bool)] = [:]
+        let history = TaskSubmissionHistory(context: context)
         for occurrence in occurrences {
             let date: LocalDate
             do {
@@ -120,7 +126,10 @@ struct TaskOccurrenceReconciliationService {
                     rawValue: occurrence.statusRawValue
                 )
             }
-            result[occurrence.dateKey] = (occurrence, date, status)
+            // 修改前验证全部等待事实；坏历史不能导致先改一半实例再报错。
+            let isWaiting = try history.latest(for: occurrence)?.reviewState == .waiting
+            let preservesHistory = try history.preservesOccurrenceHistory(occurrence)
+            result[occurrence.dateKey] = (occurrence, date, status, isWaiting, preservesHistory)
         }
         return result
     }

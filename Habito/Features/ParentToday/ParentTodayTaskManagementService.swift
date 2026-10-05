@@ -107,6 +107,7 @@ struct ParentTodayTaskManagementService {
     }
 
     private func validatedStatus(of occurrence: TaskOccurrence) throws -> TaskOccurrenceStatus {
+        try TaskSubmissionHistory(context: context).requireNotWaiting(occurrence.id)
         guard let status = occurrence.status else {
             throw ParentTodayTaskManagementError.invalidOccurrenceStatus(
                 occurrenceID: occurrence.id,

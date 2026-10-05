@@ -39,7 +39,7 @@ struct TodayTaskQueryService {
         }
         let carryOverItems = try carryOverItems(before: date, at: now)
         let actionable = (carryOverItems + sortedItems).first { item in
-            item.status == .inProgress || item.status == .pending
+            !item.isAwaitingReview && (item.status == .inProgress || item.status == .pending)
         }
         let visibleItems = sortedItems.filter { $0.status != .skipped }
         let currentDate = try LocalDate(date: now, calendar: calendar, timeZone: timeZone)
@@ -122,6 +122,7 @@ struct TodayTaskQueryService {
 
         let sessionDuration = sessions.reduce(0) { $0 + $1.duration }
         let displayedDuration = completion?.activeDurationSeconds ?? sessionDuration
+        let submission = try TaskSubmissionHistory(context: context).snapshot(for: occurrence)
 
         return TodayTaskItem(
             id: occurrence.id,
@@ -135,7 +136,8 @@ struct TodayTaskQueryService {
             origin: occurrence.origin,
             activeSessionState: activeSessions.first?.state,
             activeDurationSeconds: displayedDuration,
-            completion: completion
+            completion: completion,
+            submission: submission
         )
     }
 
@@ -257,6 +259,8 @@ struct TodayTaskQueryService {
         at now: Date
     ) -> (Int, Date, String) {
         let rank: Int
+        // 等待仍计入未完成分母，但不占据下一项建议；不能引导孩子再次提交或开计时。
+        if item.isAwaitingReview { return (3, item.scheduledAt, item.id.uuidString) }
         switch item.status {
         case .inProgress:
             rank = 0
@@ -265,9 +269,9 @@ struct TodayTaskQueryService {
         case .pending:
             rank = 2
         case .completed:
-            rank = 3
-        case .skipped:
             rank = 4
+        case .skipped:
+            rank = 5
         }
         return (rank, item.scheduledAt, item.id.uuidString)
     }
