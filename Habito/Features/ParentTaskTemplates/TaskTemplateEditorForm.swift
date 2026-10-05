@@ -125,7 +125,8 @@ struct TaskTemplateEditorForm: View {
                 return .schedule
             case .noWeekdays:
                 return .weekdays
-            case .templateNotFound, .archivedTemplate, .missingRule, .unsupportedRecurrence:
+            case .templateNotFound, .archivedTemplate, .missingRule, .unsupportedRecurrence,
+                .invalidReward, .rewardOverflow, .revisionOverflow, .invalidStoredRevision, .pendingContextChanges:
                 return .general
             }
         }
@@ -159,6 +160,10 @@ struct TaskTemplateEditorForm: View {
         case .invalidTime: "taskEditor.errorTime"
         case .noWeekdays: "taskEditor.errorWeekdays"
         case .unsupportedIcon, .unsupportedColor: "taskEditor.errorOption"
+        case .invalidReward: "taskEditor.errorReward"
+        case .rewardOverflow: "taskEditor.errorRewardOverflow"
+        case .revisionOverflow, .invalidStoredRevision: "taskEditor.errorRevision"
+        case .pendingContextChanges: "taskEditor.errorPendingChanges"
         case .templateNotFound, .archivedTemplate, .missingRule, .unsupportedRecurrence:
             "taskEditor.errorLoad"
         }

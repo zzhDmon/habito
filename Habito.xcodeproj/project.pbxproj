@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AB1000000000000000000139 /* TaskTemplateConfigurationEditingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000139 /* TaskTemplateConfigurationEditingTests.swift */; };
+		AB1000000000000000000138 /* TaskTemplateEditRollbackSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000138 /* TaskTemplateEditRollbackSnapshot.swift */; };
 		AB1000000000000000000137 /* ReviewRoundTripTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000137 /* ReviewRoundTripTests.swift */; };
 		AB1000000000000000000136 /* ParentReviewSnapshotFieldStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000136 /* ParentReviewSnapshotFieldStyle.swift */; };
 		AB1000000000000000000128 /* ParentReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000128 /* ParentReviewView.swift */; };
@@ -376,6 +378,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AB2000000000000000000139 /* TaskTemplateConfigurationEditingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskTemplateConfigurationEditingTests.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000138 /* TaskTemplateEditRollbackSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskTemplateEditRollbackSnapshot.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000137 /* ReviewRoundTripTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ReviewRoundTripTests.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000136 /* ParentReviewSnapshotFieldStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ParentReviewSnapshotFieldStyle.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000128 /* ParentReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ParentReviewView.swift"; sourceTree = "<group>"; };
@@ -1170,6 +1174,7 @@
 				T20000000000000000000001 /* TaskTemplateDraft.swift */,
 				T20000000000000000000002 /* TaskTemplateEditorError.swift */,
 				T20000000000000000000003 /* TaskTemplateEditingService.swift */,
+				AB2000000000000000000138 /* TaskTemplateEditRollbackSnapshot.swift */,
 				T20000000000000000000005 /* TaskTemplateEditorFeedback.swift */,
 				T20000000000000000000008 /* TaskTemplateEditorView.swift */,
 				T20000000000000000000009 /* TaskTemplateEditorForm.swift */,
@@ -1258,6 +1263,7 @@
 				AB2000000000000000000126 /* ParentReviewQueueServiceTests.swift */,
 				AB2000000000000000000127 /* ParentReviewViewModelTests.swift */,
 				AB2000000000000000000137 /* ReviewRoundTripTests.swift */,
+				AB2000000000000000000139 /* TaskTemplateConfigurationEditingTests.swift */,
 				Z20000000000000000000004 /* TaskSnoozeServiceTests.swift */,
 				J20000000000000000000006 /* TodayQueryFixture.swift */,
 				J20000000000000000000007 /* TodayTaskQueryServiceTests.swift */,
@@ -1711,6 +1717,7 @@
 				T10000000000000000000001 /* TaskTemplateDraft.swift in Sources */,
 				T10000000000000000000002 /* TaskTemplateEditorError.swift in Sources */,
 				T10000000000000000000003 /* TaskTemplateEditingService.swift in Sources */,
+				AB1000000000000000000138 /* TaskTemplateEditRollbackSnapshot.swift in Sources */,
 				T10000000000000000000005 /* TaskTemplateEditorFeedback.swift in Sources */,
 				T10000000000000000000008 /* TaskTemplateEditorView.swift in Sources */,
 				T10000000000000000000009 /* TaskTemplateEditorForm.swift in Sources */,
@@ -1928,6 +1935,7 @@
 				AB1000000000000000000126 /* ParentReviewQueueServiceTests.swift in Sources */,
 				AB1000000000000000000127 /* ParentReviewViewModelTests.swift in Sources */,
 				AB1000000000000000000137 /* ReviewRoundTripTests.swift in Sources */,
+				AB1000000000000000000139 /* TaskTemplateConfigurationEditingTests.swift in Sources */,
 				Z10000000000000000000004 /* TaskSnoozeServiceTests.swift in Sources */,
 				C10000000000000000000010 /* LocalDateTests.swift in Sources */,
 				N10000000000000000000004 /* LocalizationCatalogTests.swift in Sources */,

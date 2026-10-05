@@ -1,6 +1,22 @@
 {
   "sourceLanguage" : "zh-Hans",
   "strings" : {
+    "taskEditor.errorReward" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "奖励不能小于 0，请检查经验和金币。" } } }
+    },
+    "taskEditor.errorRewardOverflow" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "基础金币与自主金币的总额过大，请调小后再保存。" } } }
+    },
+    "taskEditor.errorRevision" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "任务版本数据无法安全更新。本次修改没有保存。" } } }
+    },
+    "taskEditor.errorPendingChanges" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "还有其他未保存的修改，请先处理后再保存这个任务。" } } }
+    },
     "parentReview.open" : {
       "extractionState" : "manual",
       "localizations" : {
