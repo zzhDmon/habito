@@ -8,6 +8,8 @@ import UserNotifications
 /// 因此这里使用最小的 `UIApplicationDelegate` 桥接，并把业务排程留在通知服务中。
 final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     let notificationResponseRouter = NotificationResponseRouter()
+    private var notificationRebuildTrigger: NotificationRebuildTrigger?
+    private var hasPendingTimeChange = false
     private let logger = Logger(
         subsystem: "com.zhangzehua.Habito",
         category: "LocalNotification"
@@ -31,6 +33,29 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
             }
         #endif
         return true
+    }
+
+    /// 由组合根在场景出现时连接全局重建入口；提前到达的生命周期事件不会丢失。
+    ///
+    /// - Important: 注入本身不触发额外排程；仅把尚未处理的系统变化合并为一次重建。
+    func connectNotificationRebuildTrigger(_ trigger: NotificationRebuildTrigger) {
+        notificationRebuildTrigger = trigger
+        if hasPendingTimeChange {
+            hasPendingTimeChange = false
+            trigger.requestRebuild()
+        }
+    }
+
+    /// 系统在午夜、校时及夏令时变化时调用；挂起期间的事件由系统在回前台时交付。
+    ///
+    /// 这里只转发事件，不直接操作 SwiftData 或通知中心。服务按注入的日历/时区重算未来实例，
+    /// 既有根视图结构化任务完成后刷新今日页面，已完成记录仍保留原绝对时间。
+    func applicationSignificantTimeChange(_ application: UIApplication) {
+        guard let notificationRebuildTrigger else {
+            hasPendingTimeChange = true
+            return
+        }
+        notificationRebuildTrigger.requestRebuild()
     }
 
     /// App 位于前台时仍展示探针通知，便于 M0-004 验证前台场景。

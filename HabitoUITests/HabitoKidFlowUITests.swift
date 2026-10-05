@@ -27,7 +27,7 @@ final class HabitoKidFlowUITests: XCTestCase {
 
     private func verifyLaunchMaterialization(extraArguments: [String]) {
         XCUIDevice.shared.orientation = .landscapeLeft
-        let app = XCUIApplication()
+        let app = makeApplication()
         app.launchArguments =
             ["--habito-ui-testing", "--habito-ui-reset", "--habito-ui-template-only"] + extraArguments
         app.launch()
@@ -41,7 +41,7 @@ final class HabitoKidFlowUITests: XCTestCase {
 
     func testColdLaunchNotificationOpensSeededTask() throws {
         XCUIDevice.shared.orientation = .landscapeLeft
-        let app = XCUIApplication()
+        let app = makeApplication()
         app.launchArguments = [
             "--habito-ui-testing",
             "--habito-ui-reset",
@@ -56,7 +56,7 @@ final class HabitoKidFlowUITests: XCTestCase {
 
     func testBackgroundNotificationReplacesCurrentNavigationWithSeededTask() throws {
         XCUIDevice.shared.orientation = .landscapeLeft
-        let app = XCUIApplication()
+        let app = makeApplication()
         app.launchArguments = [
             "--habito-ui-testing",
             "--habito-ui-reset",
@@ -75,7 +75,7 @@ final class HabitoKidFlowUITests: XCTestCase {
 
     func testStartPauseRelaunchResumeCompleteAndUndo() throws {
         XCUIDevice.shared.orientation = .landscapeLeft
-        let app = XCUIApplication()
+        let app = makeApplication()
         app.launchArguments = ["--habito-ui-testing", "--habito-ui-reset"]
         app.launch()
 
@@ -116,7 +116,7 @@ final class HabitoKidFlowUITests: XCTestCase {
 
     func testPendingTaskCanScheduleTenMinuteSnooze() throws {
         XCUIDevice.shared.orientation = .landscapeLeft
-        let app = XCUIApplication()
+        let app = makeApplication()
         app.launchArguments = ["--habito-ui-testing", "--habito-ui-reset"]
         app.launch()
 
@@ -135,7 +135,7 @@ final class HabitoKidFlowUITests: XCTestCase {
 
     func testSnoozeExplainsDeniedNotificationsWithoutBlockingCompletion() throws {
         XCUIDevice.shared.orientation = .landscapeLeft
-        let app = XCUIApplication()
+        let app = makeApplication()
         app.launchArguments = ["--habito-ui-testing", "--habito-ui-reset", "--habito-ui-notifications-denied"]
         app.launch()
         let task = app.buttons[seededTaskIdentifier]
@@ -153,7 +153,7 @@ final class HabitoKidFlowUITests: XCTestCase {
 
     func testParentCanRetryFailedNotificationScheduling() throws {
         XCUIDevice.shared.orientation = .landscapeLeft
-        let app = XCUIApplication()
+        let app = makeApplication()
         app.launchArguments = ["--habito-ui-testing", "--habito-ui-reset", "--habito-ui-notifications-fail"]
         app.launch()
         unlockParent(in: app)
@@ -168,7 +168,7 @@ final class HabitoKidFlowUITests: XCTestCase {
 
     func testParentGateOpensWithTapAndPersistsCredentialAcrossRelaunch() throws {
         XCUIDevice.shared.orientation = .landscapeLeft
-        let app = XCUIApplication()
+        let app = makeApplication()
         app.launchArguments = ["--habito-ui-testing", "--habito-ui-reset"]
         app.launch()
 
@@ -241,7 +241,7 @@ final class HabitoKidFlowUITests: XCTestCase {
 
     func testParentCanSkipRestoreAndCorrectTodayTask() throws {
         XCUIDevice.shared.orientation = .landscapeLeft
-        let app = XCUIApplication()
+        let app = makeApplication()
         app.launchArguments = ["--habito-ui-testing", "--habito-ui-reset"]
         app.launch()
 
@@ -282,7 +282,7 @@ final class HabitoKidFlowUITests: XCTestCase {
 
     func testParentNotificationDiagnosticsShowsIndependentStates() throws {
         XCUIDevice.shared.orientation = .landscapeLeft
-        let app = XCUIApplication()
+        let app = makeApplication()
         app.launchArguments = ["--habito-ui-testing", "--habito-ui-reset"]
         app.launch()
 
@@ -305,7 +305,7 @@ final class HabitoKidFlowUITests: XCTestCase {
 
     func testParentCanPreviewHolidayAndRestoreTasksByRemovingOverride() throws {
         XCUIDevice.shared.orientation = .landscapeLeft
-        let app = XCUIApplication()
+        let app = makeApplication()
         app.launchArguments = ["--habito-ui-testing", "--habito-ui-reset"]
         app.launch()
 
@@ -354,7 +354,7 @@ final class HabitoKidFlowUITests: XCTestCase {
 
     func testParentManagementLoopFromEmptyData() throws {
         XCUIDevice.shared.orientation = .landscapeLeft
-        let app = XCUIApplication()
+        let app = makeApplication()
         app.launchArguments = [
             "--habito-ui-testing",
             "--habito-ui-reset",
@@ -435,6 +435,13 @@ final class HabitoKidFlowUITests: XCTestCase {
         XCTAssertTrue(lifecycleConfirm.waitForExistence(timeout: 5))
         lifecycleConfirm.tap()
         XCTAssertTrue(app.staticTexts["还没有任务"].waitForExistence(timeout: 5))
+    }
+
+    /// 同一用例的所有重启沿用相同环境；只隔离场景日期，不冻结计时实际经过的秒数。
+    private func makeApplication() -> XCUIApplication {
+        let app = XCUIApplication()
+        app.launchEnvironment["HABITO_UI_SYSTEM_REFERENCE"] = String(Date.now.timeIntervalSince1970)
+        return app
     }
 
     private func unlockParent(in app: XCUIApplication) {

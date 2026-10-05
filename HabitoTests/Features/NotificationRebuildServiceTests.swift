@@ -6,6 +6,72 @@ import Testing
 @Suite("通知业务重建")
 @MainActor
 struct NotificationRebuildServiceTests {
+    @Test("提前开始后清理主提醒，但已安排的稍后槽位仍按进行中规则保留")
+    func startingTaskClearsPrimaryAndPreservesEligibleSnooze() async throws {
+        let fixture = try Fixture()
+        _ = try fixture.insertDailyTemplate()
+        _ = try await fixture.service.rebuild(at: fixture.now)
+        let occurrence = try #require(
+            fixture.context.fetch(FetchDescriptor<TaskOccurrence>()).first { $0.dateKey == "2026-09-27" })
+        let primary = NotificationRequestIdentifier(occurrenceID: occurrence.id, kind: .primary).rawValue
+        let snooze = NotificationRequestIdentifier(occurrenceID: occurrence.id, kind: .snooze).rawValue
+        _ = try await TaskSnoozeService(
+            context: fixture.context, scheduler: fixture.scheduler, permissionProvider: fixture.permissions,
+            calendar: fixture.calendar, timeZone: fixture.timeZone, operationGate: fixture.operationGate
+        ).schedule(occurrenceID: occurrence.id, at: fixture.now)
+        let trigger = NotificationRebuildTrigger()
+        let model = TaskSessionViewModel(
+            occurrenceID: occurrence.id, context: fixture.context, calendar: fixture.calendar,
+            timeZone: fixture.timeZone,
+            dateProvider: FixedDateProvider(value: fixture.now), notificationRebuildTrigger: trigger)
+        model.load()
+        model.startOrResume()
+        #expect(trigger.revision == 1)
+        let result = try await fixture.service.rebuild(at: fixture.now)
+        #expect(result.reconciliation.isSuccessful)
+        #expect(fixture.scheduler.pending[primary] == nil)
+        #expect(fixture.scheduler.pending[snooze] != nil)
+        #expect(try NotificationLinkStore(context: fixture.context).link(requestIdentifier: primary) == nil)
+        #expect(try NotificationLinkStore(context: fixture.context).link(requestIdentifier: snooze) != nil)
+        #expect(result.selection.primaryCandidates.count == 14)
+        #expect(result.scheduledSnoozeCount == 1)
+        #expect(occurrence.status == .inProgress)
+    }
+
+    @Test("时区重建更新未来实例与稳定通知映射，不改写完成绝对时间")
+    func changedTimeZoneRebuildsFutureRequestsAndPreservesCompletion() async throws {
+        let fixture = try Fixture()
+        _ = try fixture.insertDailyTemplate()
+        _ = try await fixture.service.rebuild(at: fixture.now)
+        let occurrences = try fixture.context.fetch(FetchDescriptor<TaskOccurrence>())
+        let completed = try #require(occurrences.first { $0.dateKey == "2026-09-27" })
+        let future = try #require(occurrences.first { $0.dateKey == "2026-09-28" })
+        let completedScheduledAt = completed.scheduledAt
+        let record = try TaskProgressService(context: fixture.context).complete(
+            completed, at: fixture.now, source: .childManual)
+        let futureID = future.id
+        let identifier = NotificationRequestIdentifier(occurrenceID: futureID, kind: .primary).rawValue
+        let oldScheduledAt = future.scheduledAt
+        let timeZone = try #require(TimeZone(identifier: "America/Los_Angeles"))
+        let shifted = NotificationRebuildService(
+            context: fixture.context, scheduler: fixture.scheduler, permissionProvider: fixture.permissions,
+            calendar: fixture.calendar, timeZone: timeZone, operationGate: fixture.operationGate)
+        let result = try await shifted.rebuild(at: fixture.now)
+        let expected = try Date("2026-09-29T02:30:00Z", strategy: .iso8601)
+        #expect(result.reconciliation.isSuccessful)
+        #expect(future.id == futureID)
+        #expect(future.scheduledAt == expected)
+        #expect(future.scheduledAt != oldScheduledAt)
+        #expect(fixture.scheduler.pending[identifier]?.scheduledAt == expected)
+        #expect(
+            try NotificationLinkStore(context: fixture.context).link(requestIdentifier: identifier)?.scheduledAt
+                == expected)
+        #expect(completed.status == .completed)
+        #expect(completed.scheduledAt == completedScheduledAt)
+        #expect(record.completedAt == fixture.now)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<CompletionRecord>()) == 1)
+    }
+
     @Test("预算恰好覆盖最低日期整天时，重建保存完整边界且连续核对不重复添加")
     func exactDailyBudgetPersistsCompleteMinimumCoverage() async throws {
         let fixture = try Fixture()

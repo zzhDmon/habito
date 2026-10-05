@@ -15,6 +15,7 @@
         static let delayedNotificationArgument = "--habito-ui-delayed-notification"
         static let notificationsDeniedArgument = "--habito-ui-notifications-denied"
         static let notificationsFailArgument = "--habito-ui-notifications-fail"
+        static let systemReferenceEnvironmentKey = "HABITO_UI_SYSTEM_REFERENCE"
 
         let shouldReset: Bool
         let shouldSeedSampleData: Bool
@@ -40,6 +41,26 @@
                 shouldPrepareNotificationResponse: arguments.contains(delayedNotificationArgument),
                 shouldDenyNotifications: arguments.contains(notificationsDeniedArgument),
                 shouldFailNotificationScheduling: arguments.contains(notificationsFailArgument)
+            )
+        }
+
+        /// 创建可跨 App 重启连续计时的 Debug 时钟；手动启动旧测试参数时仍使用系统时钟。
+        ///
+        /// - Parameter environment: 启动环境，可由单测传入，不修改进程全局环境。
+        /// - Returns: 存在有效测试基准时返回映射时钟，否则返回手动探针兼容的系统时钟。
+        /// - Throws: 显式传入的基准不是有限时间戳时拒绝，避免静默掩盖坏夹具。
+        func makeDateProvider(environment: [String: String] = ProcessInfo.processInfo.environment) throws
+            -> any DateProviding
+        {
+            guard let rawReference = environment[Self.systemReferenceEnvironmentKey] else {
+                return SystemDateProvider()
+            }
+            guard let reference = TimeInterval(rawReference), reference.isFinite else {
+                throw CocoaError(.coderInvalidValue)
+            }
+            return UITestDateProvider(
+                referenceSystemDate: Date(timeIntervalSince1970: reference),
+                referenceTestDate: try Date("2026-09-27T02:00:00Z", strategy: .iso8601)
             )
         }
 

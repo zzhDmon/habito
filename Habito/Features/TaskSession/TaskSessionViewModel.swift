@@ -88,6 +88,13 @@ final class TaskSessionViewModel {
         reload(showLoading: false)
     }
 
+    /// 提供显示层的业务时刻；TimelineView 只负责刷新节奏，不能另用系统时间计算撤销窗口。
+    ///
+    /// - Returns: 与开始、完成和撤销写入共用的注入时钟，避免测试或未来时钟替换时显示与操作不同步。
+    func currentDate() -> Date {
+        dateProvider.now()
+    }
+
     /// 根据当前页面状态执行开始或继续；运行中重复触发不会创建第二个会话。
     func startOrResume() {
         guard case let .loaded(content) = state else { return }
@@ -98,6 +105,8 @@ final class TaskSessionViewModel {
             switch content.primaryAction {
             case .start:
                 _ = try progressService.startTiming(for: occurrence, at: now)
+                // 主提醒只属于待处理实例；开始成功后立即核对，避免尚未到点的旧主提醒继续出现。
+                notificationRebuildTrigger.requestRebuild()
             case .resume:
                 _ = try progressService.resumeTiming(for: occurrence, at: now)
             case .pause, .none:

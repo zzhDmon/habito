@@ -9,16 +9,17 @@ struct TaskSessionLoadedView: View {
     let onSnooze: () async -> Void
     let onComplete: () -> Void
     let onUndoCompletion: () -> Void
+    let currentDate: () -> Date
 
     var body: some View {
         AdaptiveTwoColumnLayout {
             TaskSessionIdentityPanel(task: content.task)
         } trailing: {
-            TimelineView(.periodic(from: .now, by: 1)) { context in
+            TimelineView(.periodic(from: .now, by: 1)) { _ in
                 TaskSessionTimerPanel(
                     content: content,
                     snoozeState: snoozeState,
-                    now: context.date,
+                    now: currentDate(),
                     onStartOrResume: onStartOrResume,
                     onPause: onPause,
                     onSnooze: onSnooze,
@@ -336,7 +337,8 @@ private enum TaskSessionDurationText {
             onPause: {},
             onSnooze: {},
             onComplete: {},
-            onUndoCompletion: {}
+            onUndoCompletion: {},
+            currentDate: { .now }
         )
         .navigationTitle("kidTask.navigationTitle")
     }
@@ -363,7 +365,8 @@ private enum TaskSessionDurationText {
             onPause: {},
             onSnooze: {},
             onComplete: {},
-            onUndoCompletion: {}
+            onUndoCompletion: {},
+            currentDate: { .now }
         )
         .navigationTitle("kidTask.navigationTitle")
     }

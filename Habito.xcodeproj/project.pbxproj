@@ -115,6 +115,9 @@
 		Z10000000000000000000008 /* TaskGraphDeletionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = Z20000000000000000000008 /* TaskGraphDeletionService.swift */; };
 		Z10000000000000000000009 /* TaskGraphDeletionError.swift in Sources */ = {isa = PBXBuildFile; fileRef = Z20000000000000000000009 /* TaskGraphDeletionError.swift */; };
 		Z1000000000000000000000A /* UITestSeedServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = Z2000000000000000000000A /* UITestSeedServiceTests.swift */; };
+		Z1000000000000000000000B /* AppDelegateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = Z2000000000000000000000B /* AppDelegateTests.swift */; };
+		Z1000000000000000000000C /* UITestDateProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = Z2000000000000000000000C /* UITestDateProvider.swift */; };
+		Z1000000000000000000000D /* UITestDateProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = Z2000000000000000000000D /* UITestDateProviderTests.swift */; };
 		G10000000000000000000001 /* TaskProgressServiceError.swift in Sources */ = {isa = PBXBuildFile; fileRef = G20000000000000000000001 /* TaskProgressServiceError.swift */; };
 		G10000000000000000000002 /* TaskProgressService.swift in Sources */ = {isa = PBXBuildFile; fileRef = G20000000000000000000002 /* TaskProgressService.swift */; };
 		G10000000000000000000003 /* TaskProgressServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = G20000000000000000000003 /* TaskProgressServiceTests.swift */; };
@@ -345,6 +348,9 @@
 		Z20000000000000000000008 /* TaskGraphDeletionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskGraphDeletionService.swift; sourceTree = "<group>"; };
 		Z20000000000000000000009 /* TaskGraphDeletionError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskGraphDeletionError.swift; sourceTree = "<group>"; };
 		Z2000000000000000000000A /* UITestSeedServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestSeedServiceTests.swift; sourceTree = "<group>"; };
+		Z2000000000000000000000B /* AppDelegateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegateTests.swift; sourceTree = "<group>"; };
+		Z2000000000000000000000C /* UITestDateProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestDateProvider.swift; sourceTree = "<group>"; };
+		Z2000000000000000000000D /* UITestDateProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestDateProviderTests.swift; sourceTree = "<group>"; };
 		G20000000000000000000001 /* TaskProgressServiceError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskProgressServiceError.swift; sourceTree = "<group>"; };
 		G20000000000000000000002 /* TaskProgressService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskProgressService.swift; sourceTree = "<group>"; };
 		G20000000000000000000003 /* TaskProgressServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskProgressServiceTests.swift; sourceTree = "<group>"; };
@@ -502,6 +508,7 @@
 			isa = PBXGroup;
 			children = (
 				A20000000000000000000009 /* AppDelegate.swift */,
+				Z2000000000000000000000C /* UITestDateProvider.swift */,
 				A20000000000000000000001 /* HabitoApp.swift */,
 				A20000000000000000000002 /* RootView.swift */,
 				N20000000000000000000001 /* UITestLaunchConfiguration.swift */,
@@ -806,6 +813,8 @@
 				Y20000000000000000000020 /* NotificationRebuildServiceTests.swift */,
 				Y20000000000000000000025 /* NotificationNavigationServiceTests.swift */,
 				Z2000000000000000000000A /* UITestSeedServiceTests.swift */,
+				Z2000000000000000000000B /* AppDelegateTests.swift */,
+				Z2000000000000000000000D /* UITestDateProviderTests.swift */,
 				Y2000000000000000000000B /* TaskTemplateEditorViewModelTests.swift */,
 				W20000000000000000000006 /* ParentCalendarDayServiceTests.swift */,
 				Q20000000000000000000001 /* InMemoryParentPINCredentialStore.swift */,
@@ -1110,6 +1119,7 @@
 				I10000000000000000000002 /* AdaptiveTwoColumnLayout.swift in Sources */,
 				N10000000000000000000003 /* HabitoAccessibilityID.swift in Sources */,
 				A10000000000000000000007 /* AppDelegate.swift in Sources */,
+				Z1000000000000000000000C /* UITestDateProvider.swift in Sources */,
 				D1000000000000000000000A /* AppSettings.swift in Sources */,
 				A10000000000000000000001 /* HabitoApp.swift in Sources */,
 				P10000000000000000000003 /* KeychainParentPINCredentialStore.swift in Sources */,
@@ -1290,6 +1300,8 @@
 				Y10000000000000000000020 /* NotificationRebuildServiceTests.swift in Sources */,
 				Y10000000000000000000025 /* NotificationNavigationServiceTests.swift in Sources */,
 				Z1000000000000000000000A /* UITestSeedServiceTests.swift in Sources */,
+				Z1000000000000000000000B /* AppDelegateTests.swift in Sources */,
+				Z1000000000000000000000D /* UITestDateProviderTests.swift in Sources */,
 				Y1000000000000000000000B /* TaskTemplateEditorViewModelTests.swift in Sources */,
 				L10000000000000000000001 /* FixedDateProvider.swift in Sources */,
 				Q10000000000000000000001 /* InMemoryParentPINCredentialStore.swift in Sources */,

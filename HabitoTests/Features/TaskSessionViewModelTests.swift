@@ -6,6 +6,62 @@ import Testing
 @MainActor
 @Suite("任务执行页计时恢复")
 struct TaskSessionViewModelTests {
+    @Test("计时显示与完成撤销判断共用注入时钟")
+    func renderedTimeUsesSameClockAsBusinessWrites() throws {
+        let fixture = try TodayQueryFixture()
+        let occurrence = fixture.makeOccurrence(title: "阅读", scheduledAt: fixture.now, status: .pending)
+        try fixture.context.save()
+        _ = try TaskProgressService(context: fixture.context).startTiming(
+            for: occurrence, at: fixture.now.addingTimeInterval(-120))
+        let model = makeModel(for: occurrence.id, fixture: fixture, now: fixture.now)
+        model.load()
+        #expect(model.currentDate() == fixture.now)
+        #expect(try loadedContent(from: model.state).displayedActiveDuration(at: model.currentDate()) == 120)
+        model.completeTask()
+        #expect(try loadedContent(from: model.state).canUndoCompletion(at: model.currentDate()))
+        model.undoCompletion()
+        #expect(occurrence.status == .pending)
+    }
+
+    @Test("提前开始任务只请求一次主提醒清理，重复点击和暂停继续不重复触发")
+    func startingFutureTaskRequestsRebuildExactlyOnce() throws {
+        let fixture = try TodayQueryFixture()
+        let occurrence = fixture.makeOccurrence(
+            title: "阅读", scheduledAt: fixture.now.addingTimeInterval(900), status: .pending)
+        try fixture.context.save()
+        let trigger = NotificationRebuildTrigger()
+        let model = makeModel(
+            for: occurrence.id, fixture: fixture, now: fixture.now, notificationRebuildTrigger: trigger)
+        model.load()
+        model.startOrResume()
+        #expect(trigger.revision == 1)
+        #expect(occurrence.status == .inProgress)
+        model.startOrResume()
+        #expect(trigger.revision == 1)
+        model.pause()
+        model.startOrResume()
+        #expect(trigger.revision == 1)
+        #expect(try sessions(in: fixture.context, occurrenceID: occurrence.id).count == 1)
+    }
+
+    @Test("加载后实例被删除导致开始失败时，不发出成功写入的重建事件")
+    func failedStartDoesNotRequestRebuild() throws {
+        let fixture = try TodayQueryFixture()
+        let second = fixture.makeOccurrence(title: "准备口算", scheduledAt: fixture.now, status: .pending)
+        try fixture.context.save()
+        let trigger = NotificationRebuildTrigger()
+        let model = makeModel(
+            for: second.id, fixture: fixture, now: fixture.now, notificationRebuildTrigger: trigger)
+        model.load()
+        let occurrenceID = second.id
+        fixture.context.delete(second)
+        try fixture.context.save()
+        model.startOrResume()
+        #expect(trigger.revision == 0)
+        #expect(model.state == .failed)
+        #expect(try sessions(in: fixture.context, occurrenceID: occurrenceID).isEmpty)
+    }
+
     @Test("通知被拒绝时展示可理解反馈并请求核对，仍能手动完成")
     func deniedSnoozeKeepsManualCompletionAvailable() async throws {
         let fixture = try TodayQueryFixture()

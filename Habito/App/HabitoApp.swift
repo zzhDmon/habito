@@ -10,6 +10,7 @@ struct HabitoApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
 
     private let modelContainer: ModelContainer
+    private let dateProvider: any DateProviding
     private let notificationRebuildService: NotificationRebuildService
     private let notificationNavigationService: NotificationNavigationService
     private let taskSessionModelFactory: TaskSessionViewModelFactory
@@ -27,9 +28,11 @@ struct HabitoApp: App {
         let credentialStore: any ParentPINCredentialStoring
         let notificationProvider: any NotificationPermissionProviding
         let notificationScheduler: any NotificationRequestScheduling
+        let dateProvider: any DateProviding
         do {
             #if DEBUG
                 if let configuration = UITestLaunchConfiguration.current {
+                    dateProvider = try configuration.makeDateProvider()
                     container = try configuration.makeContainer()
                     let uiTestCredentialStore = configuration.makeCredentialStore()
                     if configuration.shouldReset {
@@ -50,11 +53,12 @@ struct HabitoApp: App {
                         shouldReset: configuration.shouldReset,
                         shouldSeedSampleData: configuration.shouldSeedSampleData,
                         shouldSeedTemplateOnly: configuration.shouldSeedTemplateOnly,
-                        now: .now,
+                        now: dateProvider.now(),
                         calendar: calendar,
                         timeZone: timeZone
                     )
                 } else {
+                    dateProvider = SystemDateProvider()
                     container = try AppModelContainer.make()
                     credentialStore = KeychainParentPINCredentialStore()
                     let notificationService = LocalNotificationService()
@@ -62,6 +66,7 @@ struct HabitoApp: App {
                     notificationScheduler = notificationService
                 }
             #else
+                dateProvider = SystemDateProvider()
                 container = try AppModelContainer.make()
                 credentialStore = KeychainParentPINCredentialStore()
                 let notificationService = LocalNotificationService()
@@ -74,9 +79,9 @@ struct HabitoApp: App {
             fatalError("无法创建 Habito 数据容器：\(error.localizedDescription)")
         }
         modelContainer = container
+        self.dateProvider = dateProvider
         let calendar = Calendar(identifier: .gregorian)
         let timeZone = TimeZone.autoupdatingCurrent
-        let dateProvider = SystemDateProvider()
         let rebuildTrigger = NotificationRebuildTrigger()
         let notificationOperationGate = NotificationOperationGate()
         _notificationRebuildTrigger = State(initialValue: rebuildTrigger)
@@ -178,9 +183,15 @@ struct HabitoApp: App {
                 notificationRebuildService: notificationRebuildService,
                 notificationRebuildTrigger: notificationRebuildTrigger,
                 notificationResponseRouter: appDelegate.notificationResponseRouter,
-                notificationNavigationService: notificationNavigationService
+                notificationNavigationService: notificationNavigationService,
+                dateProvider: dateProvider
             )
+            .onAppear(perform: connectLifecycleEvents)
         }
         .modelContainer(modelContainer)
+    }
+
+    private func connectLifecycleEvents() {
+        appDelegate.connectNotificationRebuildTrigger(notificationRebuildTrigger)
     }
 }

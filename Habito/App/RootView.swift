@@ -18,6 +18,7 @@ struct RootView: View {
     private let taskTemplateEditorModelFactory: TaskTemplateEditorViewModelFactory
     private let notificationRebuildService: NotificationRebuildService
     private let notificationNavigationService: NotificationNavigationService
+    private let dateProvider: any DateProviding
     private let logger = Logger(subsystem: "com.zhangzehua.Habito", category: "NotificationRebuild")
 
     init(
@@ -32,7 +33,8 @@ struct RootView: View {
         notificationRebuildService: NotificationRebuildService,
         notificationRebuildTrigger: NotificationRebuildTrigger,
         notificationResponseRouter: NotificationResponseRouter,
-        notificationNavigationService: NotificationNavigationService
+        notificationNavigationService: NotificationNavigationService,
+        dateProvider: any DateProviding
     ) {
         _todayModel = State(initialValue: todayModel)
         self.taskSessionModelFactory = taskSessionModelFactory
@@ -46,6 +48,7 @@ struct RootView: View {
         self.taskTemplateEditorModelFactory = taskTemplateEditorModelFactory
         self.notificationRebuildService = notificationRebuildService
         self.notificationNavigationService = notificationNavigationService
+        self.dateProvider = dateProvider
     }
 
     var body: some View {
@@ -132,12 +135,12 @@ struct RootView: View {
     private func rebuildNotifications() async {
         notificationRebuildTrigger.recordStarted()
         do {
-            let result = try await notificationRebuildService.rebuild(at: .now)
+            let result = try await notificationRebuildService.rebuild(at: dateProvider.now())
             try Task.checkCancellation()
             // 重建会独立物化今日实例；TodayViewModel 持有只读值，不会随 SwiftData 写入自动刷新。
             // 排程部分失败也应显示已落盘的任务，确保无通知权限时仍可手动完成。
             loadToday()
-            notificationRebuildTrigger.record(result, checkedAt: .now)
+            notificationRebuildTrigger.record(result, checkedAt: dateProvider.now())
             if !result.reconciliation.isSuccessful {
                 logger.error("通知核对有 \(result.reconciliation.failures.count, privacy: .public) 项失败")
             }
