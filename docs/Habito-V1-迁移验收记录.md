@@ -72,3 +72,13 @@
 - 后补固定交易 ID 与 waiting 重开断言后，最终完整两系统各 **270/270（335 次）通过**：17.2 `/tmp/habito-v1-m1-001-ios17/Logs/Test/Test-Habito-2026.10.06_00-05-53-+0800.xcresult`；27 `/tmp/habito-v1-m1-001-ios27/Logs/Test/Test-Habito-2026.10.06_00-07-25-+0800.xcresult`，零失败/跳过/runtime warning。
 - 完整横屏 UI 各 **16/16**：17.2 `/tmp/habito-v1-m1-001-ios17/Logs/Test/Test-Habito-2026.10.06_00-00-53-+0800.xcresult`（235.166 秒，无 runtime warning）；27 `/tmp/habito-v1-m1-001-ios27/Logs/Test/Test-Habito-2026.10.06_00-00-54-+0800.xcresult`（318.298 秒，保留 16 条 R-009），零失败/跳过。UI 后仅补结构单测及修正失效注释，没有改 App 行为或布局；最终单测再次运行覆盖新增断言。
 - Release 横屏构建、静态分析、严格格式、工程解析/差异检查通过；swiftui-pro 数据/Swift/卫生复核保持主 actor 模型/上下文、固定时间、原生 SwiftData、稳定外键与中文 DocC，更新当前撤销字段失效注释，不改冻结历史。001A DONE；待验收 UI、审批事务和更强反馈仍未完成，V0 真机 B 不放行。
+
+## 6. V1-M3-003B0：稍后验收世代兼容结构
+
+- 从 7c8b5ac 独立冻结结构 5.0.0 十一模型到 SchemaV4。逐一去除命名空间/导入/注释与格式空白后机械核对源正文相同，字段、约束、关系、默认值未变；结构 1～4 未动。当前结构 6.0.0 仅新增 NotificationLink.submissionIDAtScheduling 可空 UUID，显式轻量迁移 5 → 6。
+- 原 stable identifier、排程时刻、首次 createdAt 保持；旧映射的新属性 nil，不用时间猜所属提交轮次。实际稍后写入与重建世代校验归 003B，本卡不改变系统排程行为、不访问真实家庭库或通知队列。
+- 独立旧 5 SQLite 夹具包含退回后再通过、真实提交/次日审核两个时刻、版本 2 完成与成对奖励、已冲正历史完成与原交易 ID、待验收、暂停/结束计时、主/稍后映射、日期覆盖和 PIN 非敏感查找引用。完整与空库迁移三次重开；可空世代写明确 ID 或保持 nil 后两次重开；四版更早旧库不凭空补提交/世代/奖励。
+- 双系统专项各 **14/14（26 次）通过**，零失败/跳过/runtime warning：17.2 `/tmp/habito-v1-m1-001-ios17/Logs/Test/Test-Habito-2026.10.06_01-20-24-+0800.xcresult`；27 `/tmp/habito-v1-m1-001-ios27/Logs/Test/Test-Habito-2026.10.06_01-20-25-+0800.xcresult`。审核历史、完成快照、余额、冲正、计时与稳定通知标识实际断言通过，不只是能打开数据库。
+- 最终完整单测各 **320/320（422 次）通过**，零失败/跳过/runtime warning：17.2 `/tmp/habito-v1-m1-001-ios17/Logs/Test/Test-Habito-2026.10.06_01-21-05-+0800.xcresult`；27 `/tmp/habito-v1-m1-001-ios27/Logs/Test/Test-Habito-2026.10.06_01-21-06-+0800.xcresult`。Release 横屏构建、静态分析、严格格式、工程解析/差异检查通过；完整横屏 UI 回归仍在运行，本卡保持 IN_PROGRESS。
+- swiftui-pro 数据/Swift/卫生部分复核保持主 actor SwiftData、独立冻结模型、明确失败、固定时刻和随机隔离磁盘库。没有新默认奖励、宠物数值、第三方依赖、家庭库迁移或实际送达证据；强反馈和验收 UI 后续独立完成。
+- 最终完整横屏 UI 各 **16/16**，零失败/跳过：17.2 `/tmp/habito-v1-m1-001-ios17/Logs/Test/Test-Habito-2026.10.06_01-21-55-+0800.xcresult`（237.929 秒、无 runtime warning）；27 `/tmp/habito-v1-m1-001-ios27/Logs/Test/Test-Habito-2026.10.06_01-21-56-+0800.xcresult`（320.389 秒、16 条已登记 R-009 全屏方向提示）。003B0 DONE，后续通知行为由 003B 独立验证，不把兼容字段持久化冒充通知清理完成。

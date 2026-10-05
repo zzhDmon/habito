@@ -9,6 +9,7 @@ struct AppModelContainerTests {
 
         #expect(AppModelContainer.schema.entities.count == 11)
         #expect(HabitoSchemaV3.models.count == 10)
+        #expect(HabitoSchemaV4.models.count == 11 && HabitoSchemaV5.models.count == 11)
     }
 
     @Test("家长 PIN 只记录固定 Keychain 账户引用")

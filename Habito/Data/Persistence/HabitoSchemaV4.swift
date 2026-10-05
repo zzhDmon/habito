@@ -1,6 +1,6 @@
 import SwiftData
 
-/// 家长提交审计结构 5.0.0；旧任务和奖励原样保留，不生成旧提交或补发奖励。
+/// 独立冻结的提交审计结构 5.0.0；十一模型不随当前稍后世代字段演进。
 nonisolated enum HabitoSchemaV4: VersionedSchema {
     static let versionIdentifier = Schema.Version(5, 0, 0)
 

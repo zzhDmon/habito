@@ -9,6 +9,10 @@ final class NotificationLink {
     var kindRawValue: String
     var scheduledAt: Date
     var createdAt: Date
+    /// 显式稍后操作当时的最新提交 ID；nil 表示尚未有提交，不靠可能相同的时间戳猜轮次。
+    ///
+    /// 等待/退回重建用当前提交世代比较，防止清理前快速退回复活旧稍后；旧库迁移保持 nil。
+    var submissionIDAtScheduling: UUID?
 
     var occurrence: TaskOccurrence?
 
@@ -17,13 +21,15 @@ final class NotificationLink {
         occurrenceID: UUID,
         kind: NotificationKind,
         scheduledAt: Date,
-        createdAt: Date = .now
+        createdAt: Date = .now,
+        submissionIDAtScheduling: UUID? = nil
     ) {
         self.requestIdentifier = requestIdentifier
         self.occurrenceID = occurrenceID
         self.kindRawValue = kind.rawValue
         self.scheduledAt = scheduledAt
         self.createdAt = createdAt
+        self.submissionIDAtScheduling = submissionIDAtScheduling
     }
 
     var kind: NotificationKind? {
