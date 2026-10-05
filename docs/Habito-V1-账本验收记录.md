@@ -11,3 +11,15 @@
 - 初轮双系统专项 15/15（22 次），补齐三种保存失败与损坏冲正/负余额后，最终专项各 **17/17（28 次）通过**：17.2 `/tmp/habito-v1-m1-001-ios17/Logs/Test/Test-Habito-2026.10.05_22-32-15-+0800.xcresult`；27 `/tmp/habito-v1-m1-001-ios27/Logs/Test/Test-Habito-2026.10.05_22-32-16-+0800.xcresult`，零失败/跳过/runtime warning。
 - 完整单测各 **224/224（275 次）通过**：17.2 `/tmp/habito-v1-m1-001-ios17/Logs/Test/Test-Habito-2026.10.05_22-33-06-+0800.xcresult`；27 `/tmp/habito-v1-m1-001-ios27/Logs/Test/Test-Habito-2026.10.05_22-33-07-+0800.xcresult`，零失败/跳过/runtime warning；Release 横屏工程构建、静态分析、严格格式、工程解析与差异检查通过。首次 DocC lint 缺 Returns 已补齐，不绕过规范。
 - swiftui-pro 复核：主 actor 持久化、Sendable 只读结果、英文 API/中文边界说明、无 await 插入竞态、无 View 写入、无新依赖或强制解包。003B DONE；本阶段无新 UI/真机证据，iPad 离线和 V0 未放行保持。仅合成数据库，不操作家庭数据、真实 Keychain 或旧签名包。
+
+## 2. V1-M1-004B：自行确认原子结算
+
+- CompletionRewardSnapshot 只接受实例的显式参数与提交/提醒绝对时间，严格早于才加自主 Coin；等于/晚于仍给基础奖励，超截止不扣。零奖励仍保存版本 1 的快照与成对零交易，新提交不写 unknown。
+- TaskCompletionService 在同一主 actor、干净上下文中暂存计时终态、完成快照与两种资产，再一次 save。跨上下文对象、家长验收配置、负奖励、实际加总溢出、矛盾时间与损坏新结算拒绝。收据先构造再保存，保存成功才返回；无 await 或通知提前触发。
+- 计时服务抽出 stageCompletion，原 complete 不传快照仍是旧版本 0 路径，重复旧完成仍不保存。当前完成查询只取未撤销事实，新事件允许与已撤销历史共存；正式 UI 尚未切换，今日查询在 006 同步。旧删除撤销明确拒绝版本非 0 记录，避免误删已结算事实。
+- 已结算重试以原完成 ID、时间和只读快照核对原交易，任务改提醒/奖励/验收类型不改变原收据；旧版本 0 只返回原历史，不补奖。新结算缺交易不自动修复补发，而是报不一致错误。
+- 修前 17 专项两项回滚场景崩溃：`/tmp/habito-v1-m1-001-ios17/Logs/Test/Test-Habito-2026.10.05_22-59-05-+0800.xcresult`；27 当时 37/37（51 次）通过，但不能放行。局部栈显示 SwiftData 在恢复新双向完成关系时递归、栈溢出；没有上传原始崩溃文件或私人设备信息。
+- 第一修复先断开本事务新插入的完成关系，17 不再崩溃但任务标量未完整恢复，`23-01-51` 结果两项断言仍失败，未删除断言。最终保存本事务修改字段的原值，失败时在关闭自动保存状态下断关系、恢复任务/计时标量、rollback 移除插入行，不做补偿性 save；17 的 `23-04-06` 13/13（16 次）复验通过。
+- 补真实磁盘失败后重开、暂存时间匹配后，双系统专项各 **39/39（53 次）通过**：17.2 `/tmp/habito-v1-m1-001-ios17/Logs/Test/Test-Habito-2026.10.05_23-06-07-+0800.xcresult`；27 `/tmp/habito-v1-m1-001-ios27/Logs/Test/Test-Habito-2026.10.05_23-06-08-+0800.xcresult`。零失败/跳过/runtime warning；随后再补旧撤销保护断言，最终全量覆盖。
+- 最终完整两系统各 **242/242（298 次）通过**：17.2 `/tmp/habito-v1-m1-001-ios17/Logs/Test/Test-Habito-2026.10.05_23-10-01-+0800.xcresult`；27 `/tmp/habito-v1-m1-001-ios27/Logs/Test/Test-Habito-2026.10.05_23-10-02-+0800.xcresult`。零失败/跳过/runtime warning；Release 横屏构建、静态分析、严格格式、工程解析及差异检查通过。
+- swiftui-pro 复核保持时间注入、业务/View 分层、主 actor、只读 Sendable 收据和中文 DocC；真实旧系统问题用兼容回滚保护修复，没有提高最低版本、关闭检查或新依赖。004B DONE；无新 schema/default/UI 发奖入口，没有把上卡 UI 证据冒充此次新 UI 运行。下一卡 005 审计撤销，随后 006 统一入口与通知/完整 UI 回归。

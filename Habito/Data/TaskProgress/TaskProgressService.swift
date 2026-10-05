@@ -109,6 +109,22 @@ struct TaskProgressService {
         at now: Date,
         source: CompletionSource
     ) throws -> CompletionRecord {
+        let wasCompleted = occurrence.status == .completed
+        let record = try stageCompletion(occurrence, at: now, source: source)
+        if !wasCompleted { try context.save() }
+        return record
+    }
+
+    /// 暂存完成和计时终态，让新结算用例与两种资产共享一次保存。
+    ///
+    /// - Important: 不自行保存；调用方必须拥有自动保存关闭与失败回滚边界。
+    ///   不传 rewardSnapshot 仍走旧零/未知写路径，App 入口暂不切换。
+    func stageCompletion(
+        _ occurrence: TaskOccurrence,
+        at now: Date,
+        source: CompletionSource,
+        rewardSnapshot: CompletionRewardSnapshot? = nil
+    ) throws -> CompletionRecord {
         let status = try validatedStatus(of: occurrence)
         let sessions = try validatedSessions(for: occurrence)
         let active = try activeSession(in: sessions, occurrenceID: occurrence.id)
@@ -128,9 +144,15 @@ struct TaskProgressService {
         guard existingRecord == nil else {
             throw TaskProgressServiceError.unexpectedCompletionRecord(occurrenceID: occurrence.id)
         }
+        if let rewardSnapshot, rewardSnapshot.submittedAt != now {
+            throw TaskCompletionServiceError.submissionTimeMismatch(occurrence.id)
+        }
         let nextStatus = try status.applying(.complete)
         let totalDuration = try sessions.reduce(0) { partial, sessionState in
             partial + (try activeDuration(of: sessionState, at: now))
+        }
+        guard totalDuration.isFinite, totalDuration >= 0 else {
+            throw TaskCompletionServiceError.invalidDuration(occurrence.id)
         }
 
         if let active {
@@ -145,13 +167,19 @@ struct TaskProgressService {
             activeDurationSeconds: totalDuration,
             completionSource: source,
             createdAt: now,
-            updatedAt: now
+            updatedAt: now,
+            completionTiming: rewardSnapshot?.timing ?? .unknown,
+            reminderAtSnapshot: rewardSnapshot?.reminderAt,
+            xpRewardSnapshot: rewardSnapshot?.xp ?? 0,
+            coinRewardSnapshot: rewardSnapshot?.baseCoins ?? 0,
+            activeBonusCoinSnapshot: rewardSnapshot?.autonomyBonusCoins ?? 0,
+            settledCoinSnapshot: rewardSnapshot?.settledCoins ?? 0,
+            rewardSettlementVersion: rewardSnapshot == nil ? 0 : 1
         )
+        context.insert(record)
         occurrence.completionRecord = record
         occurrence.statusRawValue = nextStatus.rawValue
         occurrence.updatedAt = now
-        context.insert(record)
-        try context.save()
         return record
     }
 
@@ -177,6 +205,10 @@ struct TaskProgressService {
         let nextStatus = try status.applying(.undoCompletion)
         guard let record = existingRecord else {
             throw TaskProgressServiceError.completionRecordMissing(occurrenceID: occurrence.id)
+        }
+        // 新结算必须走审计冲正，旧删除入口不能删掉已有奖励对应的完成事实。
+        guard record.rewardSettlementVersion == 0 else {
+            throw TaskCompletionServiceError.legacyUndoCannotDeleteSettlement(record.id)
         }
         guard now >= record.completedAt else {
             throw TaskProgressServiceError.timeBeforeCompletion(occurrenceID: occurrence.id)
@@ -224,10 +256,11 @@ struct TaskProgressService {
         }
     }
 
-    private func completionRecord(for occurrence: TaskOccurrence) throws -> CompletionRecord? {
+    /// 只取当前未撤销事实；撤销历史保持但不作为下一次完成的幂等命中。
+    func completionRecord(for occurrence: TaskOccurrence) throws -> CompletionRecord? {
         let occurrenceID = occurrence.id
         let descriptor = FetchDescriptor<CompletionRecord>(
-            predicate: #Predicate { $0.occurrenceID == occurrenceID }
+            predicate: #Predicate { $0.occurrenceID == occurrenceID && $0.revokedAt == nil }
         )
         let records = try context.fetch(descriptor)
         guard records.count <= 1 else {
