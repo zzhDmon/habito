@@ -7,6 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AB1000000000000000000019 /* HabitoSchemaV1+TaskTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000019 /* HabitoSchemaV1+TaskTemplate.swift */; };
+		AB1000000000000000000020 /* HabitoSchemaV1+ReminderRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000020 /* HabitoSchemaV1+ReminderRule.swift */; };
+		AB1000000000000000000021 /* HabitoSchemaV1+TaskOccurrence.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000021 /* HabitoSchemaV1+TaskOccurrence.swift */; };
+		AB1000000000000000000022 /* HabitoSchemaV1+CompletionRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000022 /* HabitoSchemaV1+CompletionRecord.swift */; };
+		AB1000000000000000000023 /* HabitoSchemaV1+TimerSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000023 /* HabitoSchemaV1+TimerSession.swift */; };
+		AB1000000000000000000024 /* HabitoSchemaV1+DayOverride.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000024 /* HabitoSchemaV1+DayOverride.swift */; };
+		AB1000000000000000000025 /* HabitoSchemaV1+NotificationLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000025 /* HabitoSchemaV1+NotificationLink.swift */; };
+		AB1000000000000000000026 /* HabitoSchemaV1+AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000026 /* HabitoSchemaV1+AppSettings.swift */; };
+		AB1000000000000000000027 /* HabitoSchemaV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000027 /* HabitoSchemaV2.swift */; };
+		AB1000000000000000000028 /* XPTransactionKind.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000028 /* XPTransactionKind.swift */; };
+		AB1000000000000000000029 /* CoinTransactionKind.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000029 /* CoinTransactionKind.swift */; };
+		AB1000000000000000000030 /* XPTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000030 /* XPTransaction.swift */; };
+		AB1000000000000000000031 /* CoinTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000031 /* CoinTransaction.swift */; };
+		AB1000000000000000000032 /* V1MigrationFixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000032 /* V1MigrationFixture.swift */; };
+		AB1000000000000000000033 /* LedgerModelMigrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000033 /* LedgerModelMigrationTests.swift */; };
 		AB1000000000000000000012 /* TaskCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000012 /* TaskCategory.swift */; };
 		AB1000000000000000000013 /* TaskTimePeriod.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000013 /* TaskTimePeriod.swift */; };
 		AB1000000000000000000014 /* TaskVerificationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000014 /* TaskVerificationType.swift */; };
@@ -257,6 +272,21 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AB2000000000000000000019 /* HabitoSchemaV1+TaskTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV1+TaskTemplate.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000020 /* HabitoSchemaV1+ReminderRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV1+ReminderRule.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000021 /* HabitoSchemaV1+TaskOccurrence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV1+TaskOccurrence.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000022 /* HabitoSchemaV1+CompletionRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV1+CompletionRecord.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000023 /* HabitoSchemaV1+TimerSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV1+TimerSession.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000024 /* HabitoSchemaV1+DayOverride.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV1+DayOverride.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000025 /* HabitoSchemaV1+NotificationLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV1+NotificationLink.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000026 /* HabitoSchemaV1+AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV1+AppSettings.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000027 /* HabitoSchemaV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV2.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000028 /* XPTransactionKind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XPTransactionKind.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000029 /* CoinTransactionKind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CoinTransactionKind.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000030 /* XPTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XPTransaction.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000031 /* CoinTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CoinTransaction.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000032 /* V1MigrationFixture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "V1MigrationFixture.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000033 /* LedgerModelMigrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LedgerModelMigrationTests.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000012 /* TaskCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCategory.swift; sourceTree = "<group>"; };
 		AB2000000000000000000013 /* TaskTimePeriod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskTimePeriod.swift; sourceTree = "<group>"; };
 		AB2000000000000000000014 /* TaskVerificationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskVerificationType.swift; sourceTree = "<group>"; };
@@ -517,6 +547,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AB5000000000000000000002 /* SchemaV1 */ = {
+			isa = PBXGroup;
+			children = (
+				AB2000000000000000000019 /* HabitoSchemaV1+TaskTemplate.swift */,
+				AB2000000000000000000020 /* HabitoSchemaV1+ReminderRule.swift */,
+				AB2000000000000000000021 /* HabitoSchemaV1+TaskOccurrence.swift */,
+				AB2000000000000000000022 /* HabitoSchemaV1+CompletionRecord.swift */,
+				AB2000000000000000000023 /* HabitoSchemaV1+TimerSession.swift */,
+				AB2000000000000000000024 /* HabitoSchemaV1+DayOverride.swift */,
+				AB2000000000000000000025 /* HabitoSchemaV1+NotificationLink.swift */,
+				AB2000000000000000000026 /* HabitoSchemaV1+AppSettings.swift */,
+			);
+			path = SchemaV1;
+			sourceTree = "<group>";
+		};
 		AB5000000000000000000001 /* SchemaV0 */ = {
 			isa = PBXGroup;
 			children = (
@@ -588,6 +633,8 @@
 			isa = PBXGroup;
 			children = (
 				A20000000000000000000004 /* AppModelContainer.swift */,
+				AB2000000000000000000027 /* HabitoSchemaV2.swift */,
+				AB5000000000000000000002 /* SchemaV1 */,
 				AB2000000000000000000016 /* HabitoSchemaV1.swift */,
 				AB2000000000000000000017 /* HabitoSchemaMigrationPlan.swift */,
 				AB5000000000000000000001 /* SchemaV0 */,
@@ -964,6 +1011,8 @@
 			isa = PBXGroup;
 			children = (
 				C20000000000000000000004 /* CompletionSource.swift */,
+				AB2000000000000000000028 /* XPTransactionKind.swift */,
+				AB2000000000000000000029 /* CoinTransactionKind.swift */,
 				AB2000000000000000000012 /* TaskCategory.swift */,
 				AB2000000000000000000013 /* TaskTimePeriod.swift */,
 				AB2000000000000000000014 /* TaskVerificationType.swift */,
@@ -1003,6 +1052,8 @@
 			isa = PBXGroup;
 			children = (
 				D2000000000000000000000A /* AppSettings.swift */,
+				AB2000000000000000000030 /* XPTransaction.swift */,
+				AB2000000000000000000031 /* CoinTransaction.swift */,
 				D20000000000000000000006 /* CompletionRecord.swift */,
 				D20000000000000000000008 /* DayOverride.swift */,
 				D20000000000000000000009 /* NotificationLink.swift */,
@@ -1034,6 +1085,8 @@
 			children = (
 				A20000000000000000000006 /* AppModelContainerTests.swift */,
 				AB2000000000000000000018 /* HabitoSchemaMigrationTests.swift */,
+				AB2000000000000000000032 /* V1MigrationFixture.swift */,
+				AB2000000000000000000033 /* LedgerModelMigrationTests.swift */,
 				AB2000000000000000000010 /* V0MigrationFixture.swift */,
 				AB2000000000000000000011 /* HabitoSchemaV0Tests.swift */,
 				H20000000000000000000002 /* M1DataKernelIntegrationTests.swift */,
@@ -1350,6 +1403,19 @@
 				K10000000000000000000005 /* TodayViewModel.swift in Sources */,
 				C10000000000000000000003 /* Weekday.swift in Sources */,
 				A10000000000000000000004 /* AppModelContainer.swift in Sources */,
+				AB1000000000000000000019 /* HabitoSchemaV1+TaskTemplate.swift in Sources */,
+				AB1000000000000000000020 /* HabitoSchemaV1+ReminderRule.swift in Sources */,
+				AB1000000000000000000021 /* HabitoSchemaV1+TaskOccurrence.swift in Sources */,
+				AB1000000000000000000022 /* HabitoSchemaV1+CompletionRecord.swift in Sources */,
+				AB1000000000000000000023 /* HabitoSchemaV1+TimerSession.swift in Sources */,
+				AB1000000000000000000024 /* HabitoSchemaV1+DayOverride.swift in Sources */,
+				AB1000000000000000000025 /* HabitoSchemaV1+NotificationLink.swift in Sources */,
+				AB1000000000000000000026 /* HabitoSchemaV1+AppSettings.swift in Sources */,
+				AB1000000000000000000027 /* HabitoSchemaV2.swift in Sources */,
+				AB1000000000000000000028 /* XPTransactionKind.swift in Sources */,
+				AB1000000000000000000029 /* CoinTransactionKind.swift in Sources */,
+				AB1000000000000000000030 /* XPTransaction.swift in Sources */,
+				AB1000000000000000000031 /* CoinTransaction.swift in Sources */,
 				AB1000000000000000000012 /* TaskCategory.swift in Sources */,
 				AB1000000000000000000013 /* TaskTimePeriod.swift in Sources */,
 				AB1000000000000000000014 /* TaskVerificationType.swift in Sources */,
@@ -1374,6 +1440,8 @@
 			files = (
 				A10000000000000000000006 /* AppModelContainerTests.swift in Sources */,
 				AB1000000000000000000018 /* HabitoSchemaMigrationTests.swift in Sources */,
+				AB1000000000000000000032 /* V1MigrationFixture.swift in Sources */,
+				AB1000000000000000000033 /* LedgerModelMigrationTests.swift in Sources */,
 				AB1000000000000000000010 /* V0MigrationFixture.swift in Sources */,
 				AB1000000000000000000011 /* HabitoSchemaV0Tests.swift in Sources */,
 				W10000000000000000000006 /* ParentCalendarDayServiceTests.swift in Sources */,
