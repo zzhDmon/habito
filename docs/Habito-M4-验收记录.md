@@ -34,6 +34,7 @@
 | M4-F18 | 稍后成功/权限 UI 场景依赖真实运行时刻，23:50 后变成跨午夜场景 | 测试可靠性 | Debug 时钟映射固定场景日期并跨重启连续计时；业务、播种和重建同源，正式规则不变 |
 | M4-F19 | 计时渲染读 TimelineView 系统日期，与注入业务时钟脱节 | 数据流/测试可靠性 | TimelineView 仅驱动刷新，计时进度和撤销窗口改读模型时钟；双系统单测及完整 UI 回归通过 |
 | M4-F20 | 提前开始任务后没有重建事件，旧主提醒仍等待到点展示 | P1 | 开始成功后触发一次核对；重复点击/暂停/继续不重复触发、失败不发事件；清主槽且保留有效稍后槽位的集成通过 |
+| M4-F21 | 稍后预算读取期间关闭权限，仍尝试添加系统请求，系统拒绝时可能只显示泛化失败 | P1 | 添加前重新读取展示能力、检查取消，再重查实例；四参数场景及新等待点业务变化/取消回归通过，不弹权限请求 |
 
 初次回归命令用单函数过滤未实际运行用例；已改为按完整 suite 过滤并核对 `xcresult` 的真实测试数量，不能把零用例成功当作通过。修复前的有效失败日志为 9 个用例、4 条问题；外围诊断收集卡住后结束旧命令，保留日志。修复后首次通知专项为 **16/16 通过**，无 runtime warning。
 
@@ -206,3 +207,12 @@ xcrun xcresulttool get test-results summary --path <实际生成的 xcresult 目
 - 静态分析、Release Simulator 构建、严格格式、工程解析和差异检查通过。格式检查曾要求补充 makeDateProvider 的 DocC Returns 段落，已补齐并重跑通过。
 - 最终完整横屏 UI 两系统各 **14/14**，零失败/跳过：17.2 结果包 `/tmp/habito-m4-008-permissions-ios17/Logs/Test/Test-Habito-2026.10.05_18-09-01-+0800.xcresult`，203.458 秒，无 runtime warning；27 结果包 `/tmp/habito-m4-008-permissions/Logs/Test/Test-Habito-2026.10.05_18-09-02-+0800.xcresult`，279.940 秒，保留 14 条 R-009 全屏方向未来提示。已读取 xcresult 摘要核对实际数量，不只依据命令退出码。
 - `swiftui-pro` 复核：组合根统一时间依赖、主 actor 状态和最小生命周期桥；TimelineView 只驱动刷新，不把系统渲染时间当业务时间；无第三方依赖、schema 或正式跨午夜规则变化。真机再次只读检查仍 unavailable，B 没有新增证据，M4-008 仍为 `IN_PROGRESS`。
+
+## 13. 2026-10-05 稍后添加前权限异步边界
+
+- 修前 iOS 17.2 稍后专项 14 通过、1 失败（参数展开 17 通过、2 失败）；结果包 `/tmp/habito-m4-008-permissions-ios17/Logs/Test/Test-Habito-2026.10.05_18-21-20-+0800.xcresult`。授权关闭和提醒关闭两次运行的 addCount 均为 1，而预期为 0；添加后的取消不能替代添加前及时拒绝。
+- 在预算读取之后、实例重查之前再次读取权限并检查取消；不能显示提醒则明确返回 notificationsUnavailable。添加后权限/业务复核和补偿保留，十分钟、预算、跨午夜政策不改。
+- 扩展该用例为四参数场景：关闭授权/关闭提醒 × 系统接受/拒绝 add。再增加权限等待期间真实完成/删除以及取消后释放 gate 的固定屏障测试，全部不依赖真实延时。测试替身的诊断回调只消费一次，正式通知服务接口不变。
+- 双系统全量单测各 **183/183（201 次执行）**，零失败/跳过/runtime warning：17.2 `/tmp/habito-m4-008-permissions-ios17/Logs/Test/Test-Habito-2026.10.05_18-24-13-+0800.xcresult`；27 `/tmp/habito-m4-008-permissions/Logs/Test/Test-Habito-2026.10.05_18-24-14-+0800.xcresult`。严格格式、差异检查、静态分析与 Release 构建通过；完整横屏 UI 待最终结果核对。
+- `swiftui-pro` 并发复核：新 await 后先检查取消，再按稳定 ID 重查，不把主 actor 当成跨 await 事务；排程 gate 与添加后补偿保持不变。只读设备检查仍 unavailable，未覆盖安装真机或推送远端。
+- 最终完整横屏 UI 各 **14/14**，零失败/跳过：17.2 `/tmp/habito-m4-008-permissions-ios17/Logs/Test/Test-Habito-2026.10.05_18-25-03-+0800.xcresult`（204.039 秒，零 runtime warning）；27 `/tmp/habito-m4-008-permissions/Logs/Test/Test-Habito-2026.10.05_18-25-04-+0800.xcresult`（275.779 秒，保留 14 条 R-009 提示）。A 本阶段通过，B 仍待真实设备。

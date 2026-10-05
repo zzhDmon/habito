@@ -94,6 +94,12 @@ struct TaskSnoozeService {
         }
 
         try Task.checkCancellation()
+        // 预算读取也会让出执行权；权限可能已关闭，不能依赖旧快照先添加再取消。
+        let permissionsBeforeAdding = await permissionProvider.diagnostics()
+        try Task.checkCancellation()
+        guard permissionsBeforeAdding.canPresentAlerts else {
+            throw TaskSnoozeError.notificationsUnavailable
+        }
         // 已删除的 SwiftData 对象仍可能保留缓存属性；必须按稳定 ID 重查，不能以旧对象状态证明实例存在。
         let latestOccurrence = try fetchOccurrence(id: occurrenceID)
         try validateStatus(of: latestOccurrence)

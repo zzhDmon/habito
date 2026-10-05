@@ -9,6 +9,7 @@ final class FakeLocalNotificationService: LocalNotificationScheduling {
     var soundSetting: NotificationDeliverySettingState = .enabled
     var requestCount = 0
     var requestError: (any Error)?
+    var onDiagnostics: (() async -> Void)?
     var onRequestAuthorization: (() async throws -> Void)?
     var pendingDate: Date?
     var scheduledDate = Date(timeIntervalSince1970: 2_000_000_000)
@@ -17,7 +18,11 @@ final class FakeLocalNotificationService: LocalNotificationScheduling {
     var didCancel = false
 
     func diagnostics() async -> NotificationDiagnosticSnapshot {
-        NotificationDiagnosticSnapshot(
+        if let onDiagnostics {
+            self.onDiagnostics = nil
+            await onDiagnostics()
+        }
+        return NotificationDiagnosticSnapshot(
             authorization: currentAuthorizationState,
             alerts: alertSetting,
             sounds: soundSetting

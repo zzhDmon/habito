@@ -6,6 +6,100 @@ import Testing
 @MainActor
 @Suite("十分钟稍后提醒")
 struct TaskSnoozeServiceTests {
+    @Test("添加前权限复核期间完成或删除任务，重新查询后拒绝旧请求", arguments: [true, false])
+    func businessChangesDuringPreAddDiagnosticsDoNotAddRequest(deleteOccurrence: Bool) async throws {
+        let fixture = try Fixture()
+        let occurrence = try fixture.makeOccurrence()
+        let occurrenceID = occurrence.id
+        // 只在预算读取后安装一次回调，精确定位第二次权限等待，而不是依赖真实延时。
+        fixture.scheduler.onRead = {
+            fixture.permissions.onDiagnostics = {
+                do {
+                    if deleteOccurrence {
+                        fixture.context.delete(occurrence)
+                        try fixture.context.save()
+                    } else {
+                        _ = try TaskProgressService(context: fixture.context).complete(
+                            occurrence, at: fixture.now, source: .childManual)
+                    }
+                } catch {
+                    Issue.record(error)
+                }
+            }
+        }
+        if deleteOccurrence {
+            await #expect(throws: TaskSnoozeError.occurrenceNotFound(occurrenceID)) {
+                _ = try await fixture.service.schedule(occurrenceID: occurrenceID, at: fixture.now)
+            }
+        } else {
+            await #expect(throws: TaskSnoozeError.invalidOccurrenceStatus(occurrenceID, "completed")) {
+                _ = try await fixture.service.schedule(occurrenceID: occurrenceID, at: fixture.now)
+            }
+        }
+        #expect(fixture.scheduler.addCount == 0)
+        #expect(fixture.scheduler.pending.isEmpty)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<NotificationLink>()) == 0)
+    }
+
+    @Test("添加前权限等待期间取消不写系统请求，释放 gate 后可继续安排")
+    func cancelledPreAddDiagnosticsDoesNotAddAndReleasesGate() async throws {
+        let fixture = try Fixture()
+        let occurrence = try fixture.makeOccurrence()
+        let entered = AsyncStream.makeStream(of: Void.self)
+        let release = AsyncStream.makeStream(of: Void.self)
+        fixture.scheduler.onRead = {
+            fixture.permissions.onDiagnostics = {
+                entered.continuation.yield(())
+                var iterator = release.stream.makeAsyncIterator()
+                _ = await iterator.next()
+            }
+        }
+        let scheduling = Task {
+            do {
+                _ = try await fixture.service.schedule(occurrenceID: occurrence.id, at: fixture.now)
+                return false
+            } catch is CancellationError {
+                return true
+            }
+        }
+        var iterator = entered.stream.makeAsyncIterator()
+        _ = await iterator.next()
+        scheduling.cancel()
+        release.continuation.yield(())
+        #expect(try await scheduling.value)
+        #expect(fixture.scheduler.addCount == 0)
+        #expect(fixture.scheduler.pending.isEmpty)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<NotificationLink>()) == 0)
+        _ = try await fixture.service.schedule(occurrenceID: occurrence.id, at: fixture.now)
+        #expect(fixture.scheduler.addCount == 1)
+        #expect(fixture.scheduler.pending.count == 1)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<NotificationLink>()) == 1)
+    }
+
+    @Test("预算读取期间关闭授权或提醒，在系统添加前明确拒绝", arguments: [true, false], [true, false])
+    func permissionsChangedDuringBudgetReadDoNotAddRequest(
+        revokeAuthorization: Bool, systemWouldRejectAdding: Bool
+    ) async throws {
+        let fixture = try Fixture()
+        let occurrence = try fixture.makeOccurrence()
+        // 即使系统因权限变化拒绝 add，也应由添加前复核返回明确的权限错误，不暴露泛化排程失败。
+        if systemWouldRejectAdding { fixture.scheduler.addError = .addFailed }
+        fixture.scheduler.onRead = {
+            if revokeAuthorization {
+                fixture.permissions.currentAuthorizationState = .denied
+            } else {
+                fixture.permissions.alertSetting = .disabled
+            }
+        }
+        await #expect(throws: TaskSnoozeError.notificationsUnavailable) {
+            _ = try await fixture.service.schedule(occurrenceID: occurrence.id, at: fixture.now)
+        }
+        #expect(fixture.scheduler.addCount == 0)
+        #expect(fixture.scheduler.pending.isEmpty)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<NotificationLink>()) == 0)
+        #expect(fixture.permissions.requestCount == 0)
+    }
+
     @Test("等待读取预算期间删除实例，不向系统添加已不存在任务的请求")
     func deletionDuringBudgetReadDoesNotAddRequest() async throws {
         let fixture = try Fixture()
