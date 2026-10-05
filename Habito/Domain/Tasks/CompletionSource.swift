@@ -1,7 +1,8 @@
 import Foundation
 
-/// 完成记录的创建来源，用于区分孩子打卡与家长更正。
+/// 完成记录来源；家长通过与手动更正分开，不用来源代替提交时间的自主判定。
 nonisolated enum CompletionSource: String, CaseIterable, Sendable {
     case childManual
     case parentCorrection
+    case parentApproval
 }

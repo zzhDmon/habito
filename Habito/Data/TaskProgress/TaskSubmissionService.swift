@@ -46,9 +46,19 @@ struct TaskSubmissionService {
             throw TaskSubmissionError.parentApprovalRequired(occurrence.id)
         }
         if let last = rows.last {
-            // 审核尚未接入时只能从明确退回重提；已通过不是新的提交许可。
-            guard last.reviewState == .returned else { throw TaskSubmissionError.unavailableState(occurrence.id) }
-            guard let reviewedAt = last.reviewedAt, now >= reviewedAt else {
+            let previousOutcomeAt: Date?
+            if last.reviewState == .returned {
+                previousOutcomeAt = last.reviewedAt
+            } else if last.reviewState == .approved, let completionID = last.reviewedCompletionID {
+                // 原通过保持通过审计；真正撤销后才能提交新事件，绝不把原通过重置为 waiting。
+                previousOutcomeAt = try context.fetch(
+                    FetchDescriptor<CompletionRecord>(predicate: #Predicate { $0.id == completionID })
+                ).first?.revokedAt
+            } else {
+                previousOutcomeAt = nil
+            }
+            guard let previousOutcomeAt else { throw TaskSubmissionError.unavailableState(occurrence.id) }
+            guard now >= previousOutcomeAt else {
                 throw TaskSubmissionError.timeBeforePreviousReview(occurrence.id)
             }
         }

@@ -42,6 +42,8 @@ struct TaskCompletionService {
         guard occurrence.modelContext === context else { throw TaskCompletionServiceError.modelNotInContext }
         guard !context.hasChanges else { throw RewardLedgerError.pendingContextChanges }
         guard now.timeIntervalSinceReferenceDate.isFinite else { throw RewardLedgerError.invalidTimestamp }
+        // 家长通过必须关联提交，不能伪装成直接完成绕过审核事务。
+        guard source != .parentApproval else { throw TaskCompletionServiceError.invalidConfiguration(occurrence.id) }
         try TaskSubmissionHistory(context: context).requireNotWaiting(occurrence.id)
         let previousAutosave = context.autosaveEnabled
         context.autosaveEnabled = false
@@ -121,7 +123,7 @@ struct TaskCompletionService {
         }
         return TaskCompletionResult(
             completionID: record.id, completedAt: record.completedAt, timing: timing,
-            xp: record.rewardSettlementVersion == 1 ? record.xpRewardSnapshot : 0,
-            coins: record.rewardSettlementVersion == 1 ? record.settledCoinSnapshot : 0, didComplete: didComplete)
+            xp: record.rewardSettlementVersion > 0 ? record.xpRewardSnapshot : 0,
+            coins: record.rewardSettlementVersion > 0 ? record.settledCoinSnapshot : 0, didComplete: didComplete)
     }
 }

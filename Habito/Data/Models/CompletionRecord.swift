@@ -21,7 +21,7 @@ final class CompletionRecord {
     private(set) var coinRewardSnapshot: Int = 0
     private(set) var activeBonusCoinSnapshot: Int = 0
     private(set) var settledCoinSnapshot: Int = 0
-    /// 0 表示旧写路径，1 表示新事务已冻结并结算；不以金额是否为零判断是否结算。
+    /// 0 为旧写路径，1 为自行确认结算，2 为关联原提交的家长通过；不以零金额判断是否结算。
     private(set) var rewardSettlementVersion: Int = 0
     /// 撤销保留原记录与事件 ID；审计撤销用例负责校验余额、窗口与原交易。
     var revokedAt: Date?

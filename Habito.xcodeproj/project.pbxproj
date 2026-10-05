@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AB1000000000000000000086 /* TaskSubmissionReviewError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000086 /* TaskSubmissionReviewError.swift */; };
+		AB1000000000000000000087 /* TaskSubmissionReviewResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000087 /* TaskSubmissionReviewResult.swift */; };
+		AB1000000000000000000088 /* TaskSubmissionReviewService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000088 /* TaskSubmissionReviewService.swift */; };
+		AB1000000000000000000089 /* TaskSubmissionReviewServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000089 /* TaskSubmissionReviewServiceTests.swift */; };
 		AB1000000000000000000081 /* TaskSubmissionError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000081 /* TaskSubmissionError.swift */; };
 		AB1000000000000000000082 /* TaskSubmissionResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000082 /* TaskSubmissionResult.swift */; };
 		AB1000000000000000000083 /* TaskSubmissionHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000083 /* TaskSubmissionHistory.swift */; };
@@ -324,6 +328,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AB2000000000000000000086 /* TaskSubmissionReviewError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskSubmissionReviewError.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000087 /* TaskSubmissionReviewResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskSubmissionReviewResult.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000088 /* TaskSubmissionReviewService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskSubmissionReviewService.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000089 /* TaskSubmissionReviewServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskSubmissionReviewServiceTests.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000081 /* TaskSubmissionError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskSubmissionError.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000082 /* TaskSubmissionResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskSubmissionResult.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000083 /* TaskSubmissionHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskSubmissionHistory.swift"; sourceTree = "<group>"; };
@@ -1179,6 +1187,8 @@
 				C20000000000000000000004 /* CompletionSource.swift */,
 				AB2000000000000000000081 /* TaskSubmissionError.swift */,
 				AB2000000000000000000082 /* TaskSubmissionResult.swift */,
+				AB2000000000000000000086 /* TaskSubmissionReviewError.swift */,
+				AB2000000000000000000087 /* TaskSubmissionReviewResult.swift */,
 				AB2000000000000000000067 /* SubmissionReviewState.swift */,
 				AB2000000000000000000059 /* CompletionUndoPolicy.swift */,
 				AB2000000000000000000060 /* TaskCompletionUndoResult.swift */,
@@ -1264,6 +1274,7 @@
 				AB2000000000000000000058 /* TaskCompletionServiceTests.swift */,
 				AB2000000000000000000064 /* TaskCompletionUndoServiceTests.swift */,
 				AB2000000000000000000085 /* TaskSubmissionServiceTests.swift */,
+				AB2000000000000000000089 /* TaskSubmissionReviewServiceTests.swift */,
 				AB2000000000000000000052 /* CompletionAuditMigrationTests.swift */,
 				AB2000000000000000000053 /* V2MigrationFixture.swift */,
 				AB2000000000000000000079 /* V3MigrationFixture.swift */,
@@ -1299,6 +1310,7 @@
 				G20000000000000000000002 /* TaskProgressService.swift */,
 				AB2000000000000000000083 /* TaskSubmissionHistory.swift */,
 				AB2000000000000000000084 /* TaskSubmissionService.swift */,
+				AB2000000000000000000088 /* TaskSubmissionReviewService.swift */,
 				AB2000000000000000000061 /* TaskCompletionUndoError.swift */,
 				AB2000000000000000000062 /* TaskCompletionAuditValidator.swift */,
 				AB2000000000000000000063 /* TaskCompletionUndoService.swift */,
@@ -1596,6 +1608,9 @@
 				AB1000000000000000000082 /* TaskSubmissionResult.swift in Sources */,
 				AB1000000000000000000083 /* TaskSubmissionHistory.swift in Sources */,
 				AB1000000000000000000084 /* TaskSubmissionService.swift in Sources */,
+				AB1000000000000000000086 /* TaskSubmissionReviewError.swift in Sources */,
+				AB1000000000000000000087 /* TaskSubmissionReviewResult.swift in Sources */,
+				AB1000000000000000000088 /* TaskSubmissionReviewService.swift in Sources */,
 				AB1000000000000000000066 /* HabitoSchemaV4.swift in Sources */,
 				AB1000000000000000000067 /* SubmissionReviewState.swift in Sources */,
 				AB1000000000000000000068 /* TaskSubmission.swift in Sources */,
@@ -1678,6 +1693,7 @@
 				AB1000000000000000000058 /* TaskCompletionServiceTests.swift in Sources */,
 				AB1000000000000000000064 /* TaskCompletionUndoServiceTests.swift in Sources */,
 				AB1000000000000000000085 /* TaskSubmissionServiceTests.swift in Sources */,
+				AB1000000000000000000089 /* TaskSubmissionReviewServiceTests.swift in Sources */,
 				AB1000000000000000000052 /* CompletionAuditMigrationTests.swift in Sources */,
 				AB1000000000000000000053 /* V2MigrationFixture.swift in Sources */,
 				AB1000000000000000000079 /* V3MigrationFixture.swift in Sources */,

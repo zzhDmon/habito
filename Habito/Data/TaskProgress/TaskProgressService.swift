@@ -127,6 +127,7 @@ struct TaskProgressService {
         source: CompletionSource,
         rewardSnapshot: CompletionRewardSnapshot? = nil
     ) throws -> CompletionRecord {
+        guard source != .parentApproval else { throw TaskCompletionServiceError.invalidConfiguration(occurrence.id) }
         let status = try validatedStatus(of: occurrence)
         let sessions = try validatedSessions(for: occurrence)
         let active = try activeSession(in: sessions, occurrenceID: occurrence.id)

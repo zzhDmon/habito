@@ -1,6 +1,6 @@
 import Foundation
 
-/// 本次自行确认冻结的奖励事实；截止时间不参加扣奖，自主性只比较提交与提醒快照。
+/// 本次提交冻结的奖励事实；截止时间不参加扣奖，自主性只比较提交与提醒快照。
 nonisolated struct CompletionRewardSnapshot: Equatable, Sendable {
     let submittedAt: Date
     let reminderAt: Date

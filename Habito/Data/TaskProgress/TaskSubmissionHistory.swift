@@ -14,6 +14,8 @@ struct TaskSubmissionHistory {
                 sortBy: [SortDescriptor(\.sequenceNumber)]))
         var ids: Set<UUID> = []
         var previousReviewAt: Date?
+        let completions = try context.fetch(
+            FetchDescriptor<CompletionRecord>(predicate: #Predicate { $0.occurrenceID == occurrenceID }))
         for (index, row) in rows.enumerated() {
             guard row.sequenceNumber == index + 1, ids.insert(row.id).inserted,
                 row.businessKey
@@ -43,6 +45,23 @@ struct TaskSubmissionHistory {
                 else { throw TaskSubmissionError.corruptHistory(occurrenceID) }
                 previousReviewAt = reviewedAt
             }
+            let linked = completions.filter { $0.submissionID == row.id }
+            if state == .approved {
+                guard linked.count == 1, let completion = linked.first,
+                    completion.id == row.reviewedCompletionID, completion.rewardSettlementVersion == 2
+                else { throw TaskSubmissionError.corruptHistory(occurrenceID) }
+                _ = try TaskCompletionAuditValidator(context: context).validate(completion)
+                // 已通过只有撤销后才允许后继提交；不能靠伪造第二条等待事实再次领同一奖励。
+                if index < rows.count - 1, completion.revokedAt == nil {
+                    throw TaskSubmissionError.corruptHistory(occurrenceID)
+                }
+                if let revokedAt = completion.revokedAt { previousReviewAt = revokedAt }
+            } else if !linked.isEmpty {
+                throw TaskSubmissionError.corruptHistory(occurrenceID)
+            }
+        }
+        guard completions.allSatisfy({ $0.submissionID.map(ids.contains) ?? true }) else {
+            throw TaskSubmissionError.corruptHistory(occurrenceID)
         }
         return rows
     }
