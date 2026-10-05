@@ -1,6 +1,149 @@
 {
   "sourceLanguage" : "zh-Hans",
   "strings" : {
+    "kidTask.statusAwaitingReview" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "等家长确认"
+          }
+        }
+      }
+    },
+    "kidTask.statusReturned" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再完善一下"
+          }
+        }
+      }
+    },
+    "taskSession.waitingDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "提交已经保存，等家长来确认。"
+          }
+        }
+      }
+    },
+    "taskSession.returnedDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "家长请你再看看。准备好就再提交。"
+          }
+        }
+      }
+    },
+    "taskSession.submitForReview" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "提交给家长"
+          }
+        }
+      }
+    },
+    "taskSession.submittedTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已提交！"
+          }
+        }
+      }
+    },
+    "taskSession.submittedDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已经交给家长，确认后任务才算完成。"
+          }
+        }
+      }
+    },
+    "taskSession.completedEncouragement" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你做到了！"
+          }
+        }
+      }
+    },
+    "taskSession.completedEncouragementDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这件事完成啦，真棒。"
+          }
+        }
+      }
+    },
+    "taskSession.autonomyEncouragement" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你自己记得做啦！"
+          }
+        }
+      }
+    },
+    "taskSession.rewardXPFormat" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%lld XP 已到账"
+          }
+        }
+      }
+    },
+    "taskSession.rewardCoinFormat" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%lld 金币已到账"
+          }
+        }
+      }
+    },
+    "taskSession.feedbackDismiss" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "知道啦"
+          }
+        }
+      }
+    },
     "%@%@" : {
       "localizations" : {
         "zh-Hans" : {

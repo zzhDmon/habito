@@ -27,7 +27,9 @@ struct KidTaskSessionView: View {
                     onSnooze: model.snooze,
                     onComplete: model.completeTask,
                     onUndoCompletion: model.undoCompletion,
-                    currentDate: model.currentDate
+                    currentDate: model.currentDate,
+                    completionFeedback: model.completionFeedback,
+                    onDismissCompletionFeedback: model.dismissCompletionFeedback
                 )
             case .failed:
                 ContentUnavailableView {

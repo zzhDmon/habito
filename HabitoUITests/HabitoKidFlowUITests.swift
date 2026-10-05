@@ -489,6 +489,166 @@ final class HabitoKidFlowUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["还没有任务"].waitForExistence(timeout: 5))
     }
 
+    func testParentApprovalSubmissionWaitsWithoutRewardOrOldActionsAcrossRelaunch() throws {
+        let app = launchScenario("parent-approval")
+        openSeededTask(in: app)
+        app.buttons["kid.session.start"].tap()
+        XCTAssertTrue(app.buttons["kid.session.pause"].waitForExistence(timeout: 5))
+        let submit = app.buttons["kid.session.submit"]
+        XCTAssertTrue(submit.exists)
+        XCTAssertEqual(submit.label, "提交给家长")
+        submit.tap()
+        assertWaitingWithoutOldActions(in: app)
+        XCTAssertTrue(app.staticTexts["已提交！"].exists)
+        app.buttons["kid.session.dismiss-completion-feedback"].tap()
+        XCTAssertFalse(app.staticTexts["已提交！"].exists)
+        keepScreenshot(app, name: "审核任务提交等待")
+
+        // 旧通知只能回首页；再次进入从磁盘读等待状态，不能重播局部收据。
+        relaunchWithOldSeededNotification(app)
+        let task = app.buttons[seededTaskIdentifier]
+        XCTAssertTrue(task.waitForExistence(timeout: 5))
+        XCTAssertTrue(task.label.contains("等家长确认"))
+        task.tap()
+        assertWaitingWithoutOldActions(in: app)
+        XCTAssertFalse(app.staticTexts["已提交！"].exists)
+        XCTAssertFalse(app.buttons["kid.session.dismiss-completion-feedback"].exists)
+    }
+
+    func testReturnedSubmissionEncouragesContinuingAndResubmitsWithoutReward() throws {
+        let app = launchScenario("returned-submission")
+        let task = app.buttons[seededTaskIdentifier]
+        XCTAssertTrue(task.waitForExistence(timeout: 5))
+        XCTAssertTrue(task.label.contains("再完善一下"))
+        task.tap()
+        let status = app.descendants(matching: .any)["kid.session.submission-status"]
+        XCTAssertTrue(status.waitForExistence(timeout: 5))
+        XCTAssertTrue(status.label.contains("准备好就再提交"))
+        XCTAssertTrue(app.buttons["kid.session.start"].exists)
+        XCTAssertTrue(app.buttons["kid.session.submit"].exists)
+        keepScreenshot(app, name: "退回继续完善")
+        app.buttons["kid.session.start"].tap()
+        XCTAssertTrue(app.buttons["kid.session.pause"].waitForExistence(timeout: 5))
+        app.buttons["kid.session.submit"].tap()
+        assertWaitingWithoutOldActions(in: app)
+    }
+
+    func testSelfConfirmShowsActualRewardsOnceAndUndoRemainsReachable() throws {
+        let app = launchScenario("reward-self-confirm")
+        openSeededTask(in: app)
+        app.buttons["kid.session.complete"].tap()
+        let undo = app.buttons["kid.session.undo"]
+        XCTAssertTrue(undo.waitForExistence(timeout: 2))
+        XCTAssertTrue(undo.isHittable)
+        XCTAssertTrue(app.staticTexts["你做到了！"].exists)
+        XCTAssertTrue(app.staticTexts["你自己记得做啦！"].exists)
+        let xp = app.descendants(matching: .any)["kid.session.reward-xp"]
+        let coins = app.descendants(matching: .any)["kid.session.reward-coins"]
+        XCTAssertTrue(xp.exists)
+        XCTAssertTrue(coins.exists)
+        XCTAssertEqual(xp.label, "+11 XP 已到账")
+        XCTAssertEqual(coins.label, "+10 金币已到账")
+        keepScreenshot(app, name: "真实奖励到账")
+        app.buttons["kid.session.dismiss-completion-feedback"].tap()
+        XCTAssertFalse(xp.exists)
+        XCTAssertFalse(coins.exists)
+        XCTAssertFalse(app.staticTexts["你做到了！"].exists)
+        relaunchWithOldSeededNotification(app)
+        XCTAssertTrue(app.staticTexts["今天的任务都完成了。"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.staticTexts["你做到了！"].exists)
+        XCTAssertFalse(app.descendants(matching: .any)["kid.session.reward-xp"].exists)
+    }
+
+    func testZeroRewardStillEncouragesCompletionWithoutInventingCurrency() throws {
+        let app = launchScenario("legacy")
+        openSeededTask(in: app)
+        app.buttons["kid.session.complete"].tap()
+        XCTAssertTrue(app.staticTexts["你做到了！"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.descendants(matching: .any)["kid.session.reward-xp"].exists)
+        XCTAssertFalse(app.descendants(matching: .any)["kid.session.reward-coins"].exists)
+        XCTAssertTrue(app.buttons["kid.session.dismiss-completion-feedback"].isHittable)
+    }
+
+    /// 字号由验收命令的 simctl ui content_size 设置；不使用未验证的私有启动参数。
+    func testSubmissionAndWaitingRemainReadableAndReachableWithSystemTextSize() throws {
+        let app = launchScenario("parent-approval")
+        openSeededTask(in: app)
+        let submit = app.buttons["kid.session.submit"]
+        scrollFullyIntoSessionViewport(submit, in: app)
+        XCTAssertTrue(submit.isHittable)
+        XCTAssertGreaterThanOrEqual(submit.frame.height, 44)
+        submit.tap()
+        let status = app.descendants(matching: .any)["kid.session.submission-status"]
+        XCTAssertTrue(status.waitForExistence(timeout: 5))
+        scrollFullyIntoSessionViewport(status, in: app)
+        XCTAssertTrue(status.label.contains("等家长确认"))
+        // 读屏合并状态有文字而非仅颜色；真机 VoiceOver 手势验收仍后置。
+        XCTAssertTrue(status.label.contains("提交已经保存"))
+        keepScreenshot(app, name: "系统字号等待状态")
+        let dismiss = app.buttons["kid.session.dismiss-completion-feedback"]
+        scrollFullyIntoSessionViewport(dismiss, in: app)
+        XCTAssertTrue(dismiss.isHittable)
+        XCTAssertGreaterThanOrEqual(dismiss.frame.height, 44)
+        keepScreenshot(app, name: "辅助大字等待与反馈")
+        dismiss.tap()
+        XCTAssertFalse(dismiss.exists)
+        XCTAssertFalse(app.staticTexts["已提交！"].exists)
+    }
+
+    private func launchScenario(_ scenario: String) -> XCUIApplication {
+        XCUIDevice.shared.orientation = .landscapeLeft
+        let app = makeApplication()
+        app.launchArguments =
+            [
+                "--habito-ui-testing", "--habito-ui-reset", "--habito-ui-task-scenario", scenario,
+            ]
+        app.launch()
+        return app
+    }
+
+    private func openSeededTask(in app: XCUIApplication) {
+        let task = app.buttons[seededTaskIdentifier]
+        XCTAssertTrue(task.waitForExistence(timeout: 5))
+        task.tap()
+        XCTAssertTrue(app.buttons["kid.session.start"].waitForExistence(timeout: 5))
+    }
+
+    private func assertWaitingWithoutOldActions(in app: XCUIApplication) {
+        let status = app.descendants(matching: .any)["kid.session.submission-status"]
+        XCTAssertTrue(status.waitForExistence(timeout: 5))
+        XCTAssertTrue(status.label.contains("等家长确认"))
+        for identifier in [
+            "kid.session.start", "kid.session.pause", "kid.session.resume", "kid.session.complete",
+            "kid.session.submit", "kid.session.snooze", "kid.session.undo", "kid.session.reward-xp",
+            "kid.session.reward-coins",
+        ] {
+            XCTAssertFalse(app.descendants(matching: .any)[identifier].exists, identifier)
+        }
+    }
+
+    private func keepScreenshot(_ app: XCUIApplication, name: String) {
+        let attachment = XCTAttachment(screenshot: app.screenshot())
+        attachment.name = name
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
+    /// 17 在按钮仅露出边缘时也可能报告 isHittable；按真实滚动窗口核对，不能把无效点击算验收。
+    private func scrollFullyIntoSessionViewport(_ element: XCUIElement, in app: XCUIApplication) {
+        XCTAssertTrue(element.waitForExistence(timeout: 5))
+        let viewport = app.scrollViews["kid.session.screen"]
+        XCTAssertTrue(viewport.exists)
+        for _ in 0..<4 {
+            if element.isHittable, viewport.frame.contains(element.frame) { return }
+            if element.frame.minY < viewport.frame.minY {
+                viewport.swipeDown()
+            } else {
+                viewport.swipeUp()
+            }
+        }
+        XCTAssertTrue(element.isHittable && viewport.frame.contains(element.frame), "元素应能完整滚动到执行页可视区域")
+    }
+
     /// 同一用例的所有重启沿用相同环境；只隔离场景日期，不冻结计时实际经过的秒数。
     private func makeApplication() -> XCUIApplication {
         let app = XCUIApplication()

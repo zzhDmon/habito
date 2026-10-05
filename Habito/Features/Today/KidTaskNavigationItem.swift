@@ -33,7 +33,13 @@ struct KidTaskNavigationItem: Hashable, Identifiable, Sendable {
         )
         status = item.status
 
-        if item.status == .inProgress, let referenceDate, item.date < referenceDate {
+        if item.isAwaitingReview {
+            statusText = String(localized: "kidTask.statusAwaitingReview")
+            statusIconName = "hourglass.circle.fill"
+        } else if item.submission?.state == .returned, item.status == .pending {
+            statusText = String(localized: "kidTask.statusReturned")
+            statusIconName = "arrow.uturn.backward.circle.fill"
+        } else if item.status == .inProgress, let referenceDate, item.date < referenceDate {
             statusText = String(localized: "kidTask.statusCarryOver")
             statusIconName = "clock.arrow.circlepath"
         } else {

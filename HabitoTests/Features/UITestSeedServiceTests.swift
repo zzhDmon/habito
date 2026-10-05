@@ -61,6 +61,84 @@
             #expect(try fixture.context.fetchCount(FetchDescriptor<TaskOccurrence>()) == 0)
         }
 
+        @Test("显式场景只写入合成配置，提交和退回均不提前发奖", arguments: UITestTaskScenario.allCases)
+        func explicitScenarioHasExpectedConfiguration(scenario: UITestTaskScenario) throws {
+            let fixture = try Fixture()
+            try fixture.prepare(scenario: scenario)
+            let occurrence = try #require(fixture.context.fetch(FetchDescriptor<TaskOccurrence>()).first)
+            #expect(occurrence.verificationTypeSnapshot == scenario.verificationType)
+            #expect(occurrence.xpRewardSnapshot == (scenario == .legacy ? 0 : 11))
+            #expect(occurrence.coinRewardSnapshot == (scenario == .legacy ? 0 : 7))
+            #expect(occurrence.activeBonusCoinSnapshot == (scenario == .legacy ? 0 : 3))
+            #expect(occurrence.scheduledAt == fixture.now.addingTimeInterval(scenario == .legacy ? -60 : 60))
+            let submissions = try fixture.context.fetch(FetchDescriptor<TaskSubmission>())
+            #expect(submissions.count == (scenario == .returnedSubmission ? 1 : 0))
+            if scenario == .returnedSubmission {
+                #expect(submissions.first?.reviewState == .returned)
+            }
+            #expect(try fixture.context.fetchCount(FetchDescriptor<CompletionRecord>()) == 0)
+            #expect(try fixture.context.fetchCount(FetchDescriptor<XPTransaction>()) == 0)
+            #expect(try fixture.context.fetchCount(FetchDescriptor<CoinTransaction>()) == 0)
+        }
+
+        @Test("重启保留退回审计，不重播夹具或改回旧零奖励配置")
+        func returnedScenarioSurvivesRelaunchWithoutReseeding() throws {
+            let fixture = try Fixture()
+            try fixture.prepare(scenario: .returnedSubmission)
+            let originalRows = try fixture.context.fetch(FetchDescriptor<TaskSubmission>())
+            let originalID = try #require(originalRows.first?.id)
+            try fixture.prepare()
+            let rows = try fixture.context.fetch(FetchDescriptor<TaskSubmission>())
+            #expect(rows.count == 1)
+            #expect(rows.first?.id == originalID)
+            #expect(rows.first?.reviewState == .returned)
+            let occurrence = try #require(fixture.context.fetch(FetchDescriptor<TaskOccurrence>()).first)
+            #expect(occurrence.verificationTypeSnapshot == .parentApproval)
+            #expect(occurrence.xpRewardSnapshot == 11)
+        }
+
+        @Test("隔离重置同时清理审核审计和奖励账本", arguments: [true, false])
+        func resetRemovesAllV1History(approve: Bool) throws {
+            let fixture = try Fixture()
+            try fixture.prepare(scenario: .parentApproval)
+            let occurrence = try #require(fixture.context.fetch(FetchDescriptor<TaskOccurrence>()).first)
+            let submission = try TaskSubmissionService(context: fixture.context).submit(occurrence, at: fixture.now)
+            if approve {
+                _ = try TaskSubmissionReviewService(context: fixture.context).approve(
+                    occurrence, submissionID: submission.submissionID, at: fixture.now)
+                #expect(try fixture.context.fetchCount(FetchDescriptor<XPTransaction>()) == 1)
+                #expect(try fixture.context.fetchCount(FetchDescriptor<CoinTransaction>()) == 1)
+            }
+            try fixture.prepare(reset: true)
+            #expect(try fixture.context.fetchCount(FetchDescriptor<TaskTemplate>()) == 1)
+            #expect(try fixture.context.fetchCount(FetchDescriptor<TaskOccurrence>()) == 1)
+            #expect(try fixture.context.fetchCount(FetchDescriptor<TaskSubmission>()) == 0)
+            #expect(try fixture.context.fetchCount(FetchDescriptor<CompletionRecord>()) == 0)
+            #expect(try fixture.context.fetchCount(FetchDescriptor<XPTransaction>()) == 0)
+            #expect(try fixture.context.fetchCount(FetchDescriptor<CoinTransaction>()) == 0)
+            let newOccurrence = try #require(fixture.context.fetch(FetchDescriptor<TaskOccurrence>()).first)
+            #expect(newOccurrence.status == .pending)
+            #expect(newOccurrence.xpRewardSnapshot == 0)
+        }
+
+        @Test("缺省场景兼容旧用例，显式场景严格解析", arguments: UITestTaskScenario.allCases)
+        func scenarioArgumentsParse(scenario: UITestTaskScenario) throws {
+            #expect(try UITestTaskScenario.parse(arguments: []) == .legacy)
+            #expect(
+                try UITestTaskScenario.parse(arguments: [UITestTaskScenario.argument, scenario.rawValue]) == scenario)
+        }
+
+        @Test(
+            "缺失或未知场景参数明确失败，不悄悄退回其他容器",
+            arguments: [
+                ["--habito-ui-task-scenario"], ["--habito-ui-task-scenario", "unknown"],
+            ])
+        func invalidScenarioArgumentsAreRejected(arguments: [String]) {
+            #expect(throws: CocoaError.self) {
+                try UITestTaskScenario.parse(arguments: arguments)
+            }
+        }
+
         private struct Fixture {
             let container: ModelContainer
             let now: Date
@@ -74,10 +152,11 @@
                 timeZone = try #require(TimeZone(identifier: "Asia/Shanghai"))
             }
 
-            func prepare(templateOnly: Bool = false) throws {
+            func prepare(templateOnly: Bool = false, reset: Bool = false, scenario: UITestTaskScenario = .legacy) throws
+            {
                 try UITestSeedService.prepare(
-                    container: container, shouldReset: false, shouldSeedTemplateOnly: templateOnly,
-                    now: now, calendar: calendar, timeZone: timeZone)
+                    container: container, shouldReset: reset, shouldSeedTemplateOnly: templateOnly,
+                    now: now, calendar: calendar, timeZone: timeZone, scenario: scenario)
             }
         }
     }

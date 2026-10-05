@@ -25,6 +25,7 @@
         ///   - now: 用于生成“今天”测试数据的绝对时间。
         ///   - calendar: 解释本地日期的日历。
         ///   - timeZone: 解释本地日期的时区。
+        ///   - scenario: 显式合成验收/奖励场景；旧用例默认零奖励自行确认，不改产品默认。
         /// - Throws: 查询、清理、日期转换或保存失败时抛出错误，阻止测试使用半初始化数据。
         static func prepare(
             container: ModelContainer,
@@ -33,7 +34,8 @@
             shouldSeedTemplateOnly: Bool = false,
             now: Date,
             calendar: Calendar,
-            timeZone: TimeZone
+            timeZone: TimeZone,
+            scenario: UITestTaskScenario = .legacy
         ) throws {
             let context = container.mainContext
             if shouldReset {
@@ -55,20 +57,29 @@
                 colorToken: "task",
                 targetDurationSeconds: 900,
                 createdAt: now,
-                updatedAt: now
+                updatedAt: now,
+                verificationType: scenario.verificationType,
+                xpReward: scenario == .legacy ? 0 : 11,
+                coinReward: scenario == .legacy ? 0 : 7,
+                activeBonusCoin: scenario == .legacy ? 0 : 3
             )
             let occurrence = TaskOccurrence(
                 id: taskID,
                 templateID: templateID,
                 date: localDate,
-                scheduledAt: now.addingTimeInterval(-60),
+                scheduledAt: now.addingTimeInterval(scenario == .legacy ? -60 : 60),
                 titleSnapshot: template.title,
                 iconSnapshot: template.iconName,
                 colorSnapshot: template.colorToken,
                 targetDurationSnapshot: template.targetDurationSeconds,
                 sourceRevision: template.revision,
+                isDetachedOverride: scenario != .legacy,
                 createdAt: now,
-                updatedAt: now
+                updatedAt: now,
+                verificationTypeSnapshot: scenario.verificationType,
+                xpRewardSnapshot: template.xpReward,
+                coinRewardSnapshot: template.coinReward,
+                activeBonusCoinSnapshot: template.activeBonusCoin
             )
             let rule = ReminderRule(
                 taskTemplateID: templateID,
@@ -85,10 +96,20 @@
                 occurrence.template = template
             }
             try context.save()
+            if scenario == .returnedSubmission, !shouldSeedTemplateOnly {
+                // 用真实提交/退回事务构造状态，不手工伪造审计或金额。
+                let row = try TaskSubmissionService(context: context).submit(occurrence, at: now)
+                _ = try TaskSubmissionReviewService(context: context).returnForRevision(
+                    occurrence, submissionID: row.submissionID, at: now)
+            }
         }
 
         private static func removeAllData(from context: ModelContext) throws {
             // 先删除关系叶子，再删除实例和模板，避免让级联删除顺序影响测试重置的确定性。
+            // 固定任务 ID 会复用，必须同步清理 V1 审计/账本，且只作用于显式隔离 UI 容器。
+            try context.fetch(FetchDescriptor<TaskSubmission>()).forEach(context.delete)
+            try context.fetch(FetchDescriptor<XPTransaction>()).forEach(context.delete)
+            try context.fetch(FetchDescriptor<CoinTransaction>()).forEach(context.delete)
             try context.fetch(FetchDescriptor<NotificationLink>()).forEach(context.delete)
             try context.fetch(FetchDescriptor<CompletionRecord>()).forEach(context.delete)
             try context.fetch(FetchDescriptor<TimerSession>()).forEach(context.delete)

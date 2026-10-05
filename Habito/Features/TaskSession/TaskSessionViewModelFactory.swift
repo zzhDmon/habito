@@ -12,6 +12,7 @@ struct TaskSessionViewModelFactory {
     private let notificationRebuildTrigger: NotificationRebuildTrigger
     private let completionService: TaskCompletionService
     private let undoService: TaskCompletionUndoService
+    private let submissionService: TaskSubmissionService
 
     init(
         context: ModelContext,
@@ -21,7 +22,8 @@ struct TaskSessionViewModelFactory {
         snoozeService: TaskSnoozeService? = nil,
         notificationRebuildTrigger: NotificationRebuildTrigger = NotificationRebuildTrigger(),
         completionService: TaskCompletionService? = nil,
-        undoService: TaskCompletionUndoService? = nil
+        undoService: TaskCompletionUndoService? = nil,
+        submissionService: TaskSubmissionService? = nil
     ) {
         self.context = context
         self.calendar = calendar
@@ -31,6 +33,7 @@ struct TaskSessionViewModelFactory {
         self.notificationRebuildTrigger = notificationRebuildTrigger
         self.completionService = completionService ?? TaskCompletionService(context: context)
         self.undoService = undoService ?? TaskCompletionUndoService(context: context)
+        self.submissionService = submissionService ?? TaskSubmissionService(context: context)
     }
 
     func makeModel(for occurrenceID: UUID) -> TaskSessionViewModel {
@@ -43,7 +46,8 @@ struct TaskSessionViewModelFactory {
             snoozeService: snoozeService,
             notificationRebuildTrigger: notificationRebuildTrigger,
             completionService: completionService,
-            undoService: undoService
+            undoService: undoService,
+            submissionService: submissionService
         )
     }
 }

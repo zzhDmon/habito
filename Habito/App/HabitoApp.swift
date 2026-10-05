@@ -55,7 +55,8 @@ struct HabitoApp: App {
                         shouldSeedTemplateOnly: configuration.shouldSeedTemplateOnly,
                         now: dateProvider.now(),
                         calendar: calendar,
-                        timeZone: timeZone
+                        timeZone: timeZone,
+                        scenario: try UITestTaskScenario.parse(arguments: ProcessInfo.processInfo.arguments)
                     )
                 } else {
                     dateProvider = SystemDateProvider()
@@ -87,6 +88,7 @@ struct HabitoApp: App {
         // 全家账本与完成/撤销共用主写上下文；服务通过工厂注入页面，不由 View 发奖。
         let completionService = TaskCompletionService(context: container.mainContext)
         let undoService = TaskCompletionUndoService(context: container.mainContext)
+        let submissionService = TaskSubmissionService(context: container.mainContext)
         _notificationRebuildTrigger = State(initialValue: rebuildTrigger)
         notificationRebuildService = NotificationRebuildService(
             context: container.mainContext,
@@ -124,7 +126,8 @@ struct HabitoApp: App {
             ),
             notificationRebuildTrigger: rebuildTrigger,
             completionService: completionService,
-            undoService: undoService
+            undoService: undoService,
+            submissionService: submissionService
         )
         taskTemplateEditorModelFactory = TaskTemplateEditorViewModelFactory(
             context: container.mainContext,

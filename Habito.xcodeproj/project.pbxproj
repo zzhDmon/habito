@@ -7,6 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AB1000000000000000000108 /* TaskCompletionSnapshotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000108 /* TaskCompletionSnapshotView.swift */; };
+		AB1000000000000000000109 /* TaskSessionActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000109 /* TaskSessionActionButton.swift */; };
+		AB1000000000000000000110 /* TaskSessionControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000110 /* TaskSessionControlsView.swift */; };
+		AB1000000000000000000111 /* TaskSessionDurationText.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000111 /* TaskSessionDurationText.swift */; };
+		AB1000000000000000000112 /* TaskSessionIdentityPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000112 /* TaskSessionIdentityPanel.swift */; };
+		AB1000000000000000000113 /* TaskSessionResultFeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000113 /* TaskSessionResultFeedbackView.swift */; };
+		AB1000000000000000000114 /* TaskSessionTimerPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000114 /* TaskSessionTimerPanel.swift */; };
+		AB1000000000000000000115 /* TaskSnoozeFeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000115 /* TaskSnoozeFeedbackView.swift */; };
+		AB1000000000000000000116 /* TaskSubmissionStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000116 /* TaskSubmissionStatusView.swift */; };
+		AB1000000000000000000117 /* UITestTaskScenario.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000117 /* UITestTaskScenario.swift */; };
 		AB1000000000000000000107 /* TaskSessionCompletionFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000107 /* TaskSessionCompletionFeedback.swift */; };
 		AB1000000000000000000106 /* NotificationSubmissionEpochUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000106 /* NotificationSubmissionEpochUpdate.swift */; };
 		AB1000000000000000000092 /* HabitoSchemaV4+TaskTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000092 /* HabitoSchemaV4+TaskTemplate.swift */; };
@@ -346,6 +356,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AB2000000000000000000108 /* TaskCompletionSnapshotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskCompletionSnapshotView.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000109 /* TaskSessionActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskSessionActionButton.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000110 /* TaskSessionControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskSessionControlsView.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000111 /* TaskSessionDurationText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskSessionDurationText.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000112 /* TaskSessionIdentityPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskSessionIdentityPanel.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000113 /* TaskSessionResultFeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskSessionResultFeedbackView.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000114 /* TaskSessionTimerPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskSessionTimerPanel.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000115 /* TaskSnoozeFeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskSnoozeFeedbackView.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000116 /* TaskSubmissionStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskSubmissionStatusView.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000117 /* UITestTaskScenario.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITestTaskScenario.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000107 /* TaskSessionCompletionFeedback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskSessionCompletionFeedback.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000106 /* NotificationSubmissionEpochUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NotificationSubmissionEpochUpdate.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000092 /* HabitoSchemaV4+TaskTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV4+TaskTemplate.swift"; sourceTree = "<group>"; };
@@ -833,6 +853,7 @@
 				A20000000000000000000002 /* RootView.swift */,
 				N20000000000000000000001 /* UITestLaunchConfiguration.swift */,
 				N20000000000000000000002 /* UITestSeedService.swift */,
+				AB2000000000000000000117 /* UITestTaskScenario.swift */,
 				Y20000000000000000000006 /* UITestNotificationPermissionProvider.swift */,
 			);
 			path = App;
@@ -1104,6 +1125,15 @@
 			children = (
 				I20000000000000000000008 /* KidTaskSessionView.swift */,
 				M20000000000000000000006 /* TaskSessionLoadedView.swift */,
+				AB2000000000000000000108 /* TaskCompletionSnapshotView.swift */,
+				AB2000000000000000000109 /* TaskSessionActionButton.swift */,
+				AB2000000000000000000110 /* TaskSessionControlsView.swift */,
+				AB2000000000000000000111 /* TaskSessionDurationText.swift */,
+				AB2000000000000000000112 /* TaskSessionIdentityPanel.swift */,
+				AB2000000000000000000113 /* TaskSessionResultFeedbackView.swift */,
+				AB2000000000000000000114 /* TaskSessionTimerPanel.swift */,
+				AB2000000000000000000115 /* TaskSnoozeFeedbackView.swift */,
+				AB2000000000000000000116 /* TaskSubmissionStatusView.swift */,
 				M20000000000000000000001 /* TaskSessionScreenContent.swift */,
 				AB2000000000000000000107 /* TaskSessionCompletionFeedback.swift */,
 				AB2000000000000000000065 /* TaskSessionActionFailure.swift */,
@@ -1520,6 +1550,16 @@
 				I10000000000000000000003 /* KidTaskNavigationItem.swift in Sources */,
 				I10000000000000000000008 /* KidTaskSessionView.swift in Sources */,
 				M10000000000000000000006 /* TaskSessionLoadedView.swift in Sources */,
+				AB1000000000000000000108 /* TaskCompletionSnapshotView.swift in Sources */,
+				AB1000000000000000000109 /* TaskSessionActionButton.swift in Sources */,
+				AB1000000000000000000110 /* TaskSessionControlsView.swift in Sources */,
+				AB1000000000000000000111 /* TaskSessionDurationText.swift in Sources */,
+				AB1000000000000000000112 /* TaskSessionIdentityPanel.swift in Sources */,
+				AB1000000000000000000113 /* TaskSessionResultFeedbackView.swift in Sources */,
+				AB1000000000000000000114 /* TaskSessionTimerPanel.swift in Sources */,
+				AB1000000000000000000115 /* TaskSnoozeFeedbackView.swift in Sources */,
+				AB1000000000000000000116 /* TaskSubmissionStatusView.swift in Sources */,
+				AB1000000000000000000117 /* UITestTaskScenario.swift in Sources */,
 				M10000000000000000000001 /* TaskSessionScreenContent.swift in Sources */,
 				AB1000000000000000000107 /* TaskSessionCompletionFeedback.swift in Sources */,
 				AB1000000000000000000065 /* TaskSessionActionFailure.swift in Sources */,

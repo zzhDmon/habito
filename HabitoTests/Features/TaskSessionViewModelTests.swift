@@ -218,6 +218,29 @@ struct TaskSessionViewModelTests {
         #expect(!fixture.context.hasChanges)
     }
 
+    @Test("组合根工厂透传提交保存边界，失败不发布成功或到账")
+    func factoryPassesInjectedSubmissionService() throws {
+        let fixture = try TodayQueryFixture()
+        let occurrence = fixture.makeOccurrence(title: "工厂提交", scheduledAt: fixture.now, status: .pending)
+        occurrence.verificationTypeSnapshotRawValue = TaskVerificationType.parentApproval.rawValue
+        try fixture.context.save()
+        let trigger = NotificationRebuildTrigger()
+        let factory = TaskSessionViewModelFactory(
+            context: fixture.context, calendar: fixture.calendar, timeZone: fixture.timeZone,
+            dateProvider: FixedDateProvider(value: fixture.now), notificationRebuildTrigger: trigger,
+            submissionService: TaskSubmissionService(
+                context: fixture.context, saveChanges: { _ in throw CocoaError(.fileWriteUnknown) }))
+        let model = factory.makeModel(for: occurrence.id)
+        model.load()
+        model.completeTask()
+        #expect(model.actionFailure == .saveFailed && model.isActionErrorPresented)
+        #expect(model.completionFeedback == nil && trigger.revision == 0)
+        #expect(occurrence.status == .pending)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<TaskSubmission>()) == 0)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<XPTransaction>()) == 0)
+        #expect(!fixture.context.hasChanges)
+    }
+
     @Test("坏验收配置加载明确失败，加载后损坏也不能静默按自行确认发奖")
     func invalidVerificationDoesNotFallback() throws {
         let fixture = try TodayQueryFixture()
