@@ -65,6 +65,8 @@ final class ParentGateViewModel {
             settings.markParentPINStored()
             try context.save()
             state = .unlocked
+            // 只记录状态事件，不记录输入、凭据或家庭数据；帮助区分保存与界面切换故障。
+            logger.info("家长凭据创建成功，本次门禁已解锁")
         } catch ParentPINError.invalidFormat {
             feedback = .invalidFormat
         } catch {
@@ -79,6 +81,7 @@ final class ParentGateViewModel {
             let pin = try ParentPIN(rawPIN)
             if try credentialStore.verify(pin) {
                 state = .unlocked
+                logger.info("本次家长凭据验证成功，门禁已解锁")
             } else {
                 feedback = .incorrectPIN
             }

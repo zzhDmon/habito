@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AB1000000000000000000140 /* TaskTemplateRewardInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000140 /* TaskTemplateRewardInput.swift */; };
+		AB1000000000000000000141 /* TaskTemplateConfigurationSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000141 /* TaskTemplateConfigurationSection.swift */; };
+		AB1000000000000000000142 /* TaskTemplateRewardSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000142 /* TaskTemplateRewardSection.swift */; };
+		AB1000000000000000000143 /* TaskTemplateRewardField.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000143 /* TaskTemplateRewardField.swift */; };
+		AB1000000000000000000144 /* TaskTemplateEditorSaveBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000144 /* TaskTemplateEditorSaveBar.swift */; };
 		AB1000000000000000000139 /* TaskTemplateConfigurationEditingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000139 /* TaskTemplateConfigurationEditingTests.swift */; };
 		AB1000000000000000000138 /* TaskTemplateEditRollbackSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000138 /* TaskTemplateEditRollbackSnapshot.swift */; };
 		AB1000000000000000000137 /* ReviewRoundTripTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000137 /* ReviewRoundTripTests.swift */; };
@@ -378,6 +383,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AB2000000000000000000140 /* TaskTemplateRewardInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskTemplateRewardInput.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000141 /* TaskTemplateConfigurationSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskTemplateConfigurationSection.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000142 /* TaskTemplateRewardSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskTemplateRewardSection.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000143 /* TaskTemplateRewardField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskTemplateRewardField.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000144 /* TaskTemplateEditorSaveBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskTemplateEditorSaveBar.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000139 /* TaskTemplateConfigurationEditingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskTemplateConfigurationEditingTests.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000138 /* TaskTemplateEditRollbackSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskTemplateEditRollbackSnapshot.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000137 /* ReviewRoundTripTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ReviewRoundTripTests.swift"; sourceTree = "<group>"; };
@@ -1175,6 +1185,11 @@
 				T20000000000000000000002 /* TaskTemplateEditorError.swift */,
 				T20000000000000000000003 /* TaskTemplateEditingService.swift */,
 				AB2000000000000000000138 /* TaskTemplateEditRollbackSnapshot.swift */,
+				AB2000000000000000000140 /* TaskTemplateRewardInput.swift */,
+				AB2000000000000000000141 /* TaskTemplateConfigurationSection.swift */,
+				AB2000000000000000000142 /* TaskTemplateRewardSection.swift */,
+				AB2000000000000000000143 /* TaskTemplateRewardField.swift */,
+				AB2000000000000000000144 /* TaskTemplateEditorSaveBar.swift */,
 				T20000000000000000000005 /* TaskTemplateEditorFeedback.swift */,
 				T20000000000000000000008 /* TaskTemplateEditorView.swift */,
 				T20000000000000000000009 /* TaskTemplateEditorForm.swift */,
@@ -1718,6 +1733,11 @@
 				T10000000000000000000002 /* TaskTemplateEditorError.swift in Sources */,
 				T10000000000000000000003 /* TaskTemplateEditingService.swift in Sources */,
 				AB1000000000000000000138 /* TaskTemplateEditRollbackSnapshot.swift in Sources */,
+				AB1000000000000000000140 /* TaskTemplateRewardInput.swift in Sources */,
+				AB1000000000000000000141 /* TaskTemplateConfigurationSection.swift in Sources */,
+				AB1000000000000000000142 /* TaskTemplateRewardSection.swift in Sources */,
+				AB1000000000000000000143 /* TaskTemplateRewardField.swift in Sources */,
+				AB1000000000000000000144 /* TaskTemplateEditorSaveBar.swift in Sources */,
 				T10000000000000000000005 /* TaskTemplateEditorFeedback.swift in Sources */,
 				T10000000000000000000008 /* TaskTemplateEditorView.swift in Sources */,
 				T10000000000000000000009 /* TaskTemplateEditorForm.swift in Sources */,

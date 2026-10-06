@@ -14,6 +14,7 @@ enum TaskTemplateEditorError: Error, Equatable {
     case missingRule(UUID)
     case unsupportedRecurrence(UUID)
     case invalidReward
+    case invalidRewardInput
     case rewardOverflow
     case revisionOverflow
     case invalidStoredRevision(UUID)

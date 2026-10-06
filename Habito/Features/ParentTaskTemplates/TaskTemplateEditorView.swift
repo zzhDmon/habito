@@ -5,6 +5,8 @@ struct TaskTemplateEditorView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var model: TaskTemplateEditorViewModel
     @State private var isNotificationWarningPresented = false
+    // FocusState 随当前页面生灭并由 UI 主 actor 管理；保存前结束编辑，让错误提示不被键盘遮挡。
+    @FocusState private var focusedReward: String?
     let onSaved: () -> Void
 
     init(model: TaskTemplateEditorViewModel, onSaved: @escaping () -> Void) {
@@ -27,6 +29,8 @@ struct TaskTemplateEditorView: View {
             } else {
                 TaskTemplateEditorForm(
                     draft: $model.draft,
+                    rewardInput: $model.rewardInput,
+                    rewardFocus: $focusedReward,
                     scheduledTime: $model.scheduledTime,
                     feedback: model.feedback,
                     onToggleWeekday: model.toggle,
@@ -34,16 +38,16 @@ struct TaskTemplateEditorView: View {
                     onEnable: { model.prepareLifecycleAction(.enable) },
                     onArchive: { model.prepareLifecycleAction(.archive) }
                 )
+                .accessibilityElement(children: .contain)
                 .accessibilityIdentifier(HabitoAccessibilityID.taskEditorScreen)
             }
         }
         .navigationTitle(model.isCreating ? "taskEditor.createTitle" : "taskEditor.editTitle")
-        .toolbar {
-            ToolbarItem(placement: .confirmationAction) {
-                Button("taskEditor.save", action: save)
-                    .disabled(model.isLoading || model.isSaving)
-                    .accessibilityIdentifier(HabitoAccessibilityID.taskEditorSave)
-            }
+        .safeAreaInset(edge: .bottom) {
+            TaskTemplateEditorSaveBar(
+                isDisabled: model.isLoading || model.isSaving || model.hasLoadFailure,
+                onSave: save
+            )
         }
         .task(model.load)
         .alert(
@@ -70,6 +74,7 @@ struct TaskTemplateEditorView: View {
     }
 
     private func save() {
+        focusedReward = nil
         Task {
             switch await model.save() {
             case .failed:

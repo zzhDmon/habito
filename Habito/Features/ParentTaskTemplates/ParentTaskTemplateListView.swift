@@ -35,7 +35,6 @@ struct ParentTaskTemplateListView: View {
             onSelect: onSelect,
             onRetry: model.load
         )
-        .navigationTitle("parentTemplates.navigationTitle")
         .safeAreaInset(edge: .top) {
             Button("parentReview.open", systemImage: "checkmark.seal", action: onShowReview)
                 .buttonStyle(.borderedProminent)

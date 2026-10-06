@@ -13,6 +13,8 @@ struct ParentGateView: View {
     @State private var pin = ""
     @State private var confirmation = ""
     @State private var isResetConfirmationPresented = false
+    /// 页面拥有的主 actor 焦点；安全输入框移除前结束编辑，不把焦点带入已解锁界面。
+    @FocusState private var focusedPINField: String?
     private let taskTemplateEditorModelFactory: TaskTemplateEditorViewModelFactory
 
     init(
@@ -63,7 +65,10 @@ struct ParentGateView: View {
                     }
                 }
             }
-            .navigationTitle("parentGate.navigationTitle")
+            // 根页面只有一个标题来源，不能用门控标题再次覆盖已解锁管理页的标题。
+            .navigationTitle(rootNavigationTitle)
+            // 行内标题避免大字号门控→管理页切换时的折叠布局竞争；字段仍跟随系统字号。
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("parentGate.close", action: dismiss.callAsFunction)
@@ -110,11 +115,13 @@ struct ParentGateView: View {
         Form {
             Section {
                 SecureField("parentGate.pin", text: $pin)
+                    .focused($focusedPINField, equals: HabitoAccessibilityID.parentPINField)
                     .keyboardType(.numberPad)
                     .textContentType(.newPassword)
                     .onChange(of: pin) { _, value in pin = filteredPIN(value) }
                     .accessibilityIdentifier(HabitoAccessibilityID.parentPINField)
                 SecureField("parentGate.confirmPIN", text: $confirmation)
+                    .focused($focusedPINField, equals: HabitoAccessibilityID.parentPINConfirmationField)
                     .keyboardType(.numberPad)
                     .textContentType(.newPassword)
                     .onChange(of: confirmation) { _, value in confirmation = filteredPIN(value) }
@@ -132,12 +139,17 @@ struct ParentGateView: View {
                 .frame(maxWidth: .infinity, minHeight: HabitoDesign.Layout.minimumTapSize)
                 .accessibilityIdentifier(HabitoAccessibilityID.parentCreateButton)
         }
+        // 大字号下按钮可能位于键盘之后；原生滚动应结束编辑，避免只能点到露出的边缘。
+        .scrollDismissesKeyboard(.immediately)
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier(HabitoAccessibilityID.parentPINForm)
     }
 
     private var verifyForm: some View {
         Form {
             Section {
                 SecureField("parentGate.pin", text: $pin)
+                    .focused($focusedPINField, equals: HabitoAccessibilityID.parentPINField)
                     .keyboardType(.numberPad)
                     .textContentType(.password)
                     .onChange(of: pin) { _, value in pin = filteredPIN(value) }
@@ -161,6 +173,9 @@ struct ParentGateView: View {
             .frame(minHeight: HabitoDesign.Layout.minimumTapSize)
             .accessibilityIdentifier(HabitoAccessibilityID.parentResetButton)
         }
+        .scrollDismissesKeyboard(.immediately)
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier(HabitoAccessibilityID.parentPINForm)
     }
 
     @ViewBuilder
@@ -172,13 +187,21 @@ struct ParentGateView: View {
     }
 
     private func createPIN() {
-        model.createPIN(pin, confirmation: confirmation)
+        // 先复制本次输入并结束编辑，再切换门禁状态；校验仍由原用例负责。
+        let enteredPIN = pin
+        let repeatedPIN = confirmation
         clearInputs()
+        model.createPIN(enteredPIN, confirmation: repeatedPIN)
+    }
+
+    private var rootNavigationTitle: LocalizedStringKey {
+        model.state == .unlocked ? "parentTemplates.navigationTitle" : "parentGate.navigationTitle"
     }
 
     private func verifyPIN() {
-        model.verifyPIN(pin)
+        let enteredPIN = pin
         clearInputs()
+        model.verifyPIN(enteredPIN)
     }
 
     private func resetPIN() {
@@ -187,6 +210,7 @@ struct ParentGateView: View {
     }
 
     private func clearInputs() {
+        focusedPINField = nil
         pin = ""
         confirmation = ""
     }

@@ -1,6 +1,98 @@
 {
   "sourceLanguage" : "zh-Hans",
   "strings" : {
+    "taskEditor.configurationSection" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "任务规则" } } }
+    },
+    "taskEditor.category" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "任务分类" } } }
+    },
+    "taskEditor.category.unassigned" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "待设置" } } }
+    },
+    "taskEditor.category.basicResponsibility" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "基础责任" } } }
+    },
+    "taskEditor.category.growth" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "成长任务" } } }
+    },
+    "taskEditor.category.challenge" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "挑战任务" } } }
+    },
+    "taskEditor.timePeriod" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "时间段" } } }
+    },
+    "taskEditor.timePeriod.morning" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "早晨" } } }
+    },
+    "taskEditor.timePeriod.afterSchool" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "放学后" } } }
+    },
+    "taskEditor.timePeriod.evening" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "晚上" } } }
+    },
+    "taskEditor.timePeriod.allDay" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "全天" } } }
+    },
+    "taskEditor.verification" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "完成确认" } } }
+    },
+    "taskEditor.verification.selfConfirm" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "孩子自行确认" } } }
+    },
+    "taskEditor.verification.parentApproval" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "家长验收" } } }
+    },
+    "taskEditor.configurationHint" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "分类和时间段不改变提醒时间，也不会自动设置奖励。家长验收任务在通过后才结算。已开始或已提交的任务保留原规则与奖励。" } } }
+    },
+    "taskEditor.rewardSection" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "完成奖励" } } }
+    },
+    "taskEditor.xp" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "经验 XP" } } }
+    },
+    "taskEditor.baseCoins" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "基础金币 Coin" } } }
+    },
+    "taskEditor.autonomyCoins" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "自主加成金币 Coin" } } }
+    },
+    "taskEditor.rewardHint" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "请明确填写奖励，不奖励的项目填 0。零奖励任务完成后同样会得到肯定。" } } }
+    },
+    "taskEditor.autonomyHint" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "只有提交时刻早于本次提醒时间，才额外获得自主金币；恰好到提醒时间不算自主。" } } }
+    },
+    "taskEditor.rewardInputHint" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "填写 0 或正整数。" } } }
+    },
+    "taskEditor.errorRewardInput" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "奖励请填写 0 或正整数，并确认数值没有过大。" } } }
+    },
     "taskEditor.errorReward" : {
       "extractionState" : "manual",
       "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "奖励不能小于 0，请检查经验和金币。" } } }
@@ -3070,7 +3162,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "计划时间"
+            "value" : "提醒时间"
           }
         }
       }

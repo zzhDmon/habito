@@ -7,6 +7,7 @@ import OSLog
 @Observable
 final class TaskTemplateEditorViewModel {
     var draft: TaskTemplateDraft
+    var rewardInput: TaskTemplateRewardInput
     var scheduledTime: Date
     private(set) var feedback: TaskTemplateEditorFeedback?
     private(set) var lifecycleImpact: TaskTemplateLifecycleImpact?
@@ -48,6 +49,7 @@ final class TaskTemplateEditorViewModel {
         self.dateProvider = dateProvider
         self.calendar = configuredCalendar
         draft = .new
+        rewardInput = TaskTemplateRewardInput(draft: .new)
         scheduledTime = Self.makeTimeDate(
             minutes: TaskTemplateDraft.new.timeOfDayMinutes,
             calendar: configuredCalendar
@@ -63,6 +65,7 @@ final class TaskTemplateEditorViewModel {
         do {
             if let templateID {
                 draft = try service.load(templateID: templateID)
+                rewardInput = TaskTemplateRewardInput(draft: draft)
                 scheduledTime = Self.makeTimeDate(
                     minutes: draft.timeOfDayMinutes,
                     calendar: calendar
@@ -78,6 +81,9 @@ final class TaskTemplateEditorViewModel {
 
     /// 保存当前草稿；首次创建成功后才请求通知权限，权限问题不会回滚任务。
     func save() async -> TaskTemplateSaveOutcome {
+        // 载入失败不是空白新任务；保留错误状态，不能让保存操作创建另一个模板。
+        // 同时保护尚未载入或正在保存的入口，UI 禁用之外仍要防止重复意图。
+        guard !isLoading, !isSaving, !hasLoadFailure else { return .failed }
         feedback = nil
         isSaving = true
         defer { isSaving = false }
@@ -85,8 +91,11 @@ final class TaskTemplateEditorViewModel {
         let components = calendar.dateComponents([.hour, .minute], from: scheduledTime)
         value.timeOfDayMinutes = (components.hour ?? 0) * 60 + (components.minute ?? 0)
         do {
+            // 先校验原文再写入，不能把无效输入当作“没有修改”而保存旧奖励。
+            value = try rewardInput.applying(to: value)
             _ = try service.save(value, at: dateProvider.now())
             draft = value
+            rewardInput = TaskTemplateRewardInput(draft: value)
             notificationRebuildTrigger.requestRebuild()
             guard isCreating else { return .saved }
             // 首轮重建可能在权限弹窗等待期间已结束；授权返回后必须显式按最新系统状态再核对。
@@ -147,6 +156,7 @@ final class TaskTemplateEditorViewModel {
             lifecycleImpact = nil
             if impact.action != .archive {
                 draft = try service.load(templateID: impact.templateID)
+                rewardInput = TaskTemplateRewardInput(draft: draft)
             }
             return impact.action
         } catch {

@@ -3,6 +3,8 @@ import SwiftUI
 /// 与持久化和导航解耦的任务表单，集中呈现字段和字段级校验反馈。
 struct TaskTemplateEditorForm: View {
     @Binding var draft: TaskTemplateDraft
+    @Binding var rewardInput: TaskTemplateRewardInput
+    let rewardFocus: FocusState<String?>.Binding
     @Binding var scheduledTime: Date
     let feedback: TaskTemplateEditorFeedback?
     let onToggleWeekday: (Weekday) -> Void
@@ -96,12 +98,20 @@ struct TaskTemplateEditorForm: View {
                 }
             }
 
+            TaskTemplateConfigurationSection(draft: $draft)
+            TaskTemplateRewardSection(
+                input: $rewardInput,
+                focus: rewardFocus,
+                errorText: feedbackLocation == .reward ? feedback.map(feedbackText) : nil
+            )
+
             if feedbackLocation == .general {
                 Section {
                     feedbackLabel(for: .general)
                 }
             }
         }
+        .scrollDismissesKeyboard(.immediately)
     }
 
     @ViewBuilder
@@ -125,23 +135,25 @@ struct TaskTemplateEditorForm: View {
                 return .schedule
             case .noWeekdays:
                 return .weekdays
+            case .invalidReward, .invalidRewardInput, .rewardOverflow:
+                return .reward
             case .templateNotFound, .archivedTemplate, .missingRule, .unsupportedRecurrence,
-                .invalidReward, .rewardOverflow, .revisionOverflow, .invalidStoredRevision, .pendingContextChanges:
+                .revisionOverflow, .invalidStoredRevision, .pendingContextChanges:
                 return .general
             }
         }
     }
 
     private func weekdayLabel(_ weekday: Weekday) -> LocalizedStringKey {
-        LocalizedStringKey("weekday.\(weekday.rawValue)")
+        LocalizedStringKey("weekday." + String(weekday.rawValue))
     }
 
     private func iconLabel(_ name: String) -> LocalizedStringKey {
-        LocalizedStringKey("taskEditor.icon.\(name)")
+        LocalizedStringKey("taskEditor.icon." + name)
     }
 
     private func colorLabel(_ token: String) -> LocalizedStringKey {
-        LocalizedStringKey("taskEditor.color.\(token)")
+        LocalizedStringKey("taskEditor.color." + token)
     }
 
     private func feedbackText(_ feedback: TaskTemplateEditorFeedback) -> LocalizedStringKey {
@@ -161,6 +173,7 @@ struct TaskTemplateEditorForm: View {
         case .noWeekdays: "taskEditor.errorWeekdays"
         case .unsupportedIcon, .unsupportedColor: "taskEditor.errorOption"
         case .invalidReward: "taskEditor.errorReward"
+        case .invalidRewardInput: "taskEditor.errorRewardInput"
         case .rewardOverflow: "taskEditor.errorRewardOverflow"
         case .revisionOverflow, .invalidStoredRevision: "taskEditor.errorRevision"
         case .pendingContextChanges: "taskEditor.errorPendingChanges"
@@ -175,17 +188,22 @@ private extension TaskTemplateEditorForm {
         case basic
         case schedule
         case weekdays
+        case reward
         case general
     }
 }
 
 #Preview("新建任务 · 横屏") {
     @Previewable @State var draft = TaskTemplateDraft.new
+    @Previewable @State var rewardInput = TaskTemplateRewardInput(draft: .new)
+    @Previewable @FocusState var rewardFocus: String?
     @Previewable @State var time = Date(timeIntervalSinceReferenceDate: 19 * 3_600 + 30 * 60)
 
     NavigationStack {
         TaskTemplateEditorForm(
             draft: $draft,
+            rewardInput: $rewardInput,
+            rewardFocus: $rewardFocus,
             scheduledTime: $time,
             feedback: nil,
             onToggleWeekday: { weekday in
@@ -205,36 +223,50 @@ private extension TaskTemplateEditorForm {
 
 #Preview("新建任务 · 校验错误") {
     @Previewable @State var draft = TaskTemplateDraft.new
+    @Previewable @State var rewardInput = TaskTemplateRewardInput(draft: .new)
+    @Previewable @FocusState var rewardFocus: String?
     @Previewable @State var time = Date(timeIntervalSinceReferenceDate: 19 * 3_600 + 30 * 60)
 
-    TaskTemplateEditorForm(
-        draft: $draft,
-        scheduledTime: $time,
-        feedback: .validation(.titleRequired),
-        onToggleWeekday: { _ in },
-        onDisable: {},
-        onEnable: {},
-        onArchive: {}
-    )
+    NavigationStack {
+        TaskTemplateEditorForm(
+            draft: $draft,
+            rewardInput: $rewardInput,
+            rewardFocus: $rewardFocus,
+            scheduledTime: $time,
+            feedback: .validation(.titleRequired),
+            onToggleWeekday: { _ in },
+            onDisable: {},
+            onEnable: {},
+            onArchive: {}
+        )
+    }
 }
 
 #Preview("新建任务 · 大号字体") {
     @Previewable @State var draft = TaskTemplateDraft.new
+    @Previewable @State var rewardInput = TaskTemplateRewardInput(draft: .new)
+    @Previewable @FocusState var rewardFocus: String?
     @Previewable @State var time = Date(timeIntervalSinceReferenceDate: 19 * 3_600 + 30 * 60)
 
-    TaskTemplateEditorForm(
-        draft: $draft,
-        scheduledTime: $time,
-        feedback: nil,
-        onToggleWeekday: { _ in },
-        onDisable: {},
-        onEnable: {},
-        onArchive: {}
-    )
+    NavigationStack {
+        TaskTemplateEditorForm(
+            draft: $draft,
+            rewardInput: $rewardInput,
+            rewardFocus: $rewardFocus,
+            scheduledTime: $time,
+            feedback: nil,
+            onToggleWeekday: { _ in },
+            onDisable: {},
+            onEnable: {},
+            onArchive: {}
+        )
+    }
     .environment(\.dynamicTypeSize, .accessibility3)
 }
 
 #Preview("编辑已停用任务 · 横屏") {
+    @Previewable @State var rewardInput = TaskTemplateRewardInput(draft: .new)
+    @Previewable @FocusState var rewardFocus: String?
     @Previewable @State var draft = TaskTemplateDraft(
         templateID: UUID(),
         title: "阅读 15 分钟",
@@ -250,6 +282,8 @@ private extension TaskTemplateEditorForm {
     NavigationStack {
         TaskTemplateEditorForm(
             draft: $draft,
+            rewardInput: $rewardInput,
+            rewardFocus: $rewardFocus,
             scheduledTime: $time,
             feedback: nil,
             onToggleWeekday: { _ in },
