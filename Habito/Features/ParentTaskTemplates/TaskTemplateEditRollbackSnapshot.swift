@@ -25,6 +25,8 @@ struct TaskTemplateEditRollbackSnapshot {
         let rewards = (template.xpReward, template.coinReward, template.activeBonusCoin)
         let recurrence = try rule.decodedRecurrence()
         let reminderMinutes = rule.timeOfDayMinutes
+        let plannedMinutes = rule.plannedTimeOfDayMinutes
+        let deadlineMinutes = rule.deadlineTimeOfDayMinutes
         let ruleEnabled = rule.isEnabled
         restoreTemplate = {
             template.title = title
@@ -41,6 +43,8 @@ struct TaskTemplateEditRollbackSnapshot {
             template.coinReward = rewards.1
             template.activeBonusCoin = rewards.2
             rule.update(recurrence: recurrence, timeOfDayMinutes: reminderMinutes, isEnabled: ruleEnabled)
+            rule.plannedTimeOfDayMinutes = plannedMinutes
+            rule.deadlineTimeOfDayMinutes = deadlineMinutes
         }
         let templateID = template.id
         let rows = try context.fetch(

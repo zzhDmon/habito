@@ -65,7 +65,9 @@ struct TaskTemplateEditingService {
             weekdays: recurrence.weekdays,
             isEnabled: template.isEnabled && rule.isEnabled,
             category: category, timePeriod: period, verificationType: verification,
-            xpReward: template.xpReward, coinReward: template.coinReward, activeBonusCoin: template.activeBonusCoin
+            xpReward: template.xpReward, coinReward: template.coinReward, activeBonusCoin: template.activeBonusCoin,
+            plannedTimeOfDayMinutes: rule.plannedTimeOfDayMinutes,
+            deadlineTimeOfDayMinutes: rule.deadlineTimeOfDayMinutes
         )
         try validate(draft)
         return draft
@@ -112,6 +114,9 @@ struct TaskTemplateEditingService {
                 apply(draft, title: title, to: template, revision: revision.partialValue, at: now)
                 rule.update(
                     recurrence: recurrence, timeOfDayMinutes: draft.timeOfDayMinutes, isEnabled: draft.isEnabled)
+                // nil 是家长明确清空；不能用可空绑定跳过赋值、从而留下旧配置。
+                rule.plannedTimeOfDayMinutes = draft.plannedTimeOfDayMinutes
+                rule.deadlineTimeOfDayMinutes = draft.deadlineTimeOfDayMinutes
                 try materializeAndSave(template, today: today, now: now)
                 return template.id
             } catch {
@@ -145,7 +150,9 @@ struct TaskTemplateEditingService {
             taskTemplateID: template.id,
             recurrence: recurrence,
             timeOfDayMinutes: draft.timeOfDayMinutes,
-            isEnabled: draft.isEnabled
+            isEnabled: draft.isEnabled,
+            plannedTimeOfDayMinutes: draft.plannedTimeOfDayMinutes,
+            deadlineTimeOfDayMinutes: draft.deadlineTimeOfDayMinutes
         )
         context.insert(template)
         context.insert(rule)
@@ -219,6 +226,11 @@ struct TaskTemplateEditingService {
         }
         guard (0..<24 * 60).contains(draft.timeOfDayMinutes) else {
             throw TaskTemplateEditorError.invalidTime
+        }
+        for value in [draft.plannedTimeOfDayMinutes, draft.deadlineTimeOfDayMinutes] {
+            if let value, !(0..<24 * 60).contains(value) {
+                throw TaskTemplateEditorError.invalidTime
+            }
         }
         guard draft.xpReward >= 0, draft.coinReward >= 0, draft.activeBonusCoin >= 0 else {
             throw TaskTemplateEditorError.invalidReward

@@ -23,6 +23,9 @@ struct TaskTemplateDraft: Equatable, Sendable {
     var coinReward: Int = 0
     /// 额外金币由提交快照的自主性决定，严格早于提醒才获得；不看系统实际送达。
     var activeBonusCoin: Int = 0
+    /// 未设置时保持 nil；计划与截止独立于原提醒，不由奖励或提醒自动补值。
+    var plannedTimeOfDayMinutes: Int? = nil
+    var deadlineTimeOfDayMinutes: Int? = nil
 
     static var new: TaskTemplateDraft {
         TaskTemplateDraft(

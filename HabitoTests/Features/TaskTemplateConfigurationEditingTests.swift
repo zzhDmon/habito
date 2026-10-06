@@ -255,6 +255,7 @@ struct TaskTemplateConfigurationEditingTests {
             let fixture = try Fixture(storeURL: url)
             let draft = try fixture.service.load(templateID: ids.template)
             #expect(draft.title == "磁盘新版" && draft.category == .growth && draft.timePeriod == .evening)
+            #expect(draft.plannedTimeOfDayMinutes == 600 && draft.deadlineTimeOfDayMinutes == nil)
             #expect(
                 draft.verificationType == .selfConfirm && draft.xpReward == 41 && draft.coinReward == 23
                     && draft.activeBonusCoin == 9)
@@ -272,7 +273,8 @@ struct TaskTemplateConfigurationEditingTests {
             #expect(ordinary.categorySnapshot == .growth && ordinary.timePeriodSnapshot == .evening)
             #expect(ordinary.verificationTypeSnapshot == .selfConfirm && ordinary.xpRewardSnapshot == 41)
             #expect(ordinary.coinRewardSnapshot == 23 && ordinary.activeBonusCoinSnapshot == 9)
-            #expect(ordinary.plannedAt == nil && ordinary.deadlineAt == nil)
+            #expect(ordinary.plannedAt == (try Date("2026-09-24T02:00:00Z", strategy: .iso8601)))
+            #expect(ordinary.deadlineAt == nil)
             let row = try #require(fixture.context.fetch(FetchDescriptor<TaskSubmission>()).first)
             #expect(
                 row.id == ids.submission && row.xpRewardSnapshot == 11 && row.coinRewardSnapshot == 7
@@ -292,7 +294,10 @@ struct TaskTemplateConfigurationEditingTests {
         template: UUID, audited: UUID, submission: UUID
     ) {
         let fixture = try Fixture(storeURL: url)
-        let id = try fixture.service.save(configuredDraft(), at: fixture.now)
+        var initial = configuredDraft()
+        initial.plannedTimeOfDayMinutes = 480
+        initial.deadlineTimeOfDayMinutes = 1320
+        let id = try fixture.service.save(initial, at: fixture.now)
         let template = try fixture.template()
         let today = try V0MigrationFixture.date("2026-09-23")
         let tomorrow = try V0MigrationFixture.date("2026-09-24")
@@ -328,6 +333,8 @@ struct TaskTemplateConfigurationEditingTests {
         changed.xpReward = 41
         changed.coinReward = 23
         changed.activeBonusCoin = 9
+        changed.plannedTimeOfDayMinutes = 600
+        changed.deadlineTimeOfDayMinutes = nil
         _ = try fixture.service.save(changed, at: fixture.now.addingTimeInterval(3))
         // 即使此次编辑只会触及普通未来实例，失败恢复也不能把冲正记录挂成当前完成。
         var failed = changed
@@ -403,6 +410,182 @@ struct TaskTemplateConfigurationEditingTests {
         #expect(!fixture.context.hasChanges)
         if kind != 0 { #expect(try fixture.occurrence().template?.id == originalID) }
         return originalID
+    }
+
+    @Test("正式草稿独立可空新建/回读/清空/重存保持身份和提醒", arguments: [nil, 0, 1439, 600] as [Int?], [nil, 0, 1439, 600] as [Int?])
+    func savesIndependentOptionalTimes(plan: Int?, deadline: Int?) throws {
+        let fixture = try Fixture()
+        var draft = configuredDraft()
+        draft.plannedTimeOfDayMinutes = plan
+        draft.deadlineTimeOfDayMinutes = deadline
+        let id = try fixture.service.save(draft, at: fixture.now)
+        var loaded = try fixture.service.load(templateID: id)
+        #expect(loaded.plannedTimeOfDayMinutes == plan && loaded.deadlineTimeOfDayMinutes == deadline)
+        let row = try fixture.occurrence()
+        let originalID = row.id
+        let scheduledAt = row.scheduledAt
+        for (minutes, value) in [(plan, row.plannedAt), (deadline, row.deadlineAt)] {
+            if let minutes {
+                var calendar = fixture.calendar
+                calendar.timeZone = fixture.timeZone
+                let components = calendar.dateComponents([.hour, .minute], from: try #require(value))
+                #expect(components.hour == minutes / 60 && components.minute == minutes % 60)
+            } else {
+                #expect(value == nil)
+            }
+        }
+        loaded.title = "只改标题保留时间"
+        _ = try fixture.service.save(loaded, at: fixture.now.addingTimeInterval(1))
+        #expect(try fixture.service.load(templateID: id) == loaded)
+        loaded.plannedTimeOfDayMinutes = nil
+        loaded.deadlineTimeOfDayMinutes = nil
+        _ = try fixture.service.save(loaded, at: fixture.now.addingTimeInterval(2))
+        #expect(try fixture.service.load(templateID: id) == loaded)
+        #expect(row.id == originalID && row.plannedAt == nil && row.deadlineAt == nil && row.scheduledAt == scheduledAt)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<XPTransaction>()) == 0)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<CoinTransaction>()) == 0)
+        #expect(!fixture.context.hasChanges)
+    }
+
+    @Test("坏可空分钟在任何新建或修改前拒绝", arguments: [-1, 1440, Int.min, Int.max], [0, 1, 2, 3])
+    func rejectsInvalidOptionalDraftBeforeWrite(value: Int, kind: Int) throws {
+        let fixture = try Fixture()
+        var draft = configuredDraft()
+        if kind >= 2 {
+            let id = try fixture.service.save(draft, at: fixture.now)
+            draft = try fixture.service.load(templateID: id)
+        }
+        if kind.isMultiple(of: 2) {
+            draft.plannedTimeOfDayMinutes = value
+        } else {
+            draft.deadlineTimeOfDayMinutes = value
+        }
+        #expect(throws: TaskTemplateEditorError.invalidTime) { try fixture.service.save(draft, at: fixture.now) }
+        #expect(try fixture.context.fetchCount(FetchDescriptor<TaskTemplate>()) == (kind >= 2 ? 1 : 0))
+        if kind >= 2 {
+            let template = try fixture.template()
+            #expect(template.revision == 1)
+            #expect(
+                template.reminderRule?.plannedTimeOfDayMinutes == nil
+                    && template.reminderRule?.deadlineTimeOfDayMinutes == nil)
+            #expect(try fixture.occurrence().plannedAt == nil && fixture.occurrence().deadlineAt == nil)
+        }
+        #expect(!fixture.context.hasChanges)
+    }
+
+    @Test("坏可空存储不可加载或被清空草稿洗白", arguments: [-1, 1440, Int.min, Int.max], [false, true])
+    func corruptOptionalRuleCannotBeOverwritten(value: Int, isDeadline: Bool) throws {
+        let fixture = try Fixture()
+        let id = try fixture.service.save(configuredDraft(), at: fixture.now)
+        let valid = try fixture.service.load(templateID: id)
+        let template = try fixture.template()
+        let rule = try #require(template.reminderRule)
+        if isDeadline { rule.deadlineTimeOfDayMinutes = value } else { rule.plannedTimeOfDayMinutes = value }
+        try fixture.context.save()
+        #expect(throws: TaskTemplateEditorError.invalidTime) { try fixture.service.load(templateID: id) }
+        #expect(throws: TaskTemplateEditorError.invalidTime) { try fixture.service.save(valid, at: fixture.now) }
+        #expect((isDeadline ? rule.deadlineTimeOfDayMinutes : rule.plannedTimeOfDayMinutes) == value)
+        #expect(template.revision == 1 && !fixture.context.hasChanges)
+    }
+
+    @Test("可空时间新建/设置/修改/清空失败恢复规则与实例，磁盘两次重开无半写", arguments: [0, 1, 2, 3], [false, true])
+    func failedOptionalTimeTransactionRestoresBothLayers(kind: Int, disk: Bool) throws {
+        let url: URL? = disk ? try V0MigrationFixture.temporaryStoreURL() : nil
+        let fixture = try Fixture(storeURL: url)
+        var original = configuredDraft()
+        if kind >= 2 {
+            original.plannedTimeOfDayMinutes = 480
+            original.deadlineTimeOfDayMinutes = 1320
+        }
+        var id: UUID?
+        var occurrenceID: UUID?
+        var originalPlan: Date?
+        var originalDeadline: Date?
+        if kind != 0 {
+            id = try fixture.service.save(original, at: fixture.now)
+            original = try fixture.service.load(templateID: #require(id))
+            let row = try fixture.occurrence()
+            occurrenceID = row.id
+            originalPlan = row.plannedAt
+            originalDeadline = row.deadlineAt
+        }
+        var changed = original
+        changed.title = "不能半保存时间"
+        changed.plannedTimeOfDayMinutes = kind == 3 ? nil : 600
+        changed.deadlineTimeOfDayMinutes = kind == 3 ? nil : 1200
+        var attempts = 0
+        let failing = fixture.makeService { context in
+            attempts += 1
+            let template = try #require(context.fetch(FetchDescriptor<TaskTemplate>()).first)
+            let rule = try #require(template.reminderRule)
+            #expect(rule.plannedTimeOfDayMinutes == changed.plannedTimeOfDayMinutes)
+            #expect(rule.deadlineTimeOfDayMinutes == changed.deadlineTimeOfDayMinutes)
+            throw saveFailure
+        }
+        #expect(throws: saveFailure) { try failing.save(changed, at: fixture.now.addingTimeInterval(1)) }
+        #expect(attempts == 1 && !fixture.context.hasChanges)
+        if let id {
+            #expect(try fixture.service.load(templateID: id) == original)
+            let row = try fixture.occurrence()
+            #expect(row.id == occurrenceID && row.plannedAt == originalPlan && row.deadlineAt == originalDeadline)
+        } else {
+            #expect(try fixture.context.fetchCount(FetchDescriptor<TaskTemplate>()) == 0)
+            #expect(try fixture.context.fetchCount(FetchDescriptor<ReminderRule>()) == 0)
+            #expect(try fixture.context.fetchCount(FetchDescriptor<TaskOccurrence>()) == 0)
+        }
+        if let url {
+            for _ in 0..<2 {
+                let reopened = try Fixture(storeURL: url)
+                if let id {
+                    #expect(try reopened.service.load(templateID: id) == original)
+                    let row = try reopened.occurrence()
+                    #expect(
+                        row.id == occurrenceID && row.plannedAt == originalPlan && row.deadlineAt == originalDeadline)
+                } else {
+                    #expect(try reopened.context.fetchCount(FetchDescriptor<TaskTemplate>()) == 0)
+                }
+                #expect(!reopened.context.hasChanges)
+            }
+        }
+        // 验证失败可重试，不以恢复后的缓存状态冒充成功保存。
+        _ = try fixture.service.save(changed, at: fixture.now.addingTimeInterval(2))
+        let saved = try fixture.service.load(templateID: fixture.template().id)
+        #expect(saved.plannedTimeOfDayMinutes == changed.plannedTimeOfDayMinutes)
+        #expect(saved.deadlineTimeOfDayMinutes == changed.deadlineTimeOfDayMinutes)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<XPTransaction>()) == 0)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<CoinTransaction>()) == 0)
+    }
+
+    @Test("正式非空时间创建/清空经过两次磁盘重开仍可回读", arguments: [false, true])
+    func optionalTimesSurviveSavedDiskReopen(clearing: Bool) throws {
+        let url = try V0MigrationFixture.temporaryStoreURL()
+        let id = try seedOptionalTimeStore(at: url, clearing: clearing)
+        for _ in 0..<2 {
+            let fixture = try Fixture(storeURL: url)
+            let draft = try fixture.service.load(templateID: id)
+            let row = try fixture.occurrence()
+            #expect(draft.plannedTimeOfDayMinutes == (clearing ? nil : 0))
+            #expect(draft.deadlineTimeOfDayMinutes == (clearing ? nil : 1439))
+            #expect(row.plannedAt == (clearing ? nil : try Date("2026-09-22T16:00:00Z", strategy: .iso8601)))
+            #expect(row.deadlineAt == (clearing ? nil : try Date("2026-09-23T15:59:00Z", strategy: .iso8601)))
+            #expect(row.sourceRevision == (clearing ? 2 : 1) && !fixture.context.hasChanges)
+        }
+    }
+
+    /// 合成库通过正式编辑事务写入；只返回 ID，下一阶段不能复用旧容器模型。
+    private func seedOptionalTimeStore(at url: URL, clearing: Bool) throws -> UUID {
+        let fixture = try Fixture(storeURL: url)
+        var draft = configuredDraft()
+        draft.plannedTimeOfDayMinutes = 0
+        draft.deadlineTimeOfDayMinutes = 1439
+        let id = try fixture.service.save(draft, at: fixture.now)
+        if clearing {
+            draft = try fixture.service.load(templateID: id)
+            draft.plannedTimeOfDayMinutes = nil
+            draft.deadlineTimeOfDayMinutes = nil
+            _ = try fixture.service.save(draft, at: fixture.now.addingTimeInterval(1))
+        }
+        return id
     }
 
     private var saveFailure: NSError { NSError(domain: "HabitoConfigurationEditingTests", code: 1) }

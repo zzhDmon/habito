@@ -116,6 +116,52 @@ struct TaskTemplateEditorViewModelTests {
         #expect(try fixture.context.fetchCount(FetchDescriptor<XPTransaction>()) == 0)
     }
 
+    @Test("编辑页面状态保存/回读可空分钟，重复加载不覆盖未保存输入", arguments: [false, true])
+    func viewModelKeepsOptionalTimeDraft(isDeadline: Bool) async throws {
+        let fixture = try makeFixture()
+        fixture.model.load()
+        fixture.model.draft.title = "可空时间"
+        fixture.model.draft.plannedTimeOfDayMinutes = isDeadline ? nil : 480
+        fixture.model.draft.deadlineTimeOfDayMinutes = isDeadline ? 1320 : nil
+        #expect(await fixture.model.save() == .saved)
+        let template = try #require(fixture.context.fetch(FetchDescriptor<TaskTemplate>()).first)
+        let editing = try makeFixture(context: fixture.context, templateID: template.id)
+        editing.model.load()
+        #expect(editing.model.draft.plannedTimeOfDayMinutes == fixture.model.draft.plannedTimeOfDayMinutes)
+        #expect(editing.model.draft.deadlineTimeOfDayMinutes == fixture.model.draft.deadlineTimeOfDayMinutes)
+        editing.model.draft.plannedTimeOfDayMinutes = 600
+        editing.model.load()
+        #expect(editing.model.draft.plannedTimeOfDayMinutes == 600)
+        editing.model.draft.plannedTimeOfDayMinutes = nil
+        editing.model.draft.deadlineTimeOfDayMinutes = nil
+        #expect(await editing.model.save() == .saved)
+        let row = try #require(fixture.context.fetch(FetchDescriptor<TaskOccurrence>()).first)
+        #expect(row.plannedAt == nil && row.deadlineAt == nil)
+        #expect(
+            template.reminderRule?.plannedTimeOfDayMinutes == nil
+                && template.reminderRule?.deadlineTimeOfDayMinutes == nil)
+    }
+
+    @Test("编辑页面坏可空分钟保留输入且不请求权限或重建", arguments: [-1, 1440], [false, true])
+    func invalidOptionalDraftCannotSaveOrTrigger(value: Int, isDeadline: Bool) async throws {
+        let fixture = try makeFixture()
+        fixture.model.load()
+        fixture.model.draft.title = "不能保存坏时间"
+        if isDeadline {
+            fixture.model.draft.deadlineTimeOfDayMinutes = value
+        } else {
+            fixture.model.draft.plannedTimeOfDayMinutes = value
+        }
+        #expect(await fixture.model.save() == .failed)
+        #expect(fixture.model.feedback == .validation(.invalidTime))
+        #expect(
+            (isDeadline ? fixture.model.draft.deadlineTimeOfDayMinutes : fixture.model.draft.plannedTimeOfDayMinutes)
+                == value)
+        #expect(
+            fixture.provider.requestCount == 0 && fixture.rebuildTrigger.revision == 0 && !fixture.context.hasChanges)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<TaskTemplate>()) == 0)
+    }
+
     @Test("尚未加载不能保存，加载后可正常创建")
     func saveBeforeLoadCannotCreateTemplate() async throws {
         let fixture = try makeFixture()
