@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AB1000000000000000000152 /* TodayRewardState.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000152 /* TodayRewardState.swift */; };
+		AB1000000000000000000153 /* TodayRewardStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000153 /* TodayRewardStateTests.swift */; };
 		AB1000000000000000000151 /* TaskSessionFeedbackMotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000151 /* TaskSessionFeedbackMotion.swift */; };
 		AB1000000000000000000150 /* TaskSessionFeedbackCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000150 /* TaskSessionFeedbackCard.swift */; };
 		AB1000000000000000000145 /* TaskSessionFeedbackTone.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000145 /* TaskSessionFeedbackTone.swift */; };
@@ -390,6 +392,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AB2000000000000000000152 /* TodayRewardState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TodayRewardState.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000153 /* TodayRewardStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TodayRewardStateTests.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000151 /* TaskSessionFeedbackMotion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskSessionFeedbackMotion.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000150 /* TaskSessionFeedbackCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskSessionFeedbackCard.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000145 /* TaskSessionFeedbackTone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskSessionFeedbackTone.swift"; sourceTree = "<group>"; };
@@ -1268,6 +1272,7 @@
 				J20000000000000000000005 /* TodayTaskQueryService.swift */,
 				J20000000000000000000003 /* TodayTasksSnapshot.swift */,
 				K20000000000000000000004 /* TodayViewState.swift */,
+				AB2000000000000000000152 /* TodayRewardState.swift */,
 				K20000000000000000000005 /* TodayViewModel.swift */,
 			);
 			path = Today;
@@ -1304,6 +1309,7 @@
 				J20000000000000000000006 /* TodayQueryFixture.swift */,
 				J20000000000000000000007 /* TodayTaskQueryServiceTests.swift */,
 				L20000000000000000000002 /* TodayViewModelTests.swift */,
+				AB2000000000000000000153 /* TodayRewardStateTests.swift */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -1843,6 +1849,7 @@
 				J10000000000000000000005 /* TodayTaskQueryService.swift in Sources */,
 				J10000000000000000000003 /* TodayTasksSnapshot.swift in Sources */,
 				K10000000000000000000004 /* TodayViewState.swift in Sources */,
+				AB1000000000000000000152 /* TodayRewardState.swift in Sources */,
 				K10000000000000000000005 /* TodayViewModel.swift in Sources */,
 				C10000000000000000000003 /* Weekday.swift in Sources */,
 				A10000000000000000000004 /* AppModelContainer.swift in Sources */,
@@ -2004,6 +2011,7 @@
 				J10000000000000000000006 /* TodayQueryFixture.swift in Sources */,
 				J10000000000000000000007 /* TodayTaskQueryServiceTests.swift in Sources */,
 				L10000000000000000000002 /* TodayViewModelTests.swift in Sources */,
+				AB1000000000000000000153 /* TodayRewardStateTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
