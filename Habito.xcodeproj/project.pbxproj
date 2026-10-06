@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AB1000000000000000000166 /* KidTaskTimingPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000166 /* KidTaskTimingPresentation.swift */; };
+		AB1000000000000000000167 /* KidTaskTimingDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000167 /* KidTaskTimingDetails.swift */; };
+		AB1000000000000000000168 /* KidTaskTimingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000168 /* KidTaskTimingView.swift */; };
 		AB1000000000000000000165 /* TaskTemplateTimeSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000165 /* TaskTemplateTimeSection.swift */; };
 		AB1000000000000000000163 /* TaskTimingSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000163 /* TaskTimingSnapshot.swift */; };
 		AB1000000000000000000164 /* TodayTaskTimingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000164 /* TodayTaskTimingTests.swift */; };
@@ -404,6 +407,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AB2000000000000000000166 /* KidTaskTimingPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidTaskTimingPresentation.swift; sourceTree = "<group>"; };
+		AB2000000000000000000167 /* KidTaskTimingDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidTaskTimingDetails.swift; sourceTree = "<group>"; };
+		AB2000000000000000000168 /* KidTaskTimingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidTaskTimingView.swift; sourceTree = "<group>"; };
 		AB2000000000000000000165 /* TaskTemplateTimeSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskTemplateTimeSection.swift; sourceTree = "<group>"; };
 		AB2000000000000000000163 /* TaskTimingSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskTimingSnapshot.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000164 /* TodayTaskTimingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TodayTaskTimingTests.swift"; sourceTree = "<group>"; };
@@ -1118,6 +1124,7 @@
 		I50000000000000000000002 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				AB5000000000000000000166 /* TaskTiming */,
 				N50000000000000000000001 /* Accessibility */,
 				I50000000000000000000003 /* Layout */,
 			);
@@ -1130,6 +1137,16 @@
 				I20000000000000000000002 /* AdaptiveTwoColumnLayout.swift */,
 			);
 			path = Layout;
+			sourceTree = "<group>";
+		};
+		AB5000000000000000000166 /* TaskTiming */ = {
+			isa = PBXGroup;
+			children = (
+				AB2000000000000000000166 /* KidTaskTimingPresentation.swift */,
+				AB2000000000000000000167 /* KidTaskTimingDetails.swift */,
+				AB2000000000000000000168 /* KidTaskTimingView.swift */,
+			);
+			path = TaskTiming;
 			sourceTree = "<group>";
 		};
 		N50000000000000000000001 /* Accessibility */ = {
@@ -1817,6 +1834,9 @@
 				T10000000000000000000008 /* TaskTemplateEditorView.swift in Sources */,
 				T10000000000000000000009 /* TaskTemplateEditorForm.swift in Sources */,
 				AB1000000000000000000165 /* TaskTemplateTimeSection.swift in Sources */,
+				AB1000000000000000000166 /* KidTaskTimingPresentation.swift in Sources */,
+				AB1000000000000000000167 /* KidTaskTimingDetails.swift in Sources */,
+				AB1000000000000000000168 /* KidTaskTimingView.swift in Sources */,
 				T10000000000000000000006 /* TaskTemplateEditorViewModel.swift in Sources */,
 				T10000000000000000000007 /* TaskTemplateEditorViewModelFactory.swift in Sources */,
 				Y10000000000000000000005 /* TaskTemplateSaveOutcome.swift in Sources */,

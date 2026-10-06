@@ -59,6 +59,7 @@ struct RootView: View {
             KidTodayView(
                 state: todayModel.state,
                 rewardState: todayModel.rewardState,
+                makeTimingPresentation: todayModel.makeTimingPresentation,
                 onSelectTask: showTask,
                 onRetry: loadToday,
                 onRetryRewards: todayModel.loadRewards

@@ -867,13 +867,57 @@
         }
       }
     },
+    "kidTask.reminderTimeText" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "提醒时间 %@"
+          }
+        }
+      }
+    },
+    "kidTask.plannedTimeText" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "计划时间 %@"
+          }
+        }
+      }
+    },
+    "kidTask.deadlineTimeText" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "截止时间 %@"
+          }
+        }
+      }
+    },
+    "kidTask.deadlinePassedHint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "过了截止时间，仍可完成"
+          }
+        }
+      }
+    },
     "kidTask.statusCarryOver" : {
       "extractionState" : "manual",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "昨日任务仍在进行"
+            "value" : "之前的任务还在做"
           }
         }
       }

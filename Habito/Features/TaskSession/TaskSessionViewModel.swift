@@ -107,6 +107,11 @@ final class TaskSessionViewModel {
         dateProvider.now()
     }
 
+    /// 时间展示和计时共享注入时钟，但不会改变完成权限、通知或奖励事实。
+    func makeTimingPresentation(for task: KidTaskNavigationItem) -> KidTaskTimingPresentation {
+        KidTaskTimingPresentation(task: task, at: dateProvider.now())
+    }
+
     /// 根据当前页面状态执行开始或继续；运行中重复触发不会创建第二个会话。
     func startOrResume() {
         guard case let .loaded(content) = state else { return }
@@ -243,7 +248,9 @@ final class TaskSessionViewModel {
             reconcileFeedback(with: item)
             state = .loaded(
                 TaskSessionScreenContent(
-                    task: KidTaskNavigationItem(item: item, calendar: calendar),
+                    task: KidTaskNavigationItem(
+                        item: item, calendar: calendar,
+                        referenceDate: try LocalDate(date: now, calendar: calendar, timeZone: calendar.timeZone)),
                     targetDurationSeconds: item.targetDurationSeconds,
                     activeSessionState: item.activeSessionState,
                     activeDurationAtSnapshot: item.activeDurationSeconds,

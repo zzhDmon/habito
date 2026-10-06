@@ -59,20 +59,21 @@ struct TodayViewModelTests {
         #expect(model.state == .failed)
     }
 
-    @Test("跨日进行中任务显示明确状态且仍可进入原实例")
-    func carryOverTaskBuildsRecoverablePresentation() throws {
+    @Test("一日前或两日前进行中任务显示通用状态且仍可进入原实例", arguments: [1, 2])
+    func carryOverTaskBuildsRecoverablePresentation(days: Int) throws {
         let fixture = try TodayQueryFixture()
+        let earlier = fixture.now.addingTimeInterval(-Double(days) * 86400)
         let occurrence = fixture.makeOccurrence(
-            title: "昨日练字",
-            scheduledAt: try instant("2026-09-22T11:30:00Z"),
+            title: "之前的练字",
+            scheduledAt: earlier,
             status: .inProgress,
-            date: try LocalDate(dateKey: "2026-09-22")
+            date: try LocalDate(date: earlier, calendar: fixture.calendar, timeZone: fixture.timeZone)
         )
         fixture.addSession(
             to: occurrence,
             state: .paused,
-            startedAt: try instant("2026-09-22T11:30:00Z"),
-            lastResumedAt: try instant("2026-09-22T11:30:00Z"),
+            startedAt: earlier,
+            lastResumedAt: earlier,
             accumulatedSeconds: 300
         )
         try fixture.context.save()
@@ -88,7 +89,7 @@ struct TodayViewModelTests {
         let content = try loadedContent(from: model.state)
         #expect(!content.isEmpty)
         #expect(content.recommendedTask?.id == occurrence.id)
-        #expect(content.recommendedTask?.statusText == "昨日任务仍在进行")
+        #expect(content.recommendedTask?.statusText == "之前的任务还在做")
         #expect(content.completedCount == 0)
         #expect(content.totalCount == 0)
         #expect(!content.isAllCompleted)

@@ -5,6 +5,18 @@ import Testing
 @MainActor
 @Suite("儿童时间段展示原生渲染")
 struct KidTodayTaskGroupRenderingTests {
+    @Test("旧 nil 或三种时间提示在普通和最大字号均可原生渲染", arguments: [false, true], [false, true])
+    func timingDetailsRenderAtBothTextSizes(threeTimes: Bool, large: Bool) throws {
+        let task: KidTaskNavigationItem = threeTimes ? .previewThreeTimes : .previewReading
+        let renderer = ImageRenderer(
+            content: KidTaskTimingDetails(presentation: .preview(for: task))
+                .environment(\.dynamicTypeSize, large ? .accessibility5 : .large)
+                .frame(width: 320))
+        renderer.scale = 1
+        let image = try #require(renderer.cgImage)
+        #expect(image.width == 320 && image.height > 0)
+    }
+
     @Test("四时段与跨日在普通和最大字号均可渲染", arguments: TodayTaskGroupKind.displayOrder, [false, true])
     func groupsRenderAtBothTextSizes(kind: TodayTaskGroupKind, large: Bool) throws {
         let period: TaskTimePeriod
@@ -18,9 +30,13 @@ struct KidTodayTaskGroupRenderingTests {
             status: .inProgress, statusText: String(localized: "kidTask.statusInProgress"),
             statusIconName: "play.circle.fill", timePeriod: period, isCarryOver: kind == .carryOver)
         let renderer = ImageRenderer(
-            content: KidTodayTaskGroupView(group: TodayTaskGroup(id: kind, tasks: [task]), onSelectTask: { _ in })
-                .environment(\.dynamicTypeSize, large ? .accessibility5 : .large)
-                .frame(width: 320))
+            content: VStack(alignment: .leading, spacing: HabitoDesign.Spacing.small) {
+                KidTodayTaskGroupView(
+                    group: TodayTaskGroup(id: kind, tasks: [task]),
+                    makeTimingPresentation: KidTaskTimingPresentation.preview, onSelectTask: { _ in })
+            }
+            .environment(\.dynamicTypeSize, large ? .accessibility5 : .large)
+            .frame(width: 320))
         renderer.scale = 1
         let image = try #require(renderer.cgImage)
         #expect(image.width == 320 && image.height > 0)

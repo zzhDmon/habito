@@ -91,6 +91,22 @@ nonisolated enum HabitoAccessibilityID {
         "kid.today.task.\(id.uuidString.lowercased())"
     }
 
+    static func taskReminderTime(_ id: UUID) -> String {
+        "kid.timing.reminder.\(id.uuidString.lowercased())"
+    }
+
+    static func taskPlannedTime(_ id: UUID) -> String {
+        "kid.timing.planned.\(id.uuidString.lowercased())"
+    }
+
+    static func taskDeadlineTime(_ id: UUID) -> String {
+        "kid.timing.deadline.\(id.uuidString.lowercased())"
+    }
+
+    static func taskDeadlineHint(_ id: UUID) -> String {
+        "kid.timing.hint.\(id.uuidString.lowercased())"
+    }
+
     /// 标题身份来自显式语义组，不依赖译文、提醒小时或遍历序号。
     static func todayTaskGroupTitle(_ kind: TodayTaskGroupKind) -> String {
         switch kind {

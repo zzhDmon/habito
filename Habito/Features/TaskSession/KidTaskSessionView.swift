@@ -28,6 +28,7 @@ struct KidTaskSessionView: View {
                     onComplete: model.completeTask,
                     onUndoCompletion: model.undoCompletion,
                     currentDate: model.currentDate,
+                    makeTimingPresentation: model.makeTimingPresentation,
                     completionFeedback: model.completionFeedback,
                     onDismissCompletionFeedback: model.dismissCompletionFeedback
                 )

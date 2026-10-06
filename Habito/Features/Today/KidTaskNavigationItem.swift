@@ -105,6 +105,16 @@ struct KidTaskNavigationItem: Hashable, Identifiable, Sendable {
 }
 
 extension KidTaskNavigationItem {
+    /// 三时间预览使用固定绝对日期，提示可见但不会创建任务或触发奖励。
+    static let previewThreeTimes = KidTaskNavigationItem(
+        id: UUID(), title: String(localized: "kidTask.previewTitle"), iconName: "book.fill",
+        scheduledTimeText: "19:30", targetDurationText: String(localized: "kidTask.previewDuration"),
+        status: .pending, statusText: String(localized: "kidTask.statusPending"),
+        statusIconName: HabitoDesign.Symbol.pending, plannedTimeText: "08:15", deadlineTimeText: "09:20",
+        timing: TaskTimingSnapshot(
+            plannedAt: Date(timeIntervalSinceReferenceDate: -3600),
+            deadlineAt: Date(timeIntervalSinceReferenceDate: -1), canShowDeadlineHint: true))
+
     /// 只供 Preview 使用，不会写入正式数据容器。
     static let previewReading = KidTaskNavigationItem(
         id: UUID(),

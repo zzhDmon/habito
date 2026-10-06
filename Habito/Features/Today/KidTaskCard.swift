@@ -3,6 +3,7 @@ import SwiftUI
 /// 今日页中的儿童友好任务大卡。
 struct KidTaskCard: View {
     let task: KidTaskNavigationItem
+    let makeTimingPresentation: @MainActor () -> KidTaskTimingPresentation
     let action: () -> Void
 
     var body: some View {
@@ -28,7 +29,7 @@ struct KidTaskCard: View {
                     Spacer(minLength: HabitoDesign.Spacing.small)
                 }
 
-                LabeledContent("kidTask.scheduleLabel", value: task.scheduledTimeText)
+                KidTaskTimingView(makePresentation: makeTimingPresentation)
                 LabeledContent("kidTask.durationLabel", value: task.targetDurationText)
 
                 Label("kidToday.openTask", systemImage: "arrow.right.circle.fill")
@@ -52,6 +53,16 @@ struct KidTaskCard: View {
 }
 
 #Preview("任务大卡") {
-    KidTaskCard(task: .previewReading, action: {})
-        .padding()
+    KidTaskCard(
+        task: .previewReading, makeTimingPresentation: { .preview(for: .previewReading) }, action: {}
+    )
+    .padding()
+}
+
+#Preview("任务大卡 · 三时间最大字号") {
+    KidTaskCard(
+        task: .previewThreeTimes, makeTimingPresentation: { .preview(for: .previewThreeTimes) }, action: {}
+    )
+    .padding()
+    .environment(\.dynamicTypeSize, .accessibility5)
 }

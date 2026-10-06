@@ -3,6 +3,7 @@ import SwiftUI
 /// 今日任务的独立状态区域，不以资产加载是否成功决定任务能否查看。
 struct KidTodayTaskContent: View {
     let state: TodayViewState
+    let makeTimingPresentation: @MainActor (KidTaskNavigationItem) -> KidTaskTimingPresentation
     let onSelectTask: (KidTaskNavigationItem) -> Void
     let onRetry: () -> Void
 
@@ -19,7 +20,8 @@ struct KidTodayTaskContent: View {
                 "kidToday.completedTitle", systemImage: HabitoDesign.Symbol.completed,
                 description: Text("kidToday.completedDescription"))
         case let .loaded(content):
-            KidTodayLoadedView(content: content, onSelectTask: onSelectTask)
+            KidTodayLoadedView(
+                content: content, makeTimingPresentation: makeTimingPresentation, onSelectTask: onSelectTask)
         case .failed:
             ContentUnavailableView {
                 Label("kidToday.errorTitle", systemImage: "exclamationmark.triangle.fill")
@@ -34,11 +36,16 @@ struct KidTodayTaskContent: View {
 }
 
 #Preview("任务区 · 正常") {
-    KidTodayTaskContent(state: .loaded(.preview), onSelectTask: { _ in }, onRetry: {}).padding()
+    KidTodayTaskContent(
+        state: .loaded(.preview), makeTimingPresentation: KidTaskTimingPresentation.preview, onSelectTask: { _ in },
+        onRetry: {}
+    ).padding()
 }
 
 #Preview("任务区 · 错误大字") {
-    KidTodayTaskContent(state: .failed, onSelectTask: { _ in }, onRetry: {})
-        .padding()
-        .environment(\.dynamicTypeSize, .accessibility5)
+    KidTodayTaskContent(
+        state: .failed, makeTimingPresentation: KidTaskTimingPresentation.preview, onSelectTask: { _ in }, onRetry: {}
+    )
+    .padding()
+    .environment(\.dynamicTypeSize, .accessibility5)
 }

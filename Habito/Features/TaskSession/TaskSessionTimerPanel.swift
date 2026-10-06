@@ -41,7 +41,6 @@ struct TaskSessionTimerPanel: View {
                 )
 
             LabeledContent("kidTask.goalTitle", value: content.task.targetDurationText)
-            LabeledContent("kidTask.scheduleLabel", value: content.task.scheduledTimeText)
 
             if let submission = content.submission, submission.state == .waiting || submission.state == .returned {
                 TaskSubmissionStatusView(submission: submission)

@@ -37,6 +37,11 @@ final class TodayViewModel {
         self.calendar.timeZone = timeZone
     }
 
+    /// 前台刷新只读取注入时钟，不重新查询或修改任务与账本。
+    func makeTimingPresentation(for task: KidTaskNavigationItem) -> KidTaskTimingPresentation {
+        KidTaskTimingPresentation(task: task, at: dateProvider.now())
+    }
+
     /// 重新读取今天的实例。失败时保留明确页面状态，并记录不含孩子隐私的错误类型。
     func load() {
         state = .loading

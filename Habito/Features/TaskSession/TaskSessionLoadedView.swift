@@ -10,6 +10,7 @@ struct TaskSessionLoadedView: View {
     let onComplete: () -> Void
     let onUndoCompletion: () -> Void
     let currentDate: () -> Date
+    let makeTimingPresentation: @MainActor (KidTaskNavigationItem) -> KidTaskTimingPresentation
     let completionFeedback: TaskSessionCompletionFeedback?
     let onDismissCompletionFeedback: () -> Void
 
@@ -17,6 +18,7 @@ struct TaskSessionLoadedView: View {
         content: TaskSessionScreenContent, snoozeState: TaskSnoozeState, onStartOrResume: @escaping () -> Void,
         onPause: @escaping () -> Void, onSnooze: @escaping () async -> Void, onComplete: @escaping () -> Void,
         onUndoCompletion: @escaping () -> Void, currentDate: @escaping () -> Date,
+        makeTimingPresentation: @escaping @MainActor (KidTaskNavigationItem) -> KidTaskTimingPresentation,
         completionFeedback: TaskSessionCompletionFeedback? = nil, onDismissCompletionFeedback: @escaping () -> Void = {}
     ) {
         self.content = content
@@ -27,6 +29,7 @@ struct TaskSessionLoadedView: View {
         self.onComplete = onComplete
         self.onUndoCompletion = onUndoCompletion
         self.currentDate = currentDate
+        self.makeTimingPresentation = makeTimingPresentation
         self.completionFeedback = completionFeedback
         self.onDismissCompletionFeedback = onDismissCompletionFeedback
     }
@@ -34,7 +37,8 @@ struct TaskSessionLoadedView: View {
     var body: some View {
         AdaptiveTwoColumnLayout {
             VStack(alignment: .leading, spacing: HabitoDesign.Spacing.large) {
-                TaskSessionIdentityPanel(task: content.task)
+                TaskSessionIdentityPanel(
+                    task: content.task, makeTimingPresentation: { makeTimingPresentation(content.task) })
                 if let completionFeedback {
                     TaskSessionResultFeedbackView(feedback: completionFeedback, onDismiss: onDismissCompletionFeedback)
                         // 新保存事件才拥有新的视觉状态；原事件的刷新不重置入场效果。
@@ -62,7 +66,8 @@ struct TaskSessionLoadedView: View {
 #Preview("任务执行 · 等待确认 · 横屏") {
     TaskSessionLoadedView(
         content: .previewReview(.waiting), snoozeState: .idle,
-        onStartOrResume: {}, onPause: {}, onSnooze: {}, onComplete: {}, onUndoCompletion: {}, currentDate: { .now }
+        onStartOrResume: {}, onPause: {}, onSnooze: {}, onComplete: {}, onUndoCompletion: {}, currentDate: { .now },
+        makeTimingPresentation: KidTaskTimingPresentation.preview
     )
     .frame(width: 1_194, height: 834)
 }
@@ -70,7 +75,8 @@ struct TaskSessionLoadedView: View {
 #Preview("任务执行 · 退回 · 辅助大字") {
     TaskSessionLoadedView(
         content: .previewReview(.returned), snoozeState: .idle,
-        onStartOrResume: {}, onPause: {}, onSnooze: {}, onComplete: {}, onUndoCompletion: {}, currentDate: { .now }
+        onStartOrResume: {}, onPause: {}, onSnooze: {}, onComplete: {}, onUndoCompletion: {}, currentDate: { .now },
+        makeTimingPresentation: KidTaskTimingPresentation.preview
     )
     .environment(\.dynamicTypeSize, .accessibility3)
     .frame(width: 1_194, height: 834)
@@ -119,7 +125,7 @@ private extension TaskSessionScreenContent {
             onSnooze: {},
             onComplete: {},
             onUndoCompletion: {},
-            currentDate: { .now }
+            currentDate: { .now }, makeTimingPresentation: KidTaskTimingPresentation.preview
         )
         .navigationTitle("kidTask.navigationTitle")
     }
@@ -148,7 +154,7 @@ private extension TaskSessionScreenContent {
             onSnooze: {},
             onComplete: {},
             onUndoCompletion: {},
-            currentDate: { .now }
+            currentDate: { .now }, makeTimingPresentation: KidTaskTimingPresentation.preview
         )
         .navigationTitle("kidTask.navigationTitle")
     }

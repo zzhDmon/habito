@@ -3,6 +3,7 @@ import SwiftUI
 /// 今日任务成功加载后的推荐卡与其余任务；布局和进度由今日页统一承载。
 struct KidTodayLoadedView: View {
     let content: TodayScreenContent
+    let makeTimingPresentation: @MainActor (KidTaskNavigationItem) -> KidTaskTimingPresentation
     let onSelectTask: (KidTaskNavigationItem) -> Void
 
     var body: some View {
@@ -11,7 +12,8 @@ struct KidTodayLoadedView: View {
                 Label("kidToday.nowLabel", systemImage: "sparkles")
                     .font(.title2)
                     .bold()
-                KidTaskCard(task: recommendedTask) {
+                KidTaskCard(task: recommendedTask, makeTimingPresentation: { makeTimingPresentation(recommendedTask) })
+                {
                     onSelectTask(recommendedTask)
                 }
             }
@@ -22,9 +24,12 @@ struct KidTodayLoadedView: View {
                     .bold()
                     .padding(.top, HabitoDesign.Spacing.small)
 
-                LazyVStack(alignment: .leading, spacing: HabitoDesign.Spacing.large) {
+                // iPadOS 27 的懒加载容器在重载后会画出末组，却不暴露其标题/按钮。
+                // 当前单日清单优先完整无障碍树；不限制任务数量，长清单性能另做探针。
+                VStack(alignment: .leading, spacing: HabitoDesign.Spacing.small) {
                     ForEach(content.remainingTaskGroups) { group in
-                        KidTodayTaskGroupView(group: group, onSelectTask: onSelectTask)
+                        KidTodayTaskGroupView(
+                            group: group, makeTimingPresentation: makeTimingPresentation, onSelectTask: onSelectTask)
                     }
                 }
             }
@@ -33,14 +38,18 @@ struct KidTodayLoadedView: View {
 }
 
 #Preview("今日任务 · 推荐与其余") {
-    KidTodayLoadedView(content: .preview, onSelectTask: { _ in }).padding()
+    KidTodayLoadedView(
+        content: .preview, makeTimingPresentation: KidTaskTimingPresentation.preview, onSelectTask: { _ in }
+    ).padding()
 }
 
 #Preview("今日任务 · 大字窄栏") {
-    KidTodayLoadedView(content: .preview, onSelectTask: { _ in })
-        .padding()
-        .frame(width: 320)
-        .environment(\.dynamicTypeSize, .accessibility5)
+    KidTodayLoadedView(
+        content: .preview, makeTimingPresentation: KidTaskTimingPresentation.preview, onSelectTask: { _ in }
+    )
+    .padding()
+    .frame(width: 320)
+    .environment(\.dynamicTypeSize, .accessibility5)
 }
 
 #Preview("今日任务 · 四时段横屏") {
@@ -55,7 +64,7 @@ struct KidTodayLoadedView: View {
                     statusIconName: HabitoDesign.Symbol.pending, timePeriod: period)
             },
             completedCount: 0, totalCount: 5, isAllCompleted: false),
-        onSelectTask: { _ in }
+        makeTimingPresentation: KidTaskTimingPresentation.preview, onSelectTask: { _ in }
     )
     .padding()
     .frame(width: 834, height: 600)

@@ -6,6 +6,60 @@ import Testing
 @MainActor
 @Suite("儿童只读时间快照与截止提示")
 struct TodayTaskTimingTests {
+    @Test("展示只消费快照和注入时刻，独立时间与两页面一致且不写库", arguments: Array(0..<4), [-1.0, 0.0, 1.0])
+    func presentationUsesInjectedClockWithoutWrites(configuration: Int, offset: TimeInterval) throws {
+        let hasPlan = configuration & 1 != 0
+        let hasDeadline = configuration & 2 != 0
+        let fixture = try TodayQueryFixture()
+        let row = fixture.makeOccurrence(title: "三个时间展示", scheduledAt: fixture.now, status: .pending)
+        row.plannedAt = hasPlan ? fixture.now.addingTimeInterval(-3600) : nil
+        row.deadlineAt = hasDeadline ? fixture.now.addingTimeInterval(3600) : nil
+        try fixture.context.save()
+        let task = navigation(try query(fixture).item(id: row.id, at: fixture.now), fixture: fixture)
+        let now = fixture.now.addingTimeInterval(3600 + offset)
+        let today = TodayViewModel(
+            context: fixture.context, calendar: fixture.calendar, timeZone: fixture.timeZone,
+            dateProvider: FixedDateProvider(value: now))
+        let session = TaskSessionViewModel(
+            occurrenceID: row.id, context: fixture.context, calendar: fixture.calendar, timeZone: fixture.timeZone,
+            dateProvider: FixedDateProvider(value: now))
+        let expected = KidTaskTimingPresentation(task: task, at: now)
+        #expect(today.makeTimingPresentation(for: task) == expected)
+        #expect(session.makeTimingPresentation(for: task) == expected)
+        #expect(expected.taskID == row.id && expected.reminderText == "提醒时间 12:00")
+        #expect(expected.plannedText == (hasPlan ? "计划时间 11:00" : nil))
+        #expect(expected.deadlineText == (hasDeadline ? "截止时间 13:00" : nil))
+        #expect(expected.showsDeadlineHint == (hasDeadline && offset > 0))
+        #expect(expected.needsDeadlineRefresh == hasDeadline)
+        #expect(row.status == .pending && !fixture.context.hasChanges)
+        try expectNoRewards(fixture.context)
+        // 展示刷新不能保存、回滚或丢掉调用者尚未保存的编辑。
+        row.titleSnapshot = "未保存的修改"
+        _ = today.makeTimingPresentation(for: task)
+        _ = session.makeTimingPresentation(for: task)
+        #expect(fixture.context.hasChanges && row.titleSnapshot == "未保存的修改")
+    }
+
+    @Test("跨日执行页保留原实例与累计时间，一日前和两日前均使用通用文案", arguments: [1, 2])
+    func sessionCarryOverUsesBusinessDate(days: Int) throws {
+        let fixture = try TodayQueryFixture()
+        let earlier = fixture.now.addingTimeInterval(-Double(days) * 86400)
+        let row = fixture.makeOccurrence(
+            title: "跨日任务", scheduledAt: earlier, status: .inProgress,
+            date: try LocalDate(date: earlier, calendar: fixture.calendar, timeZone: fixture.timeZone))
+        fixture.addSession(to: row, state: .paused, startedAt: earlier, lastResumedAt: earlier, accumulatedSeconds: 300)
+        try fixture.context.save()
+        let model = TaskSessionViewModel(
+            occurrenceID: row.id, context: fixture.context, calendar: fixture.calendar, timeZone: fixture.timeZone,
+            dateProvider: FixedDateProvider(value: fixture.now))
+        model.load()
+        guard case let .loaded(content) = model.state else { Issue.record("跨日页应成功加载"); return }
+        #expect(content.task.id == row.id && content.task.isCarryOver)
+        #expect(content.task.statusText == "之前的任务还在做" && content.activeDurationAtSnapshot == 300)
+        #expect(content.primaryAction == .resume && content.canComplete && !fixture.context.hasChanges)
+        try expectNoRewards(fixture.context)
+    }
+
     @Test("独立可空快照不由提醒补值，首页和单项返回同一时间", arguments: [false, true], [false, true])
     func optionalTimesPropagateWithoutFallback(hasPlan: Bool, hasDeadline: Bool) throws {
         let fixture = try TodayQueryFixture()
@@ -83,6 +137,8 @@ struct TodayTaskTimingTests {
         let route = navigation(item, fixture: fixture)
         let actionable = kind == 0 || kind == 1 || kind == 5
         #expect(route.timing.isPastDeadline(at: now) == (actionable && offset > 0))
+        #expect(KidTaskTimingPresentation(task: route, at: now).showsDeadlineHint == (actionable && offset > 0))
+        #expect(KidTaskTimingPresentation(task: route, at: now).needsDeadlineRefresh == actionable)
         let content = TaskSessionScreenContent(
             task: route, targetDurationSeconds: item.targetDurationSeconds, activeSessionState: item.activeSessionState,
             activeDurationAtSnapshot: item.activeDurationSeconds, snapshotAt: now, completion: item.completion,

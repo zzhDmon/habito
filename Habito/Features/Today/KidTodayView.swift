@@ -4,6 +4,7 @@ import SwiftUI
 struct KidTodayView: View {
     let state: TodayViewState
     let rewardState: TodayRewardState
+    let makeTimingPresentation: @MainActor (KidTaskNavigationItem) -> KidTaskTimingPresentation
     let onSelectTask: (KidTaskNavigationItem) -> Void
     let onRetry: () -> Void
     let onRetryRewards: () -> Void
@@ -19,7 +20,9 @@ struct KidTodayView: View {
                 }
             }
         } trailing: {
-            KidTodayTaskContent(state: state, onSelectTask: onSelectTask, onRetry: onRetry)
+            KidTodayTaskContent(
+                state: state, makeTimingPresentation: makeTimingPresentation,
+                onSelectTask: onSelectTask, onRetry: onRetry)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .accessibilityIdentifier(HabitoAccessibilityID.todayScreen)
@@ -32,7 +35,8 @@ struct KidTodayView: View {
     NavigationStack {
         KidTodayView(
             state: .loaded(.preview), rewardState: .loaded(RewardBalance(effectiveXP: 11, coins: 7)),
-            onSelectTask: { _ in }, onRetry: {}, onRetryRewards: {})
+            makeTimingPresentation: KidTaskTimingPresentation.preview, onSelectTask: { _ in }, onRetry: {},
+            onRetryRewards: {})
     }
     .frame(width: 1_194, height: 834)
 }
@@ -49,7 +53,8 @@ struct KidTodayView: View {
                     isAllCompleted: false
                 )
             ),
-            rewardState: .loaded(RewardBalance(effectiveXP: 11, coins: 7)), onSelectTask: { _ in },
+            rewardState: .loaded(RewardBalance(effectiveXP: 11, coins: 7)),
+            makeTimingPresentation: KidTaskTimingPresentation.preview, onSelectTask: { _ in },
             onRetry: {}, onRetryRewards: {}
         )
     }
@@ -68,18 +73,20 @@ struct KidTodayView: View {
                     isAllCompleted: true
                 )
             ),
-            rewardState: .loaded(RewardBalance(effectiveXP: 11, coins: 7)), onSelectTask: { _ in },
+            rewardState: .loaded(RewardBalance(effectiveXP: 11, coins: 7)),
+            makeTimingPresentation: KidTaskTimingPresentation.preview, onSelectTask: { _ in },
             onRetry: {}, onRetryRewards: {}
         )
     }
     .frame(width: 1_194, height: 834)
 }
 
-#Preview("今日 · 昨日任务进行中") {
+#Preview("今日 · 跨日任务进行中") {
     NavigationStack {
         KidTodayView(
             state: .loaded(.previewCarryOver),
-            rewardState: .loaded(RewardBalance(effectiveXP: 11, coins: 7)), onSelectTask: { _ in },
+            rewardState: .loaded(RewardBalance(effectiveXP: 11, coins: 7)),
+            makeTimingPresentation: KidTaskTimingPresentation.preview, onSelectTask: { _ in },
             onRetry: {}, onRetryRewards: {}
         )
     }
@@ -89,7 +96,8 @@ struct KidTodayView: View {
 #Preview("今日 · 数据错误") {
     NavigationStack {
         KidTodayView(
-            state: .failed, rewardState: .loaded(RewardBalance(effectiveXP: 11, coins: 7)), onSelectTask: { _ in },
+            state: .failed, rewardState: .loaded(RewardBalance(effectiveXP: 11, coins: 7)),
+            makeTimingPresentation: KidTaskTimingPresentation.preview, onSelectTask: { _ in },
             onRetry: {}, onRetryRewards: {})
     }
     .frame(width: 1_194, height: 834)
@@ -99,7 +107,8 @@ struct KidTodayView: View {
     NavigationStack {
         KidTodayView(
             state: .loaded(.preview), rewardState: .loaded(RewardBalance(effectiveXP: 11, coins: 7)),
-            onSelectTask: { _ in }, onRetry: {}, onRetryRewards: {})
+            makeTimingPresentation: KidTaskTimingPresentation.preview, onSelectTask: { _ in }, onRetry: {},
+            onRetryRewards: {})
     }
     .environment(\.dynamicTypeSize, .accessibility3)
 }
@@ -108,7 +117,8 @@ struct KidTodayView: View {
     NavigationStack {
         KidTodayView(
             state: .loaded(.preview), rewardState: .failed,
-            onSelectTask: { _ in }, onRetry: {}, onRetryRewards: {})
+            makeTimingPresentation: KidTaskTimingPresentation.preview, onSelectTask: { _ in }, onRetry: {},
+            onRetryRewards: {})
     }
     .frame(width: 1_194, height: 834)
     .environment(\.dynamicTypeSize, .accessibility5)

@@ -105,6 +105,15 @@ final class HabitoKidFlowUITests: XCTestCase {
     }
 
     func testCrossDayPausedTaskRemainsRecommendedOutsideTodayPeriodGroupsWithSystemTextSize() throws {
+        try verifyCarryOverRecovery(days: 1)
+    }
+
+    func testTwoDayPausedTaskKeepsIdentityAndTodayDenominatorWithSystemTextSize() throws {
+        try verifyCarryOverRecovery(days: 2)
+    }
+
+    /// 映射业务时钟跨过指定天数，恢复原实例；不修改系统时间或等待真实午夜。
+    private func verifyCarryOverRecovery(days: Int) throws {
         let app = launchScenario("legacy")
         openSeededTask(in: app)
         app.buttons["kid.session.start"].tap()
@@ -115,12 +124,11 @@ final class HabitoKidFlowUITests: XCTestCase {
         let reference = try XCTUnwrap(Double(app.launchEnvironment["HABITO_UI_SYSTEM_REFERENCE"] ?? ""))
         app.terminate()
         app.launchArguments = ["--habito-ui-testing"]
-        // 仅推进现有 Debug 映射时钟一天；暂停累计时长不靠等待，也不改变设备系统时间。
-        app.launchEnvironment["HABITO_UI_SYSTEM_REFERENCE"] = String(reference - 86400)
+        app.launchEnvironment["HABITO_UI_SYSTEM_REFERENCE"] = String(reference - Double(days) * 86400)
         app.launch()
         let carryOver = app.buttons[seededTaskIdentifier]
         scrollFullyIntoTodayViewport(carryOver, in: app)
-        XCTAssertTrue(carryOver.label.contains("昨日任务仍在进行"))
+        XCTAssertTrue(carryOver.label.contains("之前的任务还在做"))
         XCTAssertEqual(app.buttons.matching(identifier: seededTaskIdentifier).count, 1)
         let allDay = app.staticTexts["kid.today.group.allDay"]
         scrollFullyIntoTodayViewport(allDay, in: app)
@@ -130,16 +138,17 @@ final class HabitoKidFlowUITests: XCTestCase {
                 format: "identifier BEGINSWITH %@ AND identifier != %@", "kid.today.task.", seededTaskIdentifier)
         ).element
         scrollFullyIntoTodayViewport(today, in: app)
-        XCTAssertFalse(today.label.contains("昨日任务仍在进行"))
+        XCTAssertFalse(today.label.contains("之前的任务还在做"))
         let todayID = today.identifier
         keepScreenshot(app, name: "跨日推荐与今日全天分组分开")
         scrollFullyIntoTodayViewport(carryOver, in: app, towardTop: true)
         carryOver.tap()
         XCTAssertTrue(app.buttons["kid.session.resume"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["之前的任务还在做"].exists)
         returnToTodayFromTask(in: app)
         relaunchTodayKeepingData(app)
         scrollFullyIntoTodayViewport(app.buttons[seededTaskIdentifier], in: app)
-        XCTAssertTrue(app.buttons[seededTaskIdentifier].label.contains("昨日任务仍在进行"))
+        XCTAssertTrue(app.buttons[seededTaskIdentifier].label.contains("之前的任务还在做"))
         scrollFullyIntoTodayViewport(app.buttons[todayID], in: app)
         assertTodayRewards(xp: 0, coins: 0, in: app)
     }
@@ -738,6 +747,97 @@ final class HabitoKidFlowUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["还没有任务"].waitForExistence(timeout: 5))
     }
 
+    func testFormalThreeTimesRemainDistinctAndPastDeadlineStillRewardsAutonomyWithSystemTextSize() throws {
+        verifyFormalChildTimes(approval: false)
+    }
+
+    func testFormalPastDeadlineWaitingKeepsTimesWithoutPressureOrRewardsWithSystemTextSize() throws {
+        verifyFormalChildTimes(approval: true)
+    }
+
+    /// 两种正式验收方式共用三时间回读；待审核只肯定提交，不把截止提示或收入带入等待态。
+    private func verifyFormalChildTimes(approval: Bool) {
+        let name = approval ? "截止后等待确认" : "三个独立时间"
+        let app = launchEmptyParentEditor(title: name)
+        XCTAssertEqual(editorReminderValue(in: app), "19点:30分钟")
+        changeTimeToggle("planned", enabled: true, in: app)
+        setOptionalTime("planned", hour: "08", minute: "15", in: app)
+        changeTimeToggle("deadline", enabled: true, in: app)
+        setOptionalTime("deadline", hour: "09", minute: "20", in: app)
+        if approval {
+            chooseEditorOption("家长验收", identifier: "parent.templates.editor.verification", in: app)
+        }
+        setRewardText("11", identifier: "parent.templates.editor.xp", in: app)
+        setRewardText("7", identifier: "parent.templates.editor.base-coins", in: app)
+        setRewardText("3", identifier: "parent.templates.editor.autonomy-coins", in: app)
+        tapEditorSave(in: app)
+        XCTAssertTrue(parentTemplate(named: name, in: app).waitForExistence(timeout: 5))
+        app.buttons["parent.gate.close"].tap()
+        let card = todayTask(named: name, in: app)
+        scrollFullyIntoTodayViewport(card, in: app)
+        XCTAssertGreaterThanOrEqual(card.frame.height, 44)
+        XCTAssertGreaterThanOrEqual(card.frame.width, 44)
+        for text in ["提醒时间 19:30", "计划时间 08:15", "截止时间 09:20", "过了截止时间，仍可完成"] {
+            XCTAssertTrue(card.label.contains(text), "推荐卡应完整读出：\(text)")
+        }
+        let id = String(card.identifier.dropFirst("kid.today.task.".count))
+        // 先重启回读未完成任务，再实际完成；不能以旧页面缓存证明保存成功。
+        relaunchTodayKeepingData(app)
+        let restored = todayTask(named: name, in: app)
+        scrollFullyIntoTodayViewport(restored, in: app)
+        XCTAssertEqual(restored.identifier, "kid.today.task." + id)
+        XCTAssertTrue(restored.label.contains("截止时间 09:20"))
+        restored.tap()
+        XCTAssertFalse(app.staticTexts["计划时间"].exists, "计时区不能把提醒时刻重复标作计划时间")
+        assertSessionTime("reminder", id: id, text: "提醒时间 19:30", in: app)
+        assertSessionTime("planned", id: id, text: "计划时间 08:15", in: app)
+        assertSessionTime("deadline", id: id, text: "截止时间 09:20", in: app)
+        assertSessionTime("hint", id: id, text: "过了截止时间，仍可完成", in: app)
+        keepScreenshot(app, name: "三个独立时间截止已过仍可完成")
+        let complete = app.buttons[approval ? "kid.session.submit" : "kid.session.complete"]
+        scrollFullyIntoSessionViewport(complete, in: app)
+        XCTAssertGreaterThanOrEqual(complete.frame.height, 44)
+        complete.tap()
+        if approval {
+            assertWaitingWithoutOldActions(in: app)
+            XCTAssertFalse(app.descendants(matching: .any)["kid.timing.hint." + id].exists)
+            assertSessionTime("deadline", id: id, text: "截止时间 09:20", in: app)
+            returnToTodayFromTask(in: app)
+            assertTodayRewards(xp: 0, coins: 0, in: app)
+            relaunchTodayKeepingData(app)
+            let waiting = todayTask(named: name, in: app)
+            scrollFullyIntoTodayViewport(waiting, in: app)
+            XCTAssertEqual(waiting.identifier, "kid.today.task." + id)
+            XCTAssertTrue(waiting.label.contains("等家长确认") && waiting.label.contains("截止时间 09:20"))
+            XCTAssertFalse(waiting.label.contains("过了截止时间"))
+            keepScreenshot(app, name: "等待任务三时间完整纵向展示")
+            waiting.tap()
+            assertWaitingWithoutOldActions(in: app)
+            XCTAssertFalse(app.descendants(matching: .any)["kid.timing.hint." + id].exists)
+            returnToTodayFromTask(in: app)
+            assertTodayRewards(xp: 0, coins: 0, in: app)
+            return
+        }
+        XCTAssertTrue(app.staticTexts["你做到了！"].waitForExistence(timeout: 5))
+        let coins = app.staticTexts["kid.session.reward-coins"]
+        scrollFullyIntoSessionViewport(coins, in: app)
+        XCTAssertEqual(coins.label, "+10 金币已到账")
+        XCTAssertTrue(app.descendants(matching: .any)["kid.session.autonomy-celebration"].exists)
+        XCTAssertFalse(app.descendants(matching: .any)["kid.timing.hint." + id].exists)
+        returnToTodayFromTask(in: app)
+        assertTodayRewards(xp: 11, coins: 10, in: app)
+        relaunchTodayKeepingData(app)
+        assertTodayRewards(xp: 11, coins: 10, in: app)
+        scrollFullyIntoTodayViewport(app.staticTexts["今天的任务都完成了。"], in: app)
+        XCTAssertFalse(app.descendants(matching: .any)["kid.session.completion-feedback"].exists)
+    }
+
+    private func assertSessionTime(_ field: String, id: String, text: String, in app: XCUIApplication) {
+        let element = app.descendants(matching: .any)["kid.timing.\(field)." + id]
+        scrollFullyIntoSessionViewport(element, in: app)
+        XCTAssertEqual(element.label, text)
+    }
+
     func testFormalOptionalTimesSetEditClearAndRelaunchWithSystemTextSize() throws {
         let name = "正式可空时间"
         let app = launchEmptyParentEditor(title: name)
@@ -791,6 +891,21 @@ final class HabitoKidFlowUITests: XCTestCase {
 
     func testLegacyOptionalTimesRemainUnsetAfterTitleEditAndRelaunchWithSystemTextSize() throws {
         let app = launchScenario("legacy")
+        let card = app.buttons[seededTaskIdentifier]
+        scrollFullyIntoTodayViewport(card, in: app)
+        XCTAssertTrue(card.label.contains("提醒时间 19:30"))
+        XCTAssertFalse(card.label.contains("计划时间") || card.label.contains("截止时间"))
+        card.tap()
+        XCTAssertFalse(app.staticTexts["计划时间"].exists, "旧 nil 不能在计时区伪造计划标签")
+        XCTAssertFalse(
+            app.descendants(matching: .any).matching(
+                NSPredicate(format: "identifier BEGINSWITH %@", "kid.timing.planned.")
+            ).element.exists)
+        XCTAssertFalse(
+            app.descendants(matching: .any).matching(
+                NSPredicate(format: "identifier BEGINSWITH %@", "kid.timing.deadline.")
+            ).element.exists)
+        returnToTodayFromTask(in: app)
         unlockParent(in: app)
         app.buttons[seededTemplateIdentifier].tap()
         assertTimeToggle("planned", enabled: false, in: app)
