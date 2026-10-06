@@ -590,6 +590,7 @@ struct TaskSessionViewModelTests {
         if undo { model.undoCompletion() } else { model.completeTask() }
         #expect(model.actionFailure == .saveFailed && model.isActionErrorPresented)
         #expect(trigger.revision == 0 && !fixture.context.hasChanges)
+        #expect(model.completionFeedback == nil)
         #expect(try loadedContent(from: model.state).task.status == (undo ? .completed : .pending))
         #expect(occurrence.status == (undo ? .completed : .pending))
     }

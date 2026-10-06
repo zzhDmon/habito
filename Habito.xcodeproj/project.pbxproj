@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AB1000000000000000000151 /* TaskSessionFeedbackMotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000151 /* TaskSessionFeedbackMotion.swift */; };
+		AB1000000000000000000150 /* TaskSessionFeedbackCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000150 /* TaskSessionFeedbackCard.swift */; };
+		AB1000000000000000000145 /* TaskSessionFeedbackTone.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000145 /* TaskSessionFeedbackTone.swift */; };
+		AB1000000000000000000146 /* TaskSessionFeedbackPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000146 /* TaskSessionFeedbackPresentation.swift */; };
+		AB1000000000000000000147 /* TaskCompletionCelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000147 /* TaskCompletionCelebrationView.swift */; };
+		AB1000000000000000000148 /* TaskCompletionRewardCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000148 /* TaskCompletionRewardCard.swift */; };
+		AB1000000000000000000149 /* TaskSessionFeedbackPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000149 /* TaskSessionFeedbackPresentationTests.swift */; };
 		AB1000000000000000000140 /* TaskTemplateRewardInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000140 /* TaskTemplateRewardInput.swift */; };
 		AB1000000000000000000141 /* TaskTemplateConfigurationSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000141 /* TaskTemplateConfigurationSection.swift */; };
 		AB1000000000000000000142 /* TaskTemplateRewardSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000142 /* TaskTemplateRewardSection.swift */; };
@@ -383,6 +390,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AB2000000000000000000151 /* TaskSessionFeedbackMotion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskSessionFeedbackMotion.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000150 /* TaskSessionFeedbackCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskSessionFeedbackCard.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000145 /* TaskSessionFeedbackTone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskSessionFeedbackTone.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000146 /* TaskSessionFeedbackPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskSessionFeedbackPresentation.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000147 /* TaskCompletionCelebrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskCompletionCelebrationView.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000148 /* TaskCompletionRewardCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskCompletionRewardCard.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000149 /* TaskSessionFeedbackPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskSessionFeedbackPresentationTests.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000140 /* TaskTemplateRewardInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskTemplateRewardInput.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000141 /* TaskTemplateConfigurationSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskTemplateConfigurationSection.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000142 /* TaskTemplateRewardSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskTemplateRewardSection.swift"; sourceTree = "<group>"; };
@@ -1220,6 +1234,12 @@
 				AB2000000000000000000116 /* TaskSubmissionStatusView.swift */,
 				M20000000000000000000001 /* TaskSessionScreenContent.swift */,
 				AB2000000000000000000107 /* TaskSessionCompletionFeedback.swift */,
+				AB2000000000000000000150 /* TaskSessionFeedbackCard.swift */,
+				AB2000000000000000000151 /* TaskSessionFeedbackMotion.swift */,
+				AB2000000000000000000145 /* TaskSessionFeedbackTone.swift */,
+				AB2000000000000000000146 /* TaskSessionFeedbackPresentation.swift */,
+				AB2000000000000000000147 /* TaskCompletionCelebrationView.swift */,
+				AB2000000000000000000148 /* TaskCompletionRewardCard.swift */,
 				AB2000000000000000000065 /* TaskSessionActionFailure.swift */,
 				Z20000000000000000000003 /* TaskSnoozeState.swift */,
 				M20000000000000000000002 /* TaskSessionViewState.swift */,
@@ -1274,6 +1294,7 @@
 				T20000000000000000000004 /* TaskTemplateEditingServiceTests.swift */,
 				U20000000000000000000005 /* TaskTemplateLifecycleServiceTests.swift */,
 				M20000000000000000000007 /* TaskSessionViewModelTests.swift */,
+				AB2000000000000000000149 /* TaskSessionFeedbackPresentationTests.swift */,
 				AB2000000000000000000125 /* ParentReviewFixture.swift */,
 				AB2000000000000000000126 /* ParentReviewQueueServiceTests.swift */,
 				AB2000000000000000000127 /* ParentReviewViewModelTests.swift */,
@@ -1667,6 +1688,12 @@
 				AB1000000000000000000124 /* ParentReviewViewModel.swift in Sources */,
 				M10000000000000000000001 /* TaskSessionScreenContent.swift in Sources */,
 				AB1000000000000000000107 /* TaskSessionCompletionFeedback.swift in Sources */,
+				AB1000000000000000000150 /* TaskSessionFeedbackCard.swift in Sources */,
+				AB1000000000000000000151 /* TaskSessionFeedbackMotion.swift in Sources */,
+				AB1000000000000000000145 /* TaskSessionFeedbackTone.swift in Sources */,
+				AB1000000000000000000146 /* TaskSessionFeedbackPresentation.swift in Sources */,
+				AB1000000000000000000147 /* TaskCompletionCelebrationView.swift in Sources */,
+				AB1000000000000000000148 /* TaskCompletionRewardCard.swift in Sources */,
 				AB1000000000000000000065 /* TaskSessionActionFailure.swift in Sources */,
 				M10000000000000000000002 /* TaskSessionViewState.swift in Sources */,
 				M10000000000000000000004 /* TaskSessionViewModel.swift in Sources */,
@@ -1951,6 +1978,7 @@
 				T10000000000000000000004 /* TaskTemplateEditingServiceTests.swift in Sources */,
 				U10000000000000000000005 /* TaskTemplateLifecycleServiceTests.swift in Sources */,
 				M10000000000000000000007 /* TaskSessionViewModelTests.swift in Sources */,
+				AB1000000000000000000149 /* TaskSessionFeedbackPresentationTests.swift in Sources */,
 				AB1000000000000000000125 /* ParentReviewFixture.swift in Sources */,
 				AB1000000000000000000126 /* ParentReviewQueueServiceTests.swift in Sources */,
 				AB1000000000000000000127 /* ParentReviewViewModelTests.swift in Sources */,

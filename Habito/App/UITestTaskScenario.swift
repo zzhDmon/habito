@@ -5,6 +5,8 @@
     enum UITestTaskScenario: String, CaseIterable {
         case legacy
         case rewardSelfConfirm = "reward-self-confirm"
+        case rewardAfterReminder = "reward-after-reminder"
+        case zeroRewardSelfConfirm = "zero-reward-self-confirm"
         case parentApproval = "parent-approval"
         case zeroRewardParentApproval = "zero-reward-parent-approval"
         case returnedSubmission = "returned-submission"
@@ -22,14 +24,22 @@
 
         var verificationType: TaskVerificationType {
             switch self {
-            case .legacy, .rewardSelfConfirm: .selfConfirm
+            case .legacy, .rewardSelfConfirm, .rewardAfterReminder, .zeroRewardSelfConfirm: .selfConfirm
             case .parentApproval, .zeroRewardParentApproval, .returnedSubmission: .parentApproval
             }
         }
 
         /// 零奖励审核同样完整跑业务闭环，不靠旧任务自行确认替代家长审核验收。
         var hasSyntheticReward: Bool {
-            self != .legacy && self != .zeroRewardParentApproval
+            self != .legacy && self != .zeroRewardParentApproval && self != .zeroRewardSelfConfirm
+        }
+
+        /// 合成场景用固定相对时刻区分普通与自主反馈，不靠等待计时或修改系统时间。
+        var reminderOffset: TimeInterval {
+            switch self {
+            case .legacy, .rewardAfterReminder: -60
+            default: 60
+            }
         }
     }
 #endif

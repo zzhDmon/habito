@@ -67,7 +67,7 @@
                 id: taskID,
                 templateID: templateID,
                 date: localDate,
-                scheduledAt: now.addingTimeInterval(scenario == .legacy ? -60 : 60),
+                scheduledAt: now.addingTimeInterval(scenario.reminderOffset),
                 titleSnapshot: template.title,
                 iconSnapshot: template.iconName,
                 colorSnapshot: template.colorToken,

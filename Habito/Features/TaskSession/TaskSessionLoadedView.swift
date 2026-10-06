@@ -37,6 +37,8 @@ struct TaskSessionLoadedView: View {
                 TaskSessionIdentityPanel(task: content.task)
                 if let completionFeedback {
                     TaskSessionResultFeedbackView(feedback: completionFeedback, onDismiss: onDismissCompletionFeedback)
+                        // 新保存事件才拥有新的视觉状态；原事件的刷新不重置入场效果。
+                        .id(completionFeedback.id)
                 }
             }
         } trailing: {

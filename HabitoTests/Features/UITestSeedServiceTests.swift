@@ -69,12 +69,13 @@
             #expect(occurrence.verificationTypeSnapshot == scenario.verificationType)
             #expect(
                 scenario.hasSyntheticReward
-                    == (scenario == .rewardSelfConfirm || scenario == .parentApproval
+                    == (scenario == .rewardSelfConfirm || scenario == .rewardAfterReminder
+                        || scenario == .parentApproval
                         || scenario == .returnedSubmission))
             #expect(occurrence.xpRewardSnapshot == (scenario.hasSyntheticReward ? 11 : 0))
             #expect(occurrence.coinRewardSnapshot == (scenario.hasSyntheticReward ? 7 : 0))
             #expect(occurrence.activeBonusCoinSnapshot == (scenario.hasSyntheticReward ? 3 : 0))
-            #expect(occurrence.scheduledAt == fixture.now.addingTimeInterval(scenario == .legacy ? -60 : 60))
+            #expect(occurrence.scheduledAt == fixture.now.addingTimeInterval(scenario.reminderOffset))
             let submissions = try fixture.context.fetch(FetchDescriptor<TaskSubmission>())
             #expect(submissions.count == (scenario == .returnedSubmission ? 1 : 0))
             if scenario == .returnedSubmission {

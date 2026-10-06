@@ -880,6 +880,65 @@ final class HabitoKidFlowUITests: XCTestCase {
         XCTAssertTrue(app.buttons["kid.session.dismiss-completion-feedback"].isHittable)
     }
 
+    func testCompletionCelebrationRewardsAndContinueRemainReachableWithSystemTextSize() throws {
+        verifyCompletionCelebration(scenario: "reward-self-confirm", autonomous: true, zeroReward: false)
+    }
+
+    func testReminderTimeCompletionGetsOrdinaryReceiptWithoutAutonomyBadge() throws {
+        verifyCompletionCelebration(scenario: "reward-after-reminder", autonomous: false, zeroReward: false)
+    }
+
+    func testZeroRewardAutonomyStillCelebratesEffortWithSystemTextSize() throws {
+        verifyCompletionCelebration(scenario: "zero-reward-self-confirm", autonomous: true, zeroReward: true)
+    }
+
+    /// 字号使用真实系统 content_size；展示分层和金额都由真实完成事务产生。
+    private func verifyCompletionCelebration(scenario: String, autonomous: Bool, zeroReward: Bool) {
+        let app = launchScenario(scenario)
+        openSeededTask(in: app)
+        let complete = app.buttons["kid.session.complete"]
+        scrollFullyIntoSessionViewport(complete, in: app)
+        complete.tap()
+        let title = app.staticTexts["kid.session.celebration-title"]
+        scrollFullyIntoSessionViewport(title, in: app)
+        XCTAssertEqual(title.label, "你做到了！")
+        let autonomy = app.descendants(matching: .any)["kid.session.autonomy-celebration"]
+        XCTAssertEqual(autonomy.exists, autonomous)
+        if autonomous {
+            scrollFullyIntoSessionViewport(autonomy, in: app)
+            XCTAssertTrue(autonomy.label.contains("你自己记得做啦！"))
+        }
+        let xp = app.descendants(matching: .any)["kid.session.reward-xp"]
+        let coins = app.descendants(matching: .any)["kid.session.reward-coins"]
+        if zeroReward {
+            XCTAssertFalse(xp.exists)
+            XCTAssertFalse(coins.exists)
+            let effort = app.staticTexts["kid.session.completion-effort"]
+            scrollFullyIntoSessionViewport(effort, in: app)
+            XCTAssertEqual(effort.label, "这份努力已经记下啦。")
+        } else {
+            scrollFullyIntoSessionViewport(xp, in: app)
+            XCTAssertEqual(xp.label, "+11 XP 已到账")
+            scrollFullyIntoSessionViewport(coins, in: app)
+            XCTAssertEqual(coins.label, autonomous ? "+10 金币已到账" : "+7 金币已到账")
+        }
+        let dismiss = app.buttons["kid.session.dismiss-completion-feedback"]
+        scrollFullyIntoSessionViewport(dismiss, in: app)
+        XCTAssertTrue(dismiss.isEnabled && dismiss.isHittable)
+        XCTAssertGreaterThanOrEqual(dismiss.frame.width, 44)
+        XCTAssertGreaterThanOrEqual(dismiss.frame.height, 44)
+        keepScreenshot(app, name: "真实分层完成可继续-" + scenario)
+        dismiss.tap()
+        XCTAssertFalse(title.exists)
+        XCTAssertFalse(dismiss.exists)
+        XCTAssertFalse(xp.exists)
+        XCTAssertFalse(coins.exists)
+        // 再次进入不能从已完成历史重播局部收据。
+        relaunchWithOldSeededNotification(app)
+        XCTAssertTrue(app.staticTexts["今天的任务都完成了。"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.descendants(matching: .any)["kid.session.completion-feedback"].exists)
+    }
+
     /// 字号由验收命令的 simctl ui content_size 设置；不使用未验证的私有启动参数。
     func testSubmissionAndWaitingRemainReadableAndReachableWithSystemTextSize() throws {
         let app = launchScenario("parent-approval")

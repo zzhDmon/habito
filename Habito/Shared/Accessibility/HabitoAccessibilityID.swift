@@ -5,6 +5,10 @@ import Foundation
 /// 标识只描述控件语义，不依赖可见中文文案或视图层级，因此文案调整和横竖屏布局变化
 /// 不会让 UI 测试失效。动态任务标识拼接持久化实例 ID，避免同名任务产生歧义。
 nonisolated enum HabitoAccessibilityID {
+    static let completionCelebrationTitle = "kid.session.celebration-title"
+    static let autonomyCelebration = "kid.session.autonomy-celebration"
+    static let completionEffort = "kid.session.completion-effort"
+    static let submissionFeedbackBadge = "kid.session.submission-feedback-badge"
     static let todayScreen = "kid.today.screen"
     static let sessionScreen = "kid.session.screen"
     static let elapsedTime = "kid.session.elapsed"
