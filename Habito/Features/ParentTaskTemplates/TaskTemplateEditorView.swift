@@ -32,12 +32,19 @@ struct TaskTemplateEditorView: View {
                     rewardInput: $model.rewardInput,
                     rewardFocus: $focusedReward,
                     scheduledTime: $model.scheduledTime,
+                    isPlannedTimeEnabled: $model.isPlannedTimeEnabled,
+                    plannedTime: $model.plannedTime,
+                    isDeadlineTimeEnabled: $model.isDeadlineTimeEnabled,
+                    deadlineTime: $model.deadlineTime,
                     feedback: model.feedback,
                     onToggleWeekday: model.toggle,
                     onDisable: { model.prepareLifecycleAction(.disable) },
                     onEnable: { model.prepareLifecycleAction(.enable) },
                     onArchive: { model.prepareLifecycleAction(.archive) }
                 )
+                .environment(\.calendar, model.timeInputCalendar)
+                .environment(\.timeZone, model.timeInputCalendar.timeZone)
+                .environment(\.locale, Locale(identifier: "zh_Hans_CN"))
                 .accessibilityElement(children: .contain)
                 .accessibilityIdentifier(HabitoAccessibilityID.taskEditorScreen)
             }

@@ -225,6 +225,104 @@ struct TaskTemplateEditorViewModelTests {
         #expect(!fixture.context.hasChanges)
     }
 
+    @Test("旧空值不会启用，显式开启采用可见提醒候选，关闭独立清空", arguments: [false, true], [false, true])
+    func optionalTimeControlsStayExplicit(plan: Bool, deadline: Bool) async throws {
+        let fixture = try makeFixture()
+        let model = fixture.model
+        model.load()
+        model.draft.title = "明确开启时间"
+        #expect(!model.isPlannedTimeEnabled && !model.isDeadlineTimeEnabled)
+        var calendar = model.timeInputCalendar
+        calendar.timeZone = try #require(TimeZone(identifier: "Asia/Shanghai"))
+        model.scheduledTime = try #require(
+            calendar.date(from: DateComponents(year: 2001, month: 1, day: 1, hour: 16, minute: 20)))
+        model.isPlannedTimeEnabled = plan
+        model.isDeadlineTimeEnabled = deadline
+        #expect(model.draft.plannedTimeOfDayMinutes == (plan ? 980 : nil))
+        #expect(model.draft.deadlineTimeOfDayMinutes == (deadline ? 980 : nil))
+        #expect(await model.save() == .saved)
+        let template = try #require(fixture.context.fetch(FetchDescriptor<TaskTemplate>()).first)
+        let editing = try makeFixture(context: fixture.context, templateID: template.id)
+        editing.model.load()
+        #expect(editing.model.isPlannedTimeEnabled == plan && editing.model.isDeadlineTimeEnabled == deadline)
+        editing.model.isPlannedTimeEnabled = false
+        #expect(editing.model.draft.plannedTimeOfDayMinutes == nil)
+        #expect(editing.model.draft.deadlineTimeOfDayMinutes == (deadline ? 980 : nil))
+        editing.model.isDeadlineTimeEnabled = false
+        #expect(await editing.model.save() == .saved)
+        #expect(template.reminderRule?.timeOfDayMinutes == 980)
+        #expect(
+            template.reminderRule?.plannedTimeOfDayMinutes == nil
+                && template.reminderRule?.deadlineTimeOfDayMinutes == nil)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<XPTransaction>()) == 0)
+    }
+
+    @Test("日期控件转换只取注入时区时分，固定锚点回读和重复加载不丢输入", arguments: [0, 480, 980, 1439], [false, true])
+    func timeControlsRoundTripFixedMinutes(minutes: Int, deadline: Bool) async throws {
+        let fixture = try makeFixture()
+        let model = fixture.model
+        model.load()
+        model.draft.title = "分钟边界"
+        let calendar = model.timeInputCalendar
+        // 选取另一年/月的控件日期，证明日期部分不会成为任务的业务日期。
+        let selection = try #require(
+            calendar.date(from: DateComponents(year: 2012, month: 2, day: 29, hour: minutes / 60, minute: minutes % 60))
+        )
+        if deadline { model.deadlineTime = selection } else { model.plannedTime = selection }
+        model.load()
+        let selected = deadline ? model.deadlineTime : model.plannedTime
+        #expect(calendar.component(.year, from: selected) == 2001)
+        #expect(calendar.component(.hour, from: selected) * 60 + calendar.component(.minute, from: selected) == minutes)
+        #expect((deadline ? model.draft.deadlineTimeOfDayMinutes : model.draft.plannedTimeOfDayMinutes) == minutes)
+        #expect(await model.save() == .saved)
+        let rule = try #require(fixture.context.fetch(FetchDescriptor<ReminderRule>()).first)
+        #expect((deadline ? rule.deadlineTimeOfDayMinutes : rule.plannedTimeOfDayMinutes) == minutes)
+        #expect((deadline ? rule.plannedTimeOfDayMinutes : rule.deadlineTimeOfDayMinutes) == nil)
+        #expect(rule.timeOfDayMinutes == 1170)
+    }
+
+    @Test("非有限控件值明确校验失败而非变午夜，纠正后可保存", arguments: [Double.nan, Double.infinity, -Double.infinity], [0, 1, 2])
+    func invalidDateControlCannotBecomeMidnight(value: Double, field: Int) async throws {
+        let fixture = try makeFixture()
+        let model = fixture.model
+        model.load()
+        model.draft.title = "坏控件值"
+        let date = Date(timeIntervalSinceReferenceDate: value)
+        switch field {
+        case 0: model.scheduledTime = date
+        case 1: model.plannedTime = date
+        default: model.deadlineTime = date
+        }
+        #expect(await model.save() == .failed)
+        #expect(model.feedback == .validation(.invalidTime))
+        #expect(fixture.rebuildTrigger.revision == 0 && fixture.provider.requestCount == 0)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<TaskTemplate>()) == 0)
+        #expect(!fixture.context.hasChanges)
+        if field == 0 { model.scheduledTime = Date(timeIntervalSinceReferenceDate: 0) }
+        if field == 1 { model.isPlannedTimeEnabled = false }
+        if field == 2 { model.isDeadlineTimeEnabled = false }
+        #expect(await model.save() == .saved)
+    }
+
+    @Test("时间控件保存失败保留可见输入，无重建或半写")
+    func timeControlFailureKeepsVisibleInput() async throws {
+        let fixture = try makeFixture(failsStorage: true)
+        let model = fixture.model
+        model.load()
+        model.draft.title = "失败保留时间"
+        model.isPlannedTimeEnabled = true
+        model.isDeadlineTimeEnabled = true
+        model.plannedTime = model.scheduledTime.addingTimeInterval(-3600)
+        model.deadlineTime = model.scheduledTime.addingTimeInterval(3600)
+        #expect(await model.save() == .failed)
+        #expect(model.feedback == .storageFailure)
+        #expect(model.draft.plannedTimeOfDayMinutes == 1110 && model.draft.deadlineTimeOfDayMinutes == 1230)
+        #expect(model.isPlannedTimeEnabled && model.isDeadlineTimeEnabled)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<TaskTemplate>()) == 0)
+        #expect(
+            !fixture.context.hasChanges && fixture.rebuildTrigger.revision == 0 && fixture.provider.requestCount == 0)
+    }
+
     private func makeFixture(
         context suppliedContext: ModelContext? = nil, templateID: UUID? = nil, failsStorage: Bool = false
     ) throws -> Fixture {

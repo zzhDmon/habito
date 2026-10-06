@@ -6,6 +6,10 @@ struct TaskTemplateEditorForm: View {
     @Binding var rewardInput: TaskTemplateRewardInput
     let rewardFocus: FocusState<String?>.Binding
     @Binding var scheduledTime: Date
+    @Binding var isPlannedTimeEnabled: Bool
+    @Binding var plannedTime: Date
+    @Binding var isDeadlineTimeEnabled: Bool
+    @Binding var deadlineTime: Date
     let feedback: TaskTemplateEditorFeedback?
     let onToggleWeekday: (Weekday) -> Void
     let onDisable: () -> Void
@@ -40,6 +44,11 @@ struct TaskTemplateEditorForm: View {
                     selection: $scheduledTime,
                     displayedComponents: .hourAndMinute
                 )
+                // compact 时间按钮在最低系统实际 AX 高度仅 36 pt；原生滚轮保证可操作面积和精确读屏。
+                .datePickerStyle(.wheel)
+                .accessibilityLabel("taskEditor.time")
+                .frame(minHeight: HabitoDesign.Layout.minimumTapSize)
+                .accessibilityIdentifier(HabitoAccessibilityID.taskEditorReminderTime)
                 TextField(
                     "taskEditor.durationMinutes",
                     value: $draft.targetDurationMinutes,
@@ -52,6 +61,10 @@ struct TaskTemplateEditorForm: View {
             } footer: {
                 feedbackLabel(for: .schedule)
             }
+
+            TaskTemplateTimeSection(
+                isPlannedTimeEnabled: $isPlannedTimeEnabled, plannedTime: $plannedTime,
+                isDeadlineTimeEnabled: $isDeadlineTimeEnabled, deadlineTime: $deadlineTime)
 
             Section {
                 ForEach(Weekday.allCases, id: \.self) { weekday in
@@ -194,6 +207,10 @@ private extension TaskTemplateEditorForm {
 }
 
 #Preview("新建任务 · 横屏") {
+    @Previewable @State var plannedEnabled = false
+    @Previewable @State var deadlineEnabled = false
+    @Previewable @State var planTime = Date(timeIntervalSinceReferenceDate: 0)
+    @Previewable @State var deadlineTime = Date(timeIntervalSinceReferenceDate: 3600)
     @Previewable @State var draft = TaskTemplateDraft.new
     @Previewable @State var rewardInput = TaskTemplateRewardInput(draft: .new)
     @Previewable @FocusState var rewardFocus: String?
@@ -205,6 +222,8 @@ private extension TaskTemplateEditorForm {
             rewardInput: $rewardInput,
             rewardFocus: $rewardFocus,
             scheduledTime: $time,
+            isPlannedTimeEnabled: $plannedEnabled, plannedTime: $planTime,
+            isDeadlineTimeEnabled: $deadlineEnabled, deadlineTime: $deadlineTime,
             feedback: nil,
             onToggleWeekday: { weekday in
                 if draft.weekdays.contains(weekday) {
@@ -222,6 +241,10 @@ private extension TaskTemplateEditorForm {
 }
 
 #Preview("新建任务 · 校验错误") {
+    @Previewable @State var plannedEnabled = false
+    @Previewable @State var deadlineEnabled = false
+    @Previewable @State var planTime = Date(timeIntervalSinceReferenceDate: 0)
+    @Previewable @State var deadlineTime = Date(timeIntervalSinceReferenceDate: 3600)
     @Previewable @State var draft = TaskTemplateDraft.new
     @Previewable @State var rewardInput = TaskTemplateRewardInput(draft: .new)
     @Previewable @FocusState var rewardFocus: String?
@@ -233,6 +256,8 @@ private extension TaskTemplateEditorForm {
             rewardInput: $rewardInput,
             rewardFocus: $rewardFocus,
             scheduledTime: $time,
+            isPlannedTimeEnabled: $plannedEnabled, plannedTime: $planTime,
+            isDeadlineTimeEnabled: $deadlineEnabled, deadlineTime: $deadlineTime,
             feedback: .validation(.titleRequired),
             onToggleWeekday: { _ in },
             onDisable: {},
@@ -243,6 +268,10 @@ private extension TaskTemplateEditorForm {
 }
 
 #Preview("新建任务 · 大号字体") {
+    @Previewable @State var plannedEnabled = false
+    @Previewable @State var deadlineEnabled = false
+    @Previewable @State var planTime = Date(timeIntervalSinceReferenceDate: 0)
+    @Previewable @State var deadlineTime = Date(timeIntervalSinceReferenceDate: 3600)
     @Previewable @State var draft = TaskTemplateDraft.new
     @Previewable @State var rewardInput = TaskTemplateRewardInput(draft: .new)
     @Previewable @FocusState var rewardFocus: String?
@@ -254,6 +283,8 @@ private extension TaskTemplateEditorForm {
             rewardInput: $rewardInput,
             rewardFocus: $rewardFocus,
             scheduledTime: $time,
+            isPlannedTimeEnabled: $plannedEnabled, plannedTime: $planTime,
+            isDeadlineTimeEnabled: $deadlineEnabled, deadlineTime: $deadlineTime,
             feedback: nil,
             onToggleWeekday: { _ in },
             onDisable: {},
@@ -265,6 +296,10 @@ private extension TaskTemplateEditorForm {
 }
 
 #Preview("编辑已停用任务 · 横屏") {
+    @Previewable @State var plannedEnabled = false
+    @Previewable @State var deadlineEnabled = false
+    @Previewable @State var planTime = Date(timeIntervalSinceReferenceDate: 0)
+    @Previewable @State var deadlineTime = Date(timeIntervalSinceReferenceDate: 3600)
     @Previewable @State var rewardInput = TaskTemplateRewardInput(draft: .new)
     @Previewable @FocusState var rewardFocus: String?
     @Previewable @State var draft = TaskTemplateDraft(
@@ -285,6 +320,8 @@ private extension TaskTemplateEditorForm {
             rewardInput: $rewardInput,
             rewardFocus: $rewardFocus,
             scheduledTime: $time,
+            isPlannedTimeEnabled: $plannedEnabled, plannedTime: $planTime,
+            isDeadlineTimeEnabled: $deadlineEnabled, deadlineTime: $deadlineTime,
             feedback: nil,
             onToggleWeekday: { _ in },
             onDisable: {},

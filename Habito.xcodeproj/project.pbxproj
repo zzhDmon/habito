@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AB1000000000000000000165 /* TaskTemplateTimeSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000165 /* TaskTemplateTimeSection.swift */; };
 		AB1000000000000000000163 /* TaskTimingSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000163 /* TaskTimingSnapshot.swift */; };
 		AB1000000000000000000164 /* TodayTaskTimingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000164 /* TodayTaskTimingTests.swift */; };
 		AB1000000000000000000158 /* TodayTaskGroupKind.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000158 /* TodayTaskGroupKind.swift */; };
@@ -403,6 +404,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AB2000000000000000000165 /* TaskTemplateTimeSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskTemplateTimeSection.swift; sourceTree = "<group>"; };
 		AB2000000000000000000163 /* TaskTimingSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskTimingSnapshot.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000164 /* TodayTaskTimingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TodayTaskTimingTests.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000158 /* TodayTaskGroupKind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TodayTaskGroupKind.swift"; sourceTree = "<group>"; };
@@ -1233,6 +1235,7 @@
 				T20000000000000000000005 /* TaskTemplateEditorFeedback.swift */,
 				T20000000000000000000008 /* TaskTemplateEditorView.swift */,
 				T20000000000000000000009 /* TaskTemplateEditorForm.swift */,
+				AB2000000000000000000165 /* TaskTemplateTimeSection.swift */,
 				T20000000000000000000006 /* TaskTemplateEditorViewModel.swift */,
 				T20000000000000000000007 /* TaskTemplateEditorViewModelFactory.swift */,
 				Y20000000000000000000005 /* TaskTemplateSaveOutcome.swift */,
@@ -1813,6 +1816,7 @@
 				T10000000000000000000005 /* TaskTemplateEditorFeedback.swift in Sources */,
 				T10000000000000000000008 /* TaskTemplateEditorView.swift in Sources */,
 				T10000000000000000000009 /* TaskTemplateEditorForm.swift in Sources */,
+				AB1000000000000000000165 /* TaskTemplateTimeSection.swift in Sources */,
 				T10000000000000000000006 /* TaskTemplateEditorViewModel.swift in Sources */,
 				T10000000000000000000007 /* TaskTemplateEditorViewModelFactory.swift in Sources */,
 				Y10000000000000000000005 /* TaskTemplateSaveOutcome.swift in Sources */,

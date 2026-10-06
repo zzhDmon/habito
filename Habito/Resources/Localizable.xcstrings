@@ -1,6 +1,30 @@
 {
   "sourceLanguage" : "zh-Hans",
   "strings" : {
+    "taskEditor.setPlannedTime" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "设置计划时间" } } }
+    },
+    "taskEditor.setDeadlineTime" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "设置截止时间" } } }
+    },
+    "taskEditor.plannedTime" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "计划时间" } } }
+    },
+    "taskEditor.deadlineTime" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "截止时间" } } }
+    },
+    "taskEditor.optionalTimesSection" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "计划与截止（可不设置）" } } }
+    },
+    "taskEditor.optionalTimesHint" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "计划是准备开始的时间，截止只用于提示。开启后请检查时间；关闭即可取消设置。提醒仍按上方时间发送，超过截止仍可完成，不扣奖励。" } } }
+    },
     "kidToday.carryOverGroupTitle" : {
       "extractionState" : "manual",
       "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "之前未完成" } } }
@@ -3186,7 +3210,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "计划"
+            "value" : "提醒与时长"
           }
         }
       }

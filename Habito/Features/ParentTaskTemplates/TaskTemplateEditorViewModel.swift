@@ -9,6 +9,48 @@ final class TaskTemplateEditorViewModel {
     var draft: TaskTemplateDraft
     var rewardInput: TaskTemplateRewardInput
     var scheduledTime: Date
+
+    /// 可空分钟是唯一草稿真相；关闭立即清空，避免另存布尔状态与旧值漂移。
+    ///
+    /// 首次明确启用时采用当前可见提醒时刻作为输入候选，家长可立即调整；
+    /// 不在加载旧 nil 或保存未启用控件时自动补值。
+    var isPlannedTimeEnabled: Bool {
+        get { draft.plannedTimeOfDayMinutes != nil }
+        set {
+            if !newValue {
+                draft.plannedTimeOfDayMinutes = nil
+            } else if draft.plannedTimeOfDayMinutes == nil {
+                draft.plannedTimeOfDayMinutes = timeMinutes(from: scheduledTime)
+            }
+        }
+    }
+
+    /// 截止与计划独立，没有强制先后关系；开启和清空只修改纯值草稿，不写库。
+    var isDeadlineTimeEnabled: Bool {
+        get { draft.deadlineTimeOfDayMinutes != nil }
+        set {
+            if !newValue {
+                draft.deadlineTimeOfDayMinutes = nil
+            } else if draft.deadlineTimeOfDayMinutes == nil {
+                draft.deadlineTimeOfDayMinutes = timeMinutes(from: scheduledTime)
+            }
+        }
+    }
+
+    /// DatePicker 的日期部分仅是固定锚点；保存的是注入时区下的时分。
+    var plannedTime: Date {
+        get { Self.makeTimeDate(minutes: draft.plannedTimeOfDayMinutes, calendar: calendar) ?? scheduledTime }
+        set { draft.plannedTimeOfDayMinutes = timeMinutes(from: newValue) }
+    }
+
+    /// 与计划使用同一转换边界，但直接绑定独立可空截止分钟。
+    var deadlineTime: Date {
+        get { Self.makeTimeDate(minutes: draft.deadlineTimeOfDayMinutes, calendar: calendar) ?? scheduledTime }
+        set { draft.deadlineTimeOfDayMinutes = timeMinutes(from: newValue) }
+    }
+
+    /// 原生控件必须和分钟转换使用同一日历/时区，不能依赖设备设置恰好一致。
+    var timeInputCalendar: Calendar { calendar }
     private(set) var feedback: TaskTemplateEditorFeedback?
     private(set) var lifecycleImpact: TaskTemplateLifecycleImpact?
     private(set) var isLoading = true
@@ -50,10 +92,8 @@ final class TaskTemplateEditorViewModel {
         self.calendar = configuredCalendar
         draft = .new
         rewardInput = TaskTemplateRewardInput(draft: .new)
-        scheduledTime = Self.makeTimeDate(
-            minutes: TaskTemplateDraft.new.timeOfDayMinutes,
-            calendar: configuredCalendar
-        )
+        // 加载期间的有限占位值不能保存；真正控件值在 load 中校验固定日历锚点后生成。
+        scheduledTime = Date(timeIntervalSinceReferenceDate: 0)
         isCreating = templateID == nil
     }
 
@@ -66,11 +106,11 @@ final class TaskTemplateEditorViewModel {
             if let templateID {
                 draft = try service.load(templateID: templateID)
                 rewardInput = TaskTemplateRewardInput(draft: draft)
-                scheduledTime = Self.makeTimeDate(
-                    minutes: draft.timeOfDayMinutes,
-                    calendar: calendar
-                )
             }
+            guard let time = Self.makeTimeDate(minutes: draft.timeOfDayMinutes, calendar: calendar) else {
+                throw TaskTemplateEditorError.invalidTime
+            }
+            scheduledTime = time
             isLoading = false
         } catch {
             logger.error("任务编辑器加载失败：\(String(describing: type(of: error)), privacy: .public)")
@@ -88,8 +128,7 @@ final class TaskTemplateEditorViewModel {
         isSaving = true
         defer { isSaving = false }
         var value = draft
-        let components = calendar.dateComponents([.hour, .minute], from: scheduledTime)
-        value.timeOfDayMinutes = (components.hour ?? 0) * 60 + (components.minute ?? 0)
+        value.timeOfDayMinutes = timeMinutes(from: scheduledTime)
         do {
             // 先校验原文再写入，不能把无效输入当作“没有修改”而保存旧奖励。
             value = try rewardInput.applying(to: value)
@@ -175,8 +214,21 @@ final class TaskTemplateEditorViewModel {
         try LocalDate(date: dateProvider.now(), calendar: calendar, timeZone: calendar.timeZone)
     }
 
-    private static func makeTimeDate(minutes: Int, calendar: Calendar) -> Date {
-        calendar.date(
+    /// 非有限控件值用非法分钟传入既有校验路径，明确失败而不是静默保存为午夜。
+    ///
+    /// - Returns: 有效时分为 0...1439；-1 仅表示坏输入，服务写前拒绝，绝不作为配置落库。
+    private func timeMinutes(from date: Date) -> Int {
+        guard date.timeIntervalSinceReferenceDate.isFinite else { return -1 }
+        let components = calendar.dateComponents([.hour, .minute], from: date)
+        guard let hour = components.hour, let minute = components.minute,
+            (0..<24).contains(hour), (0..<60).contains(minute)
+        else { return -1 }
+        return hour * 60 + minute
+    }
+
+    private static func makeTimeDate(minutes: Int?, calendar: Calendar) -> Date? {
+        guard let minutes, (0..<1440).contains(minutes) else { return nil }
+        return calendar.date(
             from: DateComponents(
                 year: 2001,
                 month: 1,
@@ -184,6 +236,6 @@ final class TaskTemplateEditorViewModel {
                 hour: minutes / 60,
                 minute: minutes % 60
             )
-        ) ?? .now
+        )
     }
 }

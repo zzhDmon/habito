@@ -738,6 +738,152 @@ final class HabitoKidFlowUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["还没有任务"].waitForExistence(timeout: 5))
     }
 
+    func testFormalOptionalTimesSetEditClearAndRelaunchWithSystemTextSize() throws {
+        let name = "正式可空时间"
+        let app = launchEmptyParentEditor(title: name)
+        let originalReminder = editorReminderValue(in: app)
+        assertTimeToggle("planned", enabled: false, in: app)
+        assertTimeToggle("deadline", enabled: false, in: app)
+        changeTimeToggle("planned", enabled: true, in: app)
+        setOptionalTime("planned", hour: "08", minute: "15", in: app)
+        changeTimeToggle("deadline", enabled: true, in: app)
+        setOptionalTime("deadline", hour: "21", minute: "45", in: app)
+        tapEditorSave(in: app)
+        let template = parentTemplate(named: name, in: app)
+        XCTAssertTrue(template.waitForExistence(timeout: 5))
+        template.tap()
+        assertOptionalTime("planned", hour: "08", minute: "15", in: app)
+        assertOptionalTime("deadline", hour: "21", minute: "45", in: app)
+        setOptionalTime("planned", hour: "09", minute: "20", in: app, towardTop: true)
+        assertOptionalTime("deadline", hour: "21", minute: "45", in: app)
+        tapEditorSave(in: app)
+        XCTAssertTrue(template.waitForExistence(timeout: 5))
+        app.terminate()
+        app.launchArguments = ["--habito-ui-testing", "--habito-ui-empty"]
+        app.launch()
+        unlockExistingParent(in: app)
+        parentTemplate(named: name, in: app).tap()
+        XCTAssertEqual(editorReminderValue(in: app), originalReminder, "独立计划/截止不能改提醒")
+        assertOptionalTime("planned", hour: "09", minute: "20", in: app)
+        assertOptionalTime("deadline", hour: "21", minute: "45", in: app)
+        keepScreenshot(app, name: "正式可空时间重启回读")
+        changeTimeToggle("planned", enabled: false, in: app, towardTop: true)
+        tapEditorSave(in: app)
+        XCTAssertTrue(template.waitForExistence(timeout: 5))
+        template.tap()
+        assertTimeToggle("planned", enabled: false, in: app)
+        assertOptionalTime("deadline", hour: "21", minute: "45", in: app)
+        changeTimeToggle("deadline", enabled: false, in: app)
+        tapEditorSave(in: app)
+        XCTAssertTrue(template.waitForExistence(timeout: 5))
+        app.terminate()
+        app.launch()
+        unlockExistingParent(in: app)
+        parentTemplate(named: name, in: app).tap()
+        XCTAssertEqual(editorReminderValue(in: app), originalReminder, "清空可选时间仍保留原提醒")
+        assertTimeToggle("planned", enabled: false, in: app)
+        assertTimeToggle("deadline", enabled: false, in: app)
+        tapEditorSave(in: app)
+        app.buttons["parent.gate.close"].tap()
+        XCTAssertEqual(
+            app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "kid.today.task.")).count, 1)
+    }
+
+    func testLegacyOptionalTimesRemainUnsetAfterTitleEditAndRelaunchWithSystemTextSize() throws {
+        let app = launchScenario("legacy")
+        unlockParent(in: app)
+        app.buttons[seededTemplateIdentifier].tap()
+        assertTimeToggle("planned", enabled: false, in: app)
+        assertTimeToggle("deadline", enabled: false, in: app)
+        let title = app.textFields["parent.templates.editor.title"]
+        scrollFullyIntoEditorViewport(title, in: app, towardTop: true)
+        title.tap()
+        title.typeText("仍未设置时间")
+        tapEditorSave(in: app)
+        XCTAssertTrue(app.buttons[seededTemplateIdentifier].waitForExistence(timeout: 5))
+        app.terminate()
+        app.launchArguments = ["--habito-ui-testing"]
+        app.launch()
+        unlockExistingParent(in: app)
+        app.buttons[seededTemplateIdentifier].tap()
+        assertTimeToggle("planned", enabled: false, in: app)
+        assertTimeToggle("deadline", enabled: false, in: app)
+        keepScreenshot(app, name: "旧任务没有自动补时间")
+    }
+
+    private func assertTimeToggle(_ field: String, enabled: Bool, in app: XCUIApplication) {
+        let toggle = app.buttons["parent.templates.editor.\(field)-enabled"]
+        scrollFullyIntoEditorViewport(toggle, in: app)
+        XCTAssertGreaterThanOrEqual(toggle.frame.height, 44)
+        XCTAssertGreaterThanOrEqual(toggle.frame.width, 44)
+        XCTAssertEqual(toggle.label, field == "planned" ? "设置计划时间" : "设置截止时间")
+        XCTAssertEqual(toggle.value as? String, enabled ? "已选择" : "未选择")
+        if !enabled {
+            XCTAssertFalse(app.datePickers["parent.templates.editor.\(field)-time"].exists)
+        }
+    }
+
+    private func changeTimeToggle(
+        _ field: String, enabled: Bool, in app: XCUIApplication, towardTop: Bool = false
+    ) {
+        let toggle = app.buttons["parent.templates.editor.\(field)-enabled"]
+        scrollFullyIntoEditorViewport(toggle, in: app, towardTop: towardTop)
+        XCTAssertGreaterThanOrEqual(toggle.frame.height, 44)
+        XCTAssertGreaterThanOrEqual(toggle.frame.width, 44)
+        XCTAssertEqual(toggle.value as? String, enabled ? "未选择" : "已选择", "应实际改变状态，而不是把现有状态当操作成功")
+        // 原生 Button 的完整区域可点击；启用事实由明确的读屏值和真实时间控件回读证明。
+        toggle.tap()
+        let changed = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "value == %@", enabled ? "已选择" : "未选择"), object: toggle)
+        let result = XCTWaiter.wait(for: [changed], timeout: 5)
+        if result != .completed {
+            let diagnostic = XCTAttachment(string: app.debugDescription)
+            diagnostic.name = "时间开关原生层级与实际状态"
+            diagnostic.lifetime = .keepAlways
+            add(diagnostic)
+            keepScreenshot(app, name: "时间开关点击失败")
+        }
+        XCTAssertEqual(result, .completed)
+    }
+
+    private func setOptionalTime(
+        _ field: String, hour: String, minute: String, in app: XCUIApplication, towardTop: Bool = false
+    ) {
+        let picker = app.datePickers["parent.templates.editor.\(field)-time"]
+        scrollFullyIntoEditorViewport(picker, in: app, towardTop: towardTop)
+        let wheels = picker.pickerWheels
+        XCTAssertEqual(wheels.count, 2, "中文 24 小时原生控件应仅有时/分两列")
+        wheels.element(boundBy: 0).adjust(toPickerWheelValue: hour)
+        wheels.element(boundBy: 1).adjust(toPickerWheelValue: minute)
+        assertOptionalTime(field, hour: hour, minute: minute, in: app)
+    }
+
+    private func assertOptionalTime(_ field: String, hour: String, minute: String, in app: XCUIApplication) {
+        let picker = app.datePickers["parent.templates.editor.\(field)-time"]
+        scrollFullyIntoEditorViewport(picker, in: app)
+        XCTAssertGreaterThanOrEqual(picker.frame.height, 44)
+        XCTAssertGreaterThanOrEqual(picker.frame.width, 44)
+        XCTAssertEqual(picker.pickerWheels.count, 2)
+        XCTAssertEqual(picker.label, field == "planned" ? "计划时间" : "截止时间")
+        // 原生中文 AX 回读带单位，选择 API 却接收不带单位的两位数字；精确核对而非模糊包含。
+        XCTAssertEqual(picker.pickerWheels.element(boundBy: 0).value as? String, hour + "点")
+        XCTAssertEqual(picker.pickerWheels.element(boundBy: 1).value as? String, minute + "分钟")
+    }
+
+    private func editorReminderValue(in app: XCUIApplication) -> String {
+        let reminder = app.datePickers["parent.templates.editor.reminder-time"]
+        scrollFullyIntoEditorViewport(reminder, in: app, towardTop: true)
+        XCTAssertGreaterThanOrEqual(reminder.frame.height, 44)
+        XCTAssertGreaterThanOrEqual(reminder.frame.width, 44)
+        XCTAssertEqual(reminder.pickerWheels.count, 2)
+        XCTAssertEqual(reminder.label, "提醒时间")
+        let hour = reminder.pickerWheels.element(boundBy: 0).value as? String
+        let minute = reminder.pickerWheels.element(boundBy: 1).value as? String
+        XCTAssertEqual(hour, "19点")
+        XCTAssertEqual(minute, "30分钟")
+        return (hour ?? "") + ":" + (minute ?? "")
+    }
+
     func testFormalConfiguredTemplateProtectsSubmittedRewardThroughEditApprovalAndRestart() throws {
         verifyFormalConfigurationLoop(zeroReward: false)
     }
