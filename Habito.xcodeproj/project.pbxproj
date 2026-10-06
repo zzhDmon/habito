@@ -9,10 +9,12 @@
 /* Begin PBXBuildFile section */
 		AB1000000000000000000158 /* TodayTaskGroupKind.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000158 /* TodayTaskGroupKind.swift */; };
 		AB1000000000000000000159 /* TodayTaskGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000159 /* TodayTaskGroup.swift */; };
+		AB1000000000000000000161 /* KidTodayTaskGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000161 /* KidTodayTaskGroupView.swift */; };
 		AB1000000000000000000154 /* KidRewardAmountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000154 /* KidRewardAmountView.swift */; };
 		AB1000000000000000000155 /* KidTodayRewardOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000155 /* KidTodayRewardOverview.swift */; };
 		AB1000000000000000000156 /* KidTodayTaskContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000156 /* KidTodayTaskContent.swift */; };
 		AB1000000000000000000160 /* TodayTaskGroupingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000160 /* TodayTaskGroupingTests.swift */; };
+		AB1000000000000000000162 /* KidTodayTaskGroupRenderingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000162 /* KidTodayTaskGroupRenderingTests.swift */; };
 		AB1000000000000000000157 /* KidTodayRewardRenderingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000157 /* KidTodayRewardRenderingTests.swift */; };
 		AB1000000000000000000152 /* TodayRewardState.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000152 /* TodayRewardState.swift */; };
 		AB1000000000000000000153 /* TodayRewardStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000153 /* TodayRewardStateTests.swift */; };
@@ -401,10 +403,12 @@
 /* Begin PBXFileReference section */
 		AB2000000000000000000158 /* TodayTaskGroupKind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TodayTaskGroupKind.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000159 /* TodayTaskGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TodayTaskGroup.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000161 /* KidTodayTaskGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KidTodayTaskGroupView.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000154 /* KidRewardAmountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KidRewardAmountView.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000155 /* KidTodayRewardOverview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KidTodayRewardOverview.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000156 /* KidTodayTaskContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KidTodayTaskContent.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000160 /* TodayTaskGroupingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TodayTaskGroupingTests.swift"; sourceTree = "<group>"; };
+		AB2000000000000000000162 /* KidTodayTaskGroupRenderingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KidTodayTaskGroupRenderingTests.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000157 /* KidTodayRewardRenderingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KidTodayRewardRenderingTests.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000152 /* TodayRewardState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TodayRewardState.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000153 /* TodayRewardStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TodayRewardStateTests.swift"; sourceTree = "<group>"; };
@@ -1281,6 +1285,7 @@
 				I20000000000000000000006 /* KidTodayView.swift */,
 				AB2000000000000000000158 /* TodayTaskGroupKind.swift */,
 				AB2000000000000000000159 /* TodayTaskGroup.swift */,
+				AB2000000000000000000161 /* KidTodayTaskGroupView.swift */,
 				AB2000000000000000000154 /* KidRewardAmountView.swift */,
 				AB2000000000000000000155 /* KidTodayRewardOverview.swift */,
 				AB2000000000000000000156 /* KidTodayTaskContent.swift */,
@@ -1330,6 +1335,7 @@
 				L20000000000000000000002 /* TodayViewModelTests.swift */,
 				AB2000000000000000000153 /* TodayRewardStateTests.swift */,
 				AB2000000000000000000160 /* TodayTaskGroupingTests.swift */,
+				AB2000000000000000000162 /* KidTodayTaskGroupRenderingTests.swift */,
 				AB2000000000000000000157 /* KidTodayRewardRenderingTests.swift */,
 			);
 			path = Features;
@@ -1732,6 +1738,7 @@
 				I10000000000000000000006 /* KidTodayView.swift in Sources */,
 				AB1000000000000000000158 /* TodayTaskGroupKind.swift in Sources */,
 				AB1000000000000000000159 /* TodayTaskGroup.swift in Sources */,
+				AB1000000000000000000161 /* KidTodayTaskGroupView.swift in Sources */,
 				AB1000000000000000000154 /* KidRewardAmountView.swift in Sources */,
 				AB1000000000000000000155 /* KidTodayRewardOverview.swift in Sources */,
 				AB1000000000000000000156 /* KidTodayTaskContent.swift in Sources */,
@@ -2039,6 +2046,7 @@
 				L10000000000000000000002 /* TodayViewModelTests.swift in Sources */,
 				AB1000000000000000000153 /* TodayRewardStateTests.swift in Sources */,
 				AB1000000000000000000160 /* TodayTaskGroupingTests.swift in Sources */,
+				AB1000000000000000000162 /* KidTodayTaskGroupRenderingTests.swift in Sources */,
 				AB1000000000000000000157 /* KidTodayRewardRenderingTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

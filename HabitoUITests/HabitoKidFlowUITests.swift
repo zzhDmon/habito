@@ -13,6 +13,137 @@ final class HabitoKidFlowUITests: XCTestCase {
         continueAfterFailure = false
     }
 
+    func testFormalTimePeriodGroupsKeepRecommendationUniqueAndTasksReachableWithSystemTextSize() throws {
+        let app = launchEmptyParentEditor(title: "分组推荐锚点")
+        tapEditorSave(in: app)
+        app.buttons["parent.gate.close"].tap()
+        let anchor = todayTask(named: "分组推荐锚点", in: app)
+        scrollFullyIntoTodayViewport(anchor, in: app)
+        anchor.tap()
+        app.buttons["kid.session.start"].tap()
+        let pause = app.buttons["kid.session.pause"]
+        XCTAssertTrue(pause.waitForExistence(timeout: 5))
+        pause.tap()
+        returnToTodayFromTask(in: app)
+        unlockExistingParent(in: app)
+        // 先用真实暂停会话固定推荐，避免相同提醒时刻的随机 UUID 决定哪一组少一项。
+        let periods = [("早晨", "morning"), ("放学后", "afterSchool"), ("晚上", "evening"), ("全天", "allDay")]
+        for (title, _) in periods {
+            let create = app.buttons["parent.templates.create"]
+            XCTAssertTrue(create.waitForExistence(timeout: 5))
+            create.tap()
+            let input = app.textFields["parent.templates.editor.title"]
+            XCTAssertTrue(input.waitForExistence(timeout: 5))
+            input.tap()
+            input.typeText("分组\(title)")
+            chooseEditorOption(title, identifier: "parent.templates.editor.time-period", in: app)
+            if title == "放学后" {
+                chooseEditorOption("家长验收", identifier: "parent.templates.editor.verification", in: app)
+            }
+            tapEditorSave(in: app)
+            XCTAssertTrue(parentTemplate(named: "分组\(title)", in: app).waitForExistence(timeout: 5))
+        }
+        app.buttons["parent.gate.close"].tap()
+        scrollFullyIntoTodayViewport(anchor, in: app, towardTop: true)
+        XCTAssertEqual(
+            app.buttons.matching(
+                NSPredicate(format: "identifier BEGINSWITH %@ AND label CONTAINS %@", "kid.today.task.", "分组推荐锚点")
+            ).count, 1)
+        let anchorID = anchor.identifier
+        var taskIDs: [String] = []
+        for (title, suffix) in periods {
+            let header = app.staticTexts["kid.today.group.\(suffix)"]
+            scrollFullyIntoTodayViewport(header, in: app)
+            XCTAssertEqual(header.label, title)
+            let task = todayTask(named: "分组\(title)", in: app)
+            scrollFullyIntoTodayViewport(task, in: app)
+            XCTAssertGreaterThanOrEqual(task.frame.width, 44)
+            XCTAssertGreaterThanOrEqual(task.frame.height, 44)
+            taskIDs.append(task.identifier)
+        }
+        XCTAssertEqual(Set(taskIDs).count, 4)
+        XCTAssertFalse(taskIDs.contains(anchorID))
+        keepScreenshot(app, name: "正式四时段分组与独立推荐")
+
+        let morning = todayTask(named: "分组早晨", in: app)
+        scrollFullyIntoTodayViewport(morning, in: app, towardTop: true)
+        morning.tap()
+        let complete = app.buttons["kid.session.complete"]
+        scrollFullyIntoSessionViewport(complete, in: app)
+        complete.tap()
+        XCTAssertTrue(app.staticTexts["你做到了！"].waitForExistence(timeout: 5))
+        returnToTodayFromTask(in: app)
+        let afterSchool = todayTask(named: "分组放学后", in: app)
+        scrollFullyIntoTodayViewport(afterSchool, in: app)
+        afterSchool.tap()
+        let submit = app.buttons["kid.session.submit"]
+        scrollFullyIntoSessionViewport(submit, in: app)
+        submit.tap()
+        assertWaitingWithoutOldActions(in: app)
+        returnToTodayFromTask(in: app)
+        relaunchTodayKeepingData(app)
+        assertTodayRewards(xp: 0, coins: 0, in: app)
+        XCTAssertTrue(app.staticTexts["完成 1 / 5"].waitForExistence(timeout: 5))
+        for (index, (title, suffix)) in periods.enumerated() {
+            let header = app.staticTexts["kid.today.group.\(suffix)"]
+            scrollFullyIntoTodayViewport(header, in: app)
+            XCTAssertEqual(header.label, title)
+            let task = todayTask(named: "分组\(title)", in: app)
+            scrollFullyIntoTodayViewport(task, in: app)
+            XCTAssertEqual(task.identifier, taskIDs[index])
+            if title == "早晨" { XCTAssertTrue(task.label.contains("已完成")) }
+            if title == "放学后" { XCTAssertTrue(task.label.contains("等家长确认")) }
+        }
+        scrollFullyIntoTodayViewport(anchor, in: app, towardTop: true)
+        XCTAssertEqual(anchor.identifier, anchorID)
+    }
+
+    private func todayTask(named title: String, in app: XCUIApplication) -> XCUIElement {
+        app.buttons.matching(
+            NSPredicate(format: "identifier BEGINSWITH %@ AND label CONTAINS %@", "kid.today.task.", title)
+        ).element
+    }
+
+    func testCrossDayPausedTaskRemainsRecommendedOutsideTodayPeriodGroupsWithSystemTextSize() throws {
+        let app = launchScenario("legacy")
+        openSeededTask(in: app)
+        app.buttons["kid.session.start"].tap()
+        let pause = app.buttons["kid.session.pause"]
+        XCTAssertTrue(pause.waitForExistence(timeout: 5))
+        pause.tap()
+        returnToTodayFromTask(in: app)
+        let reference = try XCTUnwrap(Double(app.launchEnvironment["HABITO_UI_SYSTEM_REFERENCE"] ?? ""))
+        app.terminate()
+        app.launchArguments = ["--habito-ui-testing"]
+        // 仅推进现有 Debug 映射时钟一天；暂停累计时长不靠等待，也不改变设备系统时间。
+        app.launchEnvironment["HABITO_UI_SYSTEM_REFERENCE"] = String(reference - 86400)
+        app.launch()
+        let carryOver = app.buttons[seededTaskIdentifier]
+        scrollFullyIntoTodayViewport(carryOver, in: app)
+        XCTAssertTrue(carryOver.label.contains("昨日任务仍在进行"))
+        XCTAssertEqual(app.buttons.matching(identifier: seededTaskIdentifier).count, 1)
+        let allDay = app.staticTexts["kid.today.group.allDay"]
+        scrollFullyIntoTodayViewport(allDay, in: app)
+        XCTAssertEqual(allDay.label, "全天")
+        let today = app.buttons.matching(
+            NSPredicate(
+                format: "identifier BEGINSWITH %@ AND identifier != %@", "kid.today.task.", seededTaskIdentifier)
+        ).element
+        scrollFullyIntoTodayViewport(today, in: app)
+        XCTAssertFalse(today.label.contains("昨日任务仍在进行"))
+        let todayID = today.identifier
+        keepScreenshot(app, name: "跨日推荐与今日全天分组分开")
+        scrollFullyIntoTodayViewport(carryOver, in: app, towardTop: true)
+        carryOver.tap()
+        XCTAssertTrue(app.buttons["kid.session.resume"].waitForExistence(timeout: 5))
+        returnToTodayFromTask(in: app)
+        relaunchTodayKeepingData(app)
+        scrollFullyIntoTodayViewport(app.buttons[seededTaskIdentifier], in: app)
+        XCTAssertTrue(app.buttons[seededTaskIdentifier].label.contains("昨日任务仍在进行"))
+        scrollFullyIntoTodayViewport(app.buttons[todayID], in: app)
+        assertTodayRewards(xp: 0, coins: 0, in: app)
+    }
+
     func testTodayRewardsPersistAfterCompletionAndRelaunchWithSystemTextSize() throws {
         let app = launchScenario("reward-after-reminder")
         assertTodayRewards(xp: 0, coins: 0, in: app)
@@ -93,12 +224,13 @@ final class HabitoKidFlowUITests: XCTestCase {
         XCTAssertFalse(app.descendants(matching: .any)["kid.today.rewards.error"].exists)
     }
 
-    private func scrollFullyIntoTodayViewport(_ element: XCUIElement, in app: XCUIApplication) {
+    private func scrollFullyIntoTodayViewport(_ element: XCUIElement, in app: XCUIApplication, towardTop: Bool = false)
+    {
         let viewport = app.scrollViews.element(boundBy: 0)
         XCTAssertTrue(viewport.waitForExistence(timeout: 5))
         let navigationBar = app.navigationBars["今日"]
         XCTAssertTrue(navigationBar.waitForExistence(timeout: 5))
-        for _ in 0..<8 {
+        for _ in 0..<25 {
             var visibleFrame = viewport.frame.intersection(app.frame)
             // 今日根页不是家长表单；只扣自己的导航栏，不能套用编辑器的标题/键盘规则。
             let barFrame = navigationBar.frame
@@ -112,11 +244,16 @@ final class HabitoKidFlowUITests: XCTestCase {
                 return
             }
             if element.exists, element.isHittable, visibleFrame.contains(element.frame) { return }
-            if element.exists, element.frame.minY < visibleFrame.minY {
-                viewport.swipeDown()
-            } else {
-                viewport.swipeUp()
-            }
+            let distance =
+                element.exists ? (element.frame.midY - visibleFrame.midY) / visibleFrame.height : (towardTop ? -1 : 1)
+            // 大字推荐卡会被整屏 swipe 来回越过；按公开 frame 对齐，保持完整可见与可操作标准。
+            let displacement =
+                min(max(abs(distance), 0.08), 0.30) * visibleFrame.height / viewport.frame.height
+                * (distance < 0 ? 1.0 : -1.0)
+            let centerY = (visibleFrame.midY - viewport.frame.minY) / viewport.frame.height
+            let start = viewport.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: centerY))
+            let end = viewport.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: centerY + displacement))
+            start.press(forDuration: 0.1, thenDragTo: end)
         }
         keepScreenshot(app, name: "今日页完整可见性失败")
         let diagnostic = XCTAttachment(string: app.debugDescription)
@@ -127,8 +264,10 @@ final class HabitoKidFlowUITests: XCTestCase {
     }
 
     private func relaunchTodayKeepingData(_ app: XCUIApplication) {
+        let isEmptyFixture = app.launchArguments.contains("--habito-ui-empty")
         app.terminate()
-        app.launchArguments = ["--habito-ui-testing"]
+        // 正式空库场景只保留数据、不启用默认样例播种；其他旧场景的启动语义不变。
+        app.launchArguments = isEmptyFixture ? ["--habito-ui-testing", "--habito-ui-empty"] : ["--habito-ui-testing"]
         app.launch()
     }
 

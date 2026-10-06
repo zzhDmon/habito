@@ -86,6 +86,14 @@ nonisolated enum HabitoAccessibilityID {
         "kid.today.task.\(id.uuidString.lowercased())"
     }
 
+    /// 标题身份来自显式语义组，不依赖译文、提醒小时或遍历序号。
+    static func todayTaskGroupTitle(_ kind: TodayTaskGroupKind) -> String {
+        switch kind {
+        case .carryOver: "kid.today.group.carry-over"
+        case let .timePeriod(period): "kid.today.group.\(period.rawValue)"
+        }
+    }
+
     static func parentTemplate(_ id: UUID) -> String {
         "parent.templates.item.\(id.uuidString.lowercased())"
     }
