@@ -100,6 +100,14 @@ struct TodayTaskQueryService {
                 value: occurrence.statusRawValue
             )
         }
+        for (field, value) in [
+            ("scheduledAt", Optional(occurrence.scheduledAt)),
+            ("plannedAt", occurrence.plannedAt), ("deadlineAt", occurrence.deadlineAt),
+        ] {
+            if let value, !value.timeIntervalSinceReferenceDate.isFinite {
+                throw TodayTaskQueryError.invalidOccurrenceTime(occurrenceID: occurrence.id, field: field)
+            }
+        }
         guard occurrence.targetDurationSnapshot > 0 else {
             throw TodayTaskQueryError.invalidTargetDuration(
                 occurrenceID: occurrence.id,
@@ -149,7 +157,10 @@ struct TodayTaskQueryService {
             completion: completion,
             submission: submission,
             verificationType: verification,
-            timePeriod: timePeriod
+            timePeriod: timePeriod,
+            timing: TaskTimingSnapshot(
+                plannedAt: occurrence.plannedAt, deadlineAt: occurrence.deadlineAt,
+                canShowDeadlineHint: (status == .pending || status == .inProgress) && submission?.state != .waiting)
         )
     }
 

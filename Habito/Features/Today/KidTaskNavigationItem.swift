@@ -9,6 +9,9 @@ struct KidTaskNavigationItem: Hashable, Identifiable, Sendable {
     let title: String
     let iconName: String
     let scheduledTimeText: String
+    let plannedTimeText: String?
+    let deadlineTimeText: String?
+    let timing: TaskTimingSnapshot
     let targetDurationText: String
     let status: TaskOccurrenceStatus
     let statusText: String
@@ -20,15 +23,20 @@ struct KidTaskNavigationItem: Hashable, Identifiable, Sendable {
     ///
     /// 日历由组合根注入，避免时间文案偷偷依赖设备当前设置。
     init(item: TodayTaskItem, calendar: Calendar, referenceDate: LocalDate? = nil) {
-        let components = calendar.dateComponents([.hour, .minute], from: item.scheduledAt)
-        let hour = components.hour ?? 0
-        let minute = components.minute ?? 0
+        // 三种时刻统一用注入时区和原有 24 小时中文样式，不在 View 读取设备设置。
+        let timeStyle = Date.FormatStyle(
+            date: .omitted, time: .omitted, locale: Locale(identifier: "zh_Hans_CN"),
+            calendar: calendar, timeZone: calendar.timeZone
+        ).hour(.twoDigits(amPM: .omitted)).minute(.twoDigits)
         let targetMinutes = max(1, Int(ceil(item.targetDurationSeconds / 60)))
 
         id = item.id
         title = item.title
         iconName = item.iconName
-        scheduledTimeText = String(format: "%02d:%02d", hour, minute)
+        scheduledTimeText = item.scheduledAt.formatted(timeStyle)
+        plannedTimeText = item.timing.plannedAt.map { $0.formatted(timeStyle) }
+        deadlineTimeText = item.timing.deadlineAt.map { $0.formatted(timeStyle) }
+        timing = item.timing
         targetDurationText = String.localizedStringWithFormat(
             String(localized: "kidTask.durationMinutesFormat"),
             targetMinutes
@@ -74,12 +82,18 @@ struct KidTaskNavigationItem: Hashable, Identifiable, Sendable {
         statusText: String,
         statusIconName: String,
         timePeriod: TaskTimePeriod = .allDay,
-        isCarryOver: Bool = false
+        isCarryOver: Bool = false,
+        plannedTimeText: String? = nil,
+        deadlineTimeText: String? = nil,
+        timing: TaskTimingSnapshot = .unspecified
     ) {
         self.id = id
         self.title = title
         self.iconName = iconName
         self.scheduledTimeText = scheduledTimeText
+        self.plannedTimeText = plannedTimeText
+        self.deadlineTimeText = deadlineTimeText
+        self.timing = timing
         self.targetDurationText = targetDurationText
         self.status = status
         self.statusText = statusText

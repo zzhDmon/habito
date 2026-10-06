@@ -17,6 +17,7 @@ struct TodayTaskItem: Equatable, Identifiable, Sendable {
     let submission: TaskSubmissionSnapshot?
     let verificationType: TaskVerificationType
     let timePeriod: TaskTimePeriod
+    let timing: TaskTimingSnapshot
 
     /// 等待是提交事实的派生值，不能另存一个可能与审核历史漂移的状态。
     var isAwaitingReview: Bool { submission?.state == .waiting }
@@ -27,7 +28,8 @@ struct TodayTaskItem: Equatable, Identifiable, Sendable {
         activeSessionState: TimerSessionState?, activeDurationSeconds: TimeInterval, completion: TodayTaskCompletion?,
         submission: TaskSubmissionSnapshot? = nil,
         verificationType: TaskVerificationType = .selfConfirm,
-        timePeriod: TaskTimePeriod = .allDay
+        timePeriod: TaskTimePeriod = .allDay,
+        timing: TaskTimingSnapshot = .unspecified
     ) {
         self.id = id
         self.date = date
@@ -44,5 +46,6 @@ struct TodayTaskItem: Equatable, Identifiable, Sendable {
         self.submission = submission
         self.verificationType = verificationType
         self.timePeriod = timePeriod
+        self.timing = timing
     }
 }
