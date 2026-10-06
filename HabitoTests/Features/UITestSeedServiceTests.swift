@@ -82,7 +82,9 @@
                 #expect(submissions.first?.reviewState == .returned)
             }
             #expect(try fixture.context.fetchCount(FetchDescriptor<CompletionRecord>()) == 0)
-            #expect(try fixture.context.fetchCount(FetchDescriptor<XPTransaction>()) == 0)
+            #expect(
+                try fixture.context.fetchCount(FetchDescriptor<XPTransaction>())
+                    == (scenario == .corruptRewardLedger ? 1 : 0))
             #expect(try fixture.context.fetchCount(FetchDescriptor<CoinTransaction>()) == 0)
         }
 

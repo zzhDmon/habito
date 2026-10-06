@@ -13,6 +13,125 @@ final class HabitoKidFlowUITests: XCTestCase {
         continueAfterFailure = false
     }
 
+    func testTodayRewardsPersistAfterCompletionAndRelaunchWithSystemTextSize() throws {
+        let app = launchScenario("reward-after-reminder")
+        assertTodayRewards(xp: 0, coins: 0, in: app)
+        openSeededTask(in: app)
+        let complete = app.buttons["kid.session.complete"]
+        scrollFullyIntoSessionViewport(complete, in: app)
+        complete.tap()
+        XCTAssertTrue(app.staticTexts["你做到了！"].waitForExistence(timeout: 5))
+        returnToTodayFromTask(in: app)
+        assertTodayRewards(xp: 11, coins: 7, in: app)
+        let completed = app.staticTexts["今天的任务都完成了。"]
+        scrollFullyIntoTodayViewport(completed, in: app)
+        keepScreenshot(app, name: "全部完成仍可查看真实资产")
+        relaunchWithOldSeededNotification(app)
+        assertTodayRewards(xp: 11, coins: 7, in: app)
+        XCTAssertFalse(app.descendants(matching: .any)["kid.session.completion-feedback"].exists)
+    }
+
+    func testTodayRewardsReflectImmediateUndoWithoutCreatingAnotherReward() throws {
+        let app = launchScenario("reward-after-reminder")
+        openSeededTask(in: app)
+        app.buttons["kid.session.complete"].tap()
+        let undo = app.buttons["kid.session.undo"]
+        XCTAssertTrue(undo.waitForExistence(timeout: 2))
+        undo.tap()
+        XCTAssertTrue(app.buttons["kid.session.complete"].waitForExistence(timeout: 5))
+        returnToTodayFromTask(in: app)
+        assertTodayRewards(xp: 0, coins: 0, in: app)
+        relaunchTodayKeepingData(app)
+        assertTodayRewards(xp: 0, coins: 0, in: app)
+        scrollFullyIntoTodayViewport(app.buttons[seededTaskIdentifier], in: app)
+    }
+
+    func testEmptyTodayKeepsZeroAssetsVisibleWithSystemTextSize() throws {
+        XCUIDevice.shared.orientation = .landscapeLeft
+        let app = makeApplication()
+        app.launchArguments = ["--habito-ui-testing", "--habito-ui-reset", "--habito-ui-empty"]
+        app.launch()
+        assertTodayRewards(xp: 0, coins: 0, in: app)
+        scrollFullyIntoTodayViewport(app.staticTexts["今天没有任务啊"], in: app)
+        keepScreenshot(app, name: "空态真实零资产")
+        relaunchTodayKeepingData(app)
+        assertTodayRewards(xp: 0, coins: 0, in: app)
+    }
+
+    func testTodayRewardFailureKeepsTasksAndRetryReachableWithSystemTextSize() throws {
+        let app = launchScenario("corrupt-reward-ledger")
+        let error = app.descendants(matching: .any)["kid.today.rewards.error"]
+        let retry = app.buttons["kid.today.rewards.retry"]
+        for _ in 0..<2 {
+            scrollFullyIntoTodayViewport(error, in: app)
+            XCTAssertEqual(error.label, "收获暂时没读到")
+            XCTAssertFalse(app.descendants(matching: .any)["kid.today.xp"].exists)
+            XCTAssertFalse(app.descendants(matching: .any)["kid.today.coins"].exists)
+            scrollFullyIntoTodayViewport(retry, in: app)
+            XCTAssertTrue(retry.isEnabled && retry.isHittable)
+            XCTAssertGreaterThanOrEqual(retry.frame.width, 44)
+            XCTAssertGreaterThanOrEqual(retry.frame.height, 44)
+            retry.tap()
+        }
+        keepScreenshot(app, name: "资产错误不伪造零余额")
+        openSeededTask(in: app)
+        XCTAssertTrue(app.buttons["kid.session.start"].isHittable)
+        returnToTodayFromTask(in: app)
+        relaunchTodayKeepingData(app)
+        scrollFullyIntoTodayViewport(error, in: app)
+        XCTAssertFalse(app.descendants(matching: .any)["kid.today.xp"].exists)
+    }
+
+    /// 精确金额和完整可见性同时验证；存在或边缘命中都不能当成读得见。
+    private func assertTodayRewards(xp: Int, coins: Int, in app: XCUIApplication) {
+        let xpValue = app.descendants(matching: .any)["kid.today.xp"]
+        let coinValue = app.descendants(matching: .any)["kid.today.coins"]
+        scrollFullyIntoTodayViewport(xpValue, in: app)
+        XCTAssertEqual(xpValue.label, "成长 XP：\(xp)")
+        scrollFullyIntoTodayViewport(coinValue, in: app)
+        XCTAssertEqual(coinValue.label, "金币：\(coins)")
+        XCTAssertFalse(app.descendants(matching: .any)["kid.today.rewards.error"].exists)
+    }
+
+    private func scrollFullyIntoTodayViewport(_ element: XCUIElement, in app: XCUIApplication) {
+        let viewport = app.scrollViews.element(boundBy: 0)
+        XCTAssertTrue(viewport.waitForExistence(timeout: 5))
+        let navigationBar = app.navigationBars["今日"]
+        XCTAssertTrue(navigationBar.waitForExistence(timeout: 5))
+        for _ in 0..<8 {
+            var visibleFrame = viewport.frame.intersection(app.frame)
+            // 今日根页不是家长表单；只扣自己的导航栏，不能套用编辑器的标题/键盘规则。
+            let barFrame = navigationBar.frame
+            if barFrame.intersects(visibleFrame) {
+                let bottom = visibleFrame.maxY
+                visibleFrame.origin.y = max(visibleFrame.minY, barFrame.maxY)
+                visibleFrame.size.height = max(0, bottom - visibleFrame.minY)
+            }
+            guard visibleFrame.height > 0 else {
+                XCTFail("今日页应保留可操作区域")
+                return
+            }
+            if element.exists, element.isHittable, visibleFrame.contains(element.frame) { return }
+            if element.exists, element.frame.minY < visibleFrame.minY {
+                viewport.swipeDown()
+            } else {
+                viewport.swipeUp()
+            }
+        }
+        keepScreenshot(app, name: "今日页完整可见性失败")
+        let diagnostic = XCTAttachment(string: app.debugDescription)
+        diagnostic.name = "今日页原生控件诊断"
+        diagnostic.lifetime = .keepAlways
+        add(diagnostic)
+        XCTFail("今日控件应完整露出且可操作")
+    }
+
+    private func relaunchTodayKeepingData(_ app: XCUIApplication) {
+        app.terminate()
+        app.launchArguments = ["--habito-ui-testing"]
+        app.launch()
+    }
+
     func testLaunchMaterializationRefreshesInitiallyEmptyToday() throws {
         verifyLaunchMaterialization(extraArguments: [])
     }
@@ -1082,6 +1201,7 @@ final class HabitoKidFlowUITests: XCTestCase {
     /// 两轮都由实际孩子/家长页面提交；重启不 reset，避免播种替代真实状态恢复。
     private func verifyReviewRoundTrip(zeroReward: Bool) {
         let app = launchScenario(zeroReward ? "zero-reward-parent-approval" : "parent-approval")
+        assertTodayRewards(xp: 0, coins: 0, in: app)
         openSeededTask(in: app)
         app.buttons["kid.session.start"].tap()
         let pause = app.buttons["kid.session.pause"]
@@ -1090,6 +1210,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         app.buttons["kid.session.submit"].tap()
         assertWaitingWithoutOldActions(in: app)
         returnToTodayFromTask(in: app)
+        assertTodayRewards(xp: 0, coins: 0, in: app)
         unlockParent(in: app)
         openParentReview(in: app)
         let firstRequestID = reviewAction("approve", in: app).identifier
@@ -1115,6 +1236,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         app.buttons["kid.session.submit"].tap()
         assertWaitingWithoutOldActions(in: app)
         returnToTodayFromTask(in: app)
+        assertTodayRewards(xp: 0, coins: 0, in: app)
         unlockExistingParent(in: app)
         openParentReview(in: app)
         let secondRequest = reviewAction("approve", in: app)
@@ -1137,9 +1259,11 @@ final class HabitoKidFlowUITests: XCTestCase {
         keepScreenshot(app, name: zeroReward ? "零奖励两轮真实审核完成" : "计时退回重提真实审核完成")
         navigateBack(in: app, from: "待验收")
         app.buttons["parent.gate.close"].tap()
+        assertTodayRewards(xp: zeroReward ? 0 : 11, coins: zeroReward ? 0 : (secondWasAutonomous ? 10 : 7), in: app)
         XCTAssertTrue(app.staticTexts["今天的任务都完成了。"].waitForExistence(timeout: 5))
 
         relaunchWithOldSeededNotification(app)
+        assertTodayRewards(xp: zeroReward ? 0 : 11, coins: zeroReward ? 0 : (secondWasAutonomous ? 10 : 7), in: app)
         XCTAssertTrue(app.staticTexts["今天的任务都完成了。"].waitForExistence(timeout: 5))
         XCTAssertFalse(app.staticTexts["你做到了！"].exists)
         XCTAssertFalse(app.descendants(matching: .any)["kid.session.reward-xp"].exists)
@@ -1273,6 +1397,7 @@ final class HabitoKidFlowUITests: XCTestCase {
     private func openSeededTask(in app: XCUIApplication) {
         let task = app.buttons[seededTaskIdentifier]
         XCTAssertTrue(task.waitForExistence(timeout: 5))
+        scrollFullyIntoTodayViewport(task, in: app)
         task.tap()
         XCTAssertTrue(app.buttons["kid.session.start"].waitForExistence(timeout: 5))
     }

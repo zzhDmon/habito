@@ -96,6 +96,14 @@
                 occurrence.template = template
             }
             try context.save()
+            if scenario == .corruptRewardLedger {
+                // 仅 Debug 独占夹具故意缺少 Coin 伙伴，验证资产错误不隐藏任务；不是生产发奖入口。
+                context.insert(
+                    XPTransaction(
+                        businessKey: RewardLedgerKey.xpReward(taskID), sourceID: taskID,
+                        kind: .reward, amount: 11, createdAt: now))
+                try context.save()
+            }
             if scenario == .returnedSubmission, !shouldSeedTemplateOnly {
                 // 用真实提交/退回事务构造状态，不手工伪造审计或金额。
                 let row = try TaskSubmissionService(context: context).submit(occurrence, at: now)

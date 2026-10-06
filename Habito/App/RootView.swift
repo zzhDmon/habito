@@ -58,8 +58,10 @@ struct RootView: View {
         NavigationStack(path: $path) {
             KidTodayView(
                 state: todayModel.state,
+                rewardState: todayModel.rewardState,
                 onSelectTask: showTask,
-                onRetry: loadToday
+                onRetry: loadToday,
+                onRetryRewards: todayModel.loadRewards
             )
             .toolbar {
                 #if DEBUG
