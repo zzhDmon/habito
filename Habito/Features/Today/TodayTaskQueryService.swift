@@ -111,6 +111,11 @@ struct TodayTaskQueryService {
             throw TodayTaskQueryError.invalidVerificationType(
                 occurrenceID: occurrence.id, value: occurrence.verificationTypeSnapshotRawValue)
         }
+        // 分类由家长显式设置的实例快照决定；坏值不能被默认全天或提醒钟点洗白。
+        guard let timePeriod = occurrence.timePeriodSnapshot else {
+            throw TodayTaskQueryError.invalidTimePeriod(
+                occurrenceID: occurrence.id, value: occurrence.timePeriodSnapshotRawValue)
+        }
 
         let sessions = try sessions(for: occurrence, at: now)
         let activeSessions = sessions.filter { $0.state != .ended }
@@ -143,7 +148,8 @@ struct TodayTaskQueryService {
             activeDurationSeconds: displayedDuration,
             completion: completion,
             submission: submission,
-            verificationType: verification
+            verificationType: verification,
+            timePeriod: timePeriod
         )
     }
 

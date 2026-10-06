@@ -13,6 +13,8 @@ struct KidTaskNavigationItem: Hashable, Identifiable, Sendable {
     let status: TaskOccurrenceStatus
     let statusText: String
     let statusIconName: String
+    let timePeriod: TaskTimePeriod
+    let isCarryOver: Bool
 
     /// 把领域查询值转换为孩子界面和导航共用的稳定展示值。
     ///
@@ -32,6 +34,8 @@ struct KidTaskNavigationItem: Hashable, Identifiable, Sendable {
             targetMinutes
         )
         status = item.status
+        timePeriod = item.timePeriod
+        isCarryOver = item.status == .inProgress && referenceDate.map { item.date < $0 } == true
 
         if item.isAwaitingReview {
             statusText = String(localized: "kidTask.statusAwaitingReview")
@@ -39,7 +43,7 @@ struct KidTaskNavigationItem: Hashable, Identifiable, Sendable {
         } else if item.submission?.state == .returned, item.status == .pending {
             statusText = String(localized: "kidTask.statusReturned")
             statusIconName = "arrow.uturn.backward.circle.fill"
-        } else if item.status == .inProgress, let referenceDate, item.date < referenceDate {
+        } else if isCarryOver {
             statusText = String(localized: "kidTask.statusCarryOver")
             statusIconName = "clock.arrow.circlepath"
         } else {
@@ -68,7 +72,9 @@ struct KidTaskNavigationItem: Hashable, Identifiable, Sendable {
         targetDurationText: String,
         status: TaskOccurrenceStatus,
         statusText: String,
-        statusIconName: String
+        statusIconName: String,
+        timePeriod: TaskTimePeriod = .allDay,
+        isCarryOver: Bool = false
     ) {
         self.id = id
         self.title = title
@@ -78,6 +84,9 @@ struct KidTaskNavigationItem: Hashable, Identifiable, Sendable {
         self.status = status
         self.statusText = statusText
         self.statusIconName = statusIconName
+        // 手动构造仅用于 Preview/测试；生产值经查询校验后从上面的 init(item:) 传播。
+        self.timePeriod = timePeriod
+        self.isCarryOver = isCarryOver
     }
 }
 
