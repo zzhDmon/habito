@@ -219,6 +219,82 @@ struct TaskRecurrenceExpanderTests {
         }
     }
 
+    @Test("计划和截止独立可空且不约束三种时间顺序", arguments: [nil, 0, 1439, 600] as [Int?], [nil, 0, 1439, 600] as [Int?])
+    func optionalTimesRemainIndependent(plan: Int?, deadline: Int?) throws {
+        let date = try localDate("2026-09-23")
+        let candidate = try #require(
+            expander().expand(
+                .once(on: date), timeOfDayMinutes: 19 * 60,
+                plannedTimeOfDayMinutes: plan, deadlineTimeOfDayMinutes: deadline,
+                from: date, through: date
+            ).first)
+        #expect(try localTimeComponents(of: candidate.scheduledAt) == DateComponents(hour: 19, minute: 0))
+        for (minutes, value) in [(plan, candidate.plannedAt), (deadline, candidate.deadlineAt)] {
+            if let minutes {
+                let value = try #require(value)
+                #expect(try localTimeComponents(of: value) == DateComponents(hour: minutes / 60, minute: minutes % 60))
+                #expect(try LocalDate(date: value, calendar: calendar, timeZone: shanghaiTimeZone()) == date)
+            } else {
+                #expect(value == nil)
+            }
+        }
+    }
+
+    @Test("坏可空分钟在无日期交集时仍拒绝", arguments: [-1, 1440, Int.max, Int.min], [false, true])
+    func invalidOptionalMinutesFailBeforeEmptyRange(value: Int, isDeadline: Bool) throws {
+        let date = try localDate("2026-09-23")
+        let later = try localDate("2026-09-24")
+        let field = isDeadline ? "deadlineTimeOfDayMinutes" : "plannedTimeOfDayMinutes"
+        #expect(throws: TaskRecurrenceExpansionError.invalidOptionalTimeOfDayMinutes(field: field, value: value)) {
+            try expander().expand(
+                .once(on: date), timeOfDayMinutes: 19 * 60,
+                plannedTimeOfDayMinutes: isDeadline ? nil : value,
+                deadlineTimeOfDayMinutes: isDeadline ? value : nil,
+                from: later, through: later)
+        }
+    }
+
+    @Test("可空时间共用提醒 DST 顺延和重复第一次策略", arguments: [false, true])
+    func optionalTimesUseSameDaylightSavingPolicy(repeated: Bool) throws {
+        let zone = try #require(TimeZone(identifier: "America/Los_Angeles"))
+        let date = try localDate(repeated ? "2026-11-01" : "2026-03-08")
+        let minutes = repeated ? 90 : 150
+        let candidate = try #require(
+            TaskRecurrenceExpander(calendar: calendar, timeZone: zone).expand(
+                .once(on: date), timeOfDayMinutes: minutes,
+                plannedTimeOfDayMinutes: minutes, deadlineTimeOfDayMinutes: minutes,
+                from: date, through: date
+            ).first)
+        #expect(candidate.plannedAt == candidate.scheduledAt && candidate.deadlineAt == candidate.scheduledAt)
+        var localCalendar = calendar
+        localCalendar.timeZone = zone
+        #expect(localCalendar.component(.hour, from: candidate.scheduledAt) == (repeated ? 1 : 3))
+        #expect(localCalendar.component(.minute, from: candidate.scheduledAt) == 30)
+        #expect(zone.secondsFromGMT(for: candidate.scheduledAt) == -7 * 60 * 60)
+    }
+
+    @Test("每周可空时间跨年每天独立解析且重复展开一致")
+    func weeklyOptionalTimesCrossYearStably() throws {
+        let start = try localDate("2026-12-31")
+        let end = try localDate("2027-01-02")
+        let rule = try TaskRecurrence.weekly(on: Set(Weekday.allCases), starting: start)
+        let expander = try expander()
+        let first = try expander.expand(
+            rule, timeOfDayMinutes: 19 * 60, plannedTimeOfDayMinutes: 0, deadlineTimeOfDayMinutes: 1439,
+            from: start, through: end)
+        let second = try expander.expand(
+            rule, timeOfDayMinutes: 19 * 60, plannedTimeOfDayMinutes: 0, deadlineTimeOfDayMinutes: 1439,
+            from: start, through: end)
+        #expect(first == second && first.count == 3)
+        for candidate in first {
+            for value in [candidate.plannedAt, candidate.deadlineAt] {
+                #expect(
+                    try LocalDate(date: #require(value), calendar: calendar, timeZone: shanghaiTimeZone())
+                        == candidate.date)
+            }
+        }
+    }
+
     private func expander() throws -> TaskRecurrenceExpander {
         TaskRecurrenceExpander(calendar: calendar, timeZone: try shanghaiTimeZone())
     }

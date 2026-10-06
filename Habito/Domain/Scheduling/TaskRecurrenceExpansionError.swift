@@ -5,6 +5,9 @@ nonisolated enum TaskRecurrenceExpansionError: Error, Equatable, Sendable {
     /// 一天内的分钟数必须落在 0...1439。
     case invalidTimeOfDayMinutes(Int)
 
+    /// 可空计划/截止的显式值也必须在当天分钟范围内，不能把坏输入当成未设置。
+    case invalidOptionalTimeOfDayMinutes(field: String, value: Int)
+
     /// 查询范围必须从较早日期指向较晚日期。
     case invalidRequestedRange(start: LocalDate, end: LocalDate)
 

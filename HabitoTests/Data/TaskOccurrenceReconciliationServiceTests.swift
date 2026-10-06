@@ -62,6 +62,12 @@ struct TaskOccurrenceReconciliationServiceTests {
         )
         let past = try occurrence(template: template, dateKey: "2026-09-22", status: .pending)
         [mutable, inProgress, completed, skipped, detached, past].forEach(context.insert)
+        let originalPlan = try instant("2026-09-23T08:00:00Z")
+        let originalDeadline = originalPlan.addingTimeInterval(900)
+        for row in [mutable, inProgress, completed, skipped, detached, past] {
+            row.plannedAt = originalPlan
+            row.deadlineAt = originalDeadline
+        }
         try context.save()
         let mutableID = mutable.id
 
@@ -91,8 +97,10 @@ struct TaskOccurrenceReconciliationServiceTests {
         #expect(mutable.titleSnapshot == "新版阅读")
         #expect(mutable.targetDurationSnapshot == 1_200)
         #expect(mutable.sourceRevision == 2)
+        #expect(mutable.plannedAt == nil && mutable.deadlineAt == nil)
         expectConfiguration(mutable, category: .challenge, period: .afterSchool, verification: .parentApproval)
         for protected in [inProgress, completed, skipped, detached, past] {
+            #expect(protected.plannedAt == originalPlan && protected.deadlineAt == originalDeadline)
             expectConfiguration(
                 protected, category: .unassigned, period: .allDay, verification: .selfConfirm, reward: 0)
         }
@@ -227,7 +235,7 @@ struct TaskOccurrenceReconciliationServiceTests {
         }
     }
 
-    @Test("任一 V1 配置差异即使未改修订号也被核对，且不改计划截止", arguments: Array(0..<6))
+    @Test("任一 V1 配置差异即使未改修订号也被核对，传入的计划截止保持", arguments: Array(0..<6))
     func eachConfigurationDifferenceIsDetected(field: Int) throws {
         let context = try makeContext()
         let template = makeTemplate()
@@ -251,7 +259,8 @@ struct TaskOccurrenceReconciliationServiceTests {
         let date = try localDate("2026-09-24")
         let now = try instant("2026-09-23T02:00:00Z")
         let report = try TaskOccurrenceReconciliationService(context: context).reconcile(
-            template: template, candidates: [candidate(date.dateKey, hour: 19, revision: 1)],
+            template: template,
+            candidates: [candidate(date.dateKey, hour: 19, revision: 1, plan: plan, deadline: deadline)],
             in: date...date, today: localDate("2026-09-23"), now: now)
         #expect(report.updatedCount == 1 && report.insertedCount == 0)
         #expect(row.categorySnapshotRawValue == template.categoryRawValue)
@@ -347,6 +356,61 @@ struct TaskOccurrenceReconciliationServiceTests {
         expectConfiguration(row, category: .unassigned, period: .allDay, verification: .selfConfirm, reward: 0)
     }
 
+    @Test("计划或截止变化独立更新，清空和连续五次核对保持幂等", arguments: [false, true])
+    func optionalTimeDifferencesUpdateAndClearIdempotently(isDeadline: Bool) throws {
+        let context = try makeContext()
+        let template = makeTemplate()
+        context.insert(template)
+        try context.save()
+        let date = try localDate("2026-09-24")
+        let service = TaskOccurrenceReconciliationService(context: context)
+        let plan = try instant("2026-09-24T00:00:00Z")
+        let deadline = try instant("2026-09-24T14:00:00Z")
+        let original = try candidate(date.dateKey, hour: 19, revision: 1, plan: plan, deadline: deadline)
+        let now = try instant("2026-09-23T01:00:00Z")
+        let inserted = try service.reconcile(
+            template: template, candidates: [original], in: date...date, today: date, now: now)
+        #expect(inserted.insertedCount == 1)
+        let row = try #require(fetchOccurrences(context).first)
+        let id = row.id
+        #expect(row.plannedAt == plan && row.deadlineAt == deadline)
+        let changed = try candidate(
+            date.dateKey, hour: 19, revision: 1,
+            plan: isDeadline ? plan : nil, deadline: isDeadline ? nil : deadline)
+        for iteration in 0..<5 {
+            let report = try service.reconcile(
+                template: template, candidates: [changed], in: date...date, today: date, now: now.addingTimeInterval(1))
+            #expect(report.updatedCount == (iteration == 0 ? 1 : 0))
+            #expect(row.id == id && row.plannedAt == changed.plannedAt && row.deadlineAt == changed.deadlineAt)
+            #expect(row.scheduledAt == original.scheduledAt && row.sourceRevision == 1)
+            #expect(!context.hasChanges)
+        }
+        #expect(try context.fetchCount(FetchDescriptor<XPTransaction>()) == 0)
+        #expect(try context.fetchCount(FetchDescriptor<CoinTransaction>()) == 0)
+    }
+
+    @Test("非有限候选时刻在任何写入前拒绝", arguments: [0, 1, 2], [Double.nan, Double.infinity, -Double.infinity])
+    func nonfiniteCandidateTimesFailBeforeWrite(field: Int, value: Double) throws {
+        let context = try makeContext()
+        let template = makeTemplate()
+        context.insert(template)
+        try context.save()
+        let first = try candidate("2026-09-24", hour: 19, revision: 1)
+        let second = try candidate("2026-09-25", hour: 19, revision: 1)
+        let invalid = Date(timeIntervalSinceReferenceDate: value)
+        let bad = ResolvedTaskCandidate(
+            date: second.date, scheduledAt: field == 0 ? invalid : second.scheduledAt, origin: second.origin,
+            plannedAt: field == 1 ? invalid : nil, deadlineAt: field == 2 ? invalid : nil)
+        let key = ["scheduledAt", "plannedAt", "deadlineAt"][field]
+        #expect(throws: OccurrenceReconciliationError.invalidCandidateTime(date: second.date, field: key)) {
+            try TaskOccurrenceReconciliationService(context: context).reconcile(
+                template: template, candidates: [first, bad], in: first.date...second.date, today: first.date,
+                now: instant("2026-09-23T01:00:00Z"))
+        }
+        #expect(!context.hasChanges)
+        #expect(try context.fetchCount(FetchDescriptor<TaskOccurrence>()) == 0)
+    }
+
     private func expectConfiguration(
         _ row: TaskOccurrence, category: TaskCategory, period: TaskTimePeriod,
         verification: TaskVerificationType, reward: Int = 11
@@ -372,11 +436,15 @@ struct TaskOccurrenceReconciliationServiceTests {
             let waiting = try #require(rows.first { $0.id == ids.waiting })
             expectConfiguration(waiting, category: .growth, period: .morning, verification: .parentApproval)
             #expect(waiting.sourceRevision == 1)
+            #expect(waiting.plannedAt == (try instant("2026-09-23T00:00:00Z")))
+            #expect(waiting.deadlineAt == (try instant("2026-09-23T14:00:00Z")))
             for row in rows where row.id != ids.waiting {
                 #expect(row.categorySnapshot == .challenge && row.timePeriodSnapshot == .evening)
                 #expect(row.verificationTypeSnapshot == .selfConfirm)
                 #expect(row.xpRewardSnapshot == 41 && row.coinRewardSnapshot == 23 && row.activeBonusCoinSnapshot == 9)
-                #expect(row.sourceRevision == 2 && row.plannedAt == nil && row.deadlineAt == nil)
+                #expect(row.sourceRevision == 2)
+                #expect(row.plannedAt == (try instant("\(row.dateKey)T02:00:00Z")))
+                #expect(row.deadlineAt == (try instant("\(row.dateKey)T12:00:00Z")))
             }
             let submission = try #require(context.fetch(FetchDescriptor<TaskSubmission>()).first)
             #expect(submission.occurrenceID == ids.waiting && submission.reviewState == .waiting)
@@ -407,7 +475,8 @@ struct TaskOccurrenceReconciliationServiceTests {
         let today = try localDate("2026-09-23")
         let rule = ReminderRule(
             taskTemplateID: template.id,
-            recurrence: try .weekly(on: Set(Weekday.allCases), starting: today), timeOfDayMinutes: 19 * 60)
+            recurrence: try .weekly(on: Set(Weekday.allCases), starting: today), timeOfDayMinutes: 19 * 60,
+            plannedTimeOfDayMinutes: 8 * 60, deadlineTimeOfDayMinutes: 22 * 60)
         context.insert(template)
         context.insert(rule)
         template.reminderRule = rule
@@ -418,8 +487,15 @@ struct TaskOccurrenceReconciliationServiceTests {
         _ = try TaskOccurrenceReconciliationService(context: context).reconcile(
             template: template,
             candidates: [
-                candidate("2026-09-23", hour: 19, revision: 1), candidate("2026-09-24", hour: 19, revision: 1),
-                candidate("2026-09-25", hour: 19, revision: 1),
+                candidate(
+                    "2026-09-23", hour: 19, revision: 1,
+                    plan: instant("2026-09-23T00:00:00Z"), deadline: instant("2026-09-23T14:00:00Z")),
+                candidate(
+                    "2026-09-24", hour: 19, revision: 1,
+                    plan: instant("2026-09-24T00:00:00Z"), deadline: instant("2026-09-24T14:00:00Z")),
+                candidate(
+                    "2026-09-25", hour: 19, revision: 1,
+                    plan: instant("2026-09-25T00:00:00Z"), deadline: instant("2026-09-25T14:00:00Z")),
             ],
             in: today...localDate("2026-09-25"), today: today, now: instant("2026-09-23T01:00:00Z"))
         let rows = try fetchOccurrences(context)
@@ -440,6 +516,9 @@ struct TaskOccurrenceReconciliationServiceTests {
         template.coinReward = 23
         template.activeBonusCoin = 9
         template.revision = 2
+        let rule = try #require(template.reminderRule)
+        rule.plannedTimeOfDayMinutes = 10 * 60
+        rule.deadlineTimeOfDayMinutes = 20 * 60
         try context.save()
         let report = try materializer(context).reconcile(
             template: template, today: localDate("2026-09-23"), now: instant("2026-09-23T02:00:00Z"))
@@ -499,12 +578,16 @@ struct TaskOccurrenceReconciliationServiceTests {
     private func candidate(
         _ dateKey: String,
         hour: Int,
-        revision: Int
+        revision: Int,
+        plan: Date? = nil,
+        deadline: Date? = nil
     ) throws -> ResolvedTaskCandidate {
         .init(
             date: try localDate(dateKey),
             scheduledAt: try scheduledAt(dateKey, hour: hour),
-            origin: .generated(templateRevision: revision)
+            origin: .generated(templateRevision: revision),
+            plannedAt: plan,
+            deadlineAt: deadline
         )
     }
 

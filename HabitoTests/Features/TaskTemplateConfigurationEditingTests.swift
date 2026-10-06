@@ -148,6 +148,11 @@ struct TaskTemplateConfigurationEditingTests {
         let occurrence = try fixture.occurrence()
         let occurrenceID = occurrence.id
         let originalScheduledAt = occurrence.scheduledAt
+        let originalPlan = originalScheduledAt.addingTimeInterval(-900)
+        let originalDeadline = originalScheduledAt.addingTimeInterval(900)
+        occurrence.plannedAt = originalPlan
+        occurrence.deadlineAt = originalDeadline
+        // 旧编辑入口仍不改可空规则；本次物化会把普通实例清为规则中的 nil，失败必须恢复。
         let session = TimerSession(
             occurrenceID: occurrenceID, state: .ended, startedAt: fixture.now, lastResumedAt: fixture.now,
             accumulatedActiveSeconds: 12, endedAt: fixture.now.addingTimeInterval(12))
@@ -183,6 +188,7 @@ struct TaskTemplateConfigurationEditingTests {
         let restored = try fixture.occurrence()
         #expect(restored.id == occurrenceID && restored.titleSnapshot == "显式合成配置" && restored.sourceRevision == 1)
         #expect(restored.scheduledAt == originalScheduledAt && restored.updatedAt == fixture.now)
+        #expect(restored.plannedAt == originalPlan && restored.deadlineAt == originalDeadline)
         #expect(
             restored.categorySnapshot == .challenge && restored.timePeriodSnapshot == .afterSchool
                 && restored.verificationTypeSnapshot == .parentApproval)
@@ -258,12 +264,15 @@ struct TaskTemplateConfigurationEditingTests {
             #expect(rows.count == 2 && audited.sourceRevision == 1 && ordinary.sourceRevision == 2)
             #expect(audited.categorySnapshot == .challenge && audited.timePeriodSnapshot == .afterSchool)
             #expect(audited.verificationTypeSnapshot == .parentApproval)
+            #expect(audited.plannedAt == (try Date("2026-09-23T00:00:00Z", strategy: .iso8601)))
+            #expect(audited.deadlineAt == (try Date("2026-09-23T14:00:00Z", strategy: .iso8601)))
             #expect(
                 audited.xpRewardSnapshot == 11 && audited.coinRewardSnapshot == 7
                     && audited.activeBonusCoinSnapshot == 3)
             #expect(ordinary.categorySnapshot == .growth && ordinary.timePeriodSnapshot == .evening)
             #expect(ordinary.verificationTypeSnapshot == .selfConfirm && ordinary.xpRewardSnapshot == 41)
             #expect(ordinary.coinRewardSnapshot == 23 && ordinary.activeBonusCoinSnapshot == 9)
+            #expect(ordinary.plannedAt == nil && ordinary.deadlineAt == nil)
             let row = try #require(fixture.context.fetch(FetchDescriptor<TaskSubmission>()).first)
             #expect(
                 row.id == ids.submission && row.xpRewardSnapshot == 11 && row.coinRewardSnapshot == 7
@@ -292,7 +301,9 @@ struct TaskTemplateConfigurationEditingTests {
             candidates: [
                 .init(
                     date: today, scheduledAt: try fixture.occurrence().scheduledAt,
-                    origin: .generated(templateRevision: 1)),
+                    origin: .generated(templateRevision: 1),
+                    plannedAt: try Date("2026-09-23T00:00:00Z", strategy: .iso8601),
+                    deadlineAt: try Date("2026-09-23T14:00:00Z", strategy: .iso8601)),
                 .init(
                     date: tomorrow, scheduledAt: fixture.now.addingTimeInterval(86_400 + 27_000),
                     origin: .generated(templateRevision: 1)),

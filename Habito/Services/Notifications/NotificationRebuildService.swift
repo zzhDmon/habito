@@ -145,13 +145,17 @@ struct NotificationRebuildService {
                     let generated = try expander.expand(
                         rule.decodedRecurrence(),
                         timeOfDayMinutes: rule.timeOfDayMinutes,
+                        plannedTimeOfDayMinutes: rule.plannedTimeOfDayMinutes,
+                        deadlineTimeOfDayMinutes: rule.deadlineTimeOfDayMinutes,
                         from: range.lowerBound,
                         through: range.upperBound
                     )
                     let detached: [ScheduledTaskCandidate] = try existing.compactMap { occurrence in
                         guard occurrence.isDetachedOverride else { return nil }
                         let date = try occurrenceDate(occurrence)
-                        return ScheduledTaskCandidate(date: date, scheduledAt: occurrence.scheduledAt)
+                        return ScheduledTaskCandidate(
+                            date: date, scheduledAt: occurrence.scheduledAt,
+                            plannedAt: occurrence.plannedAt, deadlineAt: occurrence.deadlineAt)
                     }
                     candidates = try resolver.resolve(
                         generated: generated,

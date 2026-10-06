@@ -36,7 +36,9 @@ nonisolated struct TaskCandidateOverrideResolver: Sendable {
             resolved[date] = ResolvedTaskCandidate(
                 date: candidate.date,
                 scheduledAt: candidate.scheduledAt,
-                origin: .generated(templateRevision: templateRevision)
+                origin: .generated(templateRevision: templateRevision),
+                plannedAt: candidate.plannedAt,
+                deadlineAt: candidate.deadlineAt
             )
         }
 
@@ -45,7 +47,9 @@ nonisolated struct TaskCandidateOverrideResolver: Sendable {
             resolved[date] = ResolvedTaskCandidate(
                 date: candidate.date,
                 scheduledAt: candidate.scheduledAt,
-                origin: .detachedOverride
+                origin: .detachedOverride,
+                plannedAt: candidate.plannedAt,
+                deadlineAt: candidate.deadlineAt
             )
         }
 

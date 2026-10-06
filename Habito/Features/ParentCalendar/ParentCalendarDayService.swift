@@ -168,7 +168,8 @@ struct ParentCalendarDayService {
             let templateOccurrences = existing.filter { $0.templateID == template.id }
             let generated = try generatedCandidate(for: template, on: date)
             let detached = templateOccurrences.filter(\.isDetachedOverride).map {
-                ScheduledTaskCandidate(date: date, scheduledAt: $0.scheduledAt)
+                ScheduledTaskCandidate(
+                    date: date, scheduledAt: $0.scheduledAt, plannedAt: $0.plannedAt, deadlineAt: $0.deadlineAt)
             }
             let candidates: [ResolvedTaskCandidate]
             if template.lifecycleState == .active {
@@ -201,6 +202,8 @@ struct ParentCalendarDayService {
         return try expander.expand(
             rule.decodedRecurrence(),
             timeOfDayMinutes: rule.timeOfDayMinutes,
+            plannedTimeOfDayMinutes: rule.plannedTimeOfDayMinutes,
+            deadlineTimeOfDayMinutes: rule.deadlineTimeOfDayMinutes,
             from: date,
             through: date
         )

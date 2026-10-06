@@ -56,13 +56,17 @@ struct TaskOccurrenceMaterializationService {
             let generated = try expander.expand(
                 rule.decodedRecurrence(),
                 timeOfDayMinutes: rule.timeOfDayMinutes,
+                plannedTimeOfDayMinutes: rule.plannedTimeOfDayMinutes,
+                deadlineTimeOfDayMinutes: rule.deadlineTimeOfDayMinutes,
                 from: today,
                 through: end
             )
             let detached: [ScheduledTaskCandidate] = datedOccurrences.compactMap { element in
                 let (occurrence, date) = element
                 guard range.contains(date), occurrence.isDetachedOverride else { return nil }
-                return ScheduledTaskCandidate(date: date, scheduledAt: occurrence.scheduledAt)
+                return ScheduledTaskCandidate(
+                    date: date, scheduledAt: occurrence.scheduledAt,
+                    plannedAt: occurrence.plannedAt, deadlineAt: occurrence.deadlineAt)
             }
             candidates = try resolver.resolve(
                 generated: generated,

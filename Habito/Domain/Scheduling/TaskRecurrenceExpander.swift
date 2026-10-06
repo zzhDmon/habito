@@ -29,6 +29,8 @@ nonisolated struct TaskRecurrenceExpander: Sendable {
     /// - Parameters:
     ///   - recurrence: 已由 `TaskRecurrence` 工厂校验的重复规则。
     ///   - timeOfDayMinutes: 从本地午夜起计算的分钟数，合法范围为 0...1439。
+    ///   - plannedTimeOfDayMinutes: 可空计划分钟；与提醒独立，解释在同一业务日期。
+    ///   - deadlineTimeOfDayMinutes: 可空截止分钟；不强制与计划/提醒的先后顺序。
     ///   - requestedStart: 调用方需要生成的第一天。
     ///   - requestedEnd: 调用方需要生成的最后一天。
     /// - Returns: 按本地日期升序排列的候选；无交集时返回空数组。
@@ -37,11 +39,22 @@ nonisolated struct TaskRecurrenceExpander: Sendable {
     func expand(
         _ recurrence: TaskRecurrence,
         timeOfDayMinutes: Int,
+        plannedTimeOfDayMinutes: Int? = nil,
+        deadlineTimeOfDayMinutes: Int? = nil,
         from requestedStart: LocalDate,
         through requestedEnd: LocalDate
     ) throws -> [ScheduledTaskCandidate] {
         guard (0..<24 * 60).contains(timeOfDayMinutes) else {
             throw TaskRecurrenceExpansionError.invalidTimeOfDayMinutes(timeOfDayMinutes)
+        }
+        // 先验证配置再取日期交集；当前没有候选也不能掩盖损坏分钟。
+        for (field, value) in [
+            ("plannedTimeOfDayMinutes", plannedTimeOfDayMinutes),
+            ("deadlineTimeOfDayMinutes", deadlineTimeOfDayMinutes),
+        ] {
+            if let value, !(0..<24 * 60).contains(value) {
+                throw TaskRecurrenceExpansionError.invalidOptionalTimeOfDayMinutes(field: field, value: value)
+            }
         }
         guard requestedStart <= requestedEnd else {
             throw TaskRecurrenceExpansionError.invalidRequestedRange(
@@ -62,12 +75,18 @@ nonisolated struct TaskRecurrenceExpander: Sendable {
             else {
                 return []
             }
-            return [try candidate(on: date, timeOfDayMinutes: timeOfDayMinutes)]
+            return [
+                try candidate(
+                    on: date, timeOfDayMinutes: timeOfDayMinutes,
+                    plannedMinutes: plannedTimeOfDayMinutes, deadlineMinutes: deadlineTimeOfDayMinutes)
+            ]
 
         case .weekly:
             return try weeklyCandidates(
                 recurrence,
                 timeOfDayMinutes: timeOfDayMinutes,
+                plannedMinutes: plannedTimeOfDayMinutes,
+                deadlineMinutes: deadlineTimeOfDayMinutes,
                 from: effectiveStart,
                 through: effectiveEnd
             )
@@ -77,6 +96,8 @@ nonisolated struct TaskRecurrenceExpander: Sendable {
     private func weeklyCandidates(
         _ recurrence: TaskRecurrence,
         timeOfDayMinutes: Int,
+        plannedMinutes: Int?,
+        deadlineMinutes: Int?,
         from start: LocalDate,
         through end: LocalDate
     ) throws -> [ScheduledTaskCandidate] {
@@ -88,7 +109,10 @@ nonisolated struct TaskRecurrenceExpander: Sendable {
             let weekdayValue = calendar.component(.weekday, from: referenceDate)
 
             if let weekday = Weekday(rawValue: weekdayValue), recurrence.weekdays.contains(weekday) {
-                result.append(try candidate(on: current, timeOfDayMinutes: timeOfDayMinutes))
+                result.append(
+                    try candidate(
+                        on: current, timeOfDayMinutes: timeOfDayMinutes,
+                        plannedMinutes: plannedMinutes, deadlineMinutes: deadlineMinutes))
             }
 
             guard current < end else { break }
@@ -154,8 +178,20 @@ nonisolated struct TaskRecurrenceExpander: Sendable {
 
     private func candidate(
         on date: LocalDate,
-        timeOfDayMinutes: Int
+        timeOfDayMinutes: Int,
+        plannedMinutes: Int?,
+        deadlineMinutes: Int?
     ) throws -> ScheduledTaskCandidate {
+        ScheduledTaskCandidate(
+            date: date,
+            scheduledAt: try resolvedTime(on: date, minutes: timeOfDayMinutes),
+            plannedAt: try plannedMinutes.map { try resolvedTime(on: date, minutes: $0) },
+            deadlineAt: try deadlineMinutes.map { try resolvedTime(on: date, minutes: $0) }
+        )
+    }
+
+    /// 三种时间共用同日 DST 策略；较早的截止不会被暗中解释为第二天。
+    private func resolvedTime(on date: LocalDate, minutes timeOfDayMinutes: Int) throws -> Date {
         let referenceDate = try referenceDate(for: date)
         let startOfDay = calendar.startOfDay(for: referenceDate)
         let searchStart = startOfDay.addingTimeInterval(-1)
@@ -199,6 +235,6 @@ nonisolated struct TaskRecurrenceExpander: Sendable {
             )
         }
 
-        return ScheduledTaskCandidate(date: date, scheduledAt: scheduledAt)
+        return scheduledAt
     }
 }

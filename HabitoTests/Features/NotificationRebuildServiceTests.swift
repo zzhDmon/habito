@@ -696,6 +696,92 @@ struct NotificationRebuildServiceTests {
         #expect(settings.schedulingHorizonDateKey == "2026-10-11")
     }
 
+    @Test("通知物化传播独立可空时间，五次重建仍只使用提醒", arguments: [0, 1, 2])
+    func rebuildPropagatesTimesWithoutChangingNotification(kind: Int) async throws {
+        let fixture = try Fixture()
+        fixture.context.autosaveEnabled = false
+        let template = try fixture.insertDailyTemplate()
+        let rule = try #require(template.reminderRule)
+        rule.plannedTimeOfDayMinutes = kind == 0 ? nil : 22 * 60
+        rule.deadlineTimeOfDayMinutes = kind == 1 ? 8 * 60 : nil
+        try fixture.context.save()
+        var ids: Set<UUID> = []
+        for iteration in 0..<5 {
+            let result = try await fixture.service.rebuild(at: fixture.now)
+            #expect(result.reconciliation.isSuccessful)
+            let rows = try fixture.context.fetch(FetchDescriptor<TaskOccurrence>())
+            #expect(rows.count == 15)
+            if iteration == 0 { ids = Set(rows.map(\.id)) }
+            #expect(Set(rows.map(\.id)) == ids)
+            for row in rows {
+                #expect(row.plannedAt == (kind == 0 ? nil : try Date("\(row.dateKey)T14:00:00Z", strategy: .iso8601)))
+                #expect(row.deadlineAt == (kind == 1 ? try Date("\(row.dateKey)T00:00:00Z", strategy: .iso8601) : nil))
+                let identifier = NotificationRequestIdentifier(occurrenceID: row.id, kind: .primary).rawValue
+                #expect(fixture.scheduler.pending[identifier]?.scheduledAt == row.scheduledAt)
+                #expect(row.scheduledAt == (try Date("\(row.dateKey)T11:30:00Z", strategy: .iso8601)))
+            }
+        }
+        #expect(fixture.scheduler.addCount == 15)
+        let originalRequests = fixture.scheduler.pending
+        rule.plannedTimeOfDayMinutes = nil
+        rule.deadlineTimeOfDayMinutes = nil
+        try fixture.context.save()
+        let cleared = try await fixture.service.rebuild(at: fixture.now)
+        #expect(cleared.reconciliation.isSuccessful && fixture.scheduler.pending == originalRequests)
+        #expect(fixture.scheduler.addCount == 15)
+        #expect(
+            try fixture.context.fetch(FetchDescriptor<TaskOccurrence>()).allSatisfy {
+                $0.plannedAt == nil && $0.deadlineAt == nil
+            })
+        #expect(try fixture.context.fetchCount(FetchDescriptor<XPTransaction>()) == 0)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<CoinTransaction>()) == 0)
+    }
+
+    @Test("通知重建保留单日时间快照，不从后改模板覆盖")
+    func rebuildKeepsDetachedTimeSnapshots() async throws {
+        let fixture = try Fixture()
+        fixture.context.autosaveEnabled = false
+        let template = try fixture.insertDailyTemplate()
+        let rule = try #require(template.reminderRule)
+        rule.plannedTimeOfDayMinutes = 18 * 60
+        rule.deadlineTimeOfDayMinutes = 22 * 60
+        try fixture.context.save()
+        _ = try await fixture.service.rebuild(at: fixture.now)
+        let row = try #require(
+            fixture.context.fetch(FetchDescriptor<TaskOccurrence>()).first { $0.dateKey == "2026-09-27" })
+        let id = row.id
+        row.isDetachedOverride = true
+        row.plannedAt = nil
+        row.deadlineAt = fixture.now.addingTimeInterval(600)
+        let originalDeadline = row.deadlineAt
+        try fixture.context.save()
+        rule.plannedTimeOfDayMinutes = 8 * 60
+        rule.deadlineTimeOfDayMinutes = nil
+        template.revision = 2
+        try fixture.context.save()
+        _ = try await fixture.service.rebuild(at: fixture.now)
+        #expect(row.id == id && row.isDetachedOverride && row.plannedAt == nil && row.deadlineAt == originalDeadline)
+        let identifier = NotificationRequestIdentifier(occurrenceID: id, kind: .primary).rawValue
+        #expect(fixture.scheduler.pending[identifier]?.scheduledAt == row.scheduledAt)
+    }
+
+    @Test("坏计划分钟让通知重建在物化前失败，不新增请求或半写实例")
+    func invalidOptionalTimeCannotPartiallyMaterializeNotifications() async throws {
+        let fixture = try Fixture()
+        let template = try fixture.insertDailyTemplate()
+        let rule = try #require(template.reminderRule)
+        rule.plannedTimeOfDayMinutes = 1440
+        try fixture.context.save()
+        await #expect(
+            throws: TaskRecurrenceExpansionError.invalidOptionalTimeOfDayMinutes(
+                field: "plannedTimeOfDayMinutes", value: 1440)
+        ) {
+            try await fixture.service.rebuild(at: fixture.now)
+        }
+        #expect(try fixture.context.fetchCount(FetchDescriptor<TaskOccurrence>()) == 0)
+        #expect(fixture.scheduler.addCount == 0 && fixture.scheduler.pending.isEmpty && !fixture.context.hasChanges)
+    }
+
     @Test("放假过滤实例，完成与停用后清理系统请求和映射")
     func holidayCompletionAndDisableCleanNotifications() async throws {
         let fixture = try Fixture()

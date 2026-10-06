@@ -174,6 +174,14 @@ struct TaskOccurrenceReconciliationService {
             guard candidate.date >= today else {
                 throw OccurrenceReconciliationError.candidateBeforeToday(candidate.date)
             }
+            for (field, value) in [
+                ("scheduledAt", Optional(candidate.scheduledAt)),
+                ("plannedAt", candidate.plannedAt), ("deadlineAt", candidate.deadlineAt),
+            ] {
+                if let value, !value.timeIntervalSinceReferenceDate.isFinite {
+                    throw OccurrenceReconciliationError.invalidCandidateTime(date: candidate.date, field: field)
+                }
+            }
             guard result[candidate.date] == nil else {
                 throw OccurrenceReconciliationError.duplicateCandidateDate(candidate.date)
             }
@@ -207,7 +215,9 @@ struct TaskOccurrenceReconciliationService {
             updatedAt: now,
             xpRewardSnapshot: template.xpReward,
             coinRewardSnapshot: template.coinReward,
-            activeBonusCoinSnapshot: template.activeBonusCoin
+            activeBonusCoinSnapshot: template.activeBonusCoin,
+            plannedAt: candidate.plannedAt,
+            deadlineAt: candidate.deadlineAt
         )
         // 已在修改前验证原始值；直接复制能保留明确输入，不用后来的模板回算已生成实例。
         occurrence.categorySnapshotRawValue = template.categoryRawValue
@@ -224,6 +234,8 @@ struct TaskOccurrenceReconciliationService {
         now: Date
     ) {
         occurrence.scheduledAt = candidate.scheduledAt
+        occurrence.plannedAt = candidate.plannedAt
+        occurrence.deadlineAt = candidate.deadlineAt
         occurrence.titleSnapshot = template.title
         occurrence.iconSnapshot = template.iconName
         occurrence.colorSnapshot = template.colorToken
@@ -246,6 +258,8 @@ struct TaskOccurrenceReconciliationService {
         occurrence: TaskOccurrence
     ) -> Bool {
         occurrence.scheduledAt != candidate.scheduledAt
+            || occurrence.plannedAt != candidate.plannedAt
+            || occurrence.deadlineAt != candidate.deadlineAt
             || occurrence.titleSnapshot != template.title
             || occurrence.iconSnapshot != template.iconName
             || occurrence.colorSnapshot != template.colorToken

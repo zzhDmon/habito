@@ -136,6 +136,46 @@ struct ParentCalendarDayServiceTests {
         }
     }
 
+    @Test("撤销放假恢复两个可空时间且五次核对稳定", arguments: [false, true])
+    func restoredHolidayPropagatesOptionalTimes(onlyDeadline: Bool) throws {
+        let fixture = try Fixture()
+        fixture.context.autosaveEnabled = false
+        let template = try fixture.insertTemplate(weekdays: Set(Weekday.allCases))
+        let rule = try #require(template.reminderRule)
+        rule.plannedTimeOfDayMinutes = onlyDeadline ? nil : 8 * 60
+        rule.deadlineTimeOfDayMinutes = 22 * 60
+        try fixture.context.save()
+        _ = try fixture.service.apply(.setHoliday, on: fixture.date, today: fixture.date, now: fixture.now)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<TaskOccurrence>()) == 0)
+        var id: UUID?
+        for iteration in 0..<5 {
+            let report = try fixture.service.apply(
+                .removeOverride, on: fixture.date, today: fixture.date, now: fixture.now)
+            let row = try #require(fixture.context.fetch(FetchDescriptor<TaskOccurrence>()).first)
+            if iteration == 0 { id = row.id }
+            #expect(row.id == id && report.insertedCount == (iteration == 0 ? 1 : 0) && report.updatedCount == 0)
+            #expect(row.plannedAt == (onlyDeadline ? nil : try Date("2026-09-25T00:00:00Z", strategy: .iso8601)))
+            #expect(row.deadlineAt == (try Date("2026-09-25T14:00:00Z", strategy: .iso8601)))
+            #expect(row.scheduledAt == (try Date("2026-09-25T11:00:00Z", strategy: .iso8601)))
+        }
+        #expect(try fixture.context.fetchCount(FetchDescriptor<XPTransaction>()) == 0)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<CoinTransaction>()) == 0)
+    }
+
+    @Test("日期覆盖保留单日可空时间，不用模板回填")
+    func calendarPreservesDetachedOptionalSnapshots() throws {
+        let fixture = try Fixture()
+        let row = try fixture.insertTemplateAndOccurrence(status: .pending, detached: true)
+        let rule = try #require(row.template?.reminderRule)
+        rule.plannedTimeOfDayMinutes = 8 * 60
+        rule.deadlineTimeOfDayMinutes = 22 * 60
+        row.plannedAt = nil
+        row.deadlineAt = fixture.now
+        try fixture.context.save()
+        let report = try fixture.service.apply(.setHoliday, on: fixture.date, today: fixture.date, now: fixture.now)
+        #expect(report.protectedCount == 1 && row.plannedAt == nil && row.deadlineAt == fixture.now)
+    }
+
     private final class Fixture {
         let context: ModelContext
         let service: ParentCalendarDayService

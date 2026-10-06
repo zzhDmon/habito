@@ -47,6 +47,8 @@ struct TaskTemplateEditRollbackSnapshot {
             FetchDescriptor<TaskOccurrence>(predicate: #Predicate { $0.templateID == templateID }))
         restoreOccurrences = try rows.map { row in
             let scheduledAt = row.scheduledAt
+            let plannedAt = row.plannedAt
+            let deadlineAt = row.deadlineAt
             let title = row.titleSnapshot
             let icon = row.iconSnapshot
             let color = row.colorSnapshot
@@ -74,6 +76,8 @@ struct TaskTemplateEditRollbackSnapshot {
             let linkRelationships = links.map { ($0, $0.occurrence) }
             return {
                 row.scheduledAt = scheduledAt
+                row.plannedAt = plannedAt
+                row.deadlineAt = deadlineAt
                 row.titleSnapshot = title
                 row.iconSnapshot = icon
                 row.colorSnapshot = color

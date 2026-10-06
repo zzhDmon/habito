@@ -118,6 +118,32 @@ struct TaskCandidateOverrideResolverTests {
         }
     }
 
+    @Test("覆盖保留来源完整可空时间，单日 nil 不从模板填值", arguments: [false, true])
+    func overridesPreserveOptionalSnapshots(clearingDetached: Bool) throws {
+        let monday = try candidate("2026-09-21", hour: 19)
+        let tuesday = try candidate("2026-09-22", hour: 19)
+        let plan = monday.scheduledAt.addingTimeInterval(-600)
+        let deadline = monday.scheduledAt.addingTimeInterval(600)
+        let generated = ScheduledTaskCandidate(
+            date: monday.date, scheduledAt: monday.scheduledAt, plannedAt: plan, deadlineAt: deadline)
+        let detached = ScheduledTaskCandidate(
+            date: monday.date, scheduledAt: monday.scheduledAt.addingTimeInterval(-3600),
+            plannedAt: clearingDetached ? nil : deadline, deadlineAt: clearingDetached ? nil : plan)
+        let result = try resolver.resolve(
+            generated: [generated, tuesday], templateRevision: 3,
+            dayOverrides: [.init(date: monday.date, dayType: .holiday)], detachedOverrides: [detached])
+        #expect(result.count == 2)
+        #expect(result[0].plannedAt == detached.plannedAt && result[0].deadlineAt == detached.deadlineAt)
+        #expect(result[0].origin == .detachedOverride)
+        #expect(result[1].plannedAt == nil && result[1].deadlineAt == nil)
+        let restored = try #require(
+            resolver.resolve(
+                generated: [generated], templateRevision: 3, dayOverrides: [], detachedOverrides: []
+            ).first)
+        #expect(restored.plannedAt == plan && restored.deadlineAt == deadline)
+        #expect(restored.origin == .generated(templateRevision: 3))
+    }
+
     private func candidate(_ dateKey: String, hour: Int) throws -> ScheduledTaskCandidate {
         let date = try LocalDate(dateKey: dateKey)
         let timeZone = try #require(TimeZone(identifier: "Asia/Shanghai"))
