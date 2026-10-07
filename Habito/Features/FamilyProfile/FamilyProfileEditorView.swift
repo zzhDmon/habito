@@ -25,9 +25,14 @@ struct FamilyProfileEditorView: View {
                 } description: {
                     Text("familyProfile.loadErrorDescription")
                 } actions: {
-                    Button("familyProfile.retry", action: model.retryLoad)
-                        .frame(minHeight: HabitoDesign.Layout.minimumTapSize)
-                        .accessibilityIdentifier(HabitoAccessibilityID.familyProfileRetry)
+                    Button(action: model.retryLoad) {
+                        // 尺寸属于真正的按钮label；外层留白不会扩大普通字号下的原生触控区域。
+                        Text("familyProfile.retry")
+                            .frame(
+                                minWidth: HabitoDesign.Layout.minimumTapSize,
+                                minHeight: HabitoDesign.Layout.minimumTapSize)
+                    }
+                    .accessibilityIdentifier(HabitoAccessibilityID.familyProfileRetry)
                 }
                 // 先建立容器边界，否则外层identifier会覆盖原生重试按钮的独立标识。
                 .accessibilityElement(children: .contain)

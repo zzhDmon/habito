@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// 展示当前完成事实；短时撤销入口由执行页安全区单独承载，不被大字内容挤出首屏。
+/// 展示当前完成事实；短时撤销入口由执行页底栏单独承载，不被大字内容挤出首屏。
 struct TaskCompletionSnapshotView: View {
     let completion: TodayTaskCompletion
 

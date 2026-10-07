@@ -35,31 +35,35 @@ struct TaskSessionLoadedView: View {
     }
 
     var body: some View {
-        AdaptiveTwoColumnLayout {
-            VStack(alignment: .leading, spacing: HabitoDesign.Spacing.large) {
-                TaskSessionIdentityPanel(
-                    task: content.task, makeTimingPresentation: { makeTimingPresentation(content.task) })
-                if let completionFeedback {
-                    TaskSessionResultFeedbackView(feedback: completionFeedback, onDismiss: onDismissCompletionFeedback)
+        // 滚动区与短时撤销栏分配互不重叠的实际空间；GeometryReader在17系只接收safeAreaInset
+        // 时仍可能把被底栏遮住的按钮报告为可点击，关闭反馈会误触撤销。分开布局不改变五秒规则。
+        VStack(spacing: 0) {
+            AdaptiveTwoColumnLayout {
+                VStack(alignment: .leading, spacing: HabitoDesign.Spacing.large) {
+                    TaskSessionIdentityPanel(
+                        task: content.task, makeTimingPresentation: { makeTimingPresentation(content.task) })
+                    if let completionFeedback {
+                        TaskSessionResultFeedbackView(
+                            feedback: completionFeedback, onDismiss: onDismissCompletionFeedback
+                        )
                         // 新保存事件才拥有新的视觉状态；原事件的刷新不重置入场效果。
                         .id(completionFeedback.id)
+                    }
+                }
+            } trailing: {
+                TimelineView(.periodic(from: .now, by: 1)) { _ in
+                    TaskSessionTimerPanel(
+                        content: content,
+                        snoozeState: snoozeState,
+                        now: currentDate(),
+                        onStartOrResume: onStartOrResume,
+                        onPause: onPause,
+                        onSnooze: onSnooze,
+                        onComplete: onComplete
+                    )
                 }
             }
-        } trailing: {
-            TimelineView(.periodic(from: .now, by: 1)) { _ in
-                TaskSessionTimerPanel(
-                    content: content,
-                    snoozeState: snoozeState,
-                    now: currentDate(),
-                    onStartOrResume: onStartOrResume,
-                    onPause: onPause,
-                    onSnooze: onSnooze,
-                    onComplete: onComplete
-                )
-            }
-        }
-        .accessibilityIdentifier(HabitoAccessibilityID.sessionScreen)
-        .safeAreaInset(edge: .bottom, spacing: 0) {
+            .accessibilityIdentifier(HabitoAccessibilityID.sessionScreen)
             // TimelineView只刷新可见秒数，服务仍使用同一注入时钟在点击时校验五秒期限。
             // 放在滚动布局之外：MAX时庆祝内容变高也不会把短时操作推到几屏以后。
             TimelineView(.periodic(from: .now, by: 1)) { _ in

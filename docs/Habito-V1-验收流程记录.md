@@ -525,3 +525,49 @@
 - 第二轮唯一失败是名字页找不到parent.gate.close。原生AX/动作活动证明列表toolbar不随push保留，不是坏保存；名字页明确注入家长sheet关闭动作，不能用页面dismiss只pop。最终close-final相关及全部四路径重新通过，不拼初轮成功。swiftui-pro九类复核实际修复这三项，维持17 API、主actor/窄注入、独立View/中文DocC、无UIKit/第三方、静态结果与语义字体/颜色非唯一依据。
 - 最终Release/Debug analyze-close-final exit0、日志为空，无编译/并发警告。全量严格格式/PBX解析/1031ID无重复/diff通过，原444键逐项保持、新17 manual/translated总461。17零运行警告，27四条均仅R-009全屏/方向提示；终态后两系恢复large并读回。没有修改schema/保存事务/PIN凭据/通知规则/奖励或未知参数。
 - 展示仍ASSUMPTION：PIN后可选填写而非强制旧家庭向导；只有明确保存生效，返回/关闭丢弃未保存局部草稿，下次重读；不替家庭起名。完整当前单测/59普通横屏UI/32重点MAX集中000F，其中最终同源名字4MAX可复用、其余28待跑，不冒称已整体验收；实机/系统开关现场/家庭观察保持后置。
+
+## 37. V1-M4-000F：名字完整软件阶段回归（软件阶段完成）
+
+- 20:13最终独立doc-coauthoring Reader五问/一致性复核通过，无实质问题；000F DONE，48已拆卡48DONE，待精确本地阶段提交。以下20:10证据表为最终软件证据，原失败和定位修订组合边界仍保留，不代表最终测试修订单一整包重跑、全PRD或目标iPad/家庭效果放行。
+
+- 20:10软件验证齐，仍IN_PROGRESS待最终独立文档Reader：两系ordinary-self-visible-final和max-self-visible-final各1/1、零失败/跳过、exit0，17零警告、27仅R-009；large均恢复/读回。生产指纹仍9d75793ae2dab7d72f5a016a7559c025a1c66ae5dfd0b9d48dfbcbedaa09039e，最终含测试指纹479bfc5666406970b8fc196f54fcc779a4795e52a1c96feca455cb5055a945b2；只最后自行确认方法点击前滚动变化，不改其余helper/七条/生产。最终严格格式/PBX解析/1031无重复/461资源不变/diff通过，同生产Release/分析exit0空日志，最终单条UI构建日志无warning/error。
+
+| 证据层级（均同生产源，测试定位修订单列） | 17系 | 27系 |
+|---|---|---|
+| unit-layout-final完整单测 | 581定义/1182执行通过 | 581定义/1182执行通过 |
+| ui-full-layout-final完整普通横屏 | 整包59/59通过 | 整包59/59通过 |
+| ui-max-layout-final原32重点MAX | 29/32，原三失败保留 | 整包32/32通过 |
+| ordinary-locator-fixed八条定位补验 | 整包8/8通过 | 整包8/8通过 |
+| max-locator-fixed八条定位补验 | 7/8；原三失败全通过，额外自行确认旧测试仍失败 | 整包8/8通过 |
+| 最终ordinary/MAX-self-visible-final | 修上述额外单条后各1/1通过 | 同单条修订各1/1通过 |
+
+17重点32路径覆盖由原29成功+原三定位失败补验通过组成；额外自行确认关闭不撤销MAX单条也最终通过。定位八条MAX证据17是未变helper七成功+单条修订1成功，不是最终测试修订单一整包8/8；普通59与重点32也不是最终测试修订整包重跑。全部原失败包/截图/AX/录屏保留，只有测试定位变化按DEC-030风险补验、不重复无关整套；不代表真实iPad、系统开关现场、家庭观察或全PRD放行。证据根仍/tmp/habito-names-000f-evidence.6GoEzw。
+
+- 20:07当前：ui-27-max-locator-fixed整包8/8、exit0、仅R-009；17为7/8、exit65、无运行警告，原三失败全部通过。唯一新增MAX覆盖的旧自行确认用例undo不存在，line2062/事件/AX E8750CA3-34FD-4AD5-A4D4-1580FD1A0C00.txt证明complete y1005/h93.5尚在屏底外、仍准备开始，测试盲点tap未完成。附件整包保留。两系终态恢复large/读回后，仅补此方法complete点击前完整滚动；生产指纹9d75793ae2dab7d72f5a016a7559c025a1c66ae5dfd0b9d48dfbcbedaa09039e不变，含测试指纹479bfc5666406970b8fc196f54fcc779a4795e52a1c96feca455cb5055a945b2。严格格式/diff通过，两系单条ordinary-self-visible-final运行，接着单条MAX，不重复其余七条或完整单测。阶段仍未放行。
+
+- 耗时观察（20:00）：unit-17-layout-final原生start/finish差40.315秒、27为15.767秒；ui-27-max-layout-final原生日志3506.607秒。单测定义仍581、实际1182次，不因耗时短省略失败恢复/幂等规则；优化验证节奏重点是减少重复整套UI，沿DEC-030保留相关单测和阶段门。
+
+- 19:57当前：ui-{{17,27}}-ordinary-locator-fixed各8/8、零失败/跳过、exit0，17零警告，27仅R-009。各设备实际MAX设置/读回后同八条max-locator-fixed运行（17 69378、27 8869），源未改、未在同设备叠加或改字号；MAX补验/最终恢复及文档复核仍待，阶段未放行。
+
+- 19:56当前：ui-17-ordinary-locator-fixed八条8/8、零失败/跳过/运行警告、exit0，公开snapshot读取及三失败对应流程在普通字号通过。17实际MAX读回后ui-17-max-locator-fixed八条启动（69378）；27 ordinary八条仍运行（7302），源仍602f011b55869e173ed432db02adb96e42cca207302b2ff2fde726ac01a4fca0。PBX1031无重复、461资源与HEAD完全一致、严格格式/diff通过，同生产Release/分析日志为空。阶段未放行，MAX补验及字号恢复待收齐。
+
+- 19:49当前：ui-27-max-layout-final整包32/32、零失败/跳过、exit0，仅R-009；27恢复large/读回。17原29/32包保留。两系都终态后，仅测试修订为完整可见优先、提交动作先滚动、公开snapshot同次读取撤销遮挡/关闭不重叠（无失败吞掉或时钟冻结）。严格格式/diff通过；生产/单测/工程指纹9d75793ae2dab7d72f5a016a7559c025a1c66ae5dfd0b9d48dfbcbedaa09039e不变，含测试新指纹602f011b55869e173ed432db02adb96e42cca207302b2ff2fde726ac01a4fca0。两系八条ordinary-locator-fixed补验运行，随后八条MAX；覆盖三原失败及庆祝/关闭/立即撤销/统计/名字重开。保留同生产完整581/1182、59普通与原MAX覆盖，明确测试修订边界，不将不同包合称新测试源整包通过；不重复无关单测。阶段仍未放行。
+
+- 19:38当前：ui-17-max-layout-final为29/32、exit65，零跳过/运行警告，四条名字通过；已恢复large/读回。原生附件E3C1B2C0-B2CD-48F7-B63D-71AE61B29E4B.txt证明收据标题y-0.5在导航栏后，C856FCA0-A9C6-4D29-B9F9-6070A6B90DAC.txt及录屏摘帧证明提交y1005/h93.5被屏底裁切、仍进行中，A2857EA6-F2EF-4B9E-A4AE-00A6C6C8EFD7.txt证明完成真实+11XP/+7金币、undo自然期满。三处为测试定位问题，不据此改业务；27 MAX仍运行（7526）、源冻结。拟在终态后仅修原测试helper/动作滚动并相关ordinary/MAX补验；公开snapshot API已查本机XCUIAutomation头文件，不解析debug文本或延长五秒。原失败包完整保留，不冒称阶段放行。
+
+- 18:51当前：两系ui-full-layout-final普通整包各59/59、零失败/跳过、exit0；17无运行警告，27仅R-009全屏/方向提示。代码差异SHA256仍2e3a79c39f2b6f1b4e8309eb96880e851a8fcc2692b83b99f58dbf5dbf8aaa25，581/1182当前单测保持通过；原55/59失败包不冒称成功。27普通large终态后实际MAX设置/读回，ui-27-max-layout-final32路径开始，17同源32MAX仍运行。两系MAX都尚无终态，阶段未放行，完成后逐设备恢复large/读回及最终复核。
+
+- 18:38当前：当前冻结源ui-17-full-layout-final整包59/59、零失败/跳过/运行警告、exit0；差异SHA256保持2e3a79c39f2b6f1b4e8309eb96880e851a8fcc2692b83b99f58dbf5dbf8aaa25。17普通large终态后实际MAX设置/读回，ui-17-max-layout-final同源32路径开始。27普通整套仍运行、其字号不改，待自身普通通过后再接MAX，不叠加同设备测试。两系581/1182单测证据不变，阶段尚未放行；以下是过程记录。
+
+- 17:46当前：两系unit-layout-final各581/581定义1182次，零失败/跳过/运行警告、exit0；冻结差异SHA256与17:43相同。终态确认后两系large读回，ui-full-layout-final各59普通横屏UI已开始，32MAX未开始。当前阶段仍未放行，下面专项/原失败为过程，不能拿渲染/运行截图或未封口包当UI通过。
+
+- 17:43当前：ui-{{17,27}}-query-narrow完整两项各2/2、exit0，零失败/跳过；17无警告，27仅R-009。多正式审核收据逐条继续无重复奖励与名字保存/编辑/PIN/重启均通过。冻结HEAD 8a325de加生产/测试差异SHA256 2e3a79c39f2b6f1b4e8309eb96880e851a8fcc2692b83b99f58dbf5dbf8aaa25，无未跟踪文件；当前源unit-layout-final完整581单测两系运行中，普通59与MAX32未齐。Release/分析仍最终生产源有效，不把原581旧包或000E MAX复用成新阶段成功。独立文档检查发现顶部下一步陈旧并修正，不作为软件验收。
+
+- 17:30进度：ui-17-ordinary-layout-fixed各九项最终8/9，ui-27-ordinary-layout-fixed完整9/9；名字触控/关闭不撤销/统计/重启/立即撤销均通过，17无运行警告、27仅R-009。唯一17多收据新IPS 7F99C120-EECE-4ADF-98C7-7A259401718D主线程日志隔离→strcmp/XCTAutomationSession.fetchMatchesForQuery，最后活动第二模板保存栏全Any查询。等两系终态后仅收窄测试Form的CollectionView/当前save-bar的Other查询，避免跨全元素和另一不存在功能栏；公开hasFocus焦点等待/输入回读/44pt/业务断言均保留。新的两条专项及最终阶段门尚待；以下为原始失败/第一轮修复过程。
+
+- 15:56领取，000E前置提交8a325de；48张已拆卡47DONE/唯一000F IN_PROGRESS。初始同源两系unit-full各581/581定义、1182次执行，零失败/跳过/运行警告、exit0。原两系ordinary ui-full各55/59、exit65，不能称全部通过；证据根/tmp/habito-names-000f-evidence.6GoEzw。
+- 17失败：名字载入失败重试18pt；统计概况自行确认完成计数0应1；多审核收据第二模板金币焦点处App崩溃；自行确认关闭反馈再旧通知重开可再次完成。27失败为名字三条输入框22pt与重试18pt，均普通large字号；000E MAX文字较大未暴露这些普通尺寸缺陷，不能以MAX通过替代普通字号。
+- 17原生截图AE94CED8-04D5-4A79-96FB-847F3C2610BB.png、录屏CAEE4F5D-22F6-45CC-898C-27B396894B74.mp4及F71853CD-C904-4A68-8176-B7943E04ABEE.mp4证实：点关闭反馈后状态已完成→准备开始，撤销条和结果卡一起消失。关闭按钮被固定底栏遮住导致误触撤销；统计与重启异常是此触控回归，不是回算统计或保存丢失。摘帧只帮助诊断原生录屏，不作新通过证据。
+- 多收据IPS 5FE51E0F-CD65-44CD-9169-FFFECDED99CA.ips主线程strcmp/运行时日志fault/高日志量隔离/UIKit键盘移动；没有奖励或SwiftData业务栈，不推断未跑完断言成功。原始失败包/AX/事件/IPS/录屏在attachments-17及attachments-27保留，不覆盖。
+- 17:14等两系退出后限定修复：名字重试label内部44pt；两名字原生largeTitle/roundedBorder输入和触控形状；TaskSessionLoadedView以VStack分隔滚动区和固定撤销条，保持原服务时钟与五秒规则；Snapshot中文注释更新；UI helper扣除底栏遮挡并验证关闭区域不重叠、关闭不能清完成事实。没有改schema/奖励/保存/通知/PIN事务或后置数值。
+- 修复源已不同于8a325de，旧完整单测或000E四MAX不直接作为当前最终门。两系ui-ordinary-layout-fixed各九专项运行中，尚未取得终态；32当前源MAX、最终完整单测及59UI尚待。Release/Debug analyze-layout-fixed均exit0、日志为空；严格格式/PBX解析/1031对象无重复/diff通过，461资源与HEAD逐项完全一致。仍未提交/推送或操作正式家庭库/真实Keychain。

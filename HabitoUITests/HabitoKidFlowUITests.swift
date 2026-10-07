@@ -141,7 +141,7 @@ final class HabitoKidFlowUITests: XCTestCase {
 
     private func setProfileText(_ text: String, identifier: String, in app: XCUIApplication) {
         let field = app.textFields[identifier]
-        let viewport = app.descendants(matching: .any)["parent.profile.form"]
+        let viewport = app.collectionViews["parent.profile.form"]
         scrollFullyIntoFormViewport(field, viewport: viewport, in: app, towardTop: true)
         XCTAssertGreaterThanOrEqual(field.frame.height, 44)
         let old = profileValue(identifier, in: app)
@@ -916,7 +916,8 @@ final class HabitoKidFlowUITests: XCTestCase {
                 XCTFail("今日页应保留可操作区域")
                 return
             }
-            if element.exists, element.isHittable, visibleFrame.contains(element.frame) { return }
+            // 导航栏后/屏外元素可能让17的hittability查询报无效激活点；先核对完整可见，再查可点击性。
+            if element.exists, visibleFrame.contains(element.frame), element.isHittable { return }
             let distance =
                 element.exists ? (element.frame.midY - visibleFrame.midY) / visibleFrame.height : (towardTop ? -1 : 1)
             // 大字推荐卡会被整屏 swipe 来回越过；按公开 frame 对齐，保持完整可见与可操作标准。
@@ -1830,7 +1831,7 @@ final class HabitoKidFlowUITests: XCTestCase {
 
     /// 先结束原生编辑再保存，避免键盘移动 iPad 弹层时点击落在旧位置。
     private func tapEditorSave(in app: XCUIApplication) {
-        let viewport = app.descendants(matching: .any)["parent.templates.editor"]
+        let viewport = app.collectionViews["parent.templates.editor"]
         let keyboard = app.keyboards.element
         if keyboard.exists, keyboard.isHittable {
             let visibleFrame = formVisibleFrame(viewport, in: app)
@@ -1918,13 +1919,13 @@ final class HabitoKidFlowUITests: XCTestCase {
     /// 原生 Form 懒加载内容；小幅滚动到控件完整可见再操作，不把边缘命中当验收。
     private func scrollFullyIntoEditorViewport(_ element: XCUIElement, in app: XCUIApplication, towardTop: Bool = false)
     {
-        let viewport = app.descendants(matching: .any)["parent.templates.editor"]
+        let viewport = app.collectionViews["parent.templates.editor"]
         scrollFullyIntoFormViewport(element, viewport: viewport, in: app, towardTop: towardTop)
     }
 
     /// 原生自动滚动可能把大字按钮放到键盘后；只在实际可视区完整露出后才点击。
     private func scrollFullyIntoPINViewport(_ element: XCUIElement, in app: XCUIApplication) {
-        let viewport = app.descendants(matching: .any)["parent.gate.form"]
+        let viewport = app.collectionViews["parent.gate.form"]
         scrollFullyIntoFormViewport(element, viewport: viewport, in: app)
     }
 
@@ -1987,9 +1988,15 @@ final class HabitoKidFlowUITests: XCTestCase {
         let keyboard = app.keyboards.element
         let assistant = app.otherElements["SystemInputAssistantView"]
         // Form 的 AX frame 包含底部安全区；固定保存栏也必须从输入的真实可视区扣除。
-        let saveBar = app.descendants(matching: .any)["parent.templates.editor.save-bar"]
-        let profileSaveBar = app.descendants(matching: .any)["parent.profile.save-bar"]
-        for obstruction in [keyboard, assistant, saveBar, profileSaveBar] where obstruction.exists {
+        // 已知Form/操作栏的原生AX类型就使用窄查询；不在每次滚动快照中遍历全部元素，
+        // 也不查当前页面不存在的另一功能保存栏，避免17自动化日志洪泛导致进程失联。
+        let saveBar: XCUIElement?
+        switch viewport.identifier {
+        case "parent.gate.form": saveBar = nil
+        case "parent.profile.form": saveBar = app.otherElements["parent.profile.save-bar"]
+        default: saveBar = app.otherElements["parent.templates.editor.save-bar"]
+        }
+        for obstruction in [keyboard, assistant] + (saveBar.map { [$0] } ?? []) where obstruction.exists {
             let frame = obstruction.frame
             if frame.intersects(visibleFrame), frame.minY > visibleFrame.minY {
                 visibleFrame.size.height = min(visibleFrame.maxY, frame.minY) - visibleFrame.minY
@@ -2001,15 +2008,20 @@ final class HabitoKidFlowUITests: XCTestCase {
     func testParentApprovalSubmissionWaitsWithoutRewardOrOldActionsAcrossRelaunch() throws {
         let app = launchScenario("parent-approval")
         openSeededTask(in: app)
-        app.buttons["kid.session.start"].tap()
+        let start = app.buttons["kid.session.start"]
+        scrollFullyIntoSessionViewport(start, in: app)
+        start.tap()
         XCTAssertTrue(app.buttons["kid.session.pause"].waitForExistence(timeout: 5))
         let submit = app.buttons["kid.session.submit"]
         XCTAssertTrue(submit.exists)
         XCTAssertEqual(submit.label, "提交给家长")
+        scrollFullyIntoSessionViewport(submit, in: app)
         submit.tap()
         assertWaitingWithoutOldActions(in: app)
         XCTAssertTrue(app.staticTexts["已提交！"].exists)
-        app.buttons["kid.session.dismiss-completion-feedback"].tap()
+        let dismiss = app.buttons["kid.session.dismiss-completion-feedback"]
+        scrollFullyIntoSessionViewport(dismiss, in: app)
+        dismiss.tap()
         XCTAssertFalse(app.staticTexts["已提交！"].exists)
         keepScreenshot(app, name: "审核任务提交等待")
 
@@ -2045,7 +2057,10 @@ final class HabitoKidFlowUITests: XCTestCase {
     func testSelfConfirmShowsActualRewardsOnceAndUndoRemainsReachable() throws {
         let app = launchScenario("reward-self-confirm")
         openSeededTask(in: app)
-        app.buttons["kid.session.complete"].tap()
+        // 此旧用例也纳入MAX：完成按钮可能只露出底边，必须先完整可见再开始真实五秒验收。
+        let complete = app.buttons["kid.session.complete"]
+        scrollFullyIntoSessionViewport(complete, in: app)
+        complete.tap()
         let undo = app.buttons["kid.session.undo"]
         XCTAssertTrue(undo.waitForExistence(timeout: 2))
         XCTAssertTrue(undo.isHittable)
@@ -2058,10 +2073,21 @@ final class HabitoKidFlowUITests: XCTestCase {
         XCTAssertEqual(xp.label, "+11 XP 已到账")
         XCTAssertEqual(coins.label, "+10 金币已到账")
         keepScreenshot(app, name: "真实奖励到账")
-        app.buttons["kid.session.dismiss-completion-feedback"].tap()
+        let dismiss = app.buttons["kid.session.dismiss-completion-feedback"]
+        scrollFullyIntoSessionViewport(dismiss, in: app)
+        // 真实五秒可能在两次AX查询间到期；同一公开快照检查重叠，不延长窗口或查询已消失的按钮。
+        let snapshot = try app.snapshot()
+        if let undoSnapshot = snapshotElement(identifier: "kid.session.undo", in: snapshot) {
+            let dismissSnapshot = try XCTUnwrap(
+                snapshotElement(identifier: "kid.session.dismiss-completion-feedback", in: snapshot))
+            XCTAssertFalse(dismissSnapshot.frame.intersects(undoSnapshot.frame), "关闭反馈与撤销不能占用同一触控区域")
+        }
+        dismiss.tap()
         XCTAssertFalse(xp.exists)
         XCTAssertFalse(coins.exists)
         XCTAssertFalse(app.staticTexts["你做到了！"].exists)
+        // 关闭只是消费反馈，不能误触底部撤销后悄悄把完成事实清掉。
+        XCTAssertFalse(app.buttons["kid.session.complete"].exists)
         relaunchWithOldSeededNotification(app)
         XCTAssertTrue(app.staticTexts["今天的任务都完成了。"].waitForExistence(timeout: 5))
         XCTAssertFalse(app.staticTexts["你做到了！"].exists)
@@ -2131,6 +2157,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         XCTAssertFalse(dismiss.exists)
         XCTAssertFalse(xp.exists)
         XCTAssertFalse(coins.exists)
+        XCTAssertFalse(app.buttons["kid.session.complete"].exists, "关闭反馈不能撤销完成")
         // 再次进入不能从已完成历史重播局部收据。
         relaunchWithOldSeededNotification(app)
         XCTAssertTrue(app.staticTexts["今天的任务都完成了。"].waitForExistence(timeout: 5))
@@ -2534,14 +2561,49 @@ final class HabitoKidFlowUITests: XCTestCase {
         let viewport = app.scrollViews["kid.session.screen"]
         XCTAssertTrue(viewport.exists)
         for _ in 0..<4 {
-            if element.isHittable, viewport.frame.contains(element.frame) { return }
-            if element.frame.minY < viewport.frame.minY {
+            let visibleFrame = sessionVisibleFrame(viewport, in: app)
+            if visibleFrame.contains(element.frame), element.isHittable { return }
+            if element.frame.minY < visibleFrame.minY {
                 viewport.swipeDown()
             } else {
                 viewport.swipeUp()
             }
         }
-        XCTAssertTrue(element.isHittable && viewport.frame.contains(element.frame), "元素应能完整滚动到执行页可视区域")
+        XCTAssertTrue(
+            sessionVisibleFrame(viewport, in: app).contains(element.frame) && element.isHittable,
+            "元素应能完整滚动到执行页可视区域，不与撤销栏重叠")
+    }
+
+    /// 用同一公开AX快照读取滚动区和撤销栏，避免真实五秒期满造成exists/frame跨查询竞态。
+    /// - Important: 读取失败明确使测试失败；不吞异常、不解析debug文本，也不冻结服务时钟。
+    private func sessionVisibleFrame(_ viewport: XCUIElement, in app: XCUIApplication) -> CGRect {
+        do {
+            let snapshot = try app.snapshot()
+            guard let scroll = snapshotElement(identifier: viewport.identifier, in: snapshot) else {
+                XCTFail("执行页快照应包含滚动窗口")
+                return .null
+            }
+            var visible = scroll.frame.intersection(snapshot.frame)
+            // 17的ScrollView AX外框可能含固定底栏；即使布局已分隔，仍保留无重叠验收标准。
+            if let undo = snapshotElement(identifier: "kid.session.undo", in: snapshot), undo.frame.intersects(visible)
+            {
+                visible.size.height = max(0, undo.frame.minY - visible.minY)
+            }
+            return visible
+        } catch {
+            XCTFail("无法读取执行页原生快照：\(error)")
+            return .null
+        }
+    }
+
+    /// 遍历已取得的不可变快照，不再向App查询可能刚好消失的短时按钮。
+    private func snapshotElement(identifier: String, in snapshot: any XCUIElementSnapshot) -> (any XCUIElementSnapshot)?
+    {
+        if snapshot.identifier == identifier { return snapshot }
+        for child in snapshot.children {
+            if let match = snapshotElement(identifier: identifier, in: child) { return match }
+        }
+        return nil
     }
 
     /// 同一用例的所有重启沿用相同环境；只隔离场景日期，不冻结计时实际经过的秒数。
