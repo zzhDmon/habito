@@ -196,6 +196,30 @@
       "extractionState" : "manual",
       "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "今日通关" } } }
     },
+    "kidToday.dailyCelebrationTitle" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "今天全通关啦！" } } }
+    },
+    "kidToday.dailyCelebrationDescription" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "一项一项，你都做到了！" } } }
+    },
+    "kidToday.dailyCelebrationContinue" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "继续" } } }
+    },
+    "kidToday.dailyCelebrationContinueHint" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "收起这次庆祝，仍可查看今日完成结果。" } } }
+    },
+    "kidToday.celebrationVerificationErrorTitle" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "庆祝暂时没准备好" } } }
+    },
+    "kidToday.celebrationVerificationErrorDescription" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "任务结果不会因此改变。再试一次吧。" } } }
+    },
     "kidToday.dailyCompletionCount %lld" : {
       "extractionState" : "manual",
       "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "完成了 %lld 项今日任务" } } }

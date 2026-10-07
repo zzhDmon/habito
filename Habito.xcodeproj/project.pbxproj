@@ -12,6 +12,11 @@
 		AB1000000000000000000264 /* TodayCompletionCelebrationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000264 /* TodayCompletionCelebrationViewModel.swift */; };
 		AB1000000000000000000265 /* TodayCompletionCelebrationViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000265 /* TodayCompletionCelebrationViewModelTests.swift */; };
 		AB1000000000000000000266 /* TodayCompletionCelebrationIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000266 /* TodayCompletionCelebrationIntegrationTests.swift */; };
+		AB1000000000000000000267 /* TodayCompletionCelebrationMotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000267 /* TodayCompletionCelebrationMotion.swift */; };
+		AB1000000000000000000268 /* TodayCompletionCelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000268 /* TodayCompletionCelebrationView.swift */; };
+		AB1000000000000000000269 /* TodayCompletionVerificationErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000269 /* TodayCompletionVerificationErrorView.swift */; };
+		AB100000000000000000026A /* TodayCompletionCelebrationPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB200000000000000000026A /* TodayCompletionCelebrationPreview.swift */; };
+		AB100000000000000000026B /* TodayCompletionCelebrationRenderingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB200000000000000000026B /* TodayCompletionCelebrationRenderingTests.swift */; };
 		AB1000000000000000000261 /* FamilyProfileEditorRenderingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000261 /* FamilyProfileEditorRenderingTests.swift */; };
 		AB1000000000000000000256 /* FamilyProfileEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000256 /* FamilyProfileEditorView.swift */; };
 		AB1000000000000000000257 /* FamilyProfileEditorForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000257 /* FamilyProfileEditorForm.swift */; };
@@ -545,6 +550,11 @@
 		AB2000000000000000000264 /* TodayCompletionCelebrationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayCompletionCelebrationViewModel.swift; sourceTree = "<group>"; };
 		AB2000000000000000000265 /* TodayCompletionCelebrationViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayCompletionCelebrationViewModelTests.swift; sourceTree = "<group>"; };
 		AB2000000000000000000266 /* TodayCompletionCelebrationIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayCompletionCelebrationIntegrationTests.swift; sourceTree = "<group>"; };
+		AB2000000000000000000267 /* TodayCompletionCelebrationMotion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayCompletionCelebrationMotion.swift; sourceTree = "<group>"; };
+		AB2000000000000000000268 /* TodayCompletionCelebrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayCompletionCelebrationView.swift; sourceTree = "<group>"; };
+		AB2000000000000000000269 /* TodayCompletionVerificationErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayCompletionVerificationErrorView.swift; sourceTree = "<group>"; };
+		AB200000000000000000026A /* TodayCompletionCelebrationPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayCompletionCelebrationPreview.swift; sourceTree = "<group>"; };
+		AB200000000000000000026B /* TodayCompletionCelebrationRenderingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayCompletionCelebrationRenderingTests.swift; sourceTree = "<group>"; };
 		AB2000000000000000000225 /* KidTodayCompletionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidTodayCompletionView.swift; sourceTree = "<group>"; };
 		AB2000000000000000000226 /* TodayCompletionSummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayCompletionSummaryTests.swift; sourceTree = "<group>"; };
 		AB2000000000000000000227 /* TodayCompletionRenderingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayCompletionRenderingTests.swift; sourceTree = "<group>"; };
@@ -1626,6 +1636,10 @@
 			children = (
 				AB2000000000000000000262 /* TodayCompletionCelebrationEvent.swift */,
 				AB2000000000000000000264 /* TodayCompletionCelebrationViewModel.swift */,
+				AB2000000000000000000267 /* TodayCompletionCelebrationMotion.swift */,
+				AB2000000000000000000268 /* TodayCompletionCelebrationView.swift */,
+				AB2000000000000000000269 /* TodayCompletionVerificationErrorView.swift */,
+				AB200000000000000000026A /* TodayCompletionCelebrationPreview.swift */,
 				AB2000000000000000000224 /* TodayCompletionSummary.swift */,
 				AB2000000000000000000225 /* KidTodayCompletionView.swift */,
 				AB2000000000000000000188 /* ChildRewardFeedbackState.swift */,
@@ -1664,6 +1678,7 @@
 				AB2000000000000000000263 /* TodayCompletionCelebrationEventTests.swift */,
 				AB2000000000000000000265 /* TodayCompletionCelebrationViewModelTests.swift */,
 				AB2000000000000000000266 /* TodayCompletionCelebrationIntegrationTests.swift */,
+				AB200000000000000000026B /* TodayCompletionCelebrationRenderingTests.swift */,
 				AB2000000000000000000261 /* FamilyProfileEditorRenderingTests.swift */,
 				AB2000000000000000000255 /* FamilyProfileEditorViewModelTests.swift */,
 				AB2000000000000000000226 /* TodayCompletionSummaryTests.swift */,
@@ -2072,6 +2087,10 @@
 				AB1000000000000000000224 /* TodayCompletionSummary.swift in Sources */,
 				AB1000000000000000000262 /* TodayCompletionCelebrationEvent.swift in Sources */,
 				AB1000000000000000000264 /* TodayCompletionCelebrationViewModel.swift in Sources */,
+				AB1000000000000000000267 /* TodayCompletionCelebrationMotion.swift in Sources */,
+				AB1000000000000000000268 /* TodayCompletionCelebrationView.swift in Sources */,
+				AB1000000000000000000269 /* TodayCompletionVerificationErrorView.swift in Sources */,
+				AB100000000000000000026A /* TodayCompletionCelebrationPreview.swift in Sources */,
 				AB1000000000000000000230 /* FamilyProfileNames.swift in Sources */,
 				AB1000000000000000000256 /* FamilyProfileEditorView.swift in Sources */,
 				AB1000000000000000000257 /* FamilyProfileEditorForm.swift in Sources */,
@@ -2455,6 +2474,7 @@
 				AB1000000000000000000263 /* TodayCompletionCelebrationEventTests.swift in Sources */,
 				AB1000000000000000000265 /* TodayCompletionCelebrationViewModelTests.swift in Sources */,
 				AB1000000000000000000266 /* TodayCompletionCelebrationIntegrationTests.swift in Sources */,
+				AB100000000000000000026B /* TodayCompletionCelebrationRenderingTests.swift in Sources */,
 				AB1000000000000000000232 /* FamilyProfileNamesTests.swift in Sources */,
 				AB1000000000000000000261 /* FamilyProfileEditorRenderingTests.swift in Sources */,
 				AB1000000000000000000255 /* FamilyProfileEditorViewModelTests.swift in Sources */,

@@ -1,6 +1,6 @@
 # Habito V1 验收流程记录
 
-> 2026-10-07 21:11：002B2 DONE，最终两系相关93/140及构建/质量/专项/独立文档复核通过，准备本地提交；原失败/0测试筛选保留见40节。实际仪式与失败提示UI尚未交付。
+> 2026-10-07 21:24：唯一B3A组件最终两系41/75及构建质量/专项通过，待文档Reader；B3B首页交互/B3C完整门WAITING。组件不当真实首页或系统开关现场交付，见41节。
 
 ## 1. V1-M3-001B：提交等待与计时终态
 
@@ -605,3 +605,12 @@
 - 首related-{17,27}、Release/分析均exit65，编译错误为Observable修改self.calendar早于新增let依赖初始化，测试尚未执行。改局部日历副本，不绕过检查。qualification-replay-red-17单条筛选exit0但原生unknown、0测试，不记通过；出现局部可变状态捕获警告，资格读取窄闭包改为MainActor模型内同步普通依赖、不跨域，无关闭严格检查。过程日志/包都在/tmp/habito-daily-wiring-002b2-evidence.kxigtI9L。
 - qualification-replay-suite-red-17真实集成套件12通过/1失败、exit65，零跳过/运行警告；唯一qualificationFailureDoesNotTurnCompletionIntoSaveFailure()证明额外资格读取失败后恢复、重传同一成功结果再次生成event。原事务/奖励仍已成功，失败只在仪式。状态invalidate(consuming:)消费此新ID，Today错误分支传ID；新增审核分支失败重传与状态回归，测试不弱化。
 - 21:06最终源related-{17,27}-final及release-final/analyze-final运行，未取未封口包当成功；严格格式/PBX解析/diff通过，源码冻结。新增14集成定义与状态16定义（原15+失败ID用例），未接实际View/提示/动画，未改schema/奖励/通知/PIN或后置参数。51卡50DONE/唯一002B2 IN_PROGRESS，终态/质量/专项/独立文档门后才可提交；完整UI/MAX集中实际功能阶段。
+
+## 41. V1-M6-002B3A：动态仪式与失败提示组件（卡级完成）
+
+- 21:14领取，前置4354046。新增独立View/Motion/校验错误View、固定纯Preview、原生ImageRenderer/策略测试，PBX/6本地化键/4稳定AX标识与五文档，共13文件；无Root或正式首页接入。装饰印章短弹出，正文/真实数量/继续操作首帧完整、无延迟或额外奖；无资格/减少动态明确禁继承动画事务。
+- 首两系related/Release/分析exit65，SDK约束accessibilityReduceMotion只读不可用environment赋值，测试未执行；保留原日志/包。修为组件显式布尔输入，后续B3B宿主读取系统只读环境传入；固定预览/单测不是系统设置现场验收，无UIKit/关闭检查。
+- 最终related-{17,27}-final.xcresult各41/41定义75执行、新3定义，零失败/跳过/运行警告、exit0；纯资格22/状态16/组件3。策略覆盖普通/减少动态初/终帧；ImageRenderer在320/900、普通/MAX、浅/深色及固定减少动态输入渲染，独立错误组件渲染。不据图片宽高通过推导AX语义/44pt实际点击/系统开关已经验收，B3B承接真实交互。
+- release-final/analyze-final均exit0、日志0字节；严格格式/PBX1051无重复/diff通过；467资源原461逐键完整不变，新6manual/translated。swiftui-pro数据/UI/无障碍/卫生复核修正只读环境边界，正文无隐藏/缩字或固定高度、语义字体/ScaledMetric/装饰隐藏、Label内44pt，无其他范围内真实问题。
+- 证据根/tmp/habito-daily-components-002b3a-evidence.OpTnzpFA；View SHA256b63780a1048c20482997ae562d1fc43b624d60000cf96f161ef5c9a4c25a9cbe，Motionee3a7328c9aee38ab8941dea877bb413421fe15b9c240012e4eac80d581f1f24，错误View185279289dad6281decce483cecdae927f83cc223b86264985d1651dfcec2c80，Preview429b034b6075e2478583ec9c5917322c7faa032da91716b001788f4d04b8f663，测试e2855d6e9aeba032393367908f8d00442ee2ede9afb42844d5af7fa84792f9a8。
+- 21:32独立文档Reader五问及13文件/467资源计数通过，B3A DONE；54卡52DONE/2WAITING，未跑整套UI/MAX，组件不代表首页交付。下一精确本地提交，B3B实际接入/错误提示与普通/MAX专项，B3C集中完整门；今日限定/内存ASSUMPTION、参数/实机/家庭效果仍保留，无需用户现在处理。
