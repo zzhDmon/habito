@@ -11,6 +11,7 @@
 		AB1000000000000000000263 /* TodayCompletionCelebrationEventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000263 /* TodayCompletionCelebrationEventTests.swift */; };
 		AB1000000000000000000264 /* TodayCompletionCelebrationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000264 /* TodayCompletionCelebrationViewModel.swift */; };
 		AB1000000000000000000265 /* TodayCompletionCelebrationViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000265 /* TodayCompletionCelebrationViewModelTests.swift */; };
+		AB1000000000000000000266 /* TodayCompletionCelebrationIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000266 /* TodayCompletionCelebrationIntegrationTests.swift */; };
 		AB1000000000000000000261 /* FamilyProfileEditorRenderingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000261 /* FamilyProfileEditorRenderingTests.swift */; };
 		AB1000000000000000000256 /* FamilyProfileEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000256 /* FamilyProfileEditorView.swift */; };
 		AB1000000000000000000257 /* FamilyProfileEditorForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000257 /* FamilyProfileEditorForm.swift */; };
@@ -543,6 +544,7 @@
 		AB2000000000000000000263 /* TodayCompletionCelebrationEventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayCompletionCelebrationEventTests.swift; sourceTree = "<group>"; };
 		AB2000000000000000000264 /* TodayCompletionCelebrationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayCompletionCelebrationViewModel.swift; sourceTree = "<group>"; };
 		AB2000000000000000000265 /* TodayCompletionCelebrationViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayCompletionCelebrationViewModelTests.swift; sourceTree = "<group>"; };
+		AB2000000000000000000266 /* TodayCompletionCelebrationIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayCompletionCelebrationIntegrationTests.swift; sourceTree = "<group>"; };
 		AB2000000000000000000225 /* KidTodayCompletionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidTodayCompletionView.swift; sourceTree = "<group>"; };
 		AB2000000000000000000226 /* TodayCompletionSummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayCompletionSummaryTests.swift; sourceTree = "<group>"; };
 		AB2000000000000000000227 /* TodayCompletionRenderingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayCompletionRenderingTests.swift; sourceTree = "<group>"; };
@@ -1661,6 +1663,7 @@
 			children = (
 				AB2000000000000000000263 /* TodayCompletionCelebrationEventTests.swift */,
 				AB2000000000000000000265 /* TodayCompletionCelebrationViewModelTests.swift */,
+				AB2000000000000000000266 /* TodayCompletionCelebrationIntegrationTests.swift */,
 				AB2000000000000000000261 /* FamilyProfileEditorRenderingTests.swift */,
 				AB2000000000000000000255 /* FamilyProfileEditorViewModelTests.swift */,
 				AB2000000000000000000226 /* TodayCompletionSummaryTests.swift */,
@@ -2451,6 +2454,7 @@
 				AB1000000000000000000226 /* TodayCompletionSummaryTests.swift in Sources */,
 				AB1000000000000000000263 /* TodayCompletionCelebrationEventTests.swift in Sources */,
 				AB1000000000000000000265 /* TodayCompletionCelebrationViewModelTests.swift in Sources */,
+				AB1000000000000000000266 /* TodayCompletionCelebrationIntegrationTests.swift in Sources */,
 				AB1000000000000000000232 /* FamilyProfileNamesTests.swift in Sources */,
 				AB1000000000000000000261 /* FamilyProfileEditorRenderingTests.swift in Sources */,
 				AB1000000000000000000255 /* FamilyProfileEditorViewModelTests.swift in Sources */,

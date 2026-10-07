@@ -1,6 +1,6 @@
 # Habito V1 验收流程记录
 
-> 2026-10-07 20:54：002B1状态DONE，两系相关42/71、新15定义及构建质量/专项/独立文档复核通过，准备本地提交。B1证据见39节；事务接线/实际仪式尚未交付。
+> 2026-10-07 21:11：002B2 DONE，最终两系相关93/140及构建/质量/专项/独立文档复核通过，准备本地提交；原失败/0测试筛选保留见40节。实际仪式与失败提示UI尚未交付。
 
 ## 1. V1-M3-001B：提交等待与计时终态
 
@@ -593,3 +593,15 @@
 - 20:51最终源related-{17,27}.xcresult各42/42定义71执行，零失败/跳过/运行警告、exit0；证据根/tmp/habito-daily-state-002b1-evidence.PmDlTJW0。当前三个suite为新状态测试、B0资格测试与静态结果测试。Release/分析exit0且日志空；严格格式/PBX1039无重复/461资源与HEAD完全一致/diff通过。状态SHA25610935f85479862cd5f9388001d908e5d13b6d54f5004365e989069d840bf72b1，测试ab2fccc590915274cdaf016ac9d544968ebe921038708e4b6d51fb9b1ddfba1e。
 - 覆盖构造/历史刷新不生成事件、新自行确认/审核/零奖励、重复/幂等、不全完成的早期ID不能后来补播、关闭/失效不能恢复、陈旧关闭/领取请求、撤销后新ID、跨日/等待/未完跨日/数量改变与显式资格失败撤下。一次动画资格为状态能力，不是实际动画或Reduce Motion系统验证。swiftui-pro数据/Swift/卫生复核无范围内真实问题。
 - 仍IN_PROGRESS，50卡49DONE/1IN_PROGRESS，待独立文档Reader再DONE/提交；按DEC-030无UI状态卡不重复整套59/32，完整阶段门留接线与界面整合后。展示ASSUMPTION内存去重到进程结束、重启不投历史；后续接线需显示查询失败并invalidate，不误称已接错误反馈UI。设备/未知参数/家庭观察仍后置。
+
+## 40. V1-M6-002B2：当天动态事件真实事务接线（21:11 DONE）
+
+- 最终结论：两系相关93/140、新15定义与构建/严格质量/专项通过；独立只读文档Reader五问及14文件计数通过，无实质矛盾。51卡51DONE，无进行中，按授权本地提交14文件、不push。后续仍有实际仪式/错误提示及集中完整功能门，以下IN_PROGRESS、失败和未验收记录为过程。
+
+- 21:08最终软件验证：related-{17,27}-final各93/93定义140执行，零失败/跳过/运行警告、exit0；六suite为新集成14、状态16、纯资格22、Today5、TaskSession24、ParentReview12，新增15定义。release-final/analyze-final exit0且日志0字节，无编译/严格并发警告；全量严格格式/PBX1041无重复/461资源与HEAD完全一致/diff通过。
+- 最终Today文件SHA2563dc9a36af5a6186da07cec2ac42d0c8e933e41a5d6c4cbec5f2e22b62835c771，状态ccc0cd0d8f462fb15a90b124707e32e9df7079352b8aefdd50640047c02b87c1，新集成361aa3d5dec9e2118d495ea7397e953226e7d88bb3df47a185dd968aed9e9807，状态测试955e6c3443458abb9dbe6b4b9958ffc30e269a37898a5be4b27224b0e08db5a2。swiftui-pro复核已修初始化/并发闭包及失败ID边界，无其他范围内真实问题。仍IN_PROGRESS待独立文档门；以下为过程，不混旧包作最终完整回归。
+
+- 20:55领取，前置ab33eca；Today持有共享庆祝状态、独立完整审计只读资格边界，普通任务/资产读取仍隔离。自行确认/工厂和新家长通过只在真实save且didComplete/didReview成功后回调，提交/退回/旧结果/失败不发布；撤销只刷新。App组合根捕获同一Today实例，没有跨await或View写入。
+- 首related-{17,27}、Release/分析均exit65，编译错误为Observable修改self.calendar早于新增let依赖初始化，测试尚未执行。改局部日历副本，不绕过检查。qualification-replay-red-17单条筛选exit0但原生unknown、0测试，不记通过；出现局部可变状态捕获警告，资格读取窄闭包改为MainActor模型内同步普通依赖、不跨域，无关闭严格检查。过程日志/包都在/tmp/habito-daily-wiring-002b2-evidence.kxigtI9L。
+- qualification-replay-suite-red-17真实集成套件12通过/1失败、exit65，零跳过/运行警告；唯一qualificationFailureDoesNotTurnCompletionIntoSaveFailure()证明额外资格读取失败后恢复、重传同一成功结果再次生成event。原事务/奖励仍已成功，失败只在仪式。状态invalidate(consuming:)消费此新ID，Today错误分支传ID；新增审核分支失败重传与状态回归，测试不弱化。
+- 21:06最终源related-{17,27}-final及release-final/analyze-final运行，未取未封口包当成功；严格格式/PBX解析/diff通过，源码冻结。新增14集成定义与状态16定义（原15+失败ID用例），未接实际View/提示/动画，未改schema/奖励/通知/PIN或后置参数。51卡50DONE/唯一002B2 IN_PROGRESS，终态/质量/专项/独立文档门后才可提交；完整UI/MAX集中实际功能阶段。

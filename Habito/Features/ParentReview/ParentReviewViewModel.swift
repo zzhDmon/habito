@@ -20,18 +20,21 @@ final class ParentReviewViewModel {
     private let reviewService: TaskSubmissionReviewService
     private let dateProvider: any DateProviding
     private let notificationRebuildTrigger: NotificationRebuildTrigger
+    private let onApprovalSaved: (@MainActor (TaskSubmissionReviewResult) -> Void)?
     private let logger = Logger(subsystem: "com.zhangzehua.Habito", category: "ParentReview")
 
     init(
         context: ModelContext, dateProvider: any DateProviding,
         notificationRebuildTrigger: NotificationRebuildTrigger = NotificationRebuildTrigger(),
-        reviewService: TaskSubmissionReviewService? = nil
+        reviewService: TaskSubmissionReviewService? = nil,
+        onApprovalSaved: (@MainActor (TaskSubmissionReviewResult) -> Void)? = nil
     ) {
         self.context = context
         queueService = ParentReviewQueueService(context: context)
         self.reviewService = reviewService ?? TaskSubmissionReviewService(context: context)
         self.dateProvider = dateProvider
         self.notificationRebuildTrigger = notificationRebuildTrigger
+        self.onApprovalSaved = onApprovalSaved
     }
 
     func load() {
@@ -84,6 +87,8 @@ final class ParentReviewViewModel {
             if result.didReview {
                 feedback = ParentReviewFeedback(occurrenceID: occurrence.id, result: result)
                 notificationRebuildTrigger.requestRebuild()
+                // 退回不是确认完成；只在真实新通过保存后通知只读仪式，不影响原审核成功反馈。
+                if result.state == .approved { onApprovalSaved?(result) }
             }
             actionFailure = nil
             isActionErrorPresented = false

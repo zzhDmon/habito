@@ -176,6 +176,16 @@ struct TodayCompletionCelebrationViewModelTests {
 
     private let instant = Date(timeIntervalSinceReferenceDate: 812_000_000)
 
+    @Test("新结果资格读取失败也消费ID，恢复后不能补播，另一新ID仍可出现")
+    func failedQualificationConsumesNewIdentity() throws {
+        let model = TodayCompletionCelebrationViewModel()
+        model.invalidate(consuming: id(2))
+        #expect(!model.receive(completion: result(), snapshot: try snapshot([task()])))
+        #expect(model.event == nil)
+        #expect(model.receive(completion: result(completionID: 4), snapshot: try snapshot([task(completionID: 4)])))
+        #expect(model.event?.id == id(4))
+    }
+
     private func id(_ value: UInt8) -> UUID {
         UUID(uuid: (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, value))
     }

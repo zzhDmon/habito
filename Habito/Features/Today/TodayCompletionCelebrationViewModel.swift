@@ -54,8 +54,10 @@ final class TodayCompletionCelebrationViewModel {
     }
 
     /// 事实读取失败或页面无法再保证当前资格时显式撤下；保留已消费ID防止稍后重播。
+    /// - Parameter completionID: 刚保存但资格读取失败的新结果ID；消费它，避免恢复后重传补播。
     /// - Important: 调用者仍须显示其查询错误，本方法不将失败伪装成正常空态。
-    func invalidate() {
+    func invalidate(consuming completionID: UUID? = nil) {
+        if let completionID { _ = consumedCompletionIDs.insert(completionID) }
         event = nil
         validateEvent = nil
         claimedAnimationID = nil

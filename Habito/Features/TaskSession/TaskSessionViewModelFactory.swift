@@ -13,6 +13,8 @@ struct TaskSessionViewModelFactory {
     private let completionService: TaskCompletionService
     private let undoService: TaskCompletionUndoService
     private let submissionService: TaskSubmissionService
+    private let onCompletionSaved: (@MainActor (TaskCompletionResult) -> Void)?
+    private let onCompletionChanged: (@MainActor () -> Void)?
 
     init(
         context: ModelContext,
@@ -23,7 +25,9 @@ struct TaskSessionViewModelFactory {
         notificationRebuildTrigger: NotificationRebuildTrigger = NotificationRebuildTrigger(),
         completionService: TaskCompletionService? = nil,
         undoService: TaskCompletionUndoService? = nil,
-        submissionService: TaskSubmissionService? = nil
+        submissionService: TaskSubmissionService? = nil,
+        onCompletionSaved: (@MainActor (TaskCompletionResult) -> Void)? = nil,
+        onCompletionChanged: (@MainActor () -> Void)? = nil
     ) {
         self.context = context
         self.calendar = calendar
@@ -34,6 +38,8 @@ struct TaskSessionViewModelFactory {
         self.completionService = completionService ?? TaskCompletionService(context: context)
         self.undoService = undoService ?? TaskCompletionUndoService(context: context)
         self.submissionService = submissionService ?? TaskSubmissionService(context: context)
+        self.onCompletionSaved = onCompletionSaved
+        self.onCompletionChanged = onCompletionChanged
     }
 
     func makeModel(for occurrenceID: UUID) -> TaskSessionViewModel {
@@ -47,7 +53,9 @@ struct TaskSessionViewModelFactory {
             notificationRebuildTrigger: notificationRebuildTrigger,
             completionService: completionService,
             undoService: undoService,
-            submissionService: submissionService
+            submissionService: submissionService,
+            onCompletionSaved: onCompletionSaved,
+            onCompletionChanged: onCompletionChanged
         )
     }
 }

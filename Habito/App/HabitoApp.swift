@@ -124,14 +124,10 @@ struct HabitoApp: App {
             context: container.mainContext,
             provider: notificationProvider
         )
-        _todayModel = State(
-            initialValue: TodayViewModel(
-                context: container.mainContext,
-                calendar: calendar,
-                timeZone: timeZone,
-                dateProvider: dateProvider
-            )
-        )
+        // 今日模型持有跨导航的单一仪式状态；回调捕获这个实例，不由执行页另建去重集合。
+        let todayModel = TodayViewModel(
+            context: container.mainContext, calendar: calendar, timeZone: timeZone, dateProvider: dateProvider)
+        _todayModel = State(initialValue: todayModel)
         _childRewardFeedbackModel = State(
             initialValue: ChildRewardFeedbackViewModel(
                 service: Self.makeChildReceiptService(context: container.mainContext), dateProvider: dateProvider))
@@ -151,7 +147,9 @@ struct HabitoApp: App {
             notificationRebuildTrigger: rebuildTrigger,
             completionService: completionService,
             undoService: undoService,
-            submissionService: submissionService
+            submissionService: submissionService,
+            onCompletionSaved: { todayModel.receive(completion: $0) },
+            onCompletionChanged: todayModel.refreshCelebration
         )
         taskTemplateEditorModelFactory = TaskTemplateEditorViewModelFactory(
             context: container.mainContext,
@@ -198,7 +196,8 @@ struct HabitoApp: App {
         _parentReviewModel = State(
             initialValue: ParentReviewViewModel(
                 context: container.mainContext, dateProvider: dateProvider,
-                notificationRebuildTrigger: rebuildTrigger, reviewService: reviewService)
+                notificationRebuildTrigger: rebuildTrigger, reviewService: reviewService,
+                onApprovalSaved: { todayModel.receive(review: $0) })
         )
         _parentNotificationModel = State(
             initialValue: ParentNotificationDiagnosticsViewModel(

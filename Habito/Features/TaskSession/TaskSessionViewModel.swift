@@ -23,6 +23,8 @@ final class TaskSessionViewModel {
     private let dateProvider: any DateProviding
     private let snoozeService: TaskSnoozeService?
     private let notificationRebuildTrigger: NotificationRebuildTrigger
+    private let onCompletionSaved: (@MainActor (TaskCompletionResult) -> Void)?
+    private let onCompletionChanged: (@MainActor () -> Void)?
     private var calendar: Calendar
     private let logger = Logger(subsystem: "com.zhangzehua.Habito", category: "TaskSession")
 
@@ -36,7 +38,9 @@ final class TaskSessionViewModel {
         notificationRebuildTrigger: NotificationRebuildTrigger = NotificationRebuildTrigger(),
         completionService: TaskCompletionService? = nil,
         undoService: TaskCompletionUndoService? = nil,
-        submissionService: TaskSubmissionService? = nil
+        submissionService: TaskSubmissionService? = nil,
+        onCompletionSaved: (@MainActor (TaskCompletionResult) -> Void)? = nil,
+        onCompletionChanged: (@MainActor () -> Void)? = nil
     ) {
         self.occurrenceID = occurrenceID
         self.context = context
@@ -52,6 +56,8 @@ final class TaskSessionViewModel {
         self.dateProvider = dateProvider
         self.snoozeService = snoozeService
         self.notificationRebuildTrigger = notificationRebuildTrigger
+        self.onCompletionSaved = onCompletionSaved
+        self.onCompletionChanged = onCompletionChanged
         self.calendar = calendar
         self.calendar.timeZone = timeZone
     }
@@ -179,6 +185,8 @@ final class TaskSessionViewModel {
                 if result.didComplete {
                     completionFeedback = .completed(result)
                     notificationRebuildTrigger.requestRebuild()
+                    // 非抛错回调发生在save成功之后；附加仪式读取失败不能变成打卡失败。
+                    onCompletionSaved?(result)
                 }
             case .parentApproval:
                 let result = try submissionService.submit(occurrence, at: dateProvider.now())
@@ -211,7 +219,10 @@ final class TaskSessionViewModel {
 
         do {
             let result = try undoService.undo(fetchOccurrence(), completionID: completion.id, at: now)
-            if result.didUndo { notificationRebuildTrigger.requestRebuild() }
+            if result.didUndo {
+                notificationRebuildTrigger.requestRebuild()
+                onCompletionChanged?()
+            }
             clearActionFailure()
             reload(showLoading: false)
         } catch {
