@@ -59,6 +59,8 @@ struct HabitoApp: App {
                         timeZone: timeZone,
                         scenario: try UITestTaskScenario.parse(arguments: ProcessInfo.processInfo.arguments)
                     )
+                    try UITestRewardReceiptProbe.prepare(
+                        context: container.mainContext, arguments: ProcessInfo.processInfo.arguments)
                 } else {
                     dateProvider = SystemDateProvider()
                     container = try AppModelContainer.make()

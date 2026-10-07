@@ -13,6 +13,30 @@ final class HabitoKidFlowUITests: XCTestCase {
         continueAfterFailure = false
     }
 
+    func testApprovalReceiptSurvivesRealProcessExitFailureAndAcknowledgementWithoutNewRewards() throws {
+        XCUIDevice.shared.orientation = .landscapeLeft
+        let app = makeApplication()
+        for scenario in ["parent-approval", "zero-reward-parent-approval"] {
+            for phase in [
+                "seed", "pending", "failed-acknowledgement", "pending", "acknowledge", "acknowledged", "acknowledged",
+            ] {
+                app.terminate()
+                app.launchArguments = [
+                    "--habito-ui-testing", "--habito-ui-task-scenario", scenario,
+                    "--habito-ui-receipt-probe", phase,
+                ]
+                if phase == "seed" { app.launchArguments.append("--habito-ui-reset") }
+                app.launch()
+                // 正常首页出现意味着本进程启动探针已核对真实收据/审计/账本；不以日志或内存值冒充重启。
+                XCTAssertTrue(app.staticTexts["完成 1 / 1"].waitForExistence(timeout: 10))
+                assertTodayRewards(
+                    xp: scenario == "parent-approval" ? 11 : 0,
+                    coins: scenario == "parent-approval" ? 10 : 0, in: app)
+                keepScreenshot(app, name: "跨进程收据-\(scenario)-\(phase)")
+            }
+        }
+    }
+
     func testFormalTimePeriodGroupsKeepRecommendationUniqueAndTasksReachableWithSystemTextSize() throws {
         let app = launchEmptyParentEditor(title: "分组推荐锚点")
         tapEditorSave(in: app)

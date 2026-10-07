@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AB1000000000000000000187 /* UITestRewardReceiptProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000187 /* UITestRewardReceiptProbe.swift */; };
+		AB1000000000000000000183 /* ChildRewardReceipt.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000183 /* ChildRewardReceipt.swift */; };
+		AB1000000000000000000184 /* ChildRewardReceiptError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000184 /* ChildRewardReceiptError.swift */; };
+		AB1000000000000000000185 /* ChildRewardReceiptService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000185 /* ChildRewardReceiptService.swift */; };
+		AB1000000000000000000186 /* ChildRewardReceiptServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000186 /* ChildRewardReceiptServiceTests.swift */; };
 		AB1000000000000000000169 /* HabitoSchemaV6.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000169 /* HabitoSchemaV6.swift */; };
 		AB1000000000000000000170 /* HabitoSchemaV5+TaskTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000170 /* HabitoSchemaV5+TaskTemplate.swift */; };
 		AB1000000000000000000171 /* HabitoSchemaV5+ReminderRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000171 /* HabitoSchemaV5+ReminderRule.swift */; };
@@ -421,6 +426,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AB2000000000000000000187 /* UITestRewardReceiptProbe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestRewardReceiptProbe.swift; sourceTree = "<group>"; };
+		AB2000000000000000000183 /* ChildRewardReceipt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildRewardReceipt.swift; sourceTree = "<group>"; };
+		AB2000000000000000000184 /* ChildRewardReceiptError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildRewardReceiptError.swift; sourceTree = "<group>"; };
+		AB2000000000000000000185 /* ChildRewardReceiptService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildRewardReceiptService.swift; sourceTree = "<group>"; };
+		AB2000000000000000000186 /* ChildRewardReceiptServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildRewardReceiptServiceTests.swift; sourceTree = "<group>"; };
 		AB2000000000000000000169 /* HabitoSchemaV6.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV6.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000170 /* HabitoSchemaV5+TaskTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV5+TaskTemplate.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000171 /* HabitoSchemaV5+ReminderRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV5+ReminderRule.swift"; sourceTree = "<group>"; };
@@ -940,6 +950,8 @@
 		AB5000000000000000000003 /* Rewards */ = {
 			isa = PBXGroup;
 			children = (
+				AB2000000000000000000183 /* ChildRewardReceipt.swift */,
+				AB2000000000000000000184 /* ChildRewardReceiptError.swift */,
 				AB2000000000000000000034 /* RewardLedgerError.swift */,
 				AB2000000000000000000035 /* RewardBalance.swift */,
 				AB2000000000000000000036 /* RewardLedgerMutation.swift */,
@@ -952,6 +964,7 @@
 		AB5000000000000000000004 /* Rewards */ = {
 			isa = PBXGroup;
 			children = (
+				AB2000000000000000000185 /* ChildRewardReceiptService.swift */,
 				AB2000000000000000000038 /* RewardLedgerSnapshot.swift */,
 				AB2000000000000000000039 /* RewardLedgerService.swift */,
 			);
@@ -1017,6 +1030,7 @@
 		A50000000000000000000003 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				AB2000000000000000000187 /* UITestRewardReceiptProbe.swift */,
 				A20000000000000000000009 /* AppDelegate.swift */,
 				Z2000000000000000000000C /* UITestDateProvider.swift */,
 				A20000000000000000000001 /* HabitoApp.swift */,
@@ -1572,6 +1586,7 @@
 		D50000000000000000000002 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				AB2000000000000000000186 /* ChildRewardReceiptServiceTests.swift */,
 				AB2000000000000000000181 /* V5MigrationFixture.swift */,
 				AB2000000000000000000182 /* ChildFeedbackDeliveryMigrationTests.swift */,
 				A20000000000000000000006 /* AppModelContainerTests.swift */,
@@ -1745,6 +1760,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AB1000000000000000000187 /* UITestRewardReceiptProbe.swift in Sources */,
+				AB1000000000000000000183 /* ChildRewardReceipt.swift in Sources */,
+				AB1000000000000000000184 /* ChildRewardReceiptError.swift in Sources */,
+				AB1000000000000000000185 /* ChildRewardReceiptService.swift in Sources */,
 				AB1000000000000000000169 /* HabitoSchemaV6.swift in Sources */,
 				AB1000000000000000000170 /* HabitoSchemaV5+TaskTemplate.swift in Sources */,
 				AB1000000000000000000171 /* HabitoSchemaV5+ReminderRule.swift in Sources */,
@@ -2073,6 +2092,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AB1000000000000000000186 /* ChildRewardReceiptServiceTests.swift in Sources */,
 				AB1000000000000000000181 /* V5MigrationFixture.swift in Sources */,
 				AB1000000000000000000182 /* ChildFeedbackDeliveryMigrationTests.swift in Sources */,
 				A10000000000000000000006 /* AppModelContainerTests.swift in Sources */,

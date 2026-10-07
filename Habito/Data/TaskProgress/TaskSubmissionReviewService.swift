@@ -81,7 +81,8 @@ struct TaskSubmissionReviewService {
                     reminderAtSnapshot: snapshot.reminderAt, xpRewardSnapshot: snapshot.xp,
                     coinRewardSnapshot: snapshot.baseCoins, activeBonusCoinSnapshot: snapshot.autonomyBonusCoins,
                     settledCoinSnapshot: snapshot.settledCoins, rewardSettlementVersion: 2,
-                    submissionID: row.id, rewardSettledAt: now)
+                    // 只给本次新通过明确投递资格，与完成/奖励同一事务保存；旧请求重试不补标。
+                    submissionID: row.id, rewardSettledAt: now, childFeedbackDeliveryVersion: 1)
                 context.insert(record)
                 stagedRecord = record
                 occurrence.completionRecord = record
