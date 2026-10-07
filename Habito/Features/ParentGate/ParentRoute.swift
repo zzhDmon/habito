@@ -2,6 +2,7 @@
 enum ParentRoute: Hashable {
     case review
     case today
+    case statistics
     case calendar
     case notifications
     case template(ParentTaskTemplateRoute)

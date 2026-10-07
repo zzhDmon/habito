@@ -11,14 +11,22 @@ struct GrowthStatisticsQueryService {
     private let timeZone: TimeZone
     private let calculator = GrowthStatisticsCalculator()
     private let taskQuery: TodayTaskQueryService
+    private let fetchOccurrences: @MainActor (FetchDescriptor<TaskOccurrence>) throws -> [TaskOccurrence]
 
-    init(context: ModelContext, calendar: Calendar, timeZone: TimeZone) {
+    /// 可替换读取边界只供隔离失败测试；普通运行始终调用同一主actor上下文的fetch。
+    init(
+        context: ModelContext, calendar: Calendar, timeZone: TimeZone,
+        fetchOccurrences: (@MainActor (FetchDescriptor<TaskOccurrence>) throws -> [TaskOccurrence])? = nil
+    ) {
         self.context = context
         var configuredCalendar = calendar
         configuredCalendar.timeZone = timeZone
         self.calendar = configuredCalendar
         self.timeZone = timeZone
-        taskQuery = TodayTaskQueryService(context: context, calendar: configuredCalendar, timeZone: timeZone)
+        self.fetchOccurrences = fetchOccurrences ?? { try context.fetch($0) }
+        taskQuery = TodayTaskQueryService(
+            context: context, calendar: configuredCalendar, timeZone: timeZone,
+            validatesCompletionAudit: true)
     }
 
     /// “今天”只由调用方时刻及业务时区确定；窗口内的完成不按到账日期重新归组。
@@ -55,7 +63,7 @@ struct GrowthStatisticsQueryService {
     private func facts(from start: LocalDate, through end: LocalDate, at now: Date) throws -> [GrowthStatisticsFact] {
         let startKey = start.dateKey
         let endKey = end.dateKey
-        let occurrences = try context.fetch(
+        let occurrences = try fetchOccurrences(
             FetchDescriptor<TaskOccurrence>(predicate: #Predicate { $0.dateKey >= startKey && $0.dateKey <= endKey }))
         return try occurrences.map { try fact(for: $0, at: now) }
     }
@@ -73,11 +81,11 @@ struct GrowthStatisticsQueryService {
             guard let record, record.id == completion.id, record.occurrence?.id == occurrence.id,
                 occurrence.completionRecord?.id == record.id
             else { throw GrowthStatisticsQueryError.invalidCompletionRelation(occurrence.id) }
-            _ = try TaskCompletionAuditValidator(context: context).validate(record)
+            // 今日查询已统一验证完成快照/审核/账本，这里再验证统计要求的当前双向关系。
             guard record.completedAt <= now, record.rewardSettledAt.map({ $0 <= now }) ?? true else {
                 throw GrowthStatisticsQueryError.completionAfterQueryTime(record.id)
             }
-            timing = record.completionTiming
+            timing = completion.timing
         } else {
             guard record == nil, occurrence.completionRecord == nil else {
                 throw GrowthStatisticsQueryError.invalidCompletionRelation(occurrence.id)

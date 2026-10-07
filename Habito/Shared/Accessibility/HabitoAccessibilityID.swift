@@ -64,6 +64,16 @@ nonisolated enum HabitoAccessibilityID {
     static let parentCalendarHoliday = "parent.calendar.holiday"
     static let parentCalendarRemoveOverride = "parent.calendar.remove-override"
     static let parentCalendarConfirm = "parent.calendar.confirm"
+    static let statisticsOpen = "parent.statistics.open"
+    static let statisticsScreen = "parent.statistics.screen"
+    static let statisticsWindow = "parent.statistics.window"
+    static let statisticsTotal = "parent.statistics.total"
+    static let statisticsRetry = "parent.statistics.retry"
+    static let statisticsError = "parent.statistics.error"
+    static let statisticsRefresh = "parent.statistics.refresh"
+    static let parentTodayOverview = "parent.today.overview"
+    static let parentTodayOverviewRetry = "parent.today.overview.retry"
+    static let parentTodayStatisticsOpen = "parent.today.statistics.open"
     static let parentNotificationDiagnosticsOpen = "parent.notifications.open"
     static let parentNotificationDiagnostics = "parent.notifications.screen"
     static let notificationPrimaryCount = "parent.notifications.primary-count"
@@ -131,6 +141,16 @@ nonisolated enum HabitoAccessibilityID {
     static func parentTodayActions(_ id: UUID) -> String {
         "parent.today.actions.\(id.uuidString.lowercased())"
     }
+
+    static func statisticsPeriod(_ days: Int) -> String { "parent.statistics.period.\(days)" }
+
+    static func statisticsDay(_ dateKey: String) -> String { "parent.statistics.day.\(dateKey)" }
+
+    static func statisticsTask(_ id: UUID) -> String { "parent.statistics.task.\(id.uuidString.lowercased())" }
+
+    static func statisticsTaskDisclosure(_ id: UUID) -> String { statisticsTask(id) + ".disclosure" }
+
+    static func statisticsTaskDay(_ id: UUID, dateKey: String) -> String { statisticsTask(id) + ".day.\(dateKey)" }
 
     static func parentReviewItem(_ id: UUID) -> String {
         "parent.review.item.\(id.uuidString.lowercased())"

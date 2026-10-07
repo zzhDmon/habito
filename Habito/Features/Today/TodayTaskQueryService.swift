@@ -10,11 +10,14 @@ struct TodayTaskQueryService {
     private let context: ModelContext
     private var calendar: Calendar
     private let timeZone: TimeZone
+    private let validatesCompletionAudit: Bool
 
-    init(context: ModelContext, calendar: Calendar, timeZone: TimeZone) {
+    /// 家长统计/自主性标签要求完整审计；默认孩子查询保留账本错误与任务执行的原隔离边界。
+    init(context: ModelContext, calendar: Calendar, timeZone: TimeZone, validatesCompletionAudit: Bool = false) {
         self.context = context
         self.calendar = calendar
         self.timeZone = timeZone
+        self.validatesCompletionAudit = validatesCompletionAudit
         self.calendar.timeZone = timeZone
     }
 
@@ -238,11 +241,17 @@ struct TodayTaskQueryService {
                 value: record.activeDurationSeconds
             )
         }
+        // 家长行展示自主性前复用完整审计；合法枚举不等于与提交/奖励快照一致。
+        if validatesCompletionAudit { _ = try TaskCompletionAuditValidator(context: context).validate(record) }
+        guard let timing = record.completionTiming else {
+            throw TaskCompletionServiceError.invalidStoredCompletion(record.id)
+        }
         return TodayTaskCompletion(
             id: record.id,
             completedAt: record.completedAt,
             activeDurationSeconds: record.activeDurationSeconds,
-            source: source
+            source: source,
+            timing: timing
         )
     }
 

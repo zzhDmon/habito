@@ -13,6 +13,283 @@ final class HabitoKidFlowUITests: XCTestCase {
         continueAfterFailure = false
     }
 
+    func testFormalStatisticsOverviewWaitingApprovalSkipAndRestartWithSystemTextSize() throws {
+        let names = ["统计自行确认", "统计家长验收", "统计跳过"]
+        let app = launchEmptyParentEditor(title: names[0])
+        setRewardText("11", identifier: "parent.templates.editor.xp", in: app)
+        setRewardText("7", identifier: "parent.templates.editor.base-coins", in: app)
+        setRewardText("3", identifier: "parent.templates.editor.autonomy-coins", in: app)
+        tapEditorSave(in: app)
+        XCTAssertTrue(parentTemplate(named: names[0], in: app).waitForExistence(timeout: 5))
+        for name in names.dropFirst() {
+            app.buttons["parent.templates.create"].tap()
+            let title = app.textFields["parent.templates.editor.title"]
+            XCTAssertTrue(title.waitForExistence(timeout: 5))
+            title.tap()
+            title.typeText(name)
+            if name == names[1] {
+                chooseEditorOption("家长验收", identifier: "parent.templates.editor.verification", in: app)
+            }
+            tapEditorSave(in: app)
+            XCTAssertTrue(parentTemplate(named: name, in: app).waitForExistence(timeout: 5))
+        }
+        let skipTemplate = parentTemplate(named: names[2], in: app).identifier
+        let completedTemplate = parentTemplate(named: names[0], in: app).identifier
+        app.buttons["parent.gate.close"].tap()
+        let selfTask = formalKidTask(named: names[0], in: app)
+        scrollFullyIntoTodayViewport(selfTask, in: app)
+        selfTask.tap()
+        let complete = app.buttons["kid.session.complete"]
+        scrollFullyIntoSessionViewport(complete, in: app)
+        complete.tap()
+        let continueButton = app.buttons["kid.session.dismiss-completion-feedback"]
+        scrollFullyIntoSessionViewport(continueButton, in: app)
+        continueButton.tap()
+        returnToTodayFromTask(in: app)
+        let reviewTask = formalKidTask(named: names[1], in: app)
+        scrollFullyIntoTodayViewport(reviewTask, in: app)
+        let reviewOccurrenceID = reviewTask.identifier.replacingOccurrences(of: "kid.today.task.", with: "")
+        reviewTask.tap()
+        let submit = app.buttons["kid.session.submit"]
+        scrollFullyIntoSessionViewport(submit, in: app)
+        submit.tap()
+        assertWaitingWithoutOldActions(in: app)
+        returnToTodayFromTask(in: app)
+        unlockExistingParent(in: app)
+        app.buttons["parent.today.open"].tap()
+        assertStatisticsCounts(
+            prefix: "parent.today.overview", completed: 1, eligible: 3,
+            autonomous: 1, known: 1, waiting: 1, in: app, screen: "parent.today.screen")
+        let parentList = app.collectionViews["parent.today.screen"]
+        let waitingRow = parentList.otherElements["parent.today.task." + reviewOccurrenceID].firstMatch
+        scrollFullyIntoStatisticsViewport(parentList.staticTexts["待家长验收"], in: app, screen: "parent.today.screen")
+        XCTAssertTrue(waitingRow.label.contains("待家长验收") || waitingRow.staticTexts["待家长验收"].exists)
+        XCTAssertFalse(app.buttons["parent.today.actions." + reviewOccurrenceID].exists)
+        navigateBack(in: app, from: "今日任务管理")
+        // 第三项通过正式单日管理跳过，不删除模板或伪造统计事实。
+        let skippedTaskTemplateID = skipTemplate.replacingOccurrences(of: "parent.templates.item.", with: "")
+        app.buttons["parent.gate.close"].tap()
+        let skippedKidTask = formalKidTask(named: names[2], in: app)
+        let skippedID = skippedKidTask.identifier.replacingOccurrences(of: "kid.today.task.", with: "")
+        unlockExistingParent(in: app)
+        app.buttons["parent.today.open"].tap()
+        // 17的原生Menu导出外层AX容器和内层按钮，容器不可点；先显示标题再操作真实叶按钮。
+        scrollFullyIntoStatisticsViewport(parentList.staticTexts[names[2]], in: app, screen: "parent.today.screen")
+        let menu = parentList.buttons["parent.today.actions." + skippedID]
+        XCTAssertTrue(menu.exists)
+        let actions = menu.buttons.firstMatch.exists ? menu.buttons.firstMatch : menu
+        let menuHierarchy = XCTAttachment(string: app.debugDescription)
+        menuHierarchy.name = "统计跳过前原生菜单层级"
+        menuHierarchy.lifetime = .keepAlways
+        add(menuHierarchy)
+        scrollFullyIntoStatisticsViewport(actions, in: app, screen: "parent.today.screen")
+        XCTAssertGreaterThanOrEqual(actions.frame.height, 44)
+        actions.tap()
+        app.buttons["跳过今天"].tap()
+        assertStatisticsCounts(
+            prefix: "parent.today.overview", completed: 1, eligible: 2,
+            autonomous: 1, known: 1, waiting: 1, in: app, screen: "parent.today.screen", towardTop: true)
+        navigateBack(in: app, from: "今日任务管理")
+        openParentReview(in: app)
+        let approve = reviewAction("approve", in: app)
+        scrollFullyIntoReviewViewport(approve, in: app)
+        approve.tap()
+        XCTAssertTrue(app.staticTexts["已确认通过"].waitForExistence(timeout: 5))
+        navigateBack(in: app, from: "待验收")
+        openStatistics(in: app)
+        assertStatisticsCounts(
+            prefix: "parent.statistics.total", completed: 2, eligible: 2,
+            autonomous: 2, known: 2, waiting: 0, in: app)
+        let sources = app.staticTexts["parent.statistics.total.sources"]
+        scrollFullyIntoStatisticsViewport(sources, in: app)
+        XCTAssertEqual(sources.label, "孩子确认：1；家长验收：1；家长更正：0")
+        let daySample = app.staticTexts["parent.statistics.day.2026-09-27.completion.sample"]
+        scrollFullyIntoStatisticsViewport(daySample, in: app)
+        XCTAssertEqual(daySample.label, "达成 2 / 样本 2")
+        let templateID = completedTemplate.replacingOccurrences(of: "parent.templates.item.", with: "")
+        let disclosure = app.buttons["parent.statistics.task." + templateID + ".disclosure"].firstMatch
+        scrollFullyIntoStatisticsViewport(disclosure, in: app)
+        XCTAssertGreaterThanOrEqual(disclosure.frame.height, 44)
+        disclosure.tap()
+        let taskSample = app.staticTexts["parent.statistics.task." + templateID + ".completion.sample"]
+        scrollFullyIntoStatisticsViewport(taskSample, in: app)
+        XCTAssertEqual(taskSample.label, "达成 1 / 样本 1")
+        // 检查一项后收起其日明细，再找下一项；避免MAX下滚过无关的整周明细。
+        scrollFullyIntoStatisticsViewport(disclosure, in: app, towardTop: true)
+        disclosure.tap()
+        let skippedDisclosure = app.buttons[
+            "parent.statistics.task." + skippedTaskTemplateID + ".disclosure"
+        ].firstMatch
+        scrollFullyIntoStatisticsViewport(skippedDisclosure, in: app)
+        skippedDisclosure.tap()
+        let skippedSample = app.staticTexts["parent.statistics.task." + skippedTaskTemplateID + ".completion.sample"]
+        scrollFullyIntoStatisticsViewport(skippedSample, in: app)
+        XCTAssertEqual(skippedSample.label, "达成 0 / 样本 0")
+        for days in [14, 30, 7] { selectStatisticsPeriod(days, in: app) }
+        keepScreenshot(app, name: "正式统计完成审核跳过窗口与任务趋势")
+        app.terminate()
+        app.launchArguments = ["--habito-ui-testing", "--habito-ui-empty"]
+        app.launch()
+        unlockExistingParent(in: app)
+        openStatistics(in: app)
+        assertStatisticsCounts(
+            prefix: "parent.statistics.total", completed: 2, eligible: 2,
+            autonomous: 2, known: 2, waiting: 0, in: app)
+        XCTAssertFalse(app.staticTexts["parent.statistics.error"].exists)
+        keepScreenshot(app, name: "统计真实磁盘重启读回")
+    }
+
+    func testStatisticsEmptyReadFailureRetriesWithoutPreloadingBeforePINWithSystemTextSize() throws {
+        XCUIDevice.shared.orientation = .landscapeLeft
+        let app = makeApplication()
+        app.launchArguments = [
+            "--habito-ui-testing", "--habito-ui-reset", "--habito-ui-empty", "--habito-ui-statistics-read-fail-once",
+        ]
+        app.launch()
+        XCTAssertFalse(app.buttons["parent.statistics.open"].exists)
+        XCTAssertFalse(app.staticTexts["parent.statistics.total.completion.value"].exists)
+        unlockParent(in: app)
+        openStatistics(in: app)
+        let retry = app.buttons["parent.statistics.retry"]
+        scrollFullyIntoStatisticsViewport(retry, in: app)
+        XCTAssertTrue(app.staticTexts["统计暂时无法读取"].exists)
+        XCTAssertFalse(app.staticTexts["parent.statistics.total.completion.value"].exists)
+        XCTAssertGreaterThanOrEqual(retry.frame.width, 44)
+        XCTAssertGreaterThanOrEqual(retry.frame.height, 44)
+        keepScreenshot(app, name: "统计读取错误不显示旧比例")
+        retry.tap()
+        assertStatisticsCounts(
+            prefix: "parent.statistics.total", completed: 0, eligible: 0,
+            autonomous: 0, known: 0, waiting: 0, in: app)
+        XCTAssertEqual(app.staticTexts["parent.statistics.total.completion.value"].label, "暂无数据")
+        for days in [14, 30, 7] { selectStatisticsPeriod(days, in: app) }
+        let refresh = app.buttons["parent.statistics.refresh"]
+        scrollFullyIntoStatisticsViewport(refresh, in: app, towardTop: true)
+        XCTAssertTrue(refresh.isHittable)
+        XCTAssertGreaterThanOrEqual(refresh.frame.height, 44)
+        refresh.tap()
+        XCTAssertFalse(app.buttons["parent.statistics.retry"].exists)
+        keepScreenshot(app, name: "统计空样本同进程重试及MAX窗口")
+    }
+
+    func testStatisticsOrdinaryCompletionIsNotAutonomousWithSystemTextSize() throws {
+        let app = launchScenario("reward-after-reminder")
+        openSeededTask(in: app)
+        let complete = app.buttons["kid.session.complete"]
+        scrollFullyIntoSessionViewport(complete, in: app)
+        complete.tap()
+        let continueButton = app.buttons["kid.session.dismiss-completion-feedback"]
+        scrollFullyIntoSessionViewport(continueButton, in: app)
+        continueButton.tap()
+        returnToTodayFromTask(in: app)
+        unlockParent(in: app)
+        openStatistics(in: app)
+        assertStatisticsCounts(
+            prefix: "parent.statistics.total", completed: 1, eligible: 1,
+            autonomous: 0, known: 1, waiting: 0, in: app)
+        XCTAssertEqual(app.staticTexts["parent.statistics.total.completion.value"].label, "100%")
+        XCTAssertEqual(app.staticTexts["parent.statistics.total.autonomy.value"].label, "0%")
+        navigateBack(in: app, from: "成长统计")
+        app.buttons["parent.today.open"].tap()
+        let row = app.collectionViews["parent.today.screen"].otherElements[parentTodayTaskIdentifier].firstMatch
+        scrollFullyIntoStatisticsViewport(app.staticTexts["非自主完成（提醒时刻或之后提交）"], in: app, screen: "parent.today.screen")
+        XCTAssertTrue(row.label.contains("非自主完成") || row.staticTexts["非自主完成（提醒时刻或之后提交）"].exists)
+        keepScreenshot(app, name: "普通完成来源与自主性明确分离")
+    }
+
+    private func formalKidTask(named name: String, in app: XCUIApplication) -> XCUIElement {
+        let rows = app.buttons.matching(
+            NSPredicate(format: "identifier BEGINSWITH %@ AND label CONTAINS %@", "kid.today.task.", name))
+        XCTAssertTrue(rows.firstMatch.waitForExistence(timeout: 5))
+        XCTAssertEqual(rows.count, 1)
+        return rows.element
+    }
+
+    private func openStatistics(in app: XCUIApplication) {
+        let open = app.buttons["parent.statistics.open"]
+        XCTAssertTrue(open.waitForExistence(timeout: 5))
+        XCTAssertTrue(open.isHittable)
+        XCTAssertGreaterThanOrEqual(open.frame.height, 44)
+        open.tap()
+        XCTAssertTrue(app.collectionViews["parent.statistics.screen"].waitForExistence(timeout: 5))
+    }
+
+    private func selectStatisticsPeriod(_ days: Int, in app: XCUIApplication) {
+        let button = app.buttons["parent.statistics.period.\(days)"]
+        scrollFullyIntoStatisticsViewport(button, in: app, towardTop: true)
+        XCTAssertGreaterThanOrEqual(button.frame.width, 44)
+        XCTAssertGreaterThanOrEqual(button.frame.height, 44)
+        button.tap()
+        let window = app.staticTexts["parent.statistics.window"]
+        scrollFullyIntoStatisticsViewport(window, in: app)
+        let start = days == 7 ? "2026-09-21" : (days == 14 ? "2026-09-14" : "2026-08-29")
+        XCTAssertEqual(window.label, "所属日期：\(start) 至 2026-09-27")
+    }
+
+    private func assertStatisticsCounts(
+        prefix: String, completed: Int, eligible: Int, autonomous: Int,
+        known: Int, waiting: Int, in app: XCUIApplication, screen: String = "parent.statistics.screen",
+        towardTop: Bool = false
+    ) {
+        for (suffix, expected) in [
+            ("completion.sample", "达成 \(completed) / 样本 \(eligible)"),
+            ("autonomy.sample", "达成 \(autonomous) / 样本 \(known)"), ("waiting", "待验收：\(waiting)"),
+        ] {
+            let value = app.staticTexts[prefix + "." + suffix]
+            scrollFullyIntoStatisticsViewport(value, in: app, screen: screen, towardTop: towardTop)
+            XCTAssertEqual(value.label, expected)
+        }
+    }
+
+    /// 只依赖原生frame/AX；趋势列表按需物化，找不到时先滚动，不把AX数量当业务总量。
+    private func scrollFullyIntoStatisticsViewport(
+        _ element: XCUIElement, in app: XCUIApplication,
+        screen: String = "parent.statistics.screen", towardTop: Bool = false
+    ) {
+        // List在两系实际AX均为CollectionView；窄查询避免取背景及无关元素的异常legacy属性。
+        let viewport = app.collectionViews[screen]
+        XCTAssertTrue(viewport.waitForExistence(timeout: 5))
+        var previousFrame: CGRect?
+        var stationaryAttempts = 0
+        for _ in 0..<80 {
+            let viewportFrame = viewport.frame
+            var visible = viewportFrame.intersection(app.frame)
+            let title = screen == "parent.today.screen" ? "今日任务管理" : "成长统计"
+            let bar = app.navigationBars[title]
+            if bar.exists, bar.frame.intersects(visible) {
+                let bottom = visible.maxY
+                visible.origin.y = max(visible.minY, bar.frame.maxY)
+                visible.size.height = max(0, bottom - visible.minY)
+            }
+            let targetFrame = element.exists ? element.frame : nil
+            if let targetFrame, visible.contains(targetFrame), element.isHittable { return }
+            if let targetFrame {
+                stationaryAttempts = targetFrame == previousFrame ? stationaryAttempts + 1 : 0
+                previousFrame = targetFrame
+                // 到达边界且目标连续不移动时留证失败，不用反复属性读取触发XCT日志洪泛。
+                if stationaryAttempts >= 3 { break }
+            }
+            // 没有有效可视区不生成无穷/NaN坐标；失败时保留原生层级，不跳过业务断言。
+            guard visible.height > 0, viewportFrame.height > 0 else { break }
+            let distance = targetFrame.map { ($0.midY - visible.midY) / visible.height } ?? (towardTop ? -1 : 1)
+            let displacement =
+                min(max(abs(distance), 0.12), 0.38) * visible.height / viewportFrame.height
+                * (distance < 0 ? 1.0 : -1.0)
+            let centerY = (visible.midY - viewportFrame.minY) / viewportFrame.height
+            // 沿列表边缘滚动，避免从行内Menu/展开按钮开始长按而打开操作菜单。
+            let start = viewport.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: centerY))
+            let end = viewport.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: centerY + displacement))
+            start.press(forDuration: 0.1, thenDragTo: end)
+        }
+        let target = element.exists ? element.identifier : "目标尚未物化"
+        let diagnostic = XCTAttachment(string: "目标：\(target)\n\(app.debugDescription)")
+        diagnostic.name = "统计原生滚动边界"
+        diagnostic.lifetime = .keepAlways
+        add(diagnostic)
+        keepScreenshot(app, name: "统计完整可见失败")
+        XCTFail("统计元素应完整滚动到实际可视区")
+    }
+
     func testApprovalReceiptSurvivesRealProcessExitFailureAndAcknowledgementWithoutNewRewards() throws {
         XCUIDevice.shared.orientation = .landscapeLeft
         let app = makeApplication()

@@ -1,6 +1,134 @@
 {
   "sourceLanguage" : "zh-Hans",
   "strings" : {
+    "statistics.open" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "成长统计" } } }
+    },
+    "statistics.navigationTitle" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "成长统计" } } }
+    },
+    "statistics.todayTitle" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "今日概况" } } }
+    },
+    "statistics.loading" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "正在读取统计…" } } }
+    },
+    "statistics.retry" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "重新读取" } } }
+    },
+    "statistics.refresh" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "刷新统计" } } }
+    },
+    "statistics.errorTitle" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "统计暂时无法读取" } } }
+    },
+    "statistics.errorDescription" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "请重新读取。没有显示旧比例，也不会改变任务或奖励。" } } }
+    },
+    "statistics.noSamples" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "暂无数据" } } }
+    },
+    "statistics.completionRate" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "完成率" } } }
+    },
+    "statistics.autonomyRate" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "自主率" } } }
+    },
+    "statistics.sample %lld %lld" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "达成 %1$lld / 样本 %2$lld" } } }
+    },
+    "statistics.waitingCount %lld" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "待验收：%lld" } } }
+    },
+    "statistics.sources %lld %lld %lld" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "孩子确认：%1$lld；家长验收：%2$lld；家长更正：%3$lld" } } }
+    },
+    "statistics.unknownCount %lld" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "自主性未知的旧完成：%lld（不计自主率）" } } }
+    },
+    "statistics.period %lld" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "%lld 天" } } }
+    },
+    "statistics.dateWindow %@ %@" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "所属日期：%1$@ 至 %2$@" } } }
+    },
+    "statistics.summary" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "窗口概况" } } }
+    },
+    "statistics.rules" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "统计口径" } } }
+    },
+    "statistics.completionHint" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "完成率 = 有效完成 / 应做任务。待验收算未完成；跳过和放假免做任务不计。单日恢复与受保护历史保留。" } } }
+    },
+    "statistics.autonomyHint" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "自主率只看自主性已知的确认完成。提醒前提交才算自主，家长晚通过不改变判定。" } } }
+    },
+    "statistics.historyHint" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "按任务所属日期统计，不按审核到账日。旧历史未知不回算；没有实例的日期显示暂无数据，不补任务。" } } }
+    },
+    "statistics.emptyTitle" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "这个窗口还没有应做记录" } } }
+    },
+    "statistics.emptyDescription" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "暂无数据不等于完成率 0%。完成真实任务后，可重新查看。" } } }
+    },
+    "statistics.daily" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "每日趋势" } } }
+    },
+    "statistics.tasks" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "逐任务趋势（点开查看）" } } }
+    },
+    "statistics.sourceChild" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "孩子自行确认" } } }
+    },
+    "statistics.sourceApproval" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "家长验收通过" } } }
+    },
+    "statistics.autonomous" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "自主完成（提醒前提交）" } } }
+    },
+    "statistics.afterReminder" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "非自主完成（提醒时刻或之后提交）" } } }
+    },
+    "statistics.unknownTiming" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "自主性未知（旧历史）" } } }
+    },
+    "parentToday.statusWaiting" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "待家长验收" } } }
+    },
     "childReceipt.approved" : {
       "extractionState" : "manual",
       "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "家长确认啦！" } } }
@@ -3852,6 +3980,14 @@
           }
         }
       }
+    },
+    "statistics.expanded" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "已展开" } } }
+    },
+    "statistics.collapsed" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "已收起" } } }
     },
     "weekday.7" : {
       "extractionState" : "stale",

@@ -7,6 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AB1000000000000000000211 /* GrowthStatisticsRateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000211 /* GrowthStatisticsRateView.swift */; };
+		AB1000000000000000000212 /* GrowthStatisticsCountsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000212 /* GrowthStatisticsCountsView.swift */; };
+		AB1000000000000000000213 /* GrowthStatisticsTrendRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000213 /* GrowthStatisticsTrendRow.swift */; };
+		AB1000000000000000000214 /* GrowthStatisticsTaskSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000214 /* GrowthStatisticsTaskSection.swift */; };
+		AB1000000000000000000215 /* GrowthStatisticsPeriodButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000215 /* GrowthStatisticsPeriodButtons.swift */; };
+		AB1000000000000000000216 /* GrowthStatisticsBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000216 /* GrowthStatisticsBody.swift */; };
+		AB1000000000000000000217 /* GrowthStatisticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000217 /* GrowthStatisticsView.swift */; };
+		AB1000000000000000000218 /* GrowthStatisticsPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000218 /* GrowthStatisticsPreview.swift */; };
+		AB1000000000000000000219 /* ParentTodayOverviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000219 /* ParentTodayOverviewView.swift */; };
+		AB1000000000000000000220 /* ParentTodayTaskPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000220 /* ParentTodayTaskPresentation.swift */; };
+		AB1000000000000000000221 /* UITestStatisticsServiceFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000221 /* UITestStatisticsServiceFactory.swift */; };
+		AB1000000000000000000222 /* ParentTodayStatisticsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000222 /* ParentTodayStatisticsTests.swift */; };
+		AB1000000000000000000223 /* GrowthStatisticsRenderingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000223 /* GrowthStatisticsRenderingTests.swift */; };
 		AB1000000000000000000206 /* GrowthStatisticsViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000206 /* GrowthStatisticsViewState.swift */; };
 		AB1000000000000000000207 /* GrowthStatisticsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000207 /* GrowthStatisticsViewModel.swift */; };
 		AB1000000000000000000208 /* ParentTodayOverviewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000208 /* ParentTodayOverviewState.swift */; };
@@ -449,6 +462,19 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AB2000000000000000000211 /* GrowthStatisticsRateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowthStatisticsRateView.swift; sourceTree = "<group>"; };
+		AB2000000000000000000212 /* GrowthStatisticsCountsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowthStatisticsCountsView.swift; sourceTree = "<group>"; };
+		AB2000000000000000000213 /* GrowthStatisticsTrendRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowthStatisticsTrendRow.swift; sourceTree = "<group>"; };
+		AB2000000000000000000214 /* GrowthStatisticsTaskSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowthStatisticsTaskSection.swift; sourceTree = "<group>"; };
+		AB2000000000000000000215 /* GrowthStatisticsPeriodButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowthStatisticsPeriodButtons.swift; sourceTree = "<group>"; };
+		AB2000000000000000000216 /* GrowthStatisticsBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowthStatisticsBody.swift; sourceTree = "<group>"; };
+		AB2000000000000000000217 /* GrowthStatisticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowthStatisticsView.swift; sourceTree = "<group>"; };
+		AB2000000000000000000218 /* GrowthStatisticsPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowthStatisticsPreview.swift; sourceTree = "<group>"; };
+		AB2000000000000000000219 /* ParentTodayOverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentTodayOverviewView.swift; sourceTree = "<group>"; };
+		AB2000000000000000000220 /* ParentTodayTaskPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentTodayTaskPresentation.swift; sourceTree = "<group>"; };
+		AB2000000000000000000221 /* UITestStatisticsServiceFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestStatisticsServiceFactory.swift; sourceTree = "<group>"; };
+		AB2000000000000000000222 /* ParentTodayStatisticsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentTodayStatisticsTests.swift; sourceTree = "<group>"; };
+		AB2000000000000000000223 /* GrowthStatisticsRenderingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowthStatisticsRenderingTests.swift; sourceTree = "<group>"; };
 		AB2000000000000000000206 /* GrowthStatisticsViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowthStatisticsViewState.swift; sourceTree = "<group>"; };
 		AB2000000000000000000207 /* GrowthStatisticsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowthStatisticsViewModel.swift; sourceTree = "<group>"; };
 		AB2000000000000000000208 /* ParentTodayOverviewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentTodayOverviewState.swift; sourceTree = "<group>"; };
@@ -906,6 +932,14 @@
 			children = (
 				AB2000000000000000000206 /* GrowthStatisticsViewState.swift */,
 				AB2000000000000000000207 /* GrowthStatisticsViewModel.swift */,
+				AB2000000000000000000211 /* GrowthStatisticsRateView.swift */,
+				AB2000000000000000000212 /* GrowthStatisticsCountsView.swift */,
+				AB2000000000000000000213 /* GrowthStatisticsTrendRow.swift */,
+				AB2000000000000000000214 /* GrowthStatisticsTaskSection.swift */,
+				AB2000000000000000000215 /* GrowthStatisticsPeriodButtons.swift */,
+				AB2000000000000000000216 /* GrowthStatisticsBody.swift */,
+				AB2000000000000000000217 /* GrowthStatisticsView.swift */,
+				AB2000000000000000000218 /* GrowthStatisticsPreview.swift */,
 			);
 			path = GrowthStatistics;
 			sourceTree = "<group>";
@@ -1111,6 +1145,7 @@
 			children = (
 				AB2000000000000000000187 /* UITestRewardReceiptProbe.swift */,
 				AB2000000000000000000193 /* UITestChildReceiptServiceFactory.swift */,
+				AB2000000000000000000221 /* UITestStatisticsServiceFactory.swift */,
 				A20000000000000000000009 /* AppDelegate.swift */,
 				Z2000000000000000000000C /* UITestDateProvider.swift */,
 				A20000000000000000000001 /* HabitoApp.swift */,
@@ -1344,6 +1379,8 @@
 				V2000000000000000000000B /* ParentTodayTaskListBody.swift */,
 				AB2000000000000000000208 /* ParentTodayOverviewState.swift */,
 				AB2000000000000000000209 /* ParentTodayOverviewViewModel.swift */,
+				AB2000000000000000000219 /* ParentTodayOverviewView.swift */,
+				AB2000000000000000000220 /* ParentTodayTaskPresentation.swift */,
 				V20000000000000000000004 /* ParentTodayTaskListContent.swift */,
 				V20000000000000000000008 /* ParentTodayTaskListView.swift */,
 				V20000000000000000000003 /* ParentTodayTaskListState.swift */,
@@ -1482,6 +1519,8 @@
 				AB2000000000000000000192 /* ChildRewardFeedbackRenderingTests.swift */,
 				L20000000000000000000001 /* FixedDateProvider.swift */,
 				AB2000000000000000000210 /* GrowthStatisticsViewModelTests.swift */,
+				AB2000000000000000000222 /* ParentTodayStatisticsTests.swift */,
+				AB2000000000000000000223 /* GrowthStatisticsRenderingTests.swift */,
 				Y2000000000000000000000A /* NotificationPermissionServiceTests.swift */,
 				Y20000000000000000000020 /* NotificationRebuildServiceTests.swift */,
 				Y20000000000000000000025 /* NotificationNavigationServiceTests.swift */,
@@ -1859,6 +1898,17 @@
 				AB1000000000000000000204 /* GrowthStatisticsQueryService.swift in Sources */,
 				AB1000000000000000000206 /* GrowthStatisticsViewState.swift in Sources */,
 				AB1000000000000000000207 /* GrowthStatisticsViewModel.swift in Sources */,
+				AB1000000000000000000211 /* GrowthStatisticsRateView.swift in Sources */,
+				AB1000000000000000000212 /* GrowthStatisticsCountsView.swift in Sources */,
+				AB1000000000000000000213 /* GrowthStatisticsTrendRow.swift in Sources */,
+				AB1000000000000000000214 /* GrowthStatisticsTaskSection.swift in Sources */,
+				AB1000000000000000000215 /* GrowthStatisticsPeriodButtons.swift in Sources */,
+				AB1000000000000000000216 /* GrowthStatisticsBody.swift in Sources */,
+				AB1000000000000000000217 /* GrowthStatisticsView.swift in Sources */,
+				AB1000000000000000000218 /* GrowthStatisticsPreview.swift in Sources */,
+				AB1000000000000000000219 /* ParentTodayOverviewView.swift in Sources */,
+				AB1000000000000000000220 /* ParentTodayTaskPresentation.swift in Sources */,
+				AB1000000000000000000221 /* UITestStatisticsServiceFactory.swift in Sources */,
 				AB1000000000000000000208 /* ParentTodayOverviewState.swift in Sources */,
 				AB1000000000000000000209 /* ParentTodayOverviewViewModel.swift in Sources */,
 				AB1000000000000000000194 /* GrowthStatisticsPeriod.swift in Sources */,
@@ -2207,6 +2257,8 @@
 				AB1000000000000000000191 /* ChildRewardFeedbackViewModelTests.swift in Sources */,
 				AB1000000000000000000205 /* GrowthStatisticsQueryServiceTests.swift in Sources */,
 				AB1000000000000000000210 /* GrowthStatisticsViewModelTests.swift in Sources */,
+				AB1000000000000000000222 /* ParentTodayStatisticsTests.swift in Sources */,
+				AB1000000000000000000223 /* GrowthStatisticsRenderingTests.swift in Sources */,
 				AB1000000000000000000202 /* GrowthStatisticsCalculatorTests.swift in Sources */,
 				AB1000000000000000000192 /* ChildRewardFeedbackRenderingTests.swift in Sources */,
 				AB1000000000000000000181 /* V5MigrationFixture.swift in Sources */,

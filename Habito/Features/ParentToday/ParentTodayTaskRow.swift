@@ -9,36 +9,30 @@ struct ParentTodayTaskRow: View {
     let onCorrectAsCompleted: () -> Void
 
     var body: some View {
-        HStack(spacing: HabitoDesign.Spacing.medium) {
-            Image(systemName: item.iconName)
-                .font(.title2)
-                .frame(
-                    minWidth: HabitoDesign.Layout.minimumTapSize,
-                    minHeight: HabitoDesign.Layout.minimumTapSize
-                )
-                .accessibilityHidden(true)
-
+        let presentation = ParentTodayTaskPresentation(item: item)
+        VStack(alignment: .leading, spacing: HabitoDesign.Spacing.small) {
             VStack(alignment: .leading, spacing: HabitoDesign.Spacing.xSmall) {
-                Text(item.title)
+                Label(item.title, systemImage: item.iconName)
                     .font(.headline)
                 Text(item.scheduledAt, format: .dateTime.hour().minute())
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
-                if item.completion?.source == .parentCorrection {
-                    Label("parentToday.parentCorrection", systemImage: "person.badge.checkmark")
+                if let source = presentation.completionSourceKey {
+                    Label(source, systemImage: "person.crop.circle.badge.checkmark")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+                if let timing = presentation.completionTimingKey {
+                    Label(timing, systemImage: "clock.badge.checkmark")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
             }
-
-            Spacer(minLength: HabitoDesign.Spacing.small)
-
-            Label(statusKey, systemImage: statusSymbol)
+            Label(presentation.statusKey, systemImage: presentation.statusSymbol)
                 .font(.subheadline)
-                .foregroundStyle(statusStyle)
-
-            if item.status == .pending || item.status == .skipped {
-                Menu("parentToday.actions", systemImage: "ellipsis.circle") {
+                .foregroundStyle(.secondary)
+            if presentation.canManage {
+                Menu {
                     Button("parentToday.reschedule", systemImage: "clock", action: onReschedule)
                     if item.status == .pending {
                         Button("parentToday.skip", systemImage: "forward.end", action: onSkip)
@@ -54,34 +48,52 @@ struct ParentTodayTaskRow: View {
                         systemImage: "checkmark.circle",
                         action: onCorrectAsCompleted
                     )
+                } label: {
+                    Label("parentToday.actions", systemImage: "ellipsis.circle")
+                        .frame(
+                            minWidth: HabitoDesign.Layout.minimumTapSize, minHeight: HabitoDesign.Layout.minimumTapSize)
                 }
-                .frame(minWidth: HabitoDesign.Layout.minimumTapSize)
+                .buttonStyle(.borderless)
                 .accessibilityIdentifier(HabitoAccessibilityID.parentTodayActions(item.id))
             }
         }
         .padding(.vertical, HabitoDesign.Spacing.small)
+        .fixedSize(horizontal: false, vertical: true)
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier(HabitoAccessibilityID.parentTodayTask(item.id))
     }
+}
 
-    private var statusKey: LocalizedStringKey {
-        switch item.status {
-        case .pending: "parentToday.statusPending"
-        case .inProgress: "parentToday.statusInProgress"
-        case .completed: "parentToday.statusCompleted"
-        case .skipped: "parentToday.statusSkipped"
+#Preview("家长任务行 · 正常横屏", traits: .landscapeLeft) {
+    if let item = ParentTodayTaskRow.previewItem(completed: false) {
+        List {
+            ParentTodayTaskRow(item: item, onReschedule: {}, onSkip: {}, onRestore: {}, onCorrectAsCompleted: {})
         }
     }
+}
 
-    private var statusSymbol: String {
-        switch item.status {
-        case .pending: "clock"
-        case .inProgress: "timer"
-        case .completed: "checkmark.circle.fill"
-        case .skipped: "forward.end.fill"
-        }
+#Preview("家长任务行 · 完成MAX") {
+    if let item = ParentTodayTaskRow.previewItem(completed: true) {
+        List {
+            ParentTodayTaskRow(item: item, onReschedule: {}, onSkip: {}, onRestore: {}, onCorrectAsCompleted: {})
+        }.environment(\.dynamicTypeSize, .accessibility5)
     }
+}
 
-    private var statusStyle: HierarchicalShapeStyle {
-        item.status == .pending ? .secondary : .primary
+private extension ParentTodayTaskRow {
+    /// 只为预览构造固定纯值；坏固定日期返回nil，不读取时钟或创建持久化容器。
+    static func previewItem(completed: Bool) -> TodayTaskItem? {
+        let date: LocalDate
+        do { date = try LocalDate(dateKey: "2026-09-23") } catch { return nil }
+        let time = Date(timeIntervalSince1970: 1_790_226_600)
+        return TodayTaskItem(
+            id: UUID(), date: date, scheduledAt: time, title: "固定合成阅读", iconName: "book.fill",
+            colorToken: "reading", targetDurationSeconds: 900,
+            status: completed ? .completed : .pending, origin: .generated(templateRevision: 1),
+            activeSessionState: nil, activeDurationSeconds: 0,
+            completion: completed
+                ? TodayTaskCompletion(
+                    id: UUID(), completedAt: time, activeDurationSeconds: 0,
+                    source: .childManual, timing: .afterReminder) : nil)
     }
 }

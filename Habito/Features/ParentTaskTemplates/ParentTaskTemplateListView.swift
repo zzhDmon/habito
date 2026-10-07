@@ -4,6 +4,7 @@ import SwiftUI
 struct ParentTaskTemplateListView: View {
     @State private var model: ParentTaskTemplateListViewModel
     let onShowReview: () -> Void
+    let onShowStatistics: () -> Void
     let onShowToday: () -> Void
     let onShowCalendar: () -> Void
     let onShowNotifications: () -> Void
@@ -13,6 +14,7 @@ struct ParentTaskTemplateListView: View {
     init(
         model: ParentTaskTemplateListViewModel,
         onShowReview: @escaping () -> Void,
+        onShowStatistics: @escaping () -> Void = {},
         onShowToday: @escaping () -> Void,
         onShowCalendar: @escaping () -> Void,
         onShowNotifications: @escaping () -> Void,
@@ -21,6 +23,7 @@ struct ParentTaskTemplateListView: View {
     ) {
         _model = State(initialValue: model)
         self.onShowReview = onShowReview
+        self.onShowStatistics = onShowStatistics
         self.onShowToday = onShowToday
         self.onShowCalendar = onShowCalendar
         self.onShowNotifications = onShowNotifications
@@ -36,13 +39,21 @@ struct ParentTaskTemplateListView: View {
             onRetry: model.load
         )
         .safeAreaInset(edge: .top) {
-            Button("parentReview.open", systemImage: "checkmark.seal", action: onShowReview)
-                .buttonStyle(.borderedProminent)
-                .frame(maxWidth: .infinity, minHeight: HabitoDesign.Layout.minimumTapSize)
-                .padding(.horizontal, HabitoDesign.Spacing.medium)
-                .padding(.vertical, HabitoDesign.Spacing.small)
-                .background(.bar)
-                .accessibilityIdentifier(HabitoAccessibilityID.parentReviewOpen)
+            VStack(spacing: HabitoDesign.Spacing.small) {
+                Button("parentReview.open", systemImage: "checkmark.seal", action: onShowReview)
+                    .buttonStyle(.borderedProminent)
+                    .frame(maxWidth: .infinity, minHeight: HabitoDesign.Layout.minimumTapSize)
+                    .accessibilityIdentifier(HabitoAccessibilityID.parentReviewOpen)
+                Button(action: onShowStatistics) {
+                    Label("statistics.open", systemImage: "chart.bar")
+                        .frame(maxWidth: .infinity, minHeight: HabitoDesign.Layout.minimumTapSize)
+                }
+                .buttonStyle(.bordered)
+                .accessibilityIdentifier(HabitoAccessibilityID.statisticsOpen)
+            }
+            .padding(.horizontal, HabitoDesign.Spacing.medium)
+            .padding(.vertical, HabitoDesign.Spacing.small)
+            .background(.bar)
         }
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {

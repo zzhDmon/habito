@@ -6,6 +6,7 @@ struct ParentGateView: View {
     @State private var model: ParentGateViewModel
     @State private var taskTemplatesModel: ParentTaskTemplateListViewModel
     @State private var parentTodayModel: ParentTodayTaskViewModel
+    @State private var statisticsModel: GrowthStatisticsViewModel
     @State private var parentReviewModel: ParentReviewViewModel
     @State private var parentCalendarModel: ParentCalendarDayViewModel
     @State private var parentNotificationModel: ParentNotificationDiagnosticsViewModel
@@ -21,6 +22,7 @@ struct ParentGateView: View {
         model: ParentGateViewModel,
         taskTemplatesModel: ParentTaskTemplateListViewModel,
         parentTodayModel: ParentTodayTaskViewModel,
+        statisticsModel: GrowthStatisticsViewModel,
         parentReviewModel: ParentReviewViewModel,
         parentCalendarModel: ParentCalendarDayViewModel,
         parentNotificationModel: ParentNotificationDiagnosticsViewModel,
@@ -29,6 +31,7 @@ struct ParentGateView: View {
         _model = State(initialValue: model)
         _taskTemplatesModel = State(initialValue: taskTemplatesModel)
         _parentTodayModel = State(initialValue: parentTodayModel)
+        _statisticsModel = State(initialValue: statisticsModel)
         _parentReviewModel = State(initialValue: parentReviewModel)
         _parentCalendarModel = State(initialValue: parentCalendarModel)
         _parentNotificationModel = State(initialValue: parentNotificationModel)
@@ -49,6 +52,7 @@ struct ParentGateView: View {
                     ParentTaskTemplateListView(
                         model: taskTemplatesModel,
                         onShowReview: { path.append(.review) },
+                        onShowStatistics: { path.append(.statistics) },
                         onShowToday: { path.append(.today) },
                         onShowCalendar: { path.append(.calendar) },
                         onShowNotifications: { path.append(.notifications) },
@@ -85,7 +89,17 @@ struct ParentGateView: View {
                         ContentUnavailableView("parentGate.verifyTitle", systemImage: "lock.fill")
                     }
                 case .today:
-                    ParentTodayTaskListView(model: parentTodayModel)
+                    if model.state == .unlocked {
+                        ParentTodayTaskListView(model: parentTodayModel, onShowStatistics: { path.append(.statistics) })
+                    } else {
+                        ContentUnavailableView("parentGate.verifyTitle", systemImage: "lock.fill")
+                    }
+                case .statistics:
+                    if model.state == .unlocked {
+                        GrowthStatisticsView(model: statisticsModel)
+                    } else {
+                        ContentUnavailableView("parentGate.verifyTitle", systemImage: "lock.fill")
+                    }
                 case .calendar:
                     ParentCalendarDayView(model: parentCalendarModel)
                 case .notifications:
@@ -99,6 +113,7 @@ struct ParentGateView: View {
             }
         }
         .presentationDetents([.large])
+        .onDisappear(perform: clearStatistics)
         .confirmationDialog(
             "parentGate.resetConfirmationTitle",
             isPresented: $isResetConfirmationPresented,
@@ -109,6 +124,12 @@ struct ParentGateView: View {
         } message: {
             Text("parentGate.resetConfirmationDescription")
         }
+    }
+
+    /// 任何关闭方式（包括下拉与通知路由）都撤下历史，不能只清按钮关闭路径。
+    private func clearStatistics() {
+        statisticsModel.reset()
+        parentTodayModel.overviewModel?.reset()
     }
 
     private var setupForm: some View {

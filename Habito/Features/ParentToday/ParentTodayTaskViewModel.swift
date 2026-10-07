@@ -9,6 +9,8 @@ import SwiftData
 final class ParentTodayTaskViewModel {
     private(set) var state: ParentTodayTaskListState = .loading
     var isActionErrorPresented = false
+    /// 可选仅兼容旧测试/预览；正式组合根注入概况，随列表读取和写入后刷新。
+    let overviewModel: ParentTodayOverviewViewModel?
 
     private let queryService: TodayTaskQueryService
     private let managementService: ParentTodayTaskManagementService
@@ -24,14 +26,16 @@ final class ParentTodayTaskViewModel {
         timeZone: TimeZone,
         dateProvider: any DateProviding,
         notificationRebuildTrigger: NotificationRebuildTrigger = NotificationRebuildTrigger(),
-        completionService: TaskCompletionService? = nil
+        completionService: TaskCompletionService? = nil,
+        overviewModel: ParentTodayOverviewViewModel? = nil
     ) {
         var configuredCalendar = calendar
         configuredCalendar.timeZone = timeZone
         queryService = TodayTaskQueryService(
             context: context,
             calendar: configuredCalendar,
-            timeZone: timeZone
+            timeZone: timeZone,
+            validatesCompletionAudit: true
         )
         managementService = ParentTodayTaskManagementService(
             context: context,
@@ -43,6 +47,7 @@ final class ParentTodayTaskViewModel {
         self.notificationRebuildTrigger = notificationRebuildTrigger
         self.calendar = configuredCalendar
         self.timeZone = timeZone
+        self.overviewModel = overviewModel
     }
 
     func load() {
@@ -56,6 +61,7 @@ final class ParentTodayTaskViewModel {
             logger.error("家长今日实例加载失败：\(String(describing: type(of: error)), privacy: .public)")
             state = .failed
         }
+        overviewModel?.load()
     }
 
     func reschedule(occurrenceID: UUID, to scheduledAt: Date) {

@@ -8,26 +8,35 @@ struct ParentTodayTaskListBody: View {
     let onRestore: (UUID) -> Void
     let onCorrectAsCompleted: (UUID) -> Void
     let onRetry: () -> Void
+    var overviewState: ParentTodayOverviewState = .idle
+    var onRetryOverview: () -> Void = {}
+    var onShowStatistics: () -> Void = {}
 
     var body: some View {
         switch state {
         case .loading:
             ProgressView("parentToday.loading")
-        case let .loaded(content) where content.items.isEmpty:
-            ContentUnavailableView(
-                "parentToday.emptyTitle",
-                systemImage: "calendar.badge.checkmark",
-                description: Text("parentToday.emptyDescription")
-            )
         case let .loaded(content):
-            List(content.items) { item in
-                ParentTodayTaskRow(
-                    item: item,
-                    onReschedule: { onReschedule(item) },
-                    onSkip: { onSkip(item.id) },
-                    onRestore: { onRestore(item.id) },
-                    onCorrectAsCompleted: { onCorrectAsCompleted(item.id) }
-                )
+            List {
+                if overviewState != .idle {
+                    Section {
+                        ParentTodayOverviewView(
+                            state: overviewState, onRetry: onRetryOverview, onShowStatistics: onShowStatistics)
+                    }
+                }
+                Section {
+                    if content.items.isEmpty {
+                        ContentUnavailableView(
+                            "parentToday.emptyTitle", systemImage: "calendar.badge.checkmark",
+                            description: Text("parentToday.emptyDescription"))
+                    }
+                    ForEach(content.items) { item in
+                        ParentTodayTaskRow(
+                            item: item, onReschedule: { onReschedule(item) },
+                            onSkip: { onSkip(item.id) }, onRestore: { onRestore(item.id) },
+                            onCorrectAsCompleted: { onCorrectAsCompleted(item.id) })
+                    }
+                }
             }
             .listStyle(.insetGrouped)
         case .failed:

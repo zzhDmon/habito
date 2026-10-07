@@ -21,6 +21,7 @@ struct HabitoApp: App {
     @State private var parentGateModel: ParentGateViewModel
     @State private var parentTaskTemplatesModel: ParentTaskTemplateListViewModel
     @State private var parentTodayModel: ParentTodayTaskViewModel
+    @State private var statisticsModel: GrowthStatisticsViewModel
     @State private var parentReviewModel: ParentReviewViewModel
     @State private var parentCalendarModel: ParentCalendarDayViewModel
     @State private var parentNotificationModel: ParentNotificationDiagnosticsViewModel
@@ -88,6 +89,14 @@ struct HabitoApp: App {
         let calendar = Calendar(identifier: .gregorian)
         let timeZone = TimeZone.autoupdatingCurrent
         let rebuildTrigger = NotificationRebuildTrigger()
+        let overviewQuery = GrowthStatisticsQueryService(
+            context: container.mainContext, calendar: calendar, timeZone: timeZone)
+        let overviewModel = ParentTodayOverviewViewModel(service: overviewQuery, now: dateProvider.now)
+        _statisticsModel = State(
+            initialValue: GrowthStatisticsViewModel(
+                service: Self.makeStatisticsService(
+                    context: container.mainContext, calendar: calendar, timeZone: timeZone),
+                now: dateProvider.now))
         let notificationOperationGate = NotificationOperationGate()
         // 全家账本与完成/撤销共用主写上下文；服务通过工厂注入页面，不由 View 发奖。
         let completionService = TaskCompletionService(context: container.mainContext)
@@ -171,7 +180,8 @@ struct HabitoApp: App {
                 timeZone: timeZone,
                 dateProvider: dateProvider,
                 notificationRebuildTrigger: rebuildTrigger,
-                completionService: completionService
+                completionService: completionService,
+                overviewModel: overviewModel
             )
         )
         _parentCalendarModel = State(
@@ -205,6 +215,7 @@ struct HabitoApp: App {
                 parentGateModel: parentGateModel,
                 parentTaskTemplatesModel: parentTaskTemplatesModel,
                 parentTodayModel: parentTodayModel,
+                statisticsModel: statisticsModel,
                 parentReviewModel: parentReviewModel,
                 parentCalendarModel: parentCalendarModel,
                 parentNotificationModel: parentNotificationModel,
@@ -222,6 +233,19 @@ struct HabitoApp: App {
 
     private func connectLifecycleEvents() {
         appDelegate.connectNotificationRebuildTrigger(notificationRebuildTrigger)
+    }
+
+    /// 读取失败探针只在显式隔离Debug测试启用；Release没有失败工厂或合成库路径。
+    private static func makeStatisticsService(context: ModelContext, calendar: Calendar, timeZone: TimeZone)
+        -> GrowthStatisticsQueryService
+    {
+        #if DEBUG
+            UITestStatisticsServiceFactory.make(
+                context: context, calendar: calendar, timeZone: timeZone,
+                arguments: ProcessInfo.processInfo.arguments)
+        #else
+            GrowthStatisticsQueryService(context: context, calendar: calendar, timeZone: timeZone)
+        #endif
     }
 
     /// 只有测试组合根替换保存边界；普通运行始终使用真实服务。
