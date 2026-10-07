@@ -1,0 +1,38 @@
+[
+  {
+    "path": "LICENSE",
+    "url": "https://raw.githubusercontent.com/tabler/tabler-icons/v3.49.0/LICENSE",
+    "sha256": "b740a1d46122672da62833e97f7e7c8a13fa85cbc7445b584b297cc00dde93db",
+    "bytes": 1073
+  },
+  {
+    "path": "icons/outline/book.svg",
+    "url": "https://raw.githubusercontent.com/tabler/tabler-icons/v3.49.0/icons/outline/book.svg",
+    "sha256": "1f55b129a72746a98e1aaffc55ae7b43d004db036968afb022b3f9fbd7da87c9",
+    "bytes": 522
+  },
+  {
+    "path": "icons/outline/pencil.svg",
+    "url": "https://raw.githubusercontent.com/tabler/tabler-icons/v3.49.0/icons/outline/pencil.svg",
+    "sha256": "422796681dab2177b958836952b0a581025013a78d8a8c9df9c1af43f62d0e97",
+    "bytes": 463
+  },
+  {
+    "path": "icons/outline/run.svg",
+    "url": "https://raw.githubusercontent.com/tabler/tabler-icons/v3.49.0/icons/outline/run.svg",
+    "sha256": "3679b290a057b4fe4ddad7e3fa01348cd16281c1788165db30ab00a39a7728af",
+    "bytes": 500
+  },
+  {
+    "path": "icons/outline/music.svg",
+    "url": "https://raw.githubusercontent.com/tabler/tabler-icons/v3.49.0/icons/outline/music.svg",
+    "sha256": "afd2fe98e580e1d4e9bf45d88165894b0e683e9141f63c312585d778b73d02c5",
+    "bytes": 519
+  },
+  {
+    "path": "icons/outline/checklist.svg",
+    "url": "https://raw.githubusercontent.com/tabler/tabler-icons/v3.49.0/icons/outline/checklist.svg",
+    "sha256": "7e6753a32e2207411201877467fb7b3c52645338a09c6612478e300d99ada973",
+    "bytes": 500
+  }
+]
