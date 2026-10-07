@@ -628,3 +628,43 @@
 - 证据根/tmp/habito-daily-home-002b3b-evidence.izrYnjrz；首两系related各56定义96执行、零失败/跳过/运行警告，构建/分析exit0。专项复核发现多子View可能被外层HStack拆成额外栏位，显式VStack修正并补横屏/失败MAX预览；修订后related-final与构建/分析-final运行，不能复用首包为最终源成功。真实UI普通/MAX尚未跑，完整门B3C等待。
 - 计划13文件：App/Root/两个今日View、DEBUG工厂及测试/PBX/现有UI测试、五文档；原467资源不改。系统开关、VoiceOver、iPad/家庭效果与后置参数均不代验，用户现在无需处理。
 - 21:40最终related-{17,27}-final各56/56定义96执行、零失败/跳过/运行警告、exit0；资格22/状态16/接线14/组件3/探针1，新增探针1定义四组合。Release/分析-final均exit0空日志；严格格式/PBX1055无重复/diff通过，467资源与HEAD完全一致。最终源指纹见看板21:40；两系真实large读回，普通四UI运行中、MAX未开始，尚未放行。首包与最终包均保留，不拼为完整阶段门。
+
+## 43. V1-M6-002B3C：当天仪式完整软件阶段回归（2026-10-08 00:39 DONE）
+
+最终软件结论：两系完整单测、普通横屏UI、37重点MAX与质量门均有通过证据；本卡DONE，总进度仍3/7。证据根`/tmp/habito-daily-full-002b3c-evidence.5jQVLusQ`。下表为最终结果，后续时间条目均为历史。
+
+| 检查 | 17系 | 27系 |
+|---|---|---|
+| 完整单测 | 637定义/1278执行，0失败/跳过 | 637定义/1278执行，0失败/跳过 |
+| 普通横屏63项 | 原包61通过＋同源补验2通过，精确63 | 原包62通过＋同源补验1通过，精确63 |
+| 重点MAX37项 | 原包36通过＋既有产物补验1通过，精确37 | 原包36通过＋既有产物补验1通过，精确37 |
+| UI运行警告 | 0 | 仅既有R-009：全屏/方向兼容提示 |
+| 最终字号 | large已读回 | large已读回 |
+
+- 原普通包失败分别为17两项/27一项；两MAX原包各一项SIGTERM中断。均保留原包及诊断；最终精准补验全通过、exit0、零跳过。27 MAX时段分组补验约六分钟，真实最大字体完成创建/分组/推荐唯一/可触达断言，未更改源或弱化断言。
+- `normal-coverage-audit.json`、`max-coverage-audit.json`逐方法集合核验无缺漏；不是将重复执行次数累加冒称覆盖，不称首包全绿。MAX补验使用test-without-building，沿用已有构建产物。00:37尝试读取未封口包返回缺Info.plist，仅为过早读取；00:39终态成功读取并完成审计。
+- Release/Debug分析均exit0且无编译/并发警告，严格格式/工程plist/本地化JSON/diff通过。487文件指纹中486保持3b1d45f；Localizable.xcstrings仅467既有键的一个提取状态及排版变化，所有翻译内容相同。归属未确认，已备份、保留且排除本次提交，未冒称工作树字节完全相同。
+- 本卡仅软件阶段放行；系统Reduce Motion/VoiceOver现场、目标iPad/家庭观察和后置宠物参数仍保留。UI-R1融合顺序已确认，下一盘点，不为新UI再次实现奖励/收据/仪式内核。
+
+
+- 2026-10-08 00:14：17 MAX首包36/37，唯一跨日暂停项SIGTERM；`ui-max-17-recheck.xcresult`使用既有产物test-without-building补验1/1、exit0、零跳过/运行警告。`max-17-coverage-audit.json`按方法名核对原通过36＋补验1精确覆盖max-tests.txt全部37项，两包恢复large均读回。27仍运行，不能提前收口。
+- 同期源核对：487文件中486个与22:13指纹一致，唯一差异Localizable.xcstrings的467键/全部翻译值保持，仅testing.openNotification增加stale提取状态及排版变化；已保存副本并询问归属，未覆盖或纳入本次提交。此前“源完全不变”是对应时间点记录，本次补验沿用现有二进制。
+
+- 2026-10-08 00:07运行异常：两系MAX在00:02:59再次同秒失联，Session日志均报signal term；17受影响为`testTwoDayPausedTaskKeepsIdentityAndTodayDenominatorWithSystemTextSize`，27为`testFormalTimePeriodGroupsKeepRecommendationUniqueAndTasksReachableWithSystemTextSize`。Xcode已恢复继续其余用例，证据`max-runner-termination-evidence.txt`。此前根据实时通过计数推测“17跨日暂停通过”的进度文字需更正：该条被中断，新增通过实际来自随后零奖励自主用例；所有最终结论仍以原生方法级结果和精确补验为准。产品/测试源码未改，中断原因未证实，不降低验收要求。
+
+- 23:23最新：27普通首包62/63通过、1条SIGTERM中断、0跳过、exit65；`ui-normal-27-recheck.xcresult`同源1/1通过、exit0，运行警告仅已有R-009。两系普通所有63条均有同源通过证据（17原61＋补2，27原62＋补1），首包失败如实保留；产品与测试源未修改。两系37重点MAX均在真实最大辅助字号读回后运行，尚未取得终态，结果/恢复文件路径见看板23:23。
+
+- 23:14最新：17普通原生63条61通过/2失败/0跳过/无运行警告、exit65；`ui-normal-17-recheck.xcresult`同源补验两项2/2通过、exit0、零跳过/警告。普通覆盖由首包61＋补验2组成，不称首包全绿。双收据原录像`normal-17-receipt-attachments`后段显示系统主屏，离开前台原因未证实；完整补验已覆盖两次提交/审核/收据与重启金额，没有为通过测试修改产品或断言。17真实MAX设定/读回后37条已运行，结束自动恢复large/readback；27普通尚待终态。
+
+- 17普通新增真实断言失败：`testMultipleFormalApprovedReceiptsContinueIndividuallyWithoutDoubleRewardsWithSystemTextSize`在UI测试2511行等待任务导航栏“今日”返回按钮失败（22:47）。前序提交及等待状态断言已执行，尚未进入双审核/收据核对；不能归结为奖励重复或直接认定定位问题。冻结源继续其余测试，待原生附件/同源复现后限定处理，失败不会从验收结果移除。
+
+- 普通UI运行异常记录：两系运行器均在22:29:39失联，原生Session日志报告`Test crashed with signal term`，Xcode自动换运行器继续其余用例。17当时为`testFormalOptionalTimesSetEditClearAndRelaunchWithSystemTextSize`，27为`testFormalConfiguredTemplateProtectsSubmittedRewardThroughEditApprovalAndRestart`。主机未发现Habito崩溃报告；同秒SIGTERM提示执行环境/中断因素，但原因尚未证实，不能当通过或据此改产品代码。原始证据保存为`normal-runner-termination-evidence.txt`。先取两系完整终态，再确定受影响方法并同源补验，保留原失败包及补验边界。
+
+- 22:13阶段质量：在独立DerivedData执行Release模拟器构建与Debug静态分析，均exit0、日志0字节；全量swift-format严格检查、工程plist、本地化JSON和diff通过。487个生产/测试/工程文件逐一与HEAD 3b1d45f内容相同，SHA256清单保存在证据根source-sha256.json；plutil转换后实际PBX objects为1056（此前注释式ID计数不含部分对象），467本地化键。原生unit summary复核两系各637定义/1278执行、零失败/跳过，通过；两系63普通UI运行中，尚未封口，不提前声称UI通过。
+
+- 22:11用户确认UI提前融合计划，记录DEC-031；该计划不改变本卡冻结源及验收范围。两系真实large读回后启动ui-normal-{17,27}.xcresult，命令参数沿22:02交接。每系普通终态后再执行37重点MAX；当前未修改生产/测试源。
+
+- 22:02交接结论：冻结生产/测试源3b1d45f，证据根/tmp/habito-daily-full-002b3c-evidence.5jQVLusQ；unit-{17,27}.xcresult各637/637定义、1278次执行，零失败/跳过/运行警告，xcodebuild exit0，原生summary已读取。63普通UI和37重点MAX尚未开始，两系字号large；本对话全部已启动命令终态，用户要求改由精简新对话继续，B3C保持IN_PROGRESS。max-tests.txt为精确选择清单，不是验证结果。
+
+- 21:59领取，生产/测试源为B3B提交3b1d45f，提交后干净；计划仅更新五文档。两系当前完整单测→63条普通横屏UI→37条重点MAX（既有32＋新增仪式4＋原自行确认奖励/撤销补验1），同设备串行、两系并行；逐设备恢复large/readback。
+- 本次最终原生结果尚未取得，不以B3B四专项或旧000F完整包代验。若发生失败保留原包，明确源码版本、修复范围与补验边界。总进度仍3/7，54已拆卡53DONE/唯一B3C IN_PROGRESS；实机/家庭与后置参数保留。
