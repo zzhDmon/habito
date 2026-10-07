@@ -31,6 +31,13 @@ final class CompletionRecord {
     /// 真实入账时刻与 completedAt 的提交事实分开；旧自行确认仍按原完成时刻核对。
     private(set) var rewardSettledAt: Date?
 
+    /// 0 为旧历史或尚未启用投递；1 留给显式新审核事务，不由金额推断资格。
+    ///
+    /// - Important: 这不是发奖版本或账本幂等键。迁移保持 0，避免首次升级补弹旧庆祝。
+    private(set) var childFeedbackDeliveryVersion: Int = 0
+    /// 孩子明确继续/关闭后才由独立用例保存；nil 不等于已经展示或需要再次结算。
+    var childFeedbackAcknowledgedAt: Date?
+
     var occurrence: TaskOccurrence?
 
     /// 构造完成事实；旧写路径保留兼容零/空，新结算用例必须显式注入快照和版本。
@@ -53,7 +60,9 @@ final class CompletionRecord {
         rewardSettlementVersion: Int = 0,
         revokedAt: Date? = nil,
         submissionID: UUID? = nil,
-        rewardSettledAt: Date? = nil
+        rewardSettledAt: Date? = nil,
+        childFeedbackDeliveryVersion: Int = 0,
+        childFeedbackAcknowledgedAt: Date? = nil
     ) {
         self.id = id
         self.occurrenceID = occurrenceID
@@ -72,6 +81,8 @@ final class CompletionRecord {
         self.revokedAt = revokedAt
         self.submissionID = submissionID
         self.rewardSettledAt = rewardSettledAt
+        self.childFeedbackDeliveryVersion = childFeedbackDeliveryVersion
+        self.childFeedbackAcknowledgedAt = childFeedbackAcknowledgedAt
     }
 
     var completionTiming: CompletionTiming? { CompletionTiming(rawValue: completionTimingRawValue) }

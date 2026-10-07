@@ -1,6 +1,6 @@
 import SwiftData
 
-/// 稍后排程世代结构 6.0.0；旧映射保持空提交 ID，不猜测或补发原请求。
+/// 冻结的结构 6.0.0，包含稍后世代与可空计划/截止；不引用当前活跃模型。
 nonisolated enum HabitoSchemaV5: VersionedSchema {
     static let versionIdentifier = Schema.Version(6, 0, 0)
 
