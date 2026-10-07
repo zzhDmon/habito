@@ -1,6 +1,6 @@
 # Habito V1 验收流程记录
 
-> 2026-10-07 20:45：002B0纯事件资格DONE，最终两系相关/构建/质量及独立文档复核通过，准备本地提交。名字000F已提交3b24730；完整动态仪式仍未交付。
+> 2026-10-07 20:54：002B1状态DONE，两系相关42/71、新15定义及构建质量/专项/独立文档复核通过，准备本地提交。B1证据见39节；事务接线/实际仪式尚未交付。
 
 ## 1. V1-M3-001B：提交等待与计时终态
 
@@ -584,3 +584,12 @@
 - 首两系related各33定义/76执行、零失败/跳过/运行警告通过（新21定义），首Release/分析exit0且日志空；PBX1035无重复、461资源不变/格式/diff通过，仅属于后续修订前源。
 - 专项复核发现跳过触发ID仍在原始tasks内，补混合用例后skipped-trigger-red-17为21通过/1失败、exit65，唯一skippedTriggerDoesNotBorrowAnotherTasksCompletion；其他已完成任务不能代替这次触发ID。只在纯有效完成ID集合加成员检查，原失败包保留、不弱化测试。
 - 20:33最终两系related-final与Release/分析-final正在运行，软件源冻结，未取未封口包作成功。证据根/tmp/habito-daily-event-002b0-evidence.6Q5pNGoo；不因首33通过声称最终源通过，也不重复无UI基础的旧59UI/MAX32。展示ASSUMPTION限今天的新孩子确认/新家长通过；旧日完成/家长更正保留原反馈，完整动态仪式和实机/家庭效果尚未交付。
+
+## 39. V1-M6-002B1：当天动态事件去重与失效状态（20:54 DONE）
+
+- 最终结论：当前两系相关42/71含新状态15定义全部通过，构建/质量及专项通过；独立只读Reader五問通过，无实质矛盾。50卡50DONE，无进行中；精确本地提交8文件、不push。以下IN_PROGRESS为过程，完整UI/MAX门仍后续功能整合，不把状态当实际仪式交付。
+
+- 20:46领取，前置002B0提交0546cd9；只新增TodayCompletionCelebrationViewModel及固定快照Swift Testing、工程注册。MainActor/Observable持有当前event，非观察内存ID集合与原结果纯验证闭包；无IO/时钟/持久化/奖励或通知写入，无新View/资源。
+- 20:51最终源related-{17,27}.xcresult各42/42定义71执行，零失败/跳过/运行警告、exit0；证据根/tmp/habito-daily-state-002b1-evidence.PmDlTJW0。当前三个suite为新状态测试、B0资格测试与静态结果测试。Release/分析exit0且日志空；严格格式/PBX1039无重复/461资源与HEAD完全一致/diff通过。状态SHA25610935f85479862cd5f9388001d908e5d13b6d54f5004365e989069d840bf72b1，测试ab2fccc590915274cdaf016ac9d544968ebe921038708e4b6d51fb9b1ddfba1e。
+- 覆盖构造/历史刷新不生成事件、新自行确认/审核/零奖励、重复/幂等、不全完成的早期ID不能后来补播、关闭/失效不能恢复、陈旧关闭/领取请求、撤销后新ID、跨日/等待/未完跨日/数量改变与显式资格失败撤下。一次动画资格为状态能力，不是实际动画或Reduce Motion系统验证。swiftui-pro数据/Swift/卫生复核无范围内真实问题。
+- 仍IN_PROGRESS，50卡49DONE/1IN_PROGRESS，待独立文档Reader再DONE/提交；按DEC-030无UI状态卡不重复整套59/32，完整阶段门留接线与界面整合后。展示ASSUMPTION内存去重到进程结束、重启不投历史；后续接线需显示查询失败并invalidate，不误称已接错误反馈UI。设备/未知参数/家庭观察仍后置。
