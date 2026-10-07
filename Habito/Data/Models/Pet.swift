@@ -18,4 +18,9 @@ final class Pet {
         singletonKey = Self.defaultKey
         name = names.petName
     }
+
+    /// 仅更新有效狗名；配对原子保存/失败恢复由FamilyProfileService承担，不改成长状态。
+    func update(names: FamilyProfileNames) {
+        name = names.petName
+    }
 }

@@ -18,4 +18,9 @@ final class ChildProfile {
         singletonKey = Self.defaultKey
         nickname = names.childNickname
     }
+
+    /// 仅更新有效昵称，不改变稳定身份；由FamilyProfileService与狗名一起保存或恢复。
+    func update(names: FamilyProfileNames) {
+        nickname = names.childNickname
+    }
 }

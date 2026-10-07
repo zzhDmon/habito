@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AB1000000000000000000249 /* FamilyProfileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000249 /* FamilyProfileService.swift */; };
+		AB1000000000000000000250 /* FamilyProfileServiceError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000250 /* FamilyProfileServiceError.swift */; };
+		AB1000000000000000000251 /* FamilyProfileServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000251 /* FamilyProfileServiceTests.swift */; };
 		AB1000000000000000000233 /* HabitoSchemaV6+TaskTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000233 /* HabitoSchemaV6+TaskTemplate.swift */; };
 		AB1000000000000000000234 /* HabitoSchemaV6+ReminderRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000234 /* HabitoSchemaV6+ReminderRule.swift */; };
 		AB1000000000000000000235 /* HabitoSchemaV6+TaskOccurrence.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000235 /* HabitoSchemaV6+TaskOccurrence.swift */; };
@@ -487,6 +490,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AB2000000000000000000249 /* FamilyProfileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FamilyProfileService.swift; sourceTree = "<group>"; };
+		AB2000000000000000000250 /* FamilyProfileServiceError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FamilyProfileServiceError.swift; sourceTree = "<group>"; };
+		AB2000000000000000000251 /* FamilyProfileServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FamilyProfileServiceTests.swift; sourceTree = "<group>"; };
 		AB2000000000000000000233 /* HabitoSchemaV6+TaskTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV6+TaskTemplate.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000234 /* HabitoSchemaV6+ReminderRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV6+ReminderRule.swift"; sourceTree = "<group>"; };
 		AB2000000000000000000235 /* HabitoSchemaV6+TaskOccurrence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV6+TaskOccurrence.swift"; sourceTree = "<group>"; };
@@ -977,6 +983,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AB5000000000000000000249 /* Profiles */ = {
+			isa = PBXGroup;
+			children = (
+				AB2000000000000000000249 /* FamilyProfileService.swift */,
+				AB2000000000000000000250 /* FamilyProfileServiceError.swift */,
+			);
+			path = Profiles;
+			sourceTree = "<group>";
+		};
 		AB5000000000000000000233 /* SchemaV6 */ = {
 			isa = PBXGroup;
 			children = (
@@ -1239,6 +1254,7 @@
 		A50000000000000000000004 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				AB5000000000000000000249 /* Profiles */,
 				AF5000000000000000000002 /* Statistics */,
 				D50000000000000000000001 /* Models */,
 				F50000000000000000000001 /* OccurrenceGeneration */,
@@ -1806,6 +1822,7 @@
 		D50000000000000000000002 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				AB2000000000000000000251 /* FamilyProfileServiceTests.swift */,
 				AB2000000000000000000247 /* V6MigrationFixture.swift */,
 				AB2000000000000000000248 /* FamilyProfileMigrationTests.swift */,
 				AB2000000000000000000205 /* GrowthStatisticsQueryServiceTests.swift */,
@@ -2001,6 +2018,8 @@
 				AB1000000000000000000220 /* ParentTodayTaskPresentation.swift in Sources */,
 				AB1000000000000000000224 /* TodayCompletionSummary.swift in Sources */,
 				AB1000000000000000000230 /* FamilyProfileNames.swift in Sources */,
+				AB1000000000000000000249 /* FamilyProfileService.swift in Sources */,
+				AB1000000000000000000250 /* FamilyProfileServiceError.swift in Sources */,
 				AB1000000000000000000233 /* HabitoSchemaV6+TaskTemplate.swift in Sources */,
 				AB1000000000000000000234 /* HabitoSchemaV6+ReminderRule.swift in Sources */,
 				AB1000000000000000000235 /* HabitoSchemaV6+TaskOccurrence.swift in Sources */,
@@ -2371,6 +2390,7 @@
 				AB1000000000000000000223 /* GrowthStatisticsRenderingTests.swift in Sources */,
 				AB1000000000000000000226 /* TodayCompletionSummaryTests.swift in Sources */,
 				AB1000000000000000000232 /* FamilyProfileNamesTests.swift in Sources */,
+				AB1000000000000000000251 /* FamilyProfileServiceTests.swift in Sources */,
 				AB1000000000000000000247 /* V6MigrationFixture.swift in Sources */,
 				AB1000000000000000000248 /* FamilyProfileMigrationTests.swift in Sources */,
 				AB1000000000000000000227 /* TodayCompletionRenderingTests.swift in Sources */,
