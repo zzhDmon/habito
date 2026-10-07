@@ -1,0 +1,7 @@
+{
+  "mode": "built-in image_gen",
+  "characterSheet": {
+    "prompt": "Use case: illustration-story. Asset type: character reference sheet for Habito, a Japanese manga growth adventure iPad app for primary-school children. Create an original cream-colored dog companion with THREE consistent full-body views on one landscape reference sheet: front, three-quarter, side. About 2.5 heads tall, soft triangular floppy caramel ears, cream body, pale muzzle and chest, small lively dark oval eyes, small dark nose, amber-yellow collar with a BLANK round tag, short upward-curving tail. Style: expressive hand-inked Japanese manga, confident varying dark-brown linework, clean flat warm colors, one restrained cel-shadow; cute but not babyish, never an existing anime character. Spacious warm ivory background; consistent proportions and identity in all three views; entire ears, tail and paws visible. Minimal small English labels FRONT, 3/4, SIDE. No UI, no levels, no coins, no additional characters, no watermark. Professional production character turnaround, charming and legible small silhouette, not a 3D plush toy.",
+    "output": "assets/dog-character-sheet-v1.png"
+  }
+}

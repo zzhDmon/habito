@@ -1,0 +1,47 @@
+[
+  {
+    "buttonsMeet44": true,
+    "case": "home-large-400",
+    "noHorizontalOverflow": true
+  },
+  {
+    "case": "reward-ordinary-dark-large-400",
+    "continueVisible": true,
+    "noHorizontalOverflow": true,
+    "rewardsHidden": false,
+    "title": "做到了，真棒！"
+  },
+  {
+    "case": "reward-autonomous-dark-large-400",
+    "continueVisible": true,
+    "noHorizontalOverflow": true,
+    "rewardsHidden": false,
+    "title": "做到了，真棒！"
+  },
+  {
+    "case": "reward-zero-dark-large-400",
+    "continueVisible": true,
+    "noHorizontalOverflow": true,
+    "rewardsHidden": true,
+    "title": "做到了，真棒！"
+  },
+  {
+    "case": "reward-waiting-dark-large-400",
+    "continueVisible": true,
+    "noHorizontalOverflow": true,
+    "rewardsHidden": true,
+    "title": "努力，已经记下了。"
+  },
+  {
+    "case": "pet-dark-large-400",
+    "feedingDisabled": true,
+    "noHorizontalOverflow": true,
+    "speech": "汪！听见啦，\n我就在这里。"
+  },
+  {
+    "bodyColor": "rgb(246, 239, 223)",
+    "case": "dark-text-inheritance-fixed",
+    "noHorizontalOverflow": true,
+    "titleColor": "rgb(246, 239, 223)"
+  }
+]

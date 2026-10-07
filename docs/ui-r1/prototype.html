@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Habito · 漫画成长冒险样稿</title>
+<link rel="stylesheet" href="prototype.css">
+</head>
+<body>
+<header class="review-bar" aria-label="样稿控制">
+  <div><strong>HABITO / UI-R1</strong><span>视觉样稿 · 演示数据，不连接任务或钱包</span></div>
+  <div class="review-controls"><button id="font-toggle" aria-pressed="false">大字号</button><button id="theme-toggle" aria-pressed="false">深色</button><a href="assets/dog-character-sheet-v1.png" target="_blank" rel="noopener">角色母版 ↗</a></div>
+</header>
+<main class="book">
+  <header class="app-header"><a href="#today" class="wordmark" aria-label="Habito 今日">habito<span aria-hidden="true">✦</span></a><div class="chapter-label">今天的小冒险</div><button class="parent-button" id="parent-button">家长空间 ↗</button></header>
+  <nav class="page-nav" aria-label="样稿页面"><button data-page="today" aria-pressed="true"><span>01</span> 今日</button><button data-page="reward" aria-pressed="false"><span>02</span> 收获</button><button data-page="pet" aria-pressed="false"><span>03</span> 小狗</button></nav>
+  <section id="today" class="page" aria-labelledby="today-title">
+    <div class="page-heading"><div><p class="eyebrow">10 月 8 日 · 星期四</p><h1 id="today-title">今天，也一起加油！</h1></div><span class="ink-note">一步一步，就很厉害。</span></div>
+    <div class="today-layout">
+      <aside class="companion-panel panel">
+        <span class="panel-number" aria-hidden="true">01 / GOOD MORNING</span>
+        <div class="speech"><strong>回来啦！</strong><br>我准备好了，<br>一起开始吧！</div>
+        <span class="sun" aria-hidden="true">✹</span><div class="dot-field" aria-hidden="true"></div>
+        <img class="home-dog" src="assets/dog-default-v1.png" alt="奶油色垂耳小狗小麦，戴着黄色项圈，微笑着等你">
+        <div class="dog-name"><span aria-hidden="true">↳</span> 你的伙伴 · 小麦</div>
+        <div class="progress-block"><div><strong>今天已经完成 <span class="completion-count"><b>3</b> / 6</span></strong><span>还剩 3 个</span></div><div class="progress-track" role="progressbar" aria-label="今日任务" aria-valuemin="0" aria-valuemax="6" aria-valuenow="3"><span></span></div><p>每完成一件事，都值得开心。</p></div>
+      </aside>
+      <div class="task-column">
+        <div class="section-caption"><h2>先从这一件开始</h2><span aria-hidden="true">LET'S GO ↘</span></div>
+        <article class="featured-task panel">
+          <div class="task-top"><span class="task-category">阅读时光</span><span class="time-note">提醒 19:30</span></div>
+          <div class="feature-title"><div class="icon-tile"><img src="assets/book.svg" alt=""></div><div><h3>读一本喜欢的书</h3><p>20 分钟，去遇见新的世界。</p></div></div>
+          <div class="task-footer"><span class="reward-hint">完成可得 <b>20 XP</b><span aria-hidden="true"> / </span><b>5 金币</b></span><button class="primary" id="start-task">开始阅读 <span aria-hidden="true">→</span></button></div>
+        </article>
+        <div class="section-caption next-caption"><h2>接下来的小任务</h2><span>慢慢来，一件一件做</span></div>
+        <article class="task-row panel"><div class="small-icon peach"><img src="assets/pencil.svg" alt=""></div><div><h3>完成今天的练字</h3><p>15 分钟 · 晚间</p></div><button class="row-button" data-demo-task="完成今天的练字" aria-label="查看完成今天的练字">→</button></article>
+        <article class="task-row panel"><div class="small-icon green"><img src="assets/run.svg" alt=""></div><div><h3>动一动身体</h3><p>10 分钟 · 晚间</p></div><button class="row-button" data-demo-task="动一动身体" aria-label="查看动一动身体">→</button></article>
+        <div class="wallet"><div><span class="wallet-icon" aria-hidden="true">✦</span><span>累计经验 <strong>280 XP</strong></span></div><div><span class="coin-icon" aria-hidden="true">H</span><span>我的金币 <strong>65</strong></span></div><p>每一点，都是你的努力。</p></div>
+      </div>
+    </div>
+  </section>
+  <section id="reward" class="page" hidden aria-labelledby="reward-title">
+    <div class="page-heading"><div><p class="eyebrow">这一格，留给努力的你</p><h1 id="reward-title">做到了，真棒！</h1></div><label class="state-select">样稿状态 <select id="reward-state"><option value="ordinary">普通完成</option><option value="autonomous">自主完成</option><option value="zero">零奖励完成</option><option value="waiting">等待家长确认</option></select></label></div>
+    <div class="reward-layout">
+      <div class="celebration panel"><span class="panel-number" aria-hidden="true">02 / A LITTLE VICTORY</span><div class="burst-lines" aria-hidden="true"></div><div class="clear-stamp" aria-hidden="true">CLEAR!</div><div class="reward-speech speech" id="reward-speech">一页一页读完了，<br>你认真起来的样子真酷！</div><img src="assets/dog-default-v1.png" alt="小麦陪你庆祝完成任务" class="reward-dog"><span class="star one" aria-hidden="true">✦</span><span class="star two" aria-hidden="true">✧</span></div>
+      <article class="receipt panel"><p class="eyebrow">读一本喜欢的书</p><h2 id="receipt-title">完成啦！</h2><p id="receipt-copy">这次的努力，已经记下了。</p><div class="autonomy" id="autonomy" hidden>自己开始，自己完成！</div><div class="reward-values" id="reward-values"><div><span class="reward-symbol" aria-hidden="true">✦</span><strong>+20 <small>XP</small></strong><span>经验已到账</span></div><div><span class="coin-icon" aria-hidden="true">H</span><strong id="coin-amount">+5 <small>金币</small></strong><span>金币已到账</span></div></div><p class="quiet-reward" id="quiet-reward" hidden>认真完成，本身就很了不起。</p><p class="receipt-note" id="receipt-note">收获来自这次完成。</p><button class="primary wide" id="continue">继续今天的冒险 →</button></article>
+    </div>
+  </section>
+  <section id="pet" class="page" hidden aria-labelledby="pet-title">
+    <div class="page-heading"><div><p class="eyebrow">我们的伙伴时间</p><h1 id="pet-title">小麦的小天地</h1></div><span class="ink-note">普通的一天，也有小小的快乐。</span></div>
+    <div class="pet-layout"><div class="pet-stage panel"><span class="panel-number" aria-hidden="true">03 / TOGETHER</span><div class="pet-sun" aria-hidden="true"></div><div class="pet-speech speech" id="pet-speech">汪！今天也想和你<br>一起做点什么。</div><img src="assets/dog-default-v1.png" alt="小狗小麦站在自己的小天地里" class="pet-dog"><div class="pet-ground" aria-hidden="true"></div><span class="pet-caption">小麦 <span>你的冒险搭档</span></span></div><aside class="pet-sidebar"><article class="panel pet-note"><p class="eyebrow">不用很厉害，也可以开始</p><h2>有你在，<br>今天就很好。</h2><p>做完任务，回来看看小麦。<br>一起享受这一小会儿。</p><button class="secondary wide" id="call-dog">叫叫小麦 ♡</button></article><article class="feeding panel"><div class="feeding-copy"><span aria-hidden="true">✦</span><h3>小麦的餐点</h3><p>陪伴，也有认真照顾。</p></div><button class="secondary wide" disabled>喂食</button></article></aside></div>
+  </section>
+  <footer class="app-footer"><span>HABITO · 和小狗一起长大</span><span aria-hidden="true">つづく · 未完待续 ↗</span></footer>
+</main>
+<aside class="prototype-note" aria-label="原型边界说明"><strong>本页是视觉原型。</strong>“开始阅读”演示完成反馈；金额和进度为固定演示值，不写入数据。宠物仅展示名字与陪伴，喂食业务、价格和成长参数尚未定义。深色/大字号仅为网页样稿检查，不替代原生验收。</aside>
+<dialog id="notice"><h2 id="notice-title">家长空间</h2><p id="notice-copy">正式应用保留现有 PIN 验证和管理页面。本样稿只展示儿童视觉方向。</p><button class="primary" id="notice-close">知道了</button></dialog>
+<script src="prototype.js"></script>
+</body></html>

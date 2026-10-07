@@ -1,0 +1,6 @@
+{
+  "mode": "built-in image_gen",
+  "reference": "assets/dog-character-sheet-v1.png",
+  "prompt": "Use case: identity-preserve plus background-extraction. Use the attached Habito character reference sheet as the identity reference. Create ONE full-body three-quarter STANDING pose of exactly the same original cream dog, facing slightly left, with an expectant friendly smile. Preserve the floppy caramel ears, cream body, pale muzzle/chest, small dark eyes, amber-yellow collar and blank round tag, curved tail, and manga ink outline. Simplify fine fur strokes for clean legibility at small UI sizes, use flat color and a restrained single cel-shadow. Entire ears, tail and four paws visible, centered with generous transparent padding. Output on a genuinely transparent background with alpha, NO ground shadow, NO text, NO labels, no reference-sheet elements, no other objects. This is a reusable character cutout for a manga UI prototype.",
+  "output": "assets/dog-default-v1.png"
+}
