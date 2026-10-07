@@ -1,0 +1,41 @@
+{
+  "version": "Tabler v3.49.0",
+  "license": "Habito/Resources/Tabler-LICENSE.txt",
+  "icons": [
+    {
+      "asset": "Habito/Resources/Manga.xcassets/TaskRun.imageset/run.svg",
+      "source": "docs/ui-r1/assets/run.svg",
+      "change": "currentColor -> #000000 for template compilation",
+      "sha256": "eb48ce6f013b00b94c254ff791ce855508483b3161d50785d591646a7e0a5015"
+    },
+    {
+      "asset": "Habito/Resources/Manga.xcassets/TaskBook.imageset/book.svg",
+      "source": "docs/ui-r1/assets/book.svg",
+      "change": "currentColor -> #000000 for template compilation",
+      "sha256": "5ec2cc7e6fa4788a47d21b3c5c3fdec5f4bf40d0a63bcf3dd07904f6a219eacf"
+    },
+    {
+      "asset": "Habito/Resources/Manga.xcassets/TaskMusic.imageset/music.svg",
+      "source": "docs/ui-r1/assets/music.svg",
+      "change": "currentColor -> #000000 for template compilation",
+      "sha256": "62e800bec28f2450829155ff7bcf5daac16ae72e7b65ce820b600b8e1c207655"
+    },
+    {
+      "asset": "Habito/Resources/Manga.xcassets/TaskPencil.imageset/pencil.svg",
+      "source": "docs/ui-r1/assets/pencil.svg",
+      "change": "currentColor -> #000000 for template compilation",
+      "sha256": "bb84d8e2779589cc3a6869bc75383077f78352ae31e1889065ef76f119845897"
+    },
+    {
+      "asset": "Habito/Resources/Manga.xcassets/TaskChecklist.imageset/checklist.svg",
+      "source": "docs/ui-r1/assets/checklist.svg",
+      "change": "currentColor -> #000000 for template compilation",
+      "sha256": "ca3c97f39254c549ab3cc745b16f0e34df747d0a1f9c18bb867fe999aa891db5"
+    }
+  ],
+  "dog": {
+    "asset": "DogDefault",
+    "source": "docs/ui-r1/assets/dog-default-v1.png",
+    "change": "byte-identical"
+  }
+}

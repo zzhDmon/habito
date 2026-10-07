@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EE0A8600B3EF018C1C251484 /* Tabler-LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 99A3F82DDA123D4EF7A62BD9 /* Tabler-LICENSE.txt */; };
+		23BFADE477462428F707C343 /* Manga.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D5A2990AA7E5BF45C5844C85 /* Manga.xcassets */; };
+		DF5584738E4BF484AE3B0E86 /* DogCharacter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CB2D0418276F00468894298 /* DogCharacter.swift */; };
+		BFE8C49B5601D7141BB93C48 /* TaskIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = A840ADE59C3817F1D3047511 /* TaskIcon.swift */; };
+		FDFCBABB44015897917D176C /* MangaButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9FEF70674A81EFEE85D5BD /* MangaButtonStyle.swift */; };
+		3C5417B01B4B27AEB2C4AAB8 /* MangaSpeechBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57EC126398512771DBC8B316 /* MangaSpeechBubble.swift */; };
+		FA94CD85E7C7D84ABD366D25 /* MangaStamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40132E42E6658BEF5C53CB22 /* MangaStamp.swift */; };
+		CBF65B2E37CCD77DB6145C1E /* MangaPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 308245936A1F409D4650D8CB /* MangaPanel.swift */; };
 		AB100000000000000000026C /* UITestTodayViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB200000000000000000026C /* UITestTodayViewModelFactory.swift */; };
 		AB100000000000000000026D /* UITestTodayViewModelFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB200000000000000000026D /* UITestTodayViewModelFactoryTests.swift */; };
 		AB1000000000000000000262 /* TodayCompletionCelebrationEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000262 /* TodayCompletionCelebrationEvent.swift */; };
@@ -512,6 +520,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		99A3F82DDA123D4EF7A62BD9 /* Tabler-LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Tabler-LICENSE.txt; sourceTree = "<group>"; };
+		D5A2990AA7E5BF45C5844C85 /* Manga.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Manga.xcassets; sourceTree = "<group>"; };
+		5CB2D0418276F00468894298 /* DogCharacter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DogCharacter.swift; sourceTree = "<group>"; };
+		A840ADE59C3817F1D3047511 /* TaskIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskIcon.swift; sourceTree = "<group>"; };
+		EC9FEF70674A81EFEE85D5BD /* MangaButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaButtonStyle.swift; sourceTree = "<group>"; };
+		57EC126398512771DBC8B316 /* MangaSpeechBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaSpeechBubble.swift; sourceTree = "<group>"; };
+		40132E42E6658BEF5C53CB22 /* MangaStamp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaStamp.swift; sourceTree = "<group>"; };
+		308245936A1F409D4650D8CB /* MangaPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaPanel.swift; sourceTree = "<group>"; };
 		AB2000000000000000000261 /* FamilyProfileEditorRenderingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FamilyProfileEditorRenderingTests.swift; sourceTree = "<group>"; };
 		AB2000000000000000000256 /* FamilyProfileEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FamilyProfileEditorView.swift; sourceTree = "<group>"; };
 		AB2000000000000000000257 /* FamilyProfileEditorForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FamilyProfileEditorForm.swift; sourceTree = "<group>"; };
@@ -1354,6 +1370,8 @@
 		A50000000000000000000006 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				99A3F82DDA123D4EF7A62BD9 /* Tabler-LICENSE.txt */,
+				D5A2990AA7E5BF45C5844C85 /* Manga.xcassets */,
 				A20000000000000000000005 /* Localizable.xcstrings */,
 			);
 			path = Resources;
@@ -1451,6 +1469,12 @@
 		I50000000000000000000001 /* DesignSystem */ = {
 			isa = PBXGroup;
 			children = (
+				308245936A1F409D4650D8CB /* MangaPanel.swift */,
+				40132E42E6658BEF5C53CB22 /* MangaStamp.swift */,
+				57EC126398512771DBC8B316 /* MangaSpeechBubble.swift */,
+				EC9FEF70674A81EFEE85D5BD /* MangaButtonStyle.swift */,
+				A840ADE59C3817F1D3047511 /* TaskIcon.swift */,
+				5CB2D0418276F00468894298 /* DogCharacter.swift */,
 				I20000000000000000000001 /* HabitoDesign.swift */,
 			);
 			path = DesignSystem;
@@ -2063,6 +2087,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE0A8600B3EF018C1C251484 /* Tabler-LICENSE.txt in Resources */,
+				23BFADE477462428F707C343 /* Manga.xcassets in Resources */,
 				A10000000000000000000005 /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2074,6 +2100,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DF5584738E4BF484AE3B0E86 /* DogCharacter.swift in Sources */,
+				BFE8C49B5601D7141BB93C48 /* TaskIcon.swift in Sources */,
+				FDFCBABB44015897917D176C /* MangaButtonStyle.swift in Sources */,
+				3C5417B01B4B27AEB2C4AAB8 /* MangaSpeechBubble.swift in Sources */,
+				FA94CD85E7C7D84ABD366D25 /* MangaStamp.swift in Sources */,
+				CBF65B2E37CCD77DB6145C1E /* MangaPanel.swift in Sources */,
 				AB1000000000000000000187 /* UITestRewardReceiptProbe.swift in Sources */,
 				AB1000000000000000000193 /* UITestChildReceiptServiceFactory.swift in Sources */,
 				AB1000000000000000000203 /* GrowthStatisticsQueryError.swift in Sources */,

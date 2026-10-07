@@ -5,6 +5,25 @@ import SwiftUI
 /// 页面只引用语义名称，不直接散落数值。后续调整儿童视觉风格时，可以在这里统一修改，
 /// 同时保留 Dynamic Type 和不同 iPad 尺寸下的系统自适应能力。
 enum HabitoDesign {
+    /// 漫画颜色由资源目录随系统深浅模式切换；仅迁移后的页面使用，不改变家长系统表单。
+    enum Manga {
+        static let paper = Color("MangaPaper")
+        static let panel = Color("MangaPanel")
+        static let ink = Color("MangaInk")
+        static let secondaryInk = Color("MangaSecondaryInk")
+        static let action = Color("MangaAction")
+        static let actionInk = Color("MangaActionInk")
+        static let successPaper = Color("MangaSuccessPaper")
+        static let successInk = Color("MangaSuccessInk")
+        static let warmPaper = Color("MangaWarmPaper")
+        static let border: CGFloat = 3
+        static let secondaryBorder: CGFloat = 2
+        static let corner: CGFloat = 10
+        static let shadowOffset: CGFloat = 4
+        static let iconSize: CGFloat = 40
+        static let characterHeight: CGFloat = 180
+    }
+
     enum Spacing {
         static let xSmall: CGFloat = 4
         static let small: CGFloat = 8
