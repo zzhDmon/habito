@@ -1,8 +1,6 @@
 import SwiftData
 
-/// 儿童收据投递结构 7.0.0；旧完成保持未启用，不补弹历史反馈或重算奖励。
-///
-/// 投递元数据只描述展示生命周期，当前业务模型归属调用方的主 actor 上下文。
+/// 冻结的收据投递结构 7.0.0，不引用当前活跃模型，保留旧投递与已读事实。
 nonisolated enum HabitoSchemaV6: VersionedSchema {
     static let versionIdentifier = Schema.Version(7, 0, 0)
 

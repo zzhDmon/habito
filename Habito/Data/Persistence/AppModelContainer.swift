@@ -7,7 +7,7 @@ import SwiftData
 /// 以免测试数据写入用户的真实数据库。
 enum AppModelContainer {
     /// 当前版本结构与迁移计划统一接入；旧版本定义不能跟随当前字段一起变更。
-    static let schema = Schema(versionedSchema: HabitoSchemaV6.self)
+    static let schema = Schema(versionedSchema: HabitoSchemaV7.self)
 
     /// 创建包含当前应用模型的 SwiftData 容器。
     ///

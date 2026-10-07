@@ -7,10 +7,10 @@ import Testing
 @MainActor
 @Suite("儿童审核收据投递兼容迁移")
 struct ChildFeedbackDeliveryMigrationTests {
-    @Test("冻结六与当前七保持十一模型，仅完成记录增加两项展示元数据")
+    @Test("冻结六与冻结七保持十一模型，仅完成记录增加两项展示元数据")
     func schemaAddsOnlyDeliveryMetadata() throws {
         let old = Schema(versionedSchema: HabitoSchemaV5.self)
-        let current = AppModelContainer.schema
+        let current = Schema(versionedSchema: HabitoSchemaV6.self)
         #expect(HabitoSchemaV5.versionIdentifier == Schema.Version(6, 0, 0))
         #expect(HabitoSchemaV6.versionIdentifier == Schema.Version(7, 0, 0))
         #expect(old.entities.count == 11 && current.entities.count == 11)
