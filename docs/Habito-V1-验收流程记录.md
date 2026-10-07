@@ -1,5 +1,7 @@
 # Habito V1 验收流程记录
 
+> 2026-10-07 20:45：002B0纯事件资格DONE，最终两系相关/构建/质量及独立文档复核通过，准备本地提交。名字000F已提交3b24730；完整动态仪式仍未交付。
+
 ## 1. V1-M3-001B：提交等待与计时终态
 
 - 仅家长验收实例可提交；同步主 actor、干净/同上下文、关闭自动保存后一次 save，保存后才返回收据。不创建 CompletionRecord 或 XP/Coin 交易，不把“已提交”写成“已到账”。
@@ -571,3 +573,14 @@
 - 多收据IPS 5FE51E0F-CD65-44CD-9169-FFFECDED99CA.ips主线程strcmp/运行时日志fault/高日志量隔离/UIKit键盘移动；没有奖励或SwiftData业务栈，不推断未跑完断言成功。原始失败包/AX/事件/IPS/录屏在attachments-17及attachments-27保留，不覆盖。
 - 17:14等两系退出后限定修复：名字重试label内部44pt；两名字原生largeTitle/roundedBorder输入和触控形状；TaskSessionLoadedView以VStack分隔滚动区和固定撤销条，保持原服务时钟与五秒规则；Snapshot中文注释更新；UI helper扣除底栏遮挡并验证关闭区域不重叠、关闭不能清完成事实。没有改schema/奖励/保存/通知/PIN事务或后置数值。
 - 修复源已不同于8a325de，旧完整单测或000E四MAX不直接作为当前最终门。两系ui-ordinary-layout-fixed各九专项运行中，尚未取得终态；32当前源MAX、最终完整单测及59UI尚待。Release/Debug analyze-layout-fixed均exit0、日志为空；严格格式/PBX解析/1031对象无重复/diff通过，461资源与HEAD逐项完全一致。仍未提交/推送或操作正式家庭库/真实Keychain。
+
+## 38. V1-M6-002B0：当天完成动态纯资格基础（20:45 DONE）
+
+- 最终结论：两系相关34/77和构建/质量证据齐，独立只读文档Reader复核通过；唯一遗留清单表旧000F进行中已修正。49卡49DONE，无进行中。只完成纯资格，不包括去重/状态/接线/仪式；以下首33与red失败以及IN_PROGRESS都是过程记录，8文件独立本地提交、不push。
+
+- 20:35最终软件验证：两系related-final各34/34定义77执行、新22定义，零失败/跳过/运行警告，xcodebuild exit0；release-final/analyze-final exit0且日志0字节，严格格式/PBX解析1035无重复/461资源不变/diff通过，swiftui-pro专项已修实际有效ID条件。事件文件SHA2569a24c3a8e36757ba7d62e734459945554ce64eef140fe405bc960f77c6d8a260，测试1e2fdc9835710d0b674f54f9cd69ba074c0af54e010f6c9630ffa2cf1f0028f3。软件证据齐但仍IN_PROGRESS待独立Reader，49卡48DONE/1IN_PROGRESS。
+
+- 20:21开始，000F前置提交3b24730；49已拆卡48DONE/唯一002B0 IN_PROGRESS。新增不可变事件值和固定日期/ID Swift Testing及工程注册；没有View、事件发布/去重状态、持久化/奖励/通知/schema或后置参数写入。初读/历史收据不构造新事件，重复纯值稳定相等，去重/失效和实际仪式后续另卡。
+- 首两系related各33定义/76执行、零失败/跳过/运行警告通过（新21定义），首Release/分析exit0且日志空；PBX1035无重复、461资源不变/格式/diff通过，仅属于后续修订前源。
+- 专项复核发现跳过触发ID仍在原始tasks内，补混合用例后skipped-trigger-red-17为21通过/1失败、exit65，唯一skippedTriggerDoesNotBorrowAnotherTasksCompletion；其他已完成任务不能代替这次触发ID。只在纯有效完成ID集合加成员检查，原失败包保留、不弱化测试。
+- 20:33最终两系related-final与Release/分析-final正在运行，软件源冻结，未取未封口包作成功。证据根/tmp/habito-daily-event-002b0-evidence.6Q5pNGoo；不因首33通过声称最终源通过，也不重复无UI基础的旧59UI/MAX32。展示ASSUMPTION限今天的新孩子确认/新家长通过；旧日完成/家长更正保留原反馈，完整动态仪式和实机/家庭效果尚未交付。
