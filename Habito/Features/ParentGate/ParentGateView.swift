@@ -7,6 +7,7 @@ struct ParentGateView: View {
     @State private var taskTemplatesModel: ParentTaskTemplateListViewModel
     @State private var parentTodayModel: ParentTodayTaskViewModel
     @State private var statisticsModel: GrowthStatisticsViewModel
+    @State private var familyProfileModel: FamilyProfileEditorViewModel
     @State private var parentReviewModel: ParentReviewViewModel
     @State private var parentCalendarModel: ParentCalendarDayViewModel
     @State private var parentNotificationModel: ParentNotificationDiagnosticsViewModel
@@ -23,6 +24,7 @@ struct ParentGateView: View {
         taskTemplatesModel: ParentTaskTemplateListViewModel,
         parentTodayModel: ParentTodayTaskViewModel,
         statisticsModel: GrowthStatisticsViewModel,
+        familyProfileModel: FamilyProfileEditorViewModel,
         parentReviewModel: ParentReviewViewModel,
         parentCalendarModel: ParentCalendarDayViewModel,
         parentNotificationModel: ParentNotificationDiagnosticsViewModel,
@@ -32,6 +34,7 @@ struct ParentGateView: View {
         _taskTemplatesModel = State(initialValue: taskTemplatesModel)
         _parentTodayModel = State(initialValue: parentTodayModel)
         _statisticsModel = State(initialValue: statisticsModel)
+        _familyProfileModel = State(initialValue: familyProfileModel)
         _parentReviewModel = State(initialValue: parentReviewModel)
         _parentCalendarModel = State(initialValue: parentCalendarModel)
         _parentNotificationModel = State(initialValue: parentNotificationModel)
@@ -53,6 +56,7 @@ struct ParentGateView: View {
                         model: taskTemplatesModel,
                         onShowReview: { path.append(.review) },
                         onShowStatistics: { path.append(.statistics) },
+                        onShowFamilyProfile: { path.append(.familyProfile) },
                         onShowToday: { path.append(.today) },
                         onShowCalendar: { path.append(.calendar) },
                         onShowNotifications: { path.append(.notifications) },
@@ -81,6 +85,13 @@ struct ParentGateView: View {
             }
             .navigationDestination(for: ParentRoute.self) { route in
                 switch route {
+                case .familyProfile:
+                    // 本次PIN未通过时不创建资料页面，也不会触发名字load。
+                    if model.state == .unlocked {
+                        FamilyProfileEditorView(model: familyProfileModel, onClose: dismiss.callAsFunction)
+                    } else {
+                        ContentUnavailableView("parentGate.verifyTitle", systemImage: "lock.fill")
+                    }
                 case .review:
                     // 审核路由只注册在家长栈；即使保留旧 path，也不能跨越本次 PIN 验证。
                     if model.state == .unlocked {
@@ -113,7 +124,7 @@ struct ParentGateView: View {
             }
         }
         .presentationDetents([.large])
-        .onDisappear(perform: clearStatistics)
+        .onDisappear(perform: clearParentPrivateState)
         .confirmationDialog(
             "parentGate.resetConfirmationTitle",
             isPresented: $isResetConfirmationPresented,
@@ -126,9 +137,10 @@ struct ParentGateView: View {
         }
     }
 
-    /// 任何关闭方式（包括下拉与通知路由）都撤下历史，不能只清按钮关闭路径。
-    private func clearStatistics() {
+    /// 任何关闭方式（包括下拉与通知路由）都撤下历史和名字，不能只清按钮关闭路径。
+    private func clearParentPrivateState() {
         statisticsModel.reset()
+        familyProfileModel.reset()
         parentTodayModel.overviewModel?.reset()
     }
 

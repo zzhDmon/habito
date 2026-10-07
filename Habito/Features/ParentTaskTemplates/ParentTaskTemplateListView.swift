@@ -5,6 +5,7 @@ struct ParentTaskTemplateListView: View {
     @State private var model: ParentTaskTemplateListViewModel
     let onShowReview: () -> Void
     let onShowStatistics: () -> Void
+    let onShowFamilyProfile: () -> Void
     let onShowToday: () -> Void
     let onShowCalendar: () -> Void
     let onShowNotifications: () -> Void
@@ -15,6 +16,7 @@ struct ParentTaskTemplateListView: View {
         model: ParentTaskTemplateListViewModel,
         onShowReview: @escaping () -> Void,
         onShowStatistics: @escaping () -> Void = {},
+        onShowFamilyProfile: @escaping () -> Void = {},
         onShowToday: @escaping () -> Void,
         onShowCalendar: @escaping () -> Void,
         onShowNotifications: @escaping () -> Void,
@@ -24,6 +26,7 @@ struct ParentTaskTemplateListView: View {
         _model = State(initialValue: model)
         self.onShowReview = onShowReview
         self.onShowStatistics = onShowStatistics
+        self.onShowFamilyProfile = onShowFamilyProfile
         self.onShowToday = onShowToday
         self.onShowCalendar = onShowCalendar
         self.onShowNotifications = onShowNotifications
@@ -50,6 +53,12 @@ struct ParentTaskTemplateListView: View {
                 }
                 .buttonStyle(.bordered)
                 .accessibilityIdentifier(HabitoAccessibilityID.statisticsOpen)
+                Button(action: onShowFamilyProfile) {
+                    Label("familyProfile.title", systemImage: "person.and.background.dotted")
+                        .frame(maxWidth: .infinity, minHeight: HabitoDesign.Layout.minimumTapSize)
+                }
+                .buttonStyle(.bordered)
+                .accessibilityIdentifier(HabitoAccessibilityID.familyProfileOpen)
             }
             .padding(.horizontal, HabitoDesign.Spacing.medium)
             .padding(.vertical, HabitoDesign.Spacing.small)

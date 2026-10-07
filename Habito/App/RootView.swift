@@ -11,6 +11,7 @@ struct RootView: View {
     @State private var parentTaskTemplatesModel: ParentTaskTemplateListViewModel
     @State private var parentTodayModel: ParentTodayTaskViewModel
     @State private var statisticsModel: GrowthStatisticsViewModel
+    @State private var familyProfileModel: FamilyProfileEditorViewModel
     @State private var parentReviewModel: ParentReviewViewModel
     @State private var parentCalendarModel: ParentCalendarDayViewModel
     @State private var parentNotificationModel: ParentNotificationDiagnosticsViewModel
@@ -32,6 +33,7 @@ struct RootView: View {
         parentTaskTemplatesModel: ParentTaskTemplateListViewModel,
         parentTodayModel: ParentTodayTaskViewModel,
         statisticsModel: GrowthStatisticsViewModel,
+        familyProfileModel: FamilyProfileEditorViewModel,
         parentReviewModel: ParentReviewViewModel,
         parentCalendarModel: ParentCalendarDayViewModel,
         parentNotificationModel: ParentNotificationDiagnosticsViewModel,
@@ -49,6 +51,7 @@ struct RootView: View {
         _parentTaskTemplatesModel = State(initialValue: parentTaskTemplatesModel)
         _parentTodayModel = State(initialValue: parentTodayModel)
         _statisticsModel = State(initialValue: statisticsModel)
+        _familyProfileModel = State(initialValue: familyProfileModel)
         _parentReviewModel = State(initialValue: parentReviewModel)
         _parentCalendarModel = State(initialValue: parentCalendarModel)
         _parentNotificationModel = State(initialValue: parentNotificationModel)
@@ -132,6 +135,7 @@ struct RootView: View {
                 taskTemplatesModel: parentTaskTemplatesModel,
                 parentTodayModel: parentTodayModel,
                 statisticsModel: statisticsModel,
+                familyProfileModel: familyProfileModel,
                 parentReviewModel: parentReviewModel,
                 parentCalendarModel: parentCalendarModel,
                 parentNotificationModel: parentNotificationModel,

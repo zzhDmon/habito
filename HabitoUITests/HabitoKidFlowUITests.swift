@@ -13,6 +13,159 @@ final class HabitoKidFlowUITests: XCTestCase {
         continueAfterFailure = false
     }
 
+    func testFamilyNamesSaveEditPINAndRestartWithSystemTextSize() throws {
+        let app = launchEmptyFamilyProfile()
+        XCTAssertEqual(profileValue("parent.profile.child", in: app), "")
+        XCTAssertEqual(profileValue("parent.profile.pet", in: app), "")
+        setProfileText("  合成 小禾  ", identifier: "parent.profile.child", in: app)
+        setProfileText("  Pixel Pup  ", identifier: "parent.profile.pet", in: app)
+        tapProfileSave(in: app)
+        assertProfileFeedback("名字记好了", in: app)
+        XCTAssertEqual(profileValue("parent.profile.child", in: app), "合成 小禾")
+        XCTAssertEqual(profileValue("parent.profile.pet", in: app), "Pixel Pup")
+        navigateBack(in: app, from: "孩子和小狗")
+        app.buttons["parent.profile.open"].tap()
+        XCTAssertEqual(profileValue("parent.profile.child", in: app), "合成 小禾")
+        XCTAssertFalse(app.staticTexts["parent.profile.feedback"].exists)
+        app.buttons["parent.gate.close"].tap()
+        XCTAssertFalse(app.textFields["parent.profile.child"].exists)
+        unlockExistingParent(in: app, verifyWrongPIN: true)
+        openFamilyProfile(in: app)
+        setProfileText("合成小树", identifier: "parent.profile.child", in: app)
+        setProfileText("合成毛球", identifier: "parent.profile.pet", in: app)
+        tapProfileSave(in: app)
+        assertProfileFeedback("名字记好了", in: app)
+        keepScreenshot(app, name: "名字真实保存及MAX反馈")
+        app.terminate()
+        app.launchArguments = ["--habito-ui-testing", "--habito-ui-empty"]
+        app.launch()
+        XCTAssertFalse(app.textFields["parent.profile.child"].exists)
+        unlockExistingParent(in: app, verifyWrongPIN: true)
+        openFamilyProfile(in: app)
+        XCTAssertEqual(profileValue("parent.profile.child", in: app), "合成小树")
+        XCTAssertEqual(profileValue("parent.profile.pet", in: app), "合成毛球")
+        // 关闭后的未保存草稿不能落盘，也不能带到下一次已解锁页面。
+        setProfileText("未保存草稿", identifier: "parent.profile.child", in: app)
+        app.buttons["parent.gate.close"].tap()
+        unlockExistingParent(in: app)
+        openFamilyProfile(in: app)
+        XCTAssertEqual(profileValue("parent.profile.child", in: app), "合成小树")
+    }
+
+    func testFamilyNamesInvalidFieldsCorrectAndClearOldFeedbackWithSystemTextSize() throws {
+        let app = launchEmptyFamilyProfile()
+        tapProfileSave(in: app)
+        assertProfileFeedback("请填写孩子昵称", in: app)
+        setProfileText("合成孩子", identifier: "parent.profile.child", in: app)
+        XCTAssertFalse(app.staticTexts["parent.profile.feedback"].exists)
+        tapProfileSave(in: app)
+        assertProfileFeedback("请填写小狗名字", in: app)
+        setProfileText("   ", identifier: "parent.profile.pet", in: app)
+        tapProfileSave(in: app)
+        assertProfileFeedback("请填写小狗名字", in: app)
+        setProfileText("合成小狗", identifier: "parent.profile.pet", in: app)
+        tapProfileSave(in: app)
+        assertProfileFeedback("名字记好了", in: app)
+        setProfileText("新的未保存名", identifier: "parent.profile.pet", in: app)
+        XCTAssertFalse(app.staticTexts["parent.profile.feedback"].exists)
+        keepScreenshot(app, name: "名字纠正后撤下旧保存反馈")
+    }
+
+    func testFamilyNamesReadFailureRetryOnlyAfterPINWithSystemTextSize() throws {
+        let app = launchEmptyFamilyProfile(extraArguments: ["--habito-ui-profile-read-fail-once"], opensPage: false)
+        openFamilyProfile(in: app, expectsForm: false)
+        let retry = app.buttons["parent.profile.retry"]
+        XCTAssertTrue(retry.waitForExistence(timeout: 5))
+        XCTAssertFalse(app.textFields["parent.profile.child"].exists)
+        XCTAssertFalse(app.buttons["parent.profile.save"].exists)
+        XCTAssertTrue(retry.isHittable && app.frame.contains(retry.frame))
+        XCTAssertGreaterThanOrEqual(retry.frame.height, 44)
+        keepScreenshot(app, name: "名字读取失败不出现可保存草稿")
+        retry.tap()
+        XCTAssertTrue(app.textFields["parent.profile.child"].waitForExistence(timeout: 5))
+        XCTAssertEqual(profileValue("parent.profile.child", in: app), "")
+        XCTAssertFalse(retry.exists)
+        setProfileText("读取重试孩子", identifier: "parent.profile.child", in: app)
+        setProfileText("读取重试小狗", identifier: "parent.profile.pet", in: app)
+        tapProfileSave(in: app)
+        assertProfileFeedback("名字记好了", in: app)
+    }
+
+    func testFamilyNamesSaveFailureKeepsDraftAndRetriesAcrossRestartWithSystemTextSize() throws {
+        let app = launchEmptyFamilyProfile(extraArguments: ["--habito-ui-profile-save-fail-once"])
+        setProfileText("  失败保留孩子  ", identifier: "parent.profile.child", in: app)
+        setProfileText("  失败保留小狗  ", identifier: "parent.profile.pet", in: app)
+        tapProfileSave(in: app)
+        assertProfileFeedback("没能保存，输入还在，请再试一次。", in: app)
+        XCTAssertEqual(profileValue("parent.profile.child", in: app), "  失败保留孩子  ")
+        XCTAssertEqual(profileValue("parent.profile.pet", in: app), "  失败保留小狗  ")
+        keepScreenshot(app, name: "名字保存失败原文草稿及MAX重试")
+        tapProfileSave(in: app)
+        assertProfileFeedback("名字记好了", in: app)
+        app.terminate()
+        app.launchArguments = ["--habito-ui-testing", "--habito-ui-empty"]
+        app.launch()
+        unlockExistingParent(in: app)
+        openFamilyProfile(in: app)
+        XCTAssertEqual(profileValue("parent.profile.child", in: app), "失败保留孩子")
+        XCTAssertEqual(profileValue("parent.profile.pet", in: app), "失败保留小狗")
+    }
+
+    private func launchEmptyFamilyProfile(extraArguments: [String] = [], opensPage: Bool = true) -> XCUIApplication {
+        XCUIDevice.shared.orientation = .landscapeLeft
+        let app = makeApplication()
+        app.launchArguments = ["--habito-ui-testing", "--habito-ui-reset", "--habito-ui-empty"] + extraArguments
+        app.launch()
+        XCTAssertFalse(app.buttons["parent.profile.open"].exists)
+        XCTAssertFalse(app.textFields["parent.profile.child"].exists)
+        unlockParent(in: app)
+        if opensPage { openFamilyProfile(in: app) }
+        return app
+    }
+
+    private func openFamilyProfile(in app: XCUIApplication, expectsForm: Bool = true) {
+        let open = app.buttons["parent.profile.open"]
+        XCTAssertTrue(open.waitForExistence(timeout: 5))
+        XCTAssertTrue(open.isHittable && app.frame.contains(open.frame))
+        XCTAssertGreaterThanOrEqual(open.frame.height, 44)
+        open.tap()
+        if expectsForm { XCTAssertTrue(app.textFields["parent.profile.child"].waitForExistence(timeout: 5)) }
+    }
+
+    private func profileValue(_ identifier: String, in app: XCUIApplication) -> String {
+        let field = app.textFields[identifier]
+        XCTAssertTrue(field.waitForExistence(timeout: 5))
+        let value = field.value as? String ?? ""
+        return value == field.placeholderValue ? "" : value
+    }
+
+    private func setProfileText(_ text: String, identifier: String, in app: XCUIApplication) {
+        let field = app.textFields[identifier]
+        let viewport = app.descendants(matching: .any)["parent.profile.form"]
+        scrollFullyIntoFormViewport(field, viewport: viewport, in: app, towardTop: true)
+        XCTAssertGreaterThanOrEqual(field.frame.height, 44)
+        let old = profileValue(identifier, in: app)
+        field.tap()
+        field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: old.count) + text)
+        XCTAssertEqual(profileValue(identifier, in: app), text)
+    }
+
+    private func tapProfileSave(in app: XCUIApplication) {
+        let save = app.buttons["parent.profile.save"]
+        XCTAssertTrue(save.waitForExistence(timeout: 5))
+        XCTAssertTrue(save.isHittable && app.frame.contains(save.frame))
+        XCTAssertGreaterThanOrEqual(save.frame.height, 44)
+        XCTAssertGreaterThanOrEqual(save.frame.width, 44)
+        save.tap()
+    }
+
+    private func assertProfileFeedback(_ text: String, in app: XCUIApplication) {
+        let feedback = app.staticTexts["parent.profile.feedback"]
+        XCTAssertTrue(feedback.waitForExistence(timeout: 5))
+        XCTAssertEqual(feedback.label, text)
+        XCTAssertTrue(app.frame.contains(feedback.frame))
+    }
+
     func testFormalStatisticsOverviewWaitingApprovalSkipAndRestartWithSystemTextSize() throws {
         let names = ["统计自行确认", "统计家长验收", "统计跳过"]
         let app = launchEmptyParentEditor(title: names[0])
@@ -1814,7 +1967,12 @@ final class HabitoKidFlowUITests: XCTestCase {
     private func formVisibleFrame(_ viewport: XCUIElement, in app: XCUIApplication) -> CGRect {
         var visibleFrame = viewport.frame
         // 17 的全屏弹层仍暴露背景“今日”导航栏；只能扣当前表单自己的原生导航栏。
-        let currentTitles = viewport.identifier == "parent.gate.form" ? ["家长入口"] : ["新建任务", "编辑任务"]
+        let currentTitles: [String]
+        switch viewport.identifier {
+        case "parent.gate.form": currentTitles = ["家长入口"]
+        case "parent.profile.form": currentTitles = ["孩子和小狗"]
+        default: currentTitles = ["新建任务", "编辑任务"]
+        }
         let navigationBars = app.navigationBars.matching(NSPredicate(format: "identifier IN %@", currentTitles))
         XCTAssertEqual(navigationBars.count, 1, "当前表单应只有一个导航栏")
         for navigationBar in navigationBars.allElementsBoundByIndex {
@@ -1830,7 +1988,8 @@ final class HabitoKidFlowUITests: XCTestCase {
         let assistant = app.otherElements["SystemInputAssistantView"]
         // Form 的 AX frame 包含底部安全区；固定保存栏也必须从输入的真实可视区扣除。
         let saveBar = app.descendants(matching: .any)["parent.templates.editor.save-bar"]
-        for obstruction in [keyboard, assistant, saveBar] where obstruction.exists {
+        let profileSaveBar = app.descendants(matching: .any)["parent.profile.save-bar"]
+        for obstruction in [keyboard, assistant, saveBar, profileSaveBar] where obstruction.exists {
             let frame = obstruction.frame
             if frame.intersects(visibleFrame), frame.minY > visibleFrame.minY {
                 visibleFrame.size.height = min(visibleFrame.maxY, frame.minY) - visibleFrame.minY
@@ -2288,6 +2447,8 @@ final class HabitoKidFlowUITests: XCTestCase {
             pin.typeText("0000")
             app.buttons["parent.gate.unlock"].tap()
             XCTAssertFalse(app.buttons["parent.review.open"].exists)
+            XCTAssertFalse(app.buttons["parent.profile.open"].exists)
+            XCTAssertFalse(app.textFields["parent.profile.child"].exists)
         }
         pin.tap()
         pin.typeText("1357")

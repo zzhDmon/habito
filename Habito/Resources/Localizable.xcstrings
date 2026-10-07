@@ -1,6 +1,193 @@
 {
   "sourceLanguage" : "zh-Hans",
   "strings" : {
+    "familyProfile.childNickname" : {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "孩子昵称"
+          }
+        }
+      }
+    },
+    "familyProfile.editHeader" : {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "修改名字"
+          }
+        }
+      }
+    },
+    "familyProfile.emptyChild" : {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请填写孩子昵称"
+          }
+        }
+      }
+    },
+    "familyProfile.emptyPet" : {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请填写小狗名字"
+          }
+        }
+      }
+    },
+    "familyProfile.lineBreakChild" : {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "孩子昵称只能写一行"
+          }
+        }
+      }
+    },
+    "familyProfile.lineBreakPet" : {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "小狗名字只能写一行"
+          }
+        }
+      }
+    },
+    "familyProfile.loadErrorDescription" : {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "重试后再编辑，不会替换已保存的名字。"
+          }
+        }
+      }
+    },
+    "familyProfile.loadErrorTitle" : {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "名字暂时读不到"
+          }
+        }
+      }
+    },
+    "familyProfile.loading" : {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在读取名字"
+          }
+        }
+      }
+    },
+    "familyProfile.petName" : {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "小狗名字"
+          }
+        }
+      }
+    },
+    "familyProfile.retry" : {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "重新读取"
+          }
+        }
+      }
+    },
+    "familyProfile.save" : {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "保存名字"
+          }
+        }
+      }
+    },
+    "familyProfile.saveDescription" : {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不用真实姓名。两个名字都要填写，只能写一行。只有保存后生效，返回会丢弃未保存的修改。"
+          }
+        }
+      }
+    },
+    "familyProfile.saveError" : {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没能保存，输入还在，请再试一次。"
+          }
+        }
+      }
+    },
+    "familyProfile.saved" : {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "名字记好了"
+          }
+        }
+      }
+    },
+    "familyProfile.setupHeader" : {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "记下你们的名字"
+          }
+        }
+      }
+    },
+    "familyProfile.title" : {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "孩子和小狗"
+          }
+        }
+      }
+    },
     "taskSession.undoRemaining %lld" : {
       "extractionState" : "manual",
       "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "撤销完成（还剩 %lld 秒）" } } }

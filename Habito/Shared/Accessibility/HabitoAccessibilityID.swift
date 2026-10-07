@@ -5,6 +5,15 @@ import Foundation
 /// 标识只描述控件语义，不依赖可见中文文案或视图层级，因此文案调整和横竖屏布局变化
 /// 不会让 UI 测试失效。动态任务标识拼接持久化实例 ID，避免同名任务产生歧义。
 nonisolated enum HabitoAccessibilityID {
+    static let familyProfileOpen = "parent.profile.open"
+    static let familyProfileForm = "parent.profile.form"
+    static let familyProfileChild = "parent.profile.child"
+    static let familyProfilePet = "parent.profile.pet"
+    static let familyProfileSave = "parent.profile.save"
+    static let familyProfileSaveBar = "parent.profile.save-bar"
+    static let familyProfileFeedback = "parent.profile.feedback"
+    static let familyProfileRetry = "parent.profile.retry"
+    static let familyProfileLoadError = "parent.profile.load-error"
     static let todayCompletion = "kid.today.completion"
     static let todayCompletionStamp = "kid.today.completion.stamp"
     static let todayCompletionCount = "kid.today.completion.count"

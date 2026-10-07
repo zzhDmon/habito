@@ -146,6 +146,23 @@
             }
         }
 
+        @Test("名字在跨进程准备时保留，显式空库重置才清理", arguments: [false, true])
+        func namesSurviveRecoveryButNotExplicitReset(reset: Bool) throws {
+            let fixture = try Fixture()
+            try fixture.prepare()
+            let names = try FamilyProfileNames(childNickname: "合成播种孩子", petName: "合成播种小狗")
+            let service = FamilyProfileService(context: fixture.context)
+            try service.save(names)
+            try UITestSeedService.prepare(
+                container: fixture.container, shouldReset: reset, shouldSeedSampleData: false,
+                now: fixture.now, calendar: fixture.calendar, timeZone: fixture.timeZone)
+            #expect(try service.load() == (reset ? nil : names))
+            #expect(try fixture.context.fetchCount(FetchDescriptor<ChildProfile>()) == (reset ? 0 : 1))
+            #expect(try fixture.context.fetchCount(FetchDescriptor<Pet>()) == (reset ? 0 : 1))
+            #expect(try fixture.context.fetchCount(FetchDescriptor<TaskTemplate>()) == (reset ? 0 : 1))
+            #expect(!fixture.context.hasChanges)
+        }
+
         private struct Fixture {
             let container: ModelContainer
             let now: Date

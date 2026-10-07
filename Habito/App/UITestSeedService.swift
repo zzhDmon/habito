@@ -126,6 +126,9 @@
             try context.fetch(FetchDescriptor<TaskTemplate>()).forEach(context.delete)
             try context.fetch(FetchDescriptor<DayOverride>()).forEach(context.delete)
             try context.fetch(FetchDescriptor<AppSettings>()).forEach(context.delete)
+            // 新增资料同样属于隔离测试状态；正式库不调用此重置，跨进程恢复不传reset。
+            try context.fetch(FetchDescriptor<ChildProfile>()).forEach(context.delete)
+            try context.fetch(FetchDescriptor<Pet>()).forEach(context.delete)
             try context.save()
         }
     }
