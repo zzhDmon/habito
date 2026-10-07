@@ -125,8 +125,14 @@ struct HabitoApp: App {
             provider: notificationProvider
         )
         // 今日模型持有跨导航的单一仪式状态；回调捕获这个实例，不由执行页另建去重集合。
-        let todayModel = TodayViewModel(
-            context: container.mainContext, calendar: calendar, timeZone: timeZone, dateProvider: dateProvider)
+        #if DEBUG
+            let todayModel = UITestTodayViewModelFactory.make(
+                context: container.mainContext, calendar: calendar, timeZone: timeZone,
+                dateProvider: dateProvider, arguments: ProcessInfo.processInfo.arguments)
+        #else
+            let todayModel = TodayViewModel(
+                context: container.mainContext, calendar: calendar, timeZone: timeZone, dateProvider: dateProvider)
+        #endif
         _todayModel = State(initialValue: todayModel)
         _childRewardFeedbackModel = State(
             initialValue: ChildRewardFeedbackViewModel(

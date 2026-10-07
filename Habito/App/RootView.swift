@@ -75,7 +75,12 @@ struct RootView: View {
                 feedbackState: childRewardFeedbackModel.state,
                 acknowledgementFailed: childRewardFeedbackModel.acknowledgementFailed,
                 onContinueReceipt: childRewardFeedbackModel.acknowledge,
-                onRetryReceipt: childRewardFeedbackModel.load
+                onRetryReceipt: childRewardFeedbackModel.load,
+                celebrationEvent: todayModel.celebrationModel.event,
+                celebrationVerificationFailed: todayModel.celebrationVerificationFailed,
+                onClaimCelebration: todayModel.celebrationModel.claimAnimation,
+                onContinueCelebration: todayModel.celebrationModel.dismiss,
+                onRetryCelebration: todayModel.refreshCelebration
             )
             .toolbar {
                 #if DEBUG

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AB100000000000000000026C /* UITestTodayViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB200000000000000000026C /* UITestTodayViewModelFactory.swift */; };
+		AB100000000000000000026D /* UITestTodayViewModelFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB200000000000000000026D /* UITestTodayViewModelFactoryTests.swift */; };
 		AB1000000000000000000262 /* TodayCompletionCelebrationEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000262 /* TodayCompletionCelebrationEvent.swift */; };
 		AB1000000000000000000263 /* TodayCompletionCelebrationEventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000263 /* TodayCompletionCelebrationEventTests.swift */; };
 		AB1000000000000000000264 /* TodayCompletionCelebrationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000264 /* TodayCompletionCelebrationViewModel.swift */; };
@@ -555,6 +557,8 @@
 		AB2000000000000000000269 /* TodayCompletionVerificationErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayCompletionVerificationErrorView.swift; sourceTree = "<group>"; };
 		AB200000000000000000026A /* TodayCompletionCelebrationPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayCompletionCelebrationPreview.swift; sourceTree = "<group>"; };
 		AB200000000000000000026B /* TodayCompletionCelebrationRenderingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayCompletionCelebrationRenderingTests.swift; sourceTree = "<group>"; };
+		AB200000000000000000026C /* UITestTodayViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestTodayViewModelFactory.swift; sourceTree = "<group>"; };
+		AB200000000000000000026D /* UITestTodayViewModelFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestTodayViewModelFactoryTests.swift; sourceTree = "<group>"; };
 		AB2000000000000000000225 /* KidTodayCompletionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidTodayCompletionView.swift; sourceTree = "<group>"; };
 		AB2000000000000000000226 /* TodayCompletionSummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayCompletionSummaryTests.swift; sourceTree = "<group>"; };
 		AB2000000000000000000227 /* TodayCompletionRenderingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayCompletionRenderingTests.swift; sourceTree = "<group>"; };
@@ -1292,6 +1296,7 @@
 				AB2000000000000000000187 /* UITestRewardReceiptProbe.swift */,
 				AB2000000000000000000193 /* UITestChildReceiptServiceFactory.swift */,
 				AB2000000000000000000260 /* UITestFamilyProfileEditorFactory.swift */,
+				AB200000000000000000026C /* UITestTodayViewModelFactory.swift */,
 				AB2000000000000000000221 /* UITestStatisticsServiceFactory.swift */,
 				A20000000000000000000009 /* AppDelegate.swift */,
 				Z2000000000000000000000C /* UITestDateProvider.swift */,
@@ -1679,6 +1684,7 @@
 				AB2000000000000000000265 /* TodayCompletionCelebrationViewModelTests.swift */,
 				AB2000000000000000000266 /* TodayCompletionCelebrationIntegrationTests.swift */,
 				AB200000000000000000026B /* TodayCompletionCelebrationRenderingTests.swift */,
+				AB200000000000000000026D /* UITestTodayViewModelFactoryTests.swift */,
 				AB2000000000000000000261 /* FamilyProfileEditorRenderingTests.swift */,
 				AB2000000000000000000255 /* FamilyProfileEditorViewModelTests.swift */,
 				AB2000000000000000000226 /* TodayCompletionSummaryTests.swift */,
@@ -2097,6 +2103,7 @@
 				AB1000000000000000000258 /* FamilyProfileEditorSaveBar.swift in Sources */,
 				AB1000000000000000000259 /* FamilyProfileEditorFeedbackView.swift in Sources */,
 				AB1000000000000000000260 /* UITestFamilyProfileEditorFactory.swift in Sources */,
+				AB100000000000000000026C /* UITestTodayViewModelFactory.swift in Sources */,
 				AB1000000000000000000252 /* FamilyProfileEditorViewModel.swift in Sources */,
 				AB1000000000000000000253 /* FamilyProfileEditorLoadState.swift in Sources */,
 				AB1000000000000000000254 /* FamilyProfileEditorFeedback.swift in Sources */,
@@ -2475,6 +2482,7 @@
 				AB1000000000000000000265 /* TodayCompletionCelebrationViewModelTests.swift in Sources */,
 				AB1000000000000000000266 /* TodayCompletionCelebrationIntegrationTests.swift in Sources */,
 				AB100000000000000000026B /* TodayCompletionCelebrationRenderingTests.swift in Sources */,
+				AB100000000000000000026D /* UITestTodayViewModelFactoryTests.swift in Sources */,
 				AB1000000000000000000232 /* FamilyProfileNamesTests.swift in Sources */,
 				AB1000000000000000000261 /* FamilyProfileEditorRenderingTests.swift in Sources */,
 				AB1000000000000000000255 /* FamilyProfileEditorViewModelTests.swift in Sources */,

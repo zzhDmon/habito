@@ -614,3 +614,17 @@
 - release-final/analyze-final均exit0、日志0字节；严格格式/PBX1051无重复/diff通过；467资源原461逐键完整不变，新6manual/translated。swiftui-pro数据/UI/无障碍/卫生复核修正只读环境边界，正文无隐藏/缩字或固定高度、语义字体/ScaledMetric/装饰隐藏、Label内44pt，无其他范围内真实问题。
 - 证据根/tmp/habito-daily-components-002b3a-evidence.OpTnzpFA；View SHA256b63780a1048c20482997ae562d1fc43b624d60000cf96f161ef5c9a4c25a9cbe，Motionee3a7328c9aee38ab8941dea877bb413421fe15b9c240012e4eac80d581f1f24，错误View185279289dad6281decce483cecdae927f83cc223b86264985d1651dfcec2c80，Preview429b034b6075e2478583ec9c5917322c7faa032da91716b001788f4d04b8f663，测试e2855d6e9aeba032393367908f8d00442ee2ede9afb42844d5af7fa84792f9a8。
 - 21:32独立文档Reader五问及13文件/467资源计数通过，B3A DONE；54卡52DONE/2WAITING，未跑整套UI/MAX，组件不代表首页交付。下一精确本地提交，B3B实际接入/错误提示与普通/MAX专项，B3C集中完整门；今日限定/内存ASSUMPTION、参数/实机/家庭效果仍保留，无需用户现在处理。
+
+## 42. V1-M6-002B3B：首页接入及真实交互专项（卡级完成）
+
+- 21:58最终结论：软件门及独立文档Reader通过，B3B DONE、54卡53DONE/1WAITING。Reader发现两处陈旧当前状态，已明确下一步与历史时间戳并复读通过；准备精确本地提交，B3C集中完整门尚未开始。以下为过程及原生证据，总工作组进度仍3/7。
+
+- 21:54最终软件结论：两系related-final各56/56定义96执行；ui-{17,27}-ordinary及ui-{17,27}-max各4/4、exit0，零失败/跳过，17无运行警告，27仅R-009。真实MAX设置/读回后执行，结束两系恢复large并读回。覆盖非零/零奖励、完成数量与真实资产、关闭刷新重启不重播、审核收据独立、资格失败不影响原成功及重试/冷启动恢复，继续和重试按钮实际44pt通过。
+- Release/分析-final exit0空日志，严格格式/PBX1055/diff和467资源保持通过，swiftui-pro专项修复多View拆栏后最终源验证齐。XCTest导出PNG预览出现方向/裁切异常，原件保留；直接simctl采样为正常横屏，未以异常预览作产品裁切结论或完整视觉证明。真实交互依据原生UI断言，系统开关/VoiceOver操作仍待实机。
+- 当前13文件，软件源指纹沿21:40；B3B仍IN_PROGRESS待独立文档复核/本地提交，B3C完整阶段门尚未执行。以下为过程，原首包和最终包分别保留。
+
+- 前置07fbfa7；Root转交同一Today共享事件/claim/dismiss/retry，KidToday任务宿主读系统只读Reduce Motion，事件ID绑定视图身份。无事件保留静态完成结果，关闭仪式不确认审核收据、不写账。附加读取失败显示独立错误及重试，不称打卡失败。
+- DEBUG工厂故障要求UI隔离与故障双标志，持续到移除启动标志；四种标志组合固定真实完成事务单测，不修改正式服务/schema/奖励。新增四条实际UI测试：非零/零奖励关闭刷新重启、审核收据独立、资格失败重试及冷启动恢复；现有三处新完成结果锚点换成稳定印章ID，重启静态描述及金额/尺寸断言保留。
+- 证据根/tmp/habito-daily-home-002b3b-evidence.izrYnjrz；首两系related各56定义96执行、零失败/跳过/运行警告，构建/分析exit0。专项复核发现多子View可能被外层HStack拆成额外栏位，显式VStack修正并补横屏/失败MAX预览；修订后related-final与构建/分析-final运行，不能复用首包为最终源成功。真实UI普通/MAX尚未跑，完整门B3C等待。
+- 计划13文件：App/Root/两个今日View、DEBUG工厂及测试/PBX/现有UI测试、五文档；原467资源不改。系统开关、VoiceOver、iPad/家庭效果与后置参数均不代验，用户现在无需处理。
+- 21:40最终related-{17,27}-final各56/56定义96执行、零失败/跳过/运行警告、exit0；资格22/状态16/接线14/组件3/探针1，新增探针1定义四组合。Release/分析-final均exit0空日志；严格格式/PBX1055无重复/diff通过，467资源与HEAD完全一致。最终源指纹见看板21:40；两系真实large读回，普通四UI运行中、MAX未开始，尚未放行。首包与最终包均保留，不拼为完整阶段门。

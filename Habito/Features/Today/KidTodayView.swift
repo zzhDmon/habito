@@ -12,6 +12,11 @@ struct KidTodayView: View {
     var acknowledgementFailed = false
     var onContinueReceipt: (UUID) -> Void = { _ in }
     var onRetryReceipt: () -> Void = {}
+    var celebrationEvent: TodayCompletionCelebrationEvent?
+    var celebrationVerificationFailed = false
+    var onClaimCelebration: (UUID) -> Bool = { _ in false }
+    var onContinueCelebration: (UUID) -> Void = { _ in }
+    var onRetryCelebration: () -> Void = {}
 
     var body: some View {
         AdaptiveTwoColumnLayout {
@@ -29,7 +34,11 @@ struct KidTodayView: View {
         } trailing: {
             KidTodayTaskContent(
                 state: state, makeTimingPresentation: makeTimingPresentation,
-                onSelectTask: onSelectTask, onRetry: onRetry)
+                onSelectTask: onSelectTask, onRetry: onRetry,
+                celebrationEvent: celebrationEvent,
+                celebrationVerificationFailed: celebrationVerificationFailed,
+                onClaimCelebration: onClaimCelebration, onContinueCelebration: onContinueCelebration,
+                onRetryCelebration: onRetryCelebration)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .accessibilityIdentifier(HabitoAccessibilityID.todayScreen)
