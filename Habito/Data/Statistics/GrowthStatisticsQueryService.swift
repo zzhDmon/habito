@@ -34,12 +34,30 @@ struct GrowthStatisticsQueryService {
         let end = try LocalDate(date: now, calendar: calendar, timeZone: timeZone)
         let dates = try calculator.dates(endingOn: end, period: period)
         guard let start = dates.first else { throw GrowthStatisticsError.invalidWindowEnd(end) }
+        let facts = try facts(from: start, through: end, at: now)
+        return try calculator.snapshot(facts: facts, endingOn: end, period: period)
+    }
+
+    /// 今日概况只验证今天的实例，不让窗口外的坏历史阻断当天管理。
+    ///
+    /// - Parameter now: 组合根注入时钟的当前时刻。
+    /// - Returns: 当日本地日期与有效完成、待验收、自主性和来源计数。
+    /// - Throws: 与窗口查询相同的未保存编辑、非法时间或当日事实校验错误。
+    func today(at now: Date) throws -> GrowthStatisticsDay {
+        guard !context.hasChanges else { throw GrowthStatisticsQueryError.pendingContextChanges }
+        guard now.timeIntervalSinceReferenceDate.isFinite else { throw GrowthStatisticsQueryError.invalidTimestamp }
+        let date = try LocalDate(date: now, calendar: calendar, timeZone: timeZone)
+        let facts = try facts(from: date, through: date, at: now)
+        // 继续由计算器验证事实重复及矛盾；不在页面状态另造一套分母规则。
+        return try calculator.day(facts: facts, on: date)
+    }
+
+    private func facts(from start: LocalDate, through end: LocalDate, at now: Date) throws -> [GrowthStatisticsFact] {
         let startKey = start.dateKey
         let endKey = end.dateKey
         let occurrences = try context.fetch(
             FetchDescriptor<TaskOccurrence>(predicate: #Predicate { $0.dateKey >= startKey && $0.dateKey <= endKey }))
-        let facts = try occurrences.map { try fact(for: $0, at: now) }
-        return try calculator.snapshot(facts: facts, endingOn: end, period: period)
+        return try occurrences.map { try fact(for: $0, at: now) }
     }
 
     private func fact(for occurrence: TaskOccurrence, at now: Date) throws -> GrowthStatisticsFact {

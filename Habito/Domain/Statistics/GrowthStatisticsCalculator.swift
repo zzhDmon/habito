@@ -62,6 +62,16 @@ nonisolated struct GrowthStatisticsCalculator {
             days: days(for: selected, dates: dates), tasks: tasks)
     }
 
+    /// 单日概况复用同一事实校验，不为“今日”强行构造多日窗口。
+    ///
+    /// - Returns: 指定日期的计数；无实例保持无分母。
+    /// - Throws: 当日重复ID/模板日期或矛盾事实。
+    func day(facts: [GrowthStatisticsFact], on date: LocalDate) throws -> GrowthStatisticsDay {
+        let selected = facts.filter { $0.date == date }
+        try validate(selected)
+        return GrowthStatisticsDay(date: date, counts: GrowthStatisticsCounts(facts: selected))
+    }
+
     private func days(for facts: [GrowthStatisticsFact], dates: [LocalDate]) -> [GrowthStatisticsDay] {
         let grouped = Dictionary(grouping: facts, by: \.date)
         return dates.map { GrowthStatisticsDay(date: $0, counts: GrowthStatisticsCounts(facts: grouped[$0] ?? [])) }
