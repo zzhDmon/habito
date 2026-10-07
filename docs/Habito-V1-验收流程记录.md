@@ -446,3 +446,21 @@
 - 家长和统计使用窄严格审计读取，孩子默认任务查询保留原坏账隔离；新增保存timing DTO不由当前提醒/来源推断。仅Debug并同时有隔离UI旗标/失败旗标才注入一次fetch失败，下一次真实读库；不损坏数据库或正式路径。
 - /tmp/habito-stat-c1a-evidence.R0S90l/related-{17,27}-fixed各95/95（159次），新增10/33，零失败/跳过/运行警告，7.009/6.169秒；Release/Debug分析exit0，格式/PBX/ID/diff通过。原406资源逐键hash保持，新32键manual/translated，总438。首相关93/94仅新测试对旧审核审计边界假设错误，外部可变捕获警告已改为闭包内固定读序列；原包保留，不忽略编译/严格并发警告。
 - 初版首轮large UI两系各1/3：非自主完成通过；17另两项崩溃在XCT自动化属性读取/runtime日志回调（IPS保留），27失败原生层级证明error ID覆盖retry、展开AX仅20.5pt；不是数据事务单测失败，仍不能放行。修复容器contain、显式44pt展开Button、刷新移入原生滚动列表、家长页contain与滚动边缘/无效坐标防护，保留业务和44pt断言。真实MAX尚未执行；完整54UI及阶段全单测仍C1B。
+
+## 30. V1-M5-001C1B：统计与收据完整阶段回归（阶段验收完成）
+
+- **2026-10-07 14:06：C1B DONE，C1汇总DONE。** 最终生产/测试源02876e2未变；两系完整单测各535/535定义（1055次）、零失败/跳过/运行警告，分别unit-17-exclusive-final和unit-27-final。证据根/tmp/habito-stat-c1b-evidence.GWM1Vz。
+- 普通横屏：27 ui-27-full-final整包54/54；17 ui-17-full-exclusive-final原53/54，唯一多收据AX快照失联由同源ui-17-multiple-same-source-retry 1/1补验，54方法均有成功证据，不改写原失败。原IPS/包保留，未修改业务源码或弱化测试；该多收据场景本阶段MAX也通过。
+- 真MAX：max-{17,27}-remaining-final各22/22、零失败/跳过；与C1A最终同源ui-{17,27}-max-glyph-final各3/3合成25路径门，不拼早源。17零运行警告；27 MAX22和普通54每条提示均仅已登记R-009。确认exit0与原生终态后两系恢复large并实际读回。
+- Release/Debug分析复用同生产源C1A release-glyph-final/analyze-glyph-final exit0、无编译/严格并发警告；本阶段严格格式/PBX解析/diff再次通过。资源440键、原406hash保持；无新schema/奖励/参数或真实库迁移。41已拆卡完成不等于整个PRD只剩设备，后续候选尚需拆卡。
+- 以下13:22及更早为过程快照；排程signal kill/取消包与原UI失联不属于有效成功门。实机VoiceOver/通知送达、系统Reduce Motion现场、家庭积极性效果及宠物参数继续另列。
+- 独立只读Reader六问通过，最终同源/17原包与补验/25MAX/41卡及后置边界均理解正确，无实质矛盾；文档检查不作为软件测试。
+
+- 13:22：27 ui-27-full-final完整54/54，零失败/跳过，54条提示逐条只有已登记R-009；17普通54路径原53+同源补验1均有成功证据，原失败包保留。两系535/1055全单测仍同源有效。确认27终态及退出后实际MAX设置/读回，max-{17,27}-remaining-final各22项正运行；C1A同源统计3MAX并入25门，不重复。源码仍02876e2，未执行MAX终态放行或正式数据迁移。
+- 13:16最新：ui-17-multiple-same-source-retry 1/1，零失败/跳过/运行警告；源码未改，17普通54方法以原包53通过+唯一同源补验通过覆盖，原53/54失败包保留，不声称原整包全绿。终态校验passed/failed/skipped/运行警告及退出后才设置/读回真实MAX，max-17-remaining-final剩余22项已启动。27完整54UI尚未终态，MAX尚未开始，阶段仍IN_PROGRESS；任何重复快照故障继续原生留证，不关闭检查或弱化44pt。
+- 13:11：17完整ui-17-full-exclusive-final为53/54、零跳过/运行警告，唯一testMultipleFormalApprovedReceiptsContinueIndividuallyWithoutDoubleRewardsWithSystemTextSize失去App连接。附件IPS 9D909025-B9FA-4085-ABB9-442F8FCA399B在strcmp/runtime_issue_os_log_fault_callback/__LIBTRACE_CLIENT_QUARANTINED_DUE_TO_HIGH_LOGGING_VOLUME__/XCTAccessibilitySnapshot，末活动为编辑表单滚动与AX读取，无奖励保存栈；不推断业务断言成功。原包保留、生产/测试源未变，独占ui-17-multiple-same-source-retry只补该场景，若复现再按证据修窄查询。27整包仍运行，22剩余MAX均尚未开始，阶段未放行。
+- 12:28补充内容复核：C1A最终17原生附件“普通完成来源与自主性明确分离”可读到来源“孩子自行确认”、保存语义“非自主完成（提醒时刻或之后提交）”及自主0/1，修正后的来源图标实际可见。该XCT截图存在方向/黑边异常，只证明内容，不当作横屏布局或44pt证据；实际AX/完整可见/44pt由已通过专项及本阶段完整门证明。生产/测试源不变。
+- 12:20有效终态：unit-17-exclusive-final与unit-27-final完整各535/535（1055次）、零失败/跳过/运行警告，最终生产/测试源仍02876e2。17明确exit0及原生终态后重新启动ui-17-full-exclusive-final，与27 ui-27-full-final均跑54完整普通横屏UI；22剩余MAX未开始。原取消包及signal kill失败包保留，不混进通过门。
+- 12:19：27 unit-27-final完整535/535（1055次）通过，零失败/跳过/运行警告，完整54UI运行中。17单测未结束误启动同设备UI，unit-17-final为534/535，唯一失败为“Test crashed with signal kill”，不当作业务断言或有效通过；ui-17-full-final精确终止exit143，原包保留。没有改生产/测试源，设备确认无Habito运行服务，独占重跑17完整单测，确认exit0及终态后才重新启动完整UI。
+- 2026-10-07 12:18：C1A已提交02876e2，唯一C1B IN_PROGRESS；开始前工作区干净，两系large读回。证据根/tmp/habito-stat-c1b-evidence.GWM1Vz；冻结最终生产及测试源，完整单测/54普通横屏UI/25相关MAX阶段门尚未运行齐全。
+- 按DEC-030承接B1/B2延期门，不重复C1A最终同源统计3MAX，另外22相关MAX仍需运行；同设备单测/UI/字号调整串行，任何代码变化按影响重验。资源/构建分析已有同源证据但不替代完整门；不以模拟器替代iPad/家庭观察、不代选后置参数，不push或迁移正式库。
