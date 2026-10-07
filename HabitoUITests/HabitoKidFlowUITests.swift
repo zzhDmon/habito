@@ -37,6 +37,164 @@ final class HabitoKidFlowUITests: XCTestCase {
         }
     }
 
+    func testChildReceiptFailedContinuePreservesFeedbackAndCanRetryAcrossRelaunchWithSystemTextSize() throws {
+        let app = submitSeededTaskForReview(extraArguments: ["--habito-ui-receipt-save-fail"])
+        unlockParent(in: app)
+        openParentReview(in: app)
+        let approve = reviewAction("approve", in: app)
+        scrollFullyIntoReviewViewport(approve, in: app)
+        let autonomous = app.staticTexts["在提醒前主动提交"].exists
+        approve.tap()
+        XCTAssertTrue(app.staticTexts["已确认通过"].waitForExistence(timeout: 5))
+        navigateBack(in: app, from: "待验收")
+        app.buttons["parent.gate.close"].tap()
+        assertChildReceipt(zero: false, autonomous: autonomous, in: app)
+        continueChildReceipt(in: app)
+        let failure = app.staticTexts["kid.today.receipt.error"]
+        scrollFullyIntoTodayViewport(failure, in: app, towardTop: true)
+        XCTAssertEqual(failure.label, "还没记住这次查看。收获不会少，再点一次继续。")
+        XCTAssertTrue(app.staticTexts["kid.today.receipt.approved"].exists)
+        assertTodayRewards(xp: 11, coins: autonomous ? 10 : 7, in: app)
+        keepScreenshot(app, name: "收据确认失败保留真实到账")
+        relaunchTodayKeepingData(app)
+        assertChildReceipt(zero: false, autonomous: autonomous, in: app)
+        continueChildReceipt(in: app)
+        relaunchTodayKeepingData(app)
+        XCTAssertFalse(app.staticTexts["kid.today.receipt.approved"].exists)
+        assertTodayRewards(xp: 11, coins: autonomous ? 10 : 7, in: app)
+    }
+
+    func testCrossDayApprovedReceiptUsesOriginalSubmissionTimingAndAcknowledgesOnceWithSystemTextSize() throws {
+        let app = submitSeededTaskForReview()
+        unlockParent(in: app)
+        openParentReview(in: app)
+        let approve = reviewAction("approve", in: app)
+        scrollFullyIntoReviewViewport(approve, in: app)
+        let autonomous = app.staticTexts["在提醒前主动提交"].exists
+        approve.tap()
+        XCTAssertTrue(app.staticTexts["已确认通过"].waitForExistence(timeout: 5))
+        app.terminate()
+        let reference = try XCTUnwrap(Double(app.launchEnvironment["HABITO_UI_SYSTEM_REFERENCE"] ?? ""))
+        app.launchEnvironment["HABITO_UI_SYSTEM_REFERENCE"] = String(reference - 2 * 86400)
+        app.launchArguments = ["--habito-ui-testing"]
+        app.launch()
+        assertChildReceipt(zero: false, autonomous: autonomous, in: app)
+        keepScreenshot(app, name: "两日后仍读取原审核收据")
+        relaunchTodayKeepingData(app)
+        assertChildReceipt(zero: false, autonomous: autonomous, in: app)
+        continueChildReceipt(in: app)
+        relaunchTodayKeepingData(app)
+        XCTAssertFalse(app.staticTexts["kid.today.receipt.approved"].exists)
+        assertTodayRewards(xp: 11, coins: autonomous ? 10 : 7, in: app)
+    }
+
+    /// 沿真实首页滚动逐一核对读屏金额；MAX 不以截图、裁剪边缘或过期 AX 代替点击验收。
+    private func assertChildReceipt(zero: Bool, autonomous: Bool, in app: XCUIApplication) {
+        let title = app.staticTexts["kid.today.receipt.approved"]
+        scrollFullyIntoTodayViewport(title, in: app, towardTop: true)
+        XCTAssertEqual(title.label, "家长确认啦！")
+        let task = app.staticTexts["kid.today.receipt.task-title"]
+        scrollFullyIntoTodayViewport(task, in: app)
+        XCTAssertFalse(task.label.isEmpty)
+        let celebration = app.staticTexts["kid.session.celebration-title"]
+        scrollFullyIntoTodayViewport(celebration, in: app)
+        XCTAssertEqual(celebration.label, "你做到了！")
+        if autonomous {
+            let badge = app.descendants(matching: .any)["kid.session.autonomy-celebration"]
+            scrollFullyIntoTodayViewport(badge, in: app)
+            XCTAssertEqual(badge.label, "你自己记得做啦！")
+        } else {
+            XCTAssertFalse(app.descendants(matching: .any)["kid.session.autonomy-celebration"].exists)
+        }
+        if zero {
+            let effort = app.staticTexts["kid.session.completion-effort"]
+            scrollFullyIntoTodayViewport(effort, in: app)
+            XCTAssertEqual(effort.label, "这份努力已经记下啦。")
+            XCTAssertFalse(app.descendants(matching: .any)["kid.session.reward-xp"].exists)
+            XCTAssertFalse(app.descendants(matching: .any)["kid.session.reward-coins"].exists)
+        } else {
+            let xp = app.descendants(matching: .any)["kid.session.reward-xp"]
+            let coins = app.descendants(matching: .any)["kid.session.reward-coins"]
+            scrollFullyIntoTodayViewport(xp, in: app)
+            XCTAssertEqual(xp.label, "+11 XP 已到账")
+            scrollFullyIntoTodayViewport(coins, in: app)
+            XCTAssertEqual(coins.label, autonomous ? "+10 金币已到账" : "+7 金币已到账")
+        }
+    }
+
+    private func continueChildReceipt(in app: XCUIApplication) {
+        let button = app.buttons["kid.session.dismiss-completion-feedback"]
+        scrollFullyIntoTodayViewport(button, in: app)
+        XCTAssertGreaterThanOrEqual(button.frame.width, 44)
+        XCTAssertGreaterThanOrEqual(button.frame.height, 44)
+        button.tap()
+    }
+
+    func testMultipleFormalApprovedReceiptsContinueIndividuallyWithoutDoubleRewardsWithSystemTextSize() throws {
+        let titles = ["逐条成长收据", "逐条努力收据"]
+        let app = launchEmptyParentEditor(title: titles[0])
+        chooseEditorOption("家长验收", identifier: "parent.templates.editor.verification", in: app)
+        setRewardText("11", identifier: "parent.templates.editor.xp", in: app)
+        setRewardText("7", identifier: "parent.templates.editor.base-coins", in: app)
+        setRewardText("3", identifier: "parent.templates.editor.autonomy-coins", in: app)
+        tapEditorSave(in: app)
+        app.buttons["parent.templates.create"].tap()
+        let title = app.textFields["parent.templates.editor.title"]
+        XCTAssertTrue(title.waitForExistence(timeout: 5))
+        title.tap()
+        title.typeText(titles[1])
+        chooseEditorOption("家长验收", identifier: "parent.templates.editor.verification", in: app)
+        setRewardText("0", identifier: "parent.templates.editor.xp", in: app)
+        setRewardText("0", identifier: "parent.templates.editor.base-coins", in: app)
+        setRewardText("0", identifier: "parent.templates.editor.autonomy-coins", in: app)
+        tapEditorSave(in: app)
+        app.buttons["parent.gate.close"].tap()
+        for name in titles {
+            let task = todayTask(named: name, in: app)
+            scrollFullyIntoTodayViewport(task, in: app)
+            task.tap()
+            let submit = app.buttons["kid.session.submit"]
+            scrollFullyIntoSessionViewport(submit, in: app)
+            submit.tap()
+            assertWaitingWithoutOldActions(in: app)
+            returnToTodayFromTask(in: app)
+        }
+        XCTAssertFalse(app.staticTexts["kid.today.receipt.approved"].exists)
+        unlockExistingParent(in: app)
+        openParentReview(in: app)
+        var approvedRequestIDs: Set<String> = []
+        // 大字懒加载仅公开已物化节点；核对两个不同稳定请求和最终空队列，不把AX数量当业务总数。
+        for _ in 0..<2 {
+            let actions = reviewActions("approve", in: app)
+            let requestID = actions.element(boundBy: 0).identifier
+            let approve = app.buttons[requestID]
+            scrollFullyIntoReviewViewport(approve, in: app)
+            XCTAssertTrue(approvedRequestIDs.insert(requestID).inserted, "每次必须审核不同的真实提交")
+            approve.tap()
+            let dismiss = app.buttons["parent.review.dismiss-feedback"]
+            scrollFullyIntoReviewViewport(dismiss, in: app, towardTop: true)
+            dismiss.tap()
+            XCTAssertFalse(app.buttons[requestID].exists)
+        }
+        XCTAssertEqual(approvedRequestIDs.count, 2)
+        XCTAssertTrue(app.staticTexts["没有待验收任务"].waitForExistence(timeout: 5))
+        navigateBack(in: app, from: "待验收")
+        app.buttons["parent.gate.close"].tap()
+        var readTitles: Set<String> = []
+        for _ in 0..<2 {
+            let name = app.staticTexts["kid.today.receipt.task-title"]
+            scrollFullyIntoTodayViewport(name, in: app, towardTop: true)
+            XCTAssertTrue(readTitles.insert(name.label).inserted, "每次继续应是不同的真实收据")
+            assertChildReceipt(zero: name.label == titles[1], autonomous: true, in: app)
+            continueChildReceipt(in: app)
+        }
+        XCTAssertEqual(readTitles, Set(titles))
+        relaunchTodayKeepingData(app)
+        XCTAssertFalse(app.staticTexts["kid.today.receipt.approved"].exists)
+        assertTodayRewards(xp: 11, coins: 10, in: app)
+        keepScreenshot(app, name: "两条正式收据确认后重启不补奖")
+    }
+
     func testFormalTimePeriodGroupsKeepRecommendationUniqueAndTasksReachableWithSystemTextSize() throws {
         let app = launchEmptyParentEditor(title: "分组推荐锚点")
         tapEditorSave(in: app)
@@ -1150,6 +1308,15 @@ final class HabitoKidFlowUITests: XCTestCase {
         // 继续同一空库环境但不 reset，避免 Debug 默认播种再加入一条待完成任务。
         app.launchArguments = ["--habito-ui-testing", "--habito-ui-empty"]
         app.launch()
+        assertChildReceipt(zero: zeroReward, autonomous: true, in: app)
+        XCTAssertEqual(app.staticTexts["kid.today.receipt.task-title"].label, name)
+        keepScreenshot(app, name: zeroReward ? "正式零奖励儿童收据" : "正式自主儿童收据")
+        relaunchTodayKeepingData(app)
+        assertChildReceipt(zero: zeroReward, autonomous: true, in: app)
+        continueChildReceipt(in: app)
+        relaunchTodayKeepingData(app)
+        XCTAssertFalse(app.staticTexts["kid.today.receipt.approved"].exists)
+        assertTodayRewards(xp: zeroReward ? 0 : 11, coins: zeroReward ? 0 : 10, in: app)
         XCTAssertTrue(app.staticTexts["今天的任务都完成了。"].waitForExistence(timeout: 5))
         XCTAssertFalse(app.buttons[taskID].exists)
         unlockExistingParent(in: app)
@@ -1627,18 +1794,25 @@ final class HabitoKidFlowUITests: XCTestCase {
         let app = launchScenario(zeroReward ? "zero-reward-parent-approval" : "parent-approval")
         assertTodayRewards(xp: 0, coins: 0, in: app)
         openSeededTask(in: app)
-        app.buttons["kid.session.start"].tap()
+        let start = app.buttons["kid.session.start"]
+        scrollFullyIntoSessionViewport(start, in: app)
+        start.tap()
         let pause = app.buttons["kid.session.pause"]
         XCTAssertTrue(pause.waitForExistence(timeout: 5))
+        scrollFullyIntoSessionViewport(pause, in: app)
         pause.tap()
-        app.buttons["kid.session.submit"].tap()
+        let submit = app.buttons["kid.session.submit"]
+        scrollFullyIntoSessionViewport(submit, in: app)
+        submit.tap()
         assertWaitingWithoutOldActions(in: app)
         returnToTodayFromTask(in: app)
         assertTodayRewards(xp: 0, coins: 0, in: app)
         unlockParent(in: app)
         openParentReview(in: app)
         let firstRequestID = reviewAction("approve", in: app).identifier
-        reviewAction("return", in: app).tap()
+        let returnAction = reviewAction("return", in: app)
+        scrollFullyIntoReviewViewport(returnAction, in: app)
+        returnAction.tap()
         XCTAssertTrue(app.staticTexts["已请孩子再完善"].waitForExistence(timeout: 5))
         XCTAssertFalse(app.staticTexts["parent.review.reward-xp"].exists)
         XCTAssertFalse(app.staticTexts["parent.review.reward-coins"].exists)
@@ -1652,12 +1826,16 @@ final class HabitoKidFlowUITests: XCTestCase {
         XCTAssertTrue(task.waitForExistence(timeout: 5))
         XCTAssertTrue(task.label.contains("再完善一下"))
         XCTAssertFalse(app.buttons["parent.review.open"].exists)
+        scrollFullyIntoTodayViewport(task, in: app)
         task.tap()
         XCTAssertTrue(app.buttons["kid.session.start"].waitForExistence(timeout: 5))
-        app.buttons["kid.session.start"].tap()
+        scrollFullyIntoSessionViewport(start, in: app)
+        start.tap()
         XCTAssertTrue(pause.waitForExistence(timeout: 5))
+        scrollFullyIntoSessionViewport(pause, in: app)
         pause.tap()
-        app.buttons["kid.session.submit"].tap()
+        scrollFullyIntoSessionViewport(submit, in: app)
+        submit.tap()
         assertWaitingWithoutOldActions(in: app)
         returnToTodayFromTask(in: app)
         assertTodayRewards(xp: 0, coins: 0, in: app)
@@ -1665,6 +1843,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         openParentReview(in: app)
         let secondRequest = reviewAction("approve", in: app)
         XCTAssertNotEqual(secondRequest.identifier, firstRequestID, "重提必须审核新 ID，不能重用退回请求")
+        scrollFullyIntoReviewViewport(secondRequest, in: app)
         // UI 操作可能跨过真实 60 秒提醒；结算需跟随第二次提交快照，不能硬假设仍自主。
         let secondWasAutonomous = app.staticTexts["在提醒前主动提交"].exists
         if !secondWasAutonomous { XCTAssertTrue(app.staticTexts["提交时已到提醒时间"].exists) }
@@ -1683,6 +1862,9 @@ final class HabitoKidFlowUITests: XCTestCase {
         keepScreenshot(app, name: zeroReward ? "零奖励两轮真实审核完成" : "计时退回重提真实审核完成")
         navigateBack(in: app, from: "待验收")
         app.buttons["parent.gate.close"].tap()
+        assertTodayRewards(xp: zeroReward ? 0 : 11, coins: zeroReward ? 0 : (secondWasAutonomous ? 10 : 7), in: app)
+        assertChildReceipt(zero: zeroReward, autonomous: secondWasAutonomous, in: app)
+        continueChildReceipt(in: app)
         assertTodayRewards(xp: zeroReward ? 0 : 11, coins: zeroReward ? 0 : (secondWasAutonomous ? 10 : 7), in: app)
         XCTAssertTrue(app.staticTexts["今天的任务都完成了。"].waitForExistence(timeout: 5))
 
@@ -1784,14 +1966,21 @@ final class HabitoKidFlowUITests: XCTestCase {
     }
 
     /// 大字长字段会被整屏 swipe 越过；按实际窗口中心小幅拖动，仍要求内容完整可见。
-    private func scrollFullyIntoReviewViewport(_ element: XCUIElement, in app: XCUIApplication) {
-        XCTAssertTrue(element.waitForExistence(timeout: 5))
+    private func scrollFullyIntoReviewViewport(
+        _ element: XCUIElement, in app: XCUIApplication, towardTop: Bool = false
+    ) {
         let viewport = app.scrollViews["parent.review.screen"]
         XCTAssertTrue(viewport.exists)
-        for _ in 0..<10 {
-            if element.isHittable, viewport.frame.contains(element.frame) { return }
-            let distance = (element.frame.midY - viewport.frame.midY) / viewport.frame.height
-            let displacement = min(max(abs(distance), 0.08), 0.25) * (distance < 0 ? 1.0 : -1.0)
+        for _ in 0..<25 {
+            let displacement: Double
+            if element.exists {
+                if element.isHittable, viewport.frame.contains(element.frame) { return }
+                let distance = (element.frame.midY - viewport.frame.midY) / viewport.frame.height
+                displacement = min(max(abs(distance), 0.08), 0.25) * (distance < 0 ? 1.0 : -1.0)
+            } else {
+                // 批准后仍停留在列表底部；顶部反馈尚未懒加载，先滚动寻找，再核对完整点击区域。
+                displacement = towardTop ? 0.25 : -0.25
+            }
             let start = viewport.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
             let end = viewport.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5 + displacement))
             start.press(forDuration: 0.1, thenDragTo: end)

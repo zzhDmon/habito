@@ -1,6 +1,26 @@
 {
   "sourceLanguage" : "zh-Hans",
   "strings" : {
+    "childReceipt.approved" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "家长确认啦！" } } }
+    },
+    "childReceipt.loadError" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "完成收据暂时没读到" } } }
+    },
+    "childReceipt.loadErrorHint" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "你可以继续做任务，也可以再读一次。" } } }
+    },
+    "childReceipt.retry" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "再读一次" } } }
+    },
+    "childReceipt.acknowledgementError" : {
+      "extractionState" : "manual",
+      "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "还没记住这次查看。收获不会少，再点一次继续。" } } }
+    },
     "taskEditor.setPlannedTime" : {
       "extractionState" : "manual",
       "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "设置计划时间" } } }

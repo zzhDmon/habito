@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AB1000000000000000000193 /* UITestChildReceiptServiceFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000193 /* UITestChildReceiptServiceFactory.swift */; };
+		AB1000000000000000000188 /* ChildRewardFeedbackState.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000188 /* ChildRewardFeedbackState.swift */; };
+		AB1000000000000000000189 /* ChildRewardFeedbackViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000189 /* ChildRewardFeedbackViewModel.swift */; };
+		AB1000000000000000000190 /* ChildRewardFeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000190 /* ChildRewardFeedbackView.swift */; };
+		AB1000000000000000000191 /* ChildRewardFeedbackViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000191 /* ChildRewardFeedbackViewModelTests.swift */; };
+		AB1000000000000000000192 /* ChildRewardFeedbackRenderingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000192 /* ChildRewardFeedbackRenderingTests.swift */; };
 		AB1000000000000000000187 /* UITestRewardReceiptProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000187 /* UITestRewardReceiptProbe.swift */; };
 		AB1000000000000000000183 /* ChildRewardReceipt.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000183 /* ChildRewardReceipt.swift */; };
 		AB1000000000000000000184 /* ChildRewardReceiptError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000184 /* ChildRewardReceiptError.swift */; };
@@ -426,6 +432,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AB2000000000000000000193 /* UITestChildReceiptServiceFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestChildReceiptServiceFactory.swift; sourceTree = "<group>"; };
+		AB2000000000000000000188 /* ChildRewardFeedbackState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildRewardFeedbackState.swift; sourceTree = "<group>"; };
+		AB2000000000000000000189 /* ChildRewardFeedbackViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildRewardFeedbackViewModel.swift; sourceTree = "<group>"; };
+		AB2000000000000000000190 /* ChildRewardFeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildRewardFeedbackView.swift; sourceTree = "<group>"; };
+		AB2000000000000000000191 /* ChildRewardFeedbackViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildRewardFeedbackViewModelTests.swift; sourceTree = "<group>"; };
+		AB2000000000000000000192 /* ChildRewardFeedbackRenderingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildRewardFeedbackRenderingTests.swift; sourceTree = "<group>"; };
 		AB2000000000000000000187 /* UITestRewardReceiptProbe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestRewardReceiptProbe.swift; sourceTree = "<group>"; };
 		AB2000000000000000000183 /* ChildRewardReceipt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildRewardReceipt.swift; sourceTree = "<group>"; };
 		AB2000000000000000000184 /* ChildRewardReceiptError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildRewardReceiptError.swift; sourceTree = "<group>"; };
@@ -1031,6 +1043,7 @@
 			isa = PBXGroup;
 			children = (
 				AB2000000000000000000187 /* UITestRewardReceiptProbe.swift */,
+				AB2000000000000000000193 /* UITestChildReceiptServiceFactory.swift */,
 				A20000000000000000000009 /* AppDelegate.swift */,
 				Z2000000000000000000000C /* UITestDateProvider.swift */,
 				A20000000000000000000001 /* HabitoApp.swift */,
@@ -1361,6 +1374,9 @@
 		I50000000000000000000005 /* Today */ = {
 			isa = PBXGroup;
 			children = (
+				AB2000000000000000000188 /* ChildRewardFeedbackState.swift */,
+				AB2000000000000000000189 /* ChildRewardFeedbackViewModel.swift */,
+				AB2000000000000000000190 /* ChildRewardFeedbackView.swift */,
 				I20000000000000000000004 /* KidRoute.swift */,
 				I20000000000000000000005 /* KidTaskCard.swift */,
 				K20000000000000000000006 /* KidTaskListRow.swift */,
@@ -1391,6 +1407,8 @@
 		J50000000000000000000001 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				AB2000000000000000000191 /* ChildRewardFeedbackViewModelTests.swift */,
+				AB2000000000000000000192 /* ChildRewardFeedbackRenderingTests.swift */,
 				L20000000000000000000001 /* FixedDateProvider.swift */,
 				Y2000000000000000000000A /* NotificationPermissionServiceTests.swift */,
 				Y20000000000000000000020 /* NotificationRebuildServiceTests.swift */,
@@ -1761,6 +1779,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				AB1000000000000000000187 /* UITestRewardReceiptProbe.swift in Sources */,
+				AB1000000000000000000193 /* UITestChildReceiptServiceFactory.swift in Sources */,
+				AB1000000000000000000188 /* ChildRewardFeedbackState.swift in Sources */,
+				AB1000000000000000000189 /* ChildRewardFeedbackViewModel.swift in Sources */,
+				AB1000000000000000000190 /* ChildRewardFeedbackView.swift in Sources */,
 				AB1000000000000000000183 /* ChildRewardReceipt.swift in Sources */,
 				AB1000000000000000000184 /* ChildRewardReceiptError.swift in Sources */,
 				AB1000000000000000000185 /* ChildRewardReceiptService.swift in Sources */,
@@ -2093,6 +2115,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				AB1000000000000000000186 /* ChildRewardReceiptServiceTests.swift in Sources */,
+				AB1000000000000000000191 /* ChildRewardFeedbackViewModelTests.swift in Sources */,
+				AB1000000000000000000192 /* ChildRewardFeedbackRenderingTests.swift in Sources */,
 				AB1000000000000000000181 /* V5MigrationFixture.swift in Sources */,
 				AB1000000000000000000182 /* ChildFeedbackDeliveryMigrationTests.swift in Sources */,
 				A10000000000000000000006 /* AppModelContainerTests.swift in Sources */,

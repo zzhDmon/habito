@@ -8,10 +8,17 @@ struct KidTodayView: View {
     let onSelectTask: (KidTaskNavigationItem) -> Void
     let onRetry: () -> Void
     let onRetryRewards: () -> Void
+    var feedbackState: ChildRewardFeedbackState = .idle
+    var acknowledgementFailed = false
+    var onContinueReceipt: (UUID) -> Void = { _ in }
+    var onRetryReceipt: () -> Void = {}
 
     var body: some View {
         AdaptiveTwoColumnLayout {
             VStack(alignment: .leading, spacing: HabitoDesign.Spacing.large) {
+                ChildRewardFeedbackView(
+                    state: feedbackState, acknowledgementFailed: acknowledgementFailed,
+                    onContinue: onContinueReceipt, onRetry: onRetryReceipt)
                 KidTodayGreetingPanel()
                 KidTodayRewardOverview(state: rewardState, onRetry: onRetryRewards)
                 if case let .loaded(content) = state, content.totalCount > 0 {

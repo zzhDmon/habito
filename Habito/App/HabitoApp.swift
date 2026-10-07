@@ -17,6 +17,7 @@ struct HabitoApp: App {
     private let taskTemplateEditorModelFactory: TaskTemplateEditorViewModelFactory
     @State private var notificationRebuildTrigger: NotificationRebuildTrigger
     @State private var todayModel: TodayViewModel
+    @State private var childRewardFeedbackModel: ChildRewardFeedbackViewModel
     @State private var parentGateModel: ParentGateViewModel
     @State private var parentTaskTemplatesModel: ParentTaskTemplateListViewModel
     @State private var parentTodayModel: ParentTodayTaskViewModel
@@ -120,6 +121,9 @@ struct HabitoApp: App {
                 dateProvider: dateProvider
             )
         )
+        _childRewardFeedbackModel = State(
+            initialValue: ChildRewardFeedbackViewModel(
+                service: Self.makeChildReceiptService(context: container.mainContext), dateProvider: dateProvider))
         taskSessionModelFactory = TaskSessionViewModelFactory(
             context: container.mainContext,
             calendar: calendar,
@@ -196,6 +200,7 @@ struct HabitoApp: App {
         WindowGroup {
             RootView(
                 todayModel: todayModel,
+                childRewardFeedbackModel: childRewardFeedbackModel,
                 taskSessionModelFactory: taskSessionModelFactory,
                 parentGateModel: parentGateModel,
                 parentTaskTemplatesModel: parentTaskTemplatesModel,
@@ -217,5 +222,14 @@ struct HabitoApp: App {
 
     private func connectLifecycleEvents() {
         appDelegate.connectNotificationRebuildTrigger(notificationRebuildTrigger)
+    }
+
+    /// 只有测试组合根替换保存边界；普通运行始终使用真实服务。
+    private static func makeChildReceiptService(context: ModelContext) -> ChildRewardReceiptService {
+        #if DEBUG
+            UITestChildReceiptServiceFactory.make(context: context, arguments: ProcessInfo.processInfo.arguments)
+        #else
+            ChildRewardReceiptService(context: context)
+        #endif
     }
 }

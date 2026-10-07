@@ -25,4 +25,12 @@ nonisolated struct TaskSessionFeedbackPresentation: Equatable, Identifiable, Sen
     }
 
     var hasReward: Bool { xp != nil || coins != nil }
+
+    /// 审核后反馈直接使用已验证完成快照；不伪造一次新的完成或重新计算金额。
+    init(receipt: ChildRewardReceipt) {
+        id = receipt.id
+        tone = receipt.timing == .beforeReminder ? .autonomous : .completed
+        xp = receipt.xp > 0 ? receipt.xp : nil
+        coins = receipt.coins > 0 ? receipt.coins : nil
+    }
 }

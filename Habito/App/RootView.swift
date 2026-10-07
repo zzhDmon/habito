@@ -6,6 +6,7 @@ struct RootView: View {
     @Environment(\.scenePhase) private var scenePhase
     @State private var path: [KidRoute] = []
     @State private var todayModel: TodayViewModel
+    @State private var childRewardFeedbackModel: ChildRewardFeedbackViewModel
     @State private var parentGateModel: ParentGateViewModel
     @State private var parentTaskTemplatesModel: ParentTaskTemplateListViewModel
     @State private var parentTodayModel: ParentTodayTaskViewModel
@@ -24,6 +25,7 @@ struct RootView: View {
 
     init(
         todayModel: TodayViewModel,
+        childRewardFeedbackModel: ChildRewardFeedbackViewModel,
         taskSessionModelFactory: TaskSessionViewModelFactory,
         parentGateModel: ParentGateViewModel,
         parentTaskTemplatesModel: ParentTaskTemplateListViewModel,
@@ -39,6 +41,7 @@ struct RootView: View {
         dateProvider: any DateProviding
     ) {
         _todayModel = State(initialValue: todayModel)
+        _childRewardFeedbackModel = State(initialValue: childRewardFeedbackModel)
         self.taskSessionModelFactory = taskSessionModelFactory
         _parentGateModel = State(initialValue: parentGateModel)
         _parentTaskTemplatesModel = State(initialValue: parentTaskTemplatesModel)
@@ -62,7 +65,11 @@ struct RootView: View {
                 makeTimingPresentation: todayModel.makeTimingPresentation,
                 onSelectTask: showTask,
                 onRetry: loadToday,
-                onRetryRewards: todayModel.loadRewards
+                onRetryRewards: todayModel.loadRewards,
+                feedbackState: childRewardFeedbackModel.state,
+                acknowledgementFailed: childRewardFeedbackModel.acknowledgementFailed,
+                onContinueReceipt: childRewardFeedbackModel.acknowledge,
+                onRetryReceipt: childRewardFeedbackModel.load
             )
             .toolbar {
                 #if DEBUG
@@ -113,6 +120,9 @@ struct RootView: View {
             loadToday()
             notificationRebuildTrigger.requestRebuild()
         }
+        .onChange(of: path) { _, routes in
+            if routes.isEmpty { loadToday() }
+        }
         .sheet(isPresented: $isParentGatePresented, onDismiss: loadToday) {
             ParentGateView(
                 model: parentGateModel,
@@ -132,6 +142,8 @@ struct RootView: View {
 
     private func loadToday() {
         todayModel.load()
+        // 家长可能有未保存草稿，执行页也有自己的完成反馈；仅首页可见时读审核收据。
+        if !isParentGatePresented, path.isEmpty { childRewardFeedbackModel.load() }
     }
 
     private func openParentGate() {

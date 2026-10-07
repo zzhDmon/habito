@@ -15,3 +15,18 @@ nonisolated struct ChildRewardReceipt: Equatable, Sendable, Identifiable {
 
     var id: UUID { completionID }
 }
+
+extension ChildRewardReceipt {
+    /// 纯展示预览值，不创建模型或写入正式容器。
+    static var preview: Self {
+        Self(
+            completionID: UUID(), occurrenceID: UUID(), title: "认真读完一本书", completedAt: .distantPast,
+            settledAt: .distantPast, timing: .beforeReminder, xp: 11, coins: 10)
+    }
+
+    static var previewZero: Self {
+        Self(
+            completionID: UUID(), occurrenceID: UUID(), title: "自己整理书包", completedAt: .distantPast,
+            settledAt: .distantPast, timing: .afterReminder, xp: 0, coins: 0)
+    }
+}
