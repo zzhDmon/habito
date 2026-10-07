@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AB1000000000000000000252 /* FamilyProfileEditorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000252 /* FamilyProfileEditorViewModel.swift */; };
+		AB1000000000000000000253 /* FamilyProfileEditorLoadState.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000253 /* FamilyProfileEditorLoadState.swift */; };
+		AB1000000000000000000254 /* FamilyProfileEditorFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000254 /* FamilyProfileEditorFeedback.swift */; };
+		AB1000000000000000000255 /* FamilyProfileEditorViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000255 /* FamilyProfileEditorViewModelTests.swift */; };
 		AB1000000000000000000249 /* FamilyProfileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000249 /* FamilyProfileService.swift */; };
 		AB1000000000000000000250 /* FamilyProfileServiceError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000250 /* FamilyProfileServiceError.swift */; };
 		AB1000000000000000000251 /* FamilyProfileServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000251 /* FamilyProfileServiceTests.swift */; };
@@ -490,6 +494,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AB2000000000000000000252 /* FamilyProfileEditorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FamilyProfileEditorViewModel.swift; sourceTree = "<group>"; };
+		AB2000000000000000000253 /* FamilyProfileEditorLoadState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FamilyProfileEditorLoadState.swift; sourceTree = "<group>"; };
+		AB2000000000000000000254 /* FamilyProfileEditorFeedback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FamilyProfileEditorFeedback.swift; sourceTree = "<group>"; };
+		AB2000000000000000000255 /* FamilyProfileEditorViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FamilyProfileEditorViewModelTests.swift; sourceTree = "<group>"; };
 		AB2000000000000000000249 /* FamilyProfileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FamilyProfileService.swift; sourceTree = "<group>"; };
 		AB2000000000000000000250 /* FamilyProfileServiceError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FamilyProfileServiceError.swift; sourceTree = "<group>"; };
 		AB2000000000000000000251 /* FamilyProfileServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FamilyProfileServiceTests.swift; sourceTree = "<group>"; };
@@ -983,6 +991,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AB5000000000000000000252 /* FamilyProfile */ = {
+			isa = PBXGroup;
+			children = (
+				AB2000000000000000000252 /* FamilyProfileEditorViewModel.swift */,
+				AB2000000000000000000253 /* FamilyProfileEditorLoadState.swift */,
+				AB2000000000000000000254 /* FamilyProfileEditorFeedback.swift */,
+			);
+			path = FamilyProfile;
+			sourceTree = "<group>";
+		};
 		AB5000000000000000000249 /* Profiles */ = {
 			isa = PBXGroup;
 			children = (
@@ -1363,6 +1381,7 @@
 		A5000000000000000000000B /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				AB5000000000000000000252 /* FamilyProfile */,
 				A5000000000000000000000C /* NotificationProbe */,
 				AF5000000000000000000003 /* GrowthStatistics */,
 				W50000000000000000000001 /* ParentCalendar */,
@@ -1613,6 +1632,7 @@
 		J50000000000000000000001 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				AB2000000000000000000255 /* FamilyProfileEditorViewModelTests.swift */,
 				AB2000000000000000000226 /* TodayCompletionSummaryTests.swift */,
 				AB2000000000000000000227 /* TodayCompletionRenderingTests.swift */,
 				AB2000000000000000000229 /* TaskCompletionUndoRenderingTests.swift */,
@@ -2018,6 +2038,9 @@
 				AB1000000000000000000220 /* ParentTodayTaskPresentation.swift in Sources */,
 				AB1000000000000000000224 /* TodayCompletionSummary.swift in Sources */,
 				AB1000000000000000000230 /* FamilyProfileNames.swift in Sources */,
+				AB1000000000000000000252 /* FamilyProfileEditorViewModel.swift in Sources */,
+				AB1000000000000000000253 /* FamilyProfileEditorLoadState.swift in Sources */,
+				AB1000000000000000000254 /* FamilyProfileEditorFeedback.swift in Sources */,
 				AB1000000000000000000249 /* FamilyProfileService.swift in Sources */,
 				AB1000000000000000000250 /* FamilyProfileServiceError.swift in Sources */,
 				AB1000000000000000000233 /* HabitoSchemaV6+TaskTemplate.swift in Sources */,
@@ -2390,6 +2413,7 @@
 				AB1000000000000000000223 /* GrowthStatisticsRenderingTests.swift in Sources */,
 				AB1000000000000000000226 /* TodayCompletionSummaryTests.swift in Sources */,
 				AB1000000000000000000232 /* FamilyProfileNamesTests.swift in Sources */,
+				AB1000000000000000000255 /* FamilyProfileEditorViewModelTests.swift in Sources */,
 				AB1000000000000000000251 /* FamilyProfileServiceTests.swift in Sources */,
 				AB1000000000000000000247 /* V6MigrationFixture.swift in Sources */,
 				AB1000000000000000000248 /* FamilyProfileMigrationTests.swift in Sources */,
