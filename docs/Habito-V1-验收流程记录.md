@@ -481,3 +481,12 @@
 - 证据/tmp/habito-daily-002a-evidence.UGvKJa，related-{17,27}、release.log、analyze.log。large实际读回后两系五场景ordinary正在运行：真奖励完成/家长关闭触发刷新/重启，零奖励完成/重启，空态，撤销，待验收；MAX尚未开始。没有把渲染或旧535全量门当新UI成功，仍IN_PROGRESS。
 
 - 14:26普通修正版ui-{17,27}-ordinary-fixed各5/5通过，MAX同测试源五项复验中。首MAX27为5/5、17为4/5；原生AX显示旧立即撤销方法直接tap首屏外y1005/h93.5完成按钮后任务仍准备开始，只修测试先完整滚动完成/撤销并证明可操作/44pt，生产与单测源未改。首失败包/AX保留，不拼首四项成功；恢复large后重跑完整相关五项ordinary再MAX。
+
+## 32. V1-M4-000A：孩子昵称与单狗名字纯校验（卡级完成）
+
+- doc-coauthoring独立Reader五问通过；顶部下一步的陈旧测试描述已纠正，无实质接力冲突。只读文档复核不当软件测试。
+- 2026-10-07 14:49领取、14:53 DONE，前置002A已提交c62281a。新增不可变FamilyProfileNames与不含原始输入的FamilyProfileNameError；无存储/首次设置UI/PIN/宠物数值写入。43张已拆卡43DONE，不代表完整第3组或PRD完成。
+- 最终证据/tmp/habito-names-000a-evidence.YzWOdg/related-{17,27}.xcresult：两系各8/8定义、34次，零失败/跳过/运行警告。固定合成中文/拉丁/内部空格/NBSP/emoji/组合字符原始UTF8、边缘空白、内部CR/LF/NEL/U+2028/U+2029、两字段准确错误、长输入保持和Sendable约束均通过。
+- Release/Debug分析exit0且日志为空，无编译/严格并发警告；全量严格格式/PBX解析/970对象ID无重复/diff通过。Test参数换行格式曾被lint发现，机械格式化后通过；未弱化验证。
+- swiftui-pro数据/Swift/卫生复核无新真实问题；中文DocC说明调用方草稿/日志与假设边界。单行、去两端空白、先孩子错误是已记录验证ASSUMPTION，不代选最大长度或替家庭起名字，旧未配置不能代填。
+- 按DEC-030卡级只跑相关8项及构建，不重复无关55UI或把C1B旧535完整源作新源证据；后续兼容存储必须先冻结7.0.0前版、仅合成库验证，正式保存与PIN后UI再拆卡。真实家庭库/实机/参数仍后置。
