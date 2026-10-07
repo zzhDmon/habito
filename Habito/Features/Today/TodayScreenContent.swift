@@ -8,6 +8,7 @@ struct TodayScreenContent: Equatable, Sendable {
     let completedCount: Int
     let totalCount: Int
     let isAllCompleted: Bool
+    let dailyCompletion: TodayCompletionSummary?
 
     /// 在页面状态创建时投影一次，避免 View.body 内重复编排任务或维护另一份可变分组。
     init(
@@ -20,6 +21,8 @@ struct TodayScreenContent: Equatable, Sendable {
         self.completedCount = completedCount
         self.totalCount = totalCount
         self.isAllCompleted = isAllCompleted
+        dailyCompletion = TodayCompletionSummary(
+            completedCount: completedCount, totalCount: totalCount, isAllCompleted: isAllCompleted)
     }
 
     var isEmpty: Bool {
@@ -28,6 +31,10 @@ struct TodayScreenContent: Equatable, Sendable {
 }
 
 extension TodayScreenContent {
+    static let previewCompleted = TodayScreenContent(
+        recommendedTask: nil, remainingTasks: [.previewCompleted],
+        completedCount: 1, totalCount: 1, isAllCompleted: true)
+
     static let preview = TodayScreenContent(
         recommendedTask: .previewReading,
         remainingTasks: [.previewWriting, .previewCompleted],

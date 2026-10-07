@@ -93,6 +93,7 @@ struct TodayViewModelTests {
         #expect(content.completedCount == 0)
         #expect(content.totalCount == 0)
         #expect(!content.isAllCompleted)
+        #expect(content.dailyCompletion == nil)
     }
 
     @Test("审核等待与退回展示明确文字，但不伪装成已完成", arguments: [false, true])
@@ -120,6 +121,34 @@ struct TodayViewModelTests {
         #expect(content.completedCount == 0)
         #expect(content.totalCount == 1)
         #expect(!content.isAllCompleted)
+        #expect(content.dailyCompletion == nil)
+    }
+
+    @Test("今日虽全完成但有跨日未完时不通关，重复刷新只读取", arguments: [false, true])
+    func dailyResultRespectsCarryOverAndRepeatedRefresh(hasCarryOver: Bool) throws {
+        let fixture = try TodayQueryFixture()
+        let completed = fixture.makeOccurrence(title: "固定合成阅读", scheduledAt: fixture.now, status: .completed)
+        fixture.addCompletion(to: completed, at: fixture.now)
+        if hasCarryOver {
+            let earlier = fixture.now.addingTimeInterval(-86400)
+            let carryOver = fixture.makeOccurrence(
+                title: "固定合成跨日", scheduledAt: earlier, status: .inProgress,
+                date: try LocalDate(date: earlier, calendar: fixture.calendar, timeZone: fixture.timeZone))
+            fixture.addSession(
+                to: carryOver, state: .paused, startedAt: earlier, lastResumedAt: earlier,
+                accumulatedSeconds: 300)
+        }
+        try fixture.context.save()
+        let model = TodayViewModel(
+            context: fixture.context, calendar: fixture.calendar, timeZone: fixture.timeZone,
+            dateProvider: FixedDateProvider(value: fixture.now))
+        for _ in 0..<3 {
+            model.load()
+            let content = try loadedContent(from: model.state)
+            #expect(content.completedCount == 1 && content.totalCount == 1)
+            #expect(content.dailyCompletion?.completedCount == (hasCarryOver ? nil : 1))
+            #expect(!fixture.context.hasChanges)
+        }
     }
 
     private func loadedContent(from state: TodayViewState) throws -> TodayScreenContent {

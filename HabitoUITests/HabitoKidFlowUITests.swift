@@ -624,22 +624,73 @@ final class HabitoKidFlowUITests: XCTestCase {
         assertTodayRewards(xp: 11, coins: 7, in: app)
         let completed = app.staticTexts["今天的任务都完成了。"]
         scrollFullyIntoTodayViewport(completed, in: app)
+        assertDailyCompletion(count: 1, in: app)
         keepScreenshot(app, name: "全部完成仍可查看真实资产")
+        // 关闭家长入口触发现有首页刷新；只读结果不变，不能把刷新当再次发奖。
+        let parentEntry = app.buttons["parent.gate.entry"]
+        parentEntry.tap()
+        let parentClose = app.buttons["parent.gate.close"]
+        XCTAssertTrue(parentClose.waitForExistence(timeout: 5))
+        parentClose.tap()
+        assertDailyCompletion(count: 1, in: app)
+        assertTodayRewards(xp: 11, coins: 7, in: app)
         relaunchWithOldSeededNotification(app)
         assertTodayRewards(xp: 11, coins: 7, in: app)
+        assertDailyCompletion(count: 1, in: app)
         XCTAssertFalse(app.descendants(matching: .any)["kid.session.completion-feedback"].exists)
+    }
+
+    func testZeroRewardDailyCompletionRemainsReadableWithoutInventingRewardsWithSystemTextSize() throws {
+        let app = launchScenario("zero-reward-self-confirm")
+        openSeededTask(in: app)
+        let complete = app.buttons["kid.session.complete"]
+        scrollFullyIntoSessionViewport(complete, in: app)
+        complete.tap()
+        XCTAssertTrue(app.staticTexts["这份努力已经记下啦。"].waitForExistence(timeout: 5))
+        returnToTodayFromTask(in: app)
+        assertTodayRewards(xp: 0, coins: 0, in: app)
+        assertDailyCompletion(count: 1, in: app)
+        keepScreenshot(app, name: "零奖励当天完成印章与真实零资产")
+        relaunchTodayKeepingData(app)
+        assertDailyCompletion(count: 1, in: app)
+        assertTodayRewards(xp: 0, coins: 0, in: app)
+        XCTAssertFalse(app.staticTexts["kid.session.reward-xp"].exists)
+        XCTAssertFalse(app.staticTexts["kid.session.reward-coins"].exists)
+    }
+
+    /// 只读完成结果必须实际读得见，不以AX存在或截断露出代替完整可见性。
+    private func assertDailyCompletion(count: Int, in app: XCUIApplication) {
+        let stamp = app.staticTexts["kid.today.completion.stamp"]
+        let total = app.staticTexts["kid.today.completion.count"]
+        let rest = app.staticTexts["kid.today.completion.rest"]
+        for element in [stamp, total, rest] {
+            scrollFullyIntoTodayViewport(element, in: app)
+        }
+        XCTAssertEqual(stamp.label, "今日通关")
+        XCTAssertEqual(total.label, "完成了 \(count) 项今日任务")
+        XCTAssertEqual(rest.label, "今天的努力，已经记下啦。接下来，安心休息吧！")
     }
 
     func testTodayRewardsReflectImmediateUndoWithoutCreatingAnotherReward() throws {
         let app = launchScenario("reward-after-reminder")
         openSeededTask(in: app)
-        app.buttons["kid.session.complete"].tap()
+        // MAX下完成按钮可能在首屏以下；XCTest自动滚动不可靠，先证明完整可见再点击。
+        let complete = app.buttons["kid.session.complete"]
+        scrollFullyIntoSessionViewport(complete, in: app)
+        complete.tap()
         let undo = app.buttons["kid.session.undo"]
         XCTAssertTrue(undo.waitForExistence(timeout: 2))
+        // 固定安全区不属于ScrollView；无需滚动，直接检查完整窗口与44pt后在原五秒内点击。
+        let undoFrame = undo.frame
+        XCTAssertTrue(undo.isHittable)
+        XCTAssertTrue(app.frame.contains(undoFrame))
+        XCTAssertGreaterThanOrEqual(undoFrame.width, 44)
+        XCTAssertGreaterThanOrEqual(undoFrame.height, 44)
         undo.tap()
         XCTAssertTrue(app.buttons["kid.session.complete"].waitForExistence(timeout: 5))
         returnToTodayFromTask(in: app)
         assertTodayRewards(xp: 0, coins: 0, in: app)
+        XCTAssertFalse(app.staticTexts["kid.today.completion.stamp"].exists)
         relaunchTodayKeepingData(app)
         assertTodayRewards(xp: 0, coins: 0, in: app)
         scrollFullyIntoTodayViewport(app.buttons[seededTaskIdentifier], in: app)
@@ -652,6 +703,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         app.launch()
         assertTodayRewards(xp: 0, coins: 0, in: app)
         scrollFullyIntoTodayViewport(app.staticTexts["今天没有任务啊"], in: app)
+        XCTAssertFalse(app.staticTexts["kid.today.completion.stamp"].exists)
         keepScreenshot(app, name: "空态真实零资产")
         relaunchTodayKeepingData(app)
         assertTodayRewards(xp: 0, coins: 0, in: app)
@@ -1950,6 +2002,9 @@ final class HabitoKidFlowUITests: XCTestCase {
         dismiss.tap()
         XCTAssertFalse(dismiss.exists)
         XCTAssertFalse(app.staticTexts["已提交！"].exists)
+        returnToTodayFromTask(in: app)
+        XCTAssertFalse(app.staticTexts["kid.today.completion.stamp"].exists)
+        assertTodayRewards(xp: 0, coins: 0, in: app)
     }
 
     func testParentReviewRequiresPINAndApprovesOriginalSnapshotOnce() throws {

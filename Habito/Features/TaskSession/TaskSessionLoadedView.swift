@@ -54,12 +54,22 @@ struct TaskSessionLoadedView: View {
                     onStartOrResume: onStartOrResume,
                     onPause: onPause,
                     onSnooze: onSnooze,
-                    onComplete: onComplete,
-                    onUndoCompletion: onUndoCompletion
+                    onComplete: onComplete
                 )
             }
         }
         .accessibilityIdentifier(HabitoAccessibilityID.sessionScreen)
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            // TimelineView只刷新可见秒数，服务仍使用同一注入时钟在点击时校验五秒期限。
+            // 放在滚动布局之外：MAX时庆祝内容变高也不会把短时操作推到几屏以后。
+            TimelineView(.periodic(from: .now, by: 1)) { _ in
+                let now = currentDate()
+                if content.canUndoCompletion(at: now) {
+                    TaskCompletionUndoView(
+                        remainingSeconds: content.undoRemainingSeconds(at: now), onUndo: onUndoCompletion)
+                }
+            }
+        }
     }
 }
 

@@ -15,13 +15,13 @@ struct KidTodayTaskContent: View {
             ContentUnavailableView(
                 "kidToday.emptyTitle", systemImage: "sun.max.fill",
                 description: Text("kidToday.emptyDescription"))
-        case let .loaded(content) where content.isAllCompleted:
-            ContentUnavailableView(
-                "kidToday.completedTitle", systemImage: HabitoDesign.Symbol.completed,
-                description: Text("kidToday.completedDescription"))
         case let .loaded(content):
-            KidTodayLoadedView(
-                content: content, makeTimingPresentation: makeTimingPresentation, onSelectTask: onSelectTask)
+            if let summary = content.dailyCompletion {
+                KidTodayCompletionView(summary: summary)
+            } else {
+                KidTodayLoadedView(
+                    content: content, makeTimingPresentation: makeTimingPresentation, onSelectTask: onSelectTask)
+            }
         case .failed:
             ContentUnavailableView {
                 Label("kidToday.errorTitle", systemImage: "exclamationmark.triangle.fill")
@@ -48,4 +48,20 @@ struct KidTodayTaskContent: View {
     )
     .padding()
     .environment(\.dynamicTypeSize, .accessibility5)
+}
+
+#Preview("任务区 · 完成") {
+    KidTodayTaskContent(
+        state: .loaded(.previewCompleted), makeTimingPresentation: KidTaskTimingPresentation.preview,
+        onSelectTask: { _ in }, onRetry: {}
+    ).padding()
+}
+
+#Preview("任务区 · 空") {
+    KidTodayTaskContent(
+        state: .loaded(
+            TodayScreenContent(
+                recommendedTask: nil, remainingTasks: [], completedCount: 0, totalCount: 0, isAllCompleted: false)),
+        makeTimingPresentation: KidTaskTimingPresentation.preview, onSelectTask: { _ in }, onRetry: {}
+    ).padding()
 }

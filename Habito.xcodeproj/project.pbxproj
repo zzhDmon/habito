@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AB1000000000000000000228 /* TaskCompletionUndoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000228 /* TaskCompletionUndoView.swift */; };
+		AB1000000000000000000229 /* TaskCompletionUndoRenderingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000229 /* TaskCompletionUndoRenderingTests.swift */; };
+		AB1000000000000000000224 /* TodayCompletionSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000224 /* TodayCompletionSummary.swift */; };
+		AB1000000000000000000225 /* KidTodayCompletionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000225 /* KidTodayCompletionView.swift */; };
+		AB1000000000000000000226 /* TodayCompletionSummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000226 /* TodayCompletionSummaryTests.swift */; };
+		AB1000000000000000000227 /* TodayCompletionRenderingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000227 /* TodayCompletionRenderingTests.swift */; };
 		AB1000000000000000000211 /* GrowthStatisticsRateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000211 /* GrowthStatisticsRateView.swift */; };
 		AB1000000000000000000212 /* GrowthStatisticsCountsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000212 /* GrowthStatisticsCountsView.swift */; };
 		AB1000000000000000000213 /* GrowthStatisticsTrendRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000213 /* GrowthStatisticsTrendRow.swift */; };
@@ -462,6 +468,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AB2000000000000000000228 /* TaskCompletionUndoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCompletionUndoView.swift; sourceTree = "<group>"; };
+		AB2000000000000000000229 /* TaskCompletionUndoRenderingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCompletionUndoRenderingTests.swift; sourceTree = "<group>"; };
+		AB2000000000000000000224 /* TodayCompletionSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayCompletionSummary.swift; sourceTree = "<group>"; };
+		AB2000000000000000000225 /* KidTodayCompletionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidTodayCompletionView.swift; sourceTree = "<group>"; };
+		AB2000000000000000000226 /* TodayCompletionSummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayCompletionSummaryTests.swift; sourceTree = "<group>"; };
+		AB2000000000000000000227 /* TodayCompletionRenderingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayCompletionRenderingTests.swift; sourceTree = "<group>"; };
 		AB2000000000000000000211 /* GrowthStatisticsRateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowthStatisticsRateView.swift; sourceTree = "<group>"; };
 		AB2000000000000000000212 /* GrowthStatisticsCountsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowthStatisticsCountsView.swift; sourceTree = "<group>"; };
 		AB2000000000000000000213 /* GrowthStatisticsTrendRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowthStatisticsTrendRow.swift; sourceTree = "<group>"; };
@@ -1452,6 +1464,7 @@
 			children = (
 				I20000000000000000000008 /* KidTaskSessionView.swift */,
 				M20000000000000000000006 /* TaskSessionLoadedView.swift */,
+				AB2000000000000000000228 /* TaskCompletionUndoView.swift */,
 				AB2000000000000000000108 /* TaskCompletionSnapshotView.swift */,
 				AB2000000000000000000109 /* TaskSessionActionButton.swift */,
 				AB2000000000000000000110 /* TaskSessionControlsView.swift */,
@@ -1482,6 +1495,8 @@
 		I50000000000000000000005 /* Today */ = {
 			isa = PBXGroup;
 			children = (
+				AB2000000000000000000224 /* TodayCompletionSummary.swift */,
+				AB2000000000000000000225 /* KidTodayCompletionView.swift */,
 				AB2000000000000000000188 /* ChildRewardFeedbackState.swift */,
 				AB2000000000000000000189 /* ChildRewardFeedbackViewModel.swift */,
 				AB2000000000000000000190 /* ChildRewardFeedbackView.swift */,
@@ -1515,6 +1530,9 @@
 		J50000000000000000000001 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				AB2000000000000000000226 /* TodayCompletionSummaryTests.swift */,
+				AB2000000000000000000227 /* TodayCompletionRenderingTests.swift */,
+				AB2000000000000000000229 /* TaskCompletionUndoRenderingTests.swift */,
 				AB2000000000000000000191 /* ChildRewardFeedbackViewModelTests.swift */,
 				AB2000000000000000000192 /* ChildRewardFeedbackRenderingTests.swift */,
 				L20000000000000000000001 /* FixedDateProvider.swift */,
@@ -1908,6 +1926,8 @@
 				AB1000000000000000000218 /* GrowthStatisticsPreview.swift in Sources */,
 				AB1000000000000000000219 /* ParentTodayOverviewView.swift in Sources */,
 				AB1000000000000000000220 /* ParentTodayTaskPresentation.swift in Sources */,
+				AB1000000000000000000224 /* TodayCompletionSummary.swift in Sources */,
+				AB1000000000000000000225 /* KidTodayCompletionView.swift in Sources */,
 				AB1000000000000000000221 /* UITestStatisticsServiceFactory.swift in Sources */,
 				AB1000000000000000000208 /* ParentTodayOverviewState.swift in Sources */,
 				AB1000000000000000000209 /* ParentTodayOverviewViewModel.swift in Sources */,
@@ -1961,6 +1981,7 @@
 				I10000000000000000000003 /* KidTaskNavigationItem.swift in Sources */,
 				I10000000000000000000008 /* KidTaskSessionView.swift in Sources */,
 				M10000000000000000000006 /* TaskSessionLoadedView.swift in Sources */,
+				AB1000000000000000000228 /* TaskCompletionUndoView.swift in Sources */,
 				AB1000000000000000000108 /* TaskCompletionSnapshotView.swift in Sources */,
 				AB1000000000000000000109 /* TaskSessionActionButton.swift in Sources */,
 				AB1000000000000000000110 /* TaskSessionControlsView.swift in Sources */,
@@ -2259,6 +2280,9 @@
 				AB1000000000000000000210 /* GrowthStatisticsViewModelTests.swift in Sources */,
 				AB1000000000000000000222 /* ParentTodayStatisticsTests.swift in Sources */,
 				AB1000000000000000000223 /* GrowthStatisticsRenderingTests.swift in Sources */,
+				AB1000000000000000000226 /* TodayCompletionSummaryTests.swift in Sources */,
+				AB1000000000000000000227 /* TodayCompletionRenderingTests.swift in Sources */,
+				AB1000000000000000000229 /* TaskCompletionUndoRenderingTests.swift in Sources */,
 				AB1000000000000000000202 /* GrowthStatisticsCalculatorTests.swift in Sources */,
 				AB1000000000000000000192 /* ChildRewardFeedbackRenderingTests.swift in Sources */,
 				AB1000000000000000000181 /* V5MigrationFixture.swift in Sources */,

@@ -10,7 +10,6 @@ struct TaskSessionTimerPanel: View {
     let onPause: () -> Void
     let onSnooze: () async -> Void
     let onComplete: () -> Void
-    let onUndoCompletion: () -> Void
 
     private var elapsedSeconds: TimeInterval {
         content.displayedActiveDuration(at: now)
@@ -48,10 +47,7 @@ struct TaskSessionTimerPanel: View {
 
             if let completion = content.completion {
                 TaskCompletionSnapshotView(
-                    completion: completion,
-                    undoRemainingSeconds: content.undoRemainingSeconds(at: now),
-                    canUndo: content.canUndoCompletion(at: now),
-                    onUndo: onUndoCompletion
+                    completion: completion
                 )
             } else if !content.isAwaitingReview {
                 TaskSessionControlsView(
