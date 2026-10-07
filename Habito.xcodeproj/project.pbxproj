@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AB1000000000000000000203 /* GrowthStatisticsQueryError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000203 /* GrowthStatisticsQueryError.swift */; };
+		AB1000000000000000000204 /* GrowthStatisticsQueryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000204 /* GrowthStatisticsQueryService.swift */; };
+		AB1000000000000000000205 /* GrowthStatisticsQueryServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000205 /* GrowthStatisticsQueryServiceTests.swift */; };
 		AB1000000000000000000194 /* GrowthStatisticsPeriod.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000194 /* GrowthStatisticsPeriod.swift */; };
 		AB1000000000000000000195 /* GrowthStatisticsFact.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000195 /* GrowthStatisticsFact.swift */; };
 		AB1000000000000000000196 /* GrowthStatisticsCounts.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2000000000000000000196 /* GrowthStatisticsCounts.swift */; };
@@ -441,6 +444,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AB2000000000000000000203 /* GrowthStatisticsQueryError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowthStatisticsQueryError.swift; sourceTree = "<group>"; };
+		AB2000000000000000000204 /* GrowthStatisticsQueryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowthStatisticsQueryService.swift; sourceTree = "<group>"; };
+		AB2000000000000000000205 /* GrowthStatisticsQueryServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowthStatisticsQueryServiceTests.swift; sourceTree = "<group>"; };
 		AB2000000000000000000194 /* GrowthStatisticsPeriod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowthStatisticsPeriod.swift; sourceTree = "<group>"; };
 		AB2000000000000000000195 /* GrowthStatisticsFact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowthStatisticsFact.swift; sourceTree = "<group>"; };
 		AB2000000000000000000196 /* GrowthStatisticsCounts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowthStatisticsCounts.swift; sourceTree = "<group>"; };
@@ -885,6 +891,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AF5000000000000000000002 /* Statistics */ = {
+			isa = PBXGroup;
+			children = (
+				AB2000000000000000000203 /* GrowthStatisticsQueryError.swift */,
+				AB2000000000000000000204 /* GrowthStatisticsQueryService.swift */,
+			);
+			path = Statistics;
+			sourceTree = "<group>";
+		};
 		AF5000000000000000000001 /* Statistics */ = {
 			isa = PBXGroup;
 			children = (
@@ -1093,6 +1108,7 @@
 		A50000000000000000000004 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				AF5000000000000000000002 /* Statistics */,
 				D50000000000000000000001 /* Models */,
 				F50000000000000000000001 /* OccurrenceGeneration */,
 				Y50000000000000000000002 /* Notifications */,
@@ -1639,6 +1655,7 @@
 		D50000000000000000000002 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				AB2000000000000000000205 /* GrowthStatisticsQueryServiceTests.swift */,
 				AB2000000000000000000186 /* ChildRewardReceiptServiceTests.swift */,
 				AB2000000000000000000181 /* V5MigrationFixture.swift */,
 				AB2000000000000000000182 /* ChildFeedbackDeliveryMigrationTests.swift */,
@@ -1815,6 +1832,8 @@
 			files = (
 				AB1000000000000000000187 /* UITestRewardReceiptProbe.swift in Sources */,
 				AB1000000000000000000193 /* UITestChildReceiptServiceFactory.swift in Sources */,
+				AB1000000000000000000203 /* GrowthStatisticsQueryError.swift in Sources */,
+				AB1000000000000000000204 /* GrowthStatisticsQueryService.swift in Sources */,
 				AB1000000000000000000194 /* GrowthStatisticsPeriod.swift in Sources */,
 				AB1000000000000000000195 /* GrowthStatisticsFact.swift in Sources */,
 				AB1000000000000000000196 /* GrowthStatisticsCounts.swift in Sources */,
@@ -2159,6 +2178,7 @@
 			files = (
 				AB1000000000000000000186 /* ChildRewardReceiptServiceTests.swift in Sources */,
 				AB1000000000000000000191 /* ChildRewardFeedbackViewModelTests.swift in Sources */,
+				AB1000000000000000000205 /* GrowthStatisticsQueryServiceTests.swift in Sources */,
 				AB1000000000000000000202 /* GrowthStatisticsCalculatorTests.swift in Sources */,
 				AB1000000000000000000192 /* ChildRewardFeedbackRenderingTests.swift in Sources */,
 				AB1000000000000000000181 /* V5MigrationFixture.swift in Sources */,
