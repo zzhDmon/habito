@@ -1,0 +1,35 @@
+{
+  "task": "UI-R1-004B",
+  "final_unit_tests": {
+    "definitions": 34,
+    "executions": 79,
+    "platforms": [
+      "17.2",
+      "27.0"
+    ]
+  },
+  "ui": {
+    "17_final": 3,
+    "27_dark_max_before_locale_fix": 3,
+    "27_dark_max_final_supplement": 1
+  },
+  "results": [
+    "/tmp/habito-ui-004b-fixed-17.xcresult",
+    "/tmp/habito-ui-004b-27-max.xcresult",
+    "/tmp/habito-ui-004b-fixed-27-max.xcresult"
+  ],
+  "initial_failure": "17新字符串表sourceLanguage=en导致英文系统显示键名；已改为项目默认zh-Hans，独立构建目录验证。",
+  "diagnostics": "17初失败、27最终测试结束后分别SIGINT其600秒可选simctl diagnose子进程；最终xcodebuild分别65/0，保留报告。",
+  "restored_27": {
+    "content_size": "large",
+    "appearance": "light"
+  },
+  "screenshots": [
+    "daily-income-light.png",
+    "daily-income-dark-max.png"
+  ],
+  "localizable_preserved": {
+    "keys": 467,
+    "changed_translations": 0
+  }
+}

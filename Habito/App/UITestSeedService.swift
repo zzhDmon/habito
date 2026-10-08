@@ -96,6 +96,18 @@
                 occurrence.template = template
             }
             try context.save()
+            if scenario == .dailyIncome {
+                // 独占测试库通过真实账本播种跨日收入和消费，验证首页不会拿余额冒充所得。
+                var localCalendar = calendar
+                localCalendar.timeZone = timeZone
+                guard let yesterday = localCalendar.date(byAdding: .day, value: -1, to: now) else {
+                    throw RewardLedgerError.invalidTimestamp
+                }
+                let ledger = RewardLedgerService(context: context)
+                _ = try ledger.grantReward(sourceID: templateID, xp: 20, coins: 10, at: yesterday)
+                _ = try ledger.grantReward(sourceID: taskID, xp: 11, coins: 7, at: now)
+                _ = try ledger.spendCoins(sourceID: taskID, cost: 3, at: now)
+            }
             if scenario == .corruptRewardLedger {
                 // 仅 Debug 独占夹具故意缺少 Coin 伙伴，验证资产错误不隐藏任务；不是生产发奖入口。
                 context.insert(

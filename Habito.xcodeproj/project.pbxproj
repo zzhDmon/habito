@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		41D05B76708F9606DDC369F0 /* TodayDailyRewardStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFB664CB893B13A0BAF7AA59 /* TodayDailyRewardStateTests.swift */; };
+		7642E7D1BDA9105F413151E1 /* UIR1.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 029C5B09D6946FDD8B7A6BF6 /* UIR1.xcstrings */; };
+		75248E0647FAC54AAEE9B39A /* KidTodayDailyRewardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D23DB83FE734A4525E10FBD4 /* KidTodayDailyRewardView.swift */; };
+		8394697FDC65978522A34DCB /* TodayDailyRewardState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA4D5B6093636ABB779FA62 /* TodayDailyRewardState.swift */; };
 		1EC85056C54470879A505EF2 /* DailyRewardQueryServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 835F3149531DB9CC72A1CAE1 /* DailyRewardQueryServiceTests.swift */; };
 		3A73074369FF9FDC3B3D9DC4 /* DailyRewardQueryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 551212BA6E3B0967BAB8139E /* DailyRewardQueryService.swift */; };
 		A546A2C3E40F03F212082A18 /* DailyRewardSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE995EE9CFC8893715050B03 /* DailyRewardSummary.swift */; };
@@ -523,6 +527,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		CFB664CB893B13A0BAF7AA59 /* TodayDailyRewardStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayDailyRewardStateTests.swift; sourceTree = "<group>"; };
+		029C5B09D6946FDD8B7A6BF6 /* UIR1.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = UIR1.xcstrings; sourceTree = "<group>"; };
+		D23DB83FE734A4525E10FBD4 /* KidTodayDailyRewardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidTodayDailyRewardView.swift; sourceTree = "<group>"; };
+		2AA4D5B6093636ABB779FA62 /* TodayDailyRewardState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayDailyRewardState.swift; sourceTree = "<group>"; };
 		835F3149531DB9CC72A1CAE1 /* DailyRewardQueryServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyRewardQueryServiceTests.swift; sourceTree = "<group>"; };
 		551212BA6E3B0967BAB8139E /* DailyRewardQueryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyRewardQueryService.swift; sourceTree = "<group>"; };
 		BE995EE9CFC8893715050B03 /* DailyRewardSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyRewardSummary.swift; sourceTree = "<group>"; };
@@ -1378,6 +1386,7 @@
 		A50000000000000000000006 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				029C5B09D6946FDD8B7A6BF6 /* UIR1.xcstrings */,
 				99A3F82DDA123D4EF7A62BD9 /* Tabler-LICENSE.txt */,
 				D5A2990AA7E5BF45C5844C85 /* Manga.xcassets */,
 				A20000000000000000000005 /* Localizable.xcstrings */,
@@ -1671,6 +1680,8 @@
 		I50000000000000000000005 /* Today */ = {
 			isa = PBXGroup;
 			children = (
+				D23DB83FE734A4525E10FBD4 /* KidTodayDailyRewardView.swift */,
+				2AA4D5B6093636ABB779FA62 /* TodayDailyRewardState.swift */,
 				AB2000000000000000000262 /* TodayCompletionCelebrationEvent.swift */,
 				AB2000000000000000000264 /* TodayCompletionCelebrationViewModel.swift */,
 				AB2000000000000000000267 /* TodayCompletionCelebrationMotion.swift */,
@@ -1712,6 +1723,7 @@
 		J50000000000000000000001 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				CFB664CB893B13A0BAF7AA59 /* TodayDailyRewardStateTests.swift */,
 				AB2000000000000000000263 /* TodayCompletionCelebrationEventTests.swift */,
 				AB2000000000000000000265 /* TodayCompletionCelebrationViewModelTests.swift */,
 				AB2000000000000000000266 /* TodayCompletionCelebrationIntegrationTests.swift */,
@@ -2096,6 +2108,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7642E7D1BDA9105F413151E1 /* UIR1.xcstrings in Resources */,
 				EE0A8600B3EF018C1C251484 /* Tabler-LICENSE.txt in Resources */,
 				23BFADE477462428F707C343 /* Manga.xcassets in Resources */,
 				A10000000000000000000005 /* Localizable.xcstrings in Resources */,
@@ -2109,6 +2122,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				75248E0647FAC54AAEE9B39A /* KidTodayDailyRewardView.swift in Sources */,
+				8394697FDC65978522A34DCB /* TodayDailyRewardState.swift in Sources */,
 				3A73074369FF9FDC3B3D9DC4 /* DailyRewardQueryService.swift in Sources */,
 				A546A2C3E40F03F212082A18 /* DailyRewardSummary.swift in Sources */,
 				DF5584738E4BF484AE3B0E86 /* DogCharacter.swift in Sources */,
@@ -2514,6 +2529,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				41D05B76708F9606DDC369F0 /* TodayDailyRewardStateTests.swift in Sources */,
 				1EC85056C54470879A505EF2 /* DailyRewardQueryServiceTests.swift in Sources */,
 				AB1000000000000000000186 /* ChildRewardReceiptServiceTests.swift in Sources */,
 				AB1000000000000000000191 /* ChildRewardFeedbackViewModelTests.swift in Sources */,

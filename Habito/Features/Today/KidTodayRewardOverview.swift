@@ -9,7 +9,7 @@ struct KidTodayRewardOverview: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: HabitoDesign.Spacing.medium) {
-            Text("kidRewards.title")
+            Text("wallet.title", tableName: "UIR1")
                 .font(.headline)
                 .accessibilityAddTraits(.isHeader)
             switch state {

@@ -9,6 +9,7 @@ import SwiftData
 final class TodayViewModel {
     private(set) var state: TodayViewState = .loading
     private(set) var rewardState: TodayRewardState = .loading
+    private(set) var dailyRewardState: TodayDailyRewardState = .loading
     /// 与真实事务回调共用的主actor内存状态，界面只读取/转交意图。
     let celebrationModel: TodayCompletionCelebrationViewModel
     private(set) var celebrationVerificationFailed = false
@@ -16,6 +17,7 @@ final class TodayViewModel {
     private let context: ModelContext
     private let queryService: TodayTaskQueryService
     private let rewardLedger: RewardLedgerService
+    private let dailyRewardQuery: DailyRewardQueryService
     private let dateProvider: any DateProviding
     private var calendar: Calendar
     private let timeZone: TimeZone
@@ -41,6 +43,7 @@ final class TodayViewModel {
     ) {
         self.context = context
         rewardLedger = RewardLedgerService(context: context)
+        dailyRewardQuery = DailyRewardQueryService(context: context, calendar: calendar, timeZone: timeZone)
         queryService = TodayTaskQueryService(
             context: context,
             calendar: calendar,
@@ -139,6 +142,18 @@ final class TodayViewModel {
         } catch {
             logger.error("儿童资产加载失败：\(String(describing: type(of: error)), privacy: .public)")
             rewardState = .failed
+        }
+        loadDailyRewards()
+    }
+
+    /// 今日所得可以单独重试；查询失败清掉旧值，但不隐藏真实钱包或今日任务。
+    func loadDailyRewards() {
+        dailyRewardState = .loading
+        do {
+            dailyRewardState = .loaded(try dailyRewardQuery.summary(at: dateProvider.now()))
+        } catch {
+            logger.error("今日所得加载失败：\(String(describing: type(of: error)), privacy: .public)")
+            dailyRewardState = .failed
         }
     }
 

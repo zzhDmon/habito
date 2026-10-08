@@ -1,0 +1,94 @@
+{
+  "sourceLanguage": "zh-Hans",
+  "strings": {
+    "wallet.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "累计成长与可用金币"
+          }
+        }
+      }
+    },
+    "daily.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "今日所得"
+          }
+        }
+      }
+    },
+    "daily.loading": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在读取今日所得"
+          }
+        }
+      }
+    },
+    "daily.xpFormat": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "今天获得 XP：%lld"
+          }
+        }
+      }
+    },
+    "daily.coinsFormat": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "今天获得金币：%lld"
+          }
+        }
+      }
+    },
+    "daily.explanation": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "只算今天已到账的奖励；花掉金币不减少所得。"
+          }
+        }
+      }
+    },
+    "daily.error": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "今日所得暂时没读到，请再试一次。"
+          }
+        }
+      }
+    },
+    "daily.retry": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "重试今日所得"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

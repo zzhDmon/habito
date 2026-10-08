@@ -72,6 +72,8 @@ struct RootView: View {
                 onSelectTask: showTask,
                 onRetry: loadToday,
                 onRetryRewards: todayModel.loadRewards,
+                dailyRewardState: todayModel.dailyRewardState,
+                onRetryDailyRewards: todayModel.loadDailyRewards,
                 feedbackState: childRewardFeedbackModel.state,
                 acknowledgementFailed: childRewardFeedbackModel.acknowledgementFailed,
                 onContinueReceipt: childRewardFeedbackModel.acknowledge,

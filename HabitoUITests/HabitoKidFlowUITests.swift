@@ -765,9 +765,29 @@ final class HabitoKidFlowUITests: XCTestCase {
         assertTodayRewards(xp: 0, coins: 0, in: app)
     }
 
+    func testDailyIncomeSeparatesYesterdayAndSpendingWithSystemTextSize() throws {
+        let app = launchScenario("daily-income")
+        assertDailyIncome(xp: 11, coins: 7, in: app)
+        assertTodayRewards(xp: 31, coins: 14, in: app)
+        relaunchTodayKeepingData(app)
+        assertDailyIncome(xp: 11, coins: 7, in: app)
+        keepScreenshot(app, name: "今日所得与累计可用资产分开")
+    }
+
+    private func assertDailyIncome(xp: Int, coins: Int, in app: XCUIApplication) {
+        let xpValue = app.descendants(matching: .any)["kid.today.daily-xp"]
+        let coinValue = app.descendants(matching: .any)["kid.today.daily-coins"]
+        scrollFullyIntoTodayViewport(xpValue, in: app)
+        XCTAssertEqual(xpValue.label, "今天获得 XP：\(xp)")
+        scrollFullyIntoTodayViewport(coinValue, in: app)
+        XCTAssertEqual(coinValue.label, "今天获得金币：\(coins)")
+        XCTAssertFalse(app.staticTexts["kid.today.daily-error"].exists)
+    }
+
     func testTodayRewardsPersistAfterCompletionAndRelaunchWithSystemTextSize() throws {
         let app = launchScenario("reward-after-reminder")
         assertTodayRewards(xp: 0, coins: 0, in: app)
+        assertDailyIncome(xp: 0, coins: 0, in: app)
         openSeededTask(in: app)
         let complete = app.buttons["kid.session.complete"]
         scrollFullyIntoSessionViewport(complete, in: app)
@@ -775,6 +795,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["你做到了！"].waitForExistence(timeout: 5))
         returnToTodayFromTask(in: app)
         assertTodayRewards(xp: 11, coins: 7, in: app)
+        assertDailyIncome(xp: 11, coins: 7, in: app)
         let completed = app.staticTexts["kid.today.completion.stamp"]
         scrollFullyIntoTodayViewport(completed, in: app)
         assertDailyCompletion(count: 1, in: app)
@@ -787,8 +808,10 @@ final class HabitoKidFlowUITests: XCTestCase {
         parentClose.tap()
         assertDailyCompletion(count: 1, in: app)
         assertTodayRewards(xp: 11, coins: 7, in: app)
+        assertDailyIncome(xp: 11, coins: 7, in: app)
         relaunchWithOldSeededNotification(app)
         assertTodayRewards(xp: 11, coins: 7, in: app)
+        assertDailyIncome(xp: 11, coins: 7, in: app)
         assertDailyCompletion(count: 1, in: app)
         XCTAssertFalse(app.descendants(matching: .any)["kid.session.completion-feedback"].exists)
     }
@@ -972,6 +995,12 @@ final class HabitoKidFlowUITests: XCTestCase {
 
     func testTodayRewardFailureKeepsTasksAndRetryReachableWithSystemTextSize() throws {
         let app = launchScenario("corrupt-reward-ledger")
+        let dailyRetry = app.buttons["kid.today.daily-retry"]
+        scrollFullyIntoTodayViewport(dailyRetry, in: app)
+        XCTAssertTrue(app.staticTexts["kid.today.daily-error"].exists)
+        XCTAssertFalse(app.descendants(matching: .any)["kid.today.daily-xp"].exists)
+        XCTAssertGreaterThanOrEqual(dailyRetry.frame.height, 44)
+        dailyRetry.tap()
         let error = app.descendants(matching: .any)["kid.today.rewards.error"]
         let retry = app.buttons["kid.today.rewards.retry"]
         for _ in 0..<2 {
