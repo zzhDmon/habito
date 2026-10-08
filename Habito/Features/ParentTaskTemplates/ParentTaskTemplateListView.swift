@@ -44,7 +44,7 @@ struct ParentTaskTemplateListView: View {
         .safeAreaInset(edge: .top) {
             VStack(spacing: HabitoDesign.Spacing.small) {
                 Button("parentReview.open", systemImage: "checkmark.seal", action: onShowReview)
-                    .buttonStyle(.borderedProminent)
+                    .buttonStyle(MangaButtonStyle())
                     .frame(maxWidth: .infinity, minHeight: HabitoDesign.Layout.minimumTapSize)
                     .accessibilityIdentifier(HabitoAccessibilityID.parentReviewOpen)
                 Button(action: onShowStatistics) {

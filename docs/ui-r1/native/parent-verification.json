@@ -1,0 +1,30 @@
+{
+  "task": "UI-R1-006A",
+  "completed": "2026-10-08 09:50",
+  "unit_tests_per_platform": {
+    "definitions": 36,
+    "executions": 118
+  },
+  "ui_per_platform": {
+    "initial_brand_paths": 2,
+    "final_save_bar_supplement": 2
+  },
+  "results": [
+    "/tmp/habito-ui-006a-17.xcresult",
+    "/tmp/habito-ui-006a-27-max.xcresult",
+    "/tmp/habito-ui-006a-save-17.xcresult",
+    "/tmp/habito-ui-006a-save-27-max.xcresult"
+  ],
+  "release_build": "/tmp/habito-ui-r1-release-build.log",
+  "debug_analysis": "/tmp/habito-ui-r1-analysis.log",
+  "initial_analysis_failure": "Release方案级分析包含@testable测试目标，模块无-enable-testing；应用Release构建成功。已分开Release build与Debug analyze，两者退出0，未改变编译检查。",
+  "restored_27": {
+    "content_size": "large",
+    "appearance": "light"
+  },
+  "screenshots": [
+    "parent-profile-light.png",
+    "parent-profile-dark-max.png",
+    "parent-review-dark-max.png"
+  ]
+}

@@ -123,6 +123,8 @@ struct ParentGateView: View {
                 }
             }
         }
+        .tint(HabitoDesign.Manga.successInk)
+        .toolbarBackground(HabitoDesign.Manga.paper, for: .navigationBar)
         .presentationDetents([.large])
         .onDisappear(perform: clearParentPrivateState)
         .confirmationDialog(
@@ -168,7 +170,7 @@ struct ParentGateView: View {
             feedbackView
 
             Button("parentGate.create", action: createPIN)
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(MangaButtonStyle())
                 .frame(maxWidth: .infinity, minHeight: HabitoDesign.Layout.minimumTapSize)
                 .accessibilityIdentifier(HabitoAccessibilityID.parentCreateButton)
         }
@@ -196,7 +198,7 @@ struct ParentGateView: View {
             feedbackView
 
             Button("parentGate.unlock", action: verifyPIN)
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(MangaButtonStyle())
                 .frame(maxWidth: .infinity, minHeight: HabitoDesign.Layout.minimumTapSize)
                 .accessibilityIdentifier(HabitoAccessibilityID.parentUnlockButton)
 

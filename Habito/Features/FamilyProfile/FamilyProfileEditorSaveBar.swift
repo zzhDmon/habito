@@ -15,7 +15,7 @@ struct FamilyProfileEditorSaveBar: View {
                 Label("familyProfile.save", systemImage: "checkmark")
                     .frame(maxWidth: .infinity, minHeight: HabitoDesign.Layout.minimumTapSize)
             }
-            .buttonStyle(.borderedProminent)
+            .buttonStyle(MangaButtonStyle())
             .disabled(isSaving)
             .accessibilityIdentifier(HabitoAccessibilityID.familyProfileSave)
         }

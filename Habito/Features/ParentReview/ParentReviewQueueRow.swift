@@ -11,12 +11,12 @@ struct ParentReviewQueueRow: View {
             Label {
                 Text(item.title)
             } icon: {
-                Image(systemName: item.iconName).accessibilityHidden(true)
+                TaskIcon(storedName: item.iconName)
             }
             .font(.title2.bold())
             ParentReviewSnapshotView(item: item)
             Button("parentReview.approve", systemImage: "checkmark.circle", action: onApprove)
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(MangaButtonStyle())
                 .controlSize(.large)
                 .frame(minHeight: HabitoDesign.Layout.minimumTapSize)
                 .accessibilityIdentifier(HabitoAccessibilityID.parentReviewApprove(item.id))
@@ -28,7 +28,8 @@ struct ParentReviewQueueRow: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(HabitoDesign.Spacing.large)
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: HabitoDesign.CornerRadius.card))
+        .foregroundStyle(HabitoDesign.Manga.ink)
+        .modifier(MangaPanel())
         // 独立容器避免 identifier 继承覆盖内部按钮；不能合并审核动作成一个读屏元素。
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier(HabitoAccessibilityID.parentReviewItem(item.id))

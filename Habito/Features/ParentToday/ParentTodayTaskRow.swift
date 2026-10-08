@@ -12,8 +12,12 @@ struct ParentTodayTaskRow: View {
         let presentation = ParentTodayTaskPresentation(item: item)
         VStack(alignment: .leading, spacing: HabitoDesign.Spacing.small) {
             VStack(alignment: .leading, spacing: HabitoDesign.Spacing.xSmall) {
-                Label(item.title, systemImage: item.iconName)
-                    .font(.headline)
+                Label {
+                    Text(item.title)
+                } icon: {
+                    TaskIcon(storedName: item.iconName, compact: true)
+                }
+                .font(.headline)
                 Text(item.scheduledAt, format: .dateTime.hour().minute())
                     .font(.subheadline)
                     .foregroundStyle(.secondary)

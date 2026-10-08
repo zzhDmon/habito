@@ -14,13 +14,14 @@ struct TodayCompletionVerificationErrorView: View {
                 Label("kidToday.retry", systemImage: "arrow.clockwise")
                     .frame(minWidth: HabitoDesign.Layout.minimumTapSize, minHeight: HabitoDesign.Layout.minimumTapSize)
             }
-            .buttonStyle(.bordered)
+            .buttonStyle(MangaButtonStyle())
             .controlSize(.large)
             .accessibilityIdentifier(HabitoAccessibilityID.todayCelebrationRetry)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(HabitoDesign.Spacing.large)
-        .background(.background, in: .rect(cornerRadius: HabitoDesign.CornerRadius.card))
+        .foregroundStyle(HabitoDesign.Manga.ink)
+        .modifier(MangaPanel())
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier(HabitoAccessibilityID.todayCelebrationError)
     }

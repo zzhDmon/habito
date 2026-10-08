@@ -24,7 +24,11 @@ struct TaskTemplateEditorForm: View {
                     .accessibilityIdentifier(HabitoAccessibilityID.taskEditorTitle)
                 Picker("taskEditor.icon", selection: $draft.iconName) {
                     ForEach(TaskTemplateDraft.allowedIconNames, id: \.self) { name in
-                        Label(iconLabel(name), systemImage: name).tag(name)
+                        Label {
+                            Text(iconLabel(name))
+                        } icon: {
+                            TaskIcon(storedName: name, compact: true)
+                        }.tag(name)
                     }
                 }
                 Picker("taskEditor.color", selection: $draft.colorToken) {

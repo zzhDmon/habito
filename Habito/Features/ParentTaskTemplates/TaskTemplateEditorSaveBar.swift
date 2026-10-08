@@ -14,7 +14,7 @@ struct TaskTemplateEditorSaveBar: View {
                 Text("taskEditor.save")
                     .frame(maxWidth: .infinity, minHeight: HabitoDesign.Layout.minimumTapSize)
             }
-            .buttonStyle(.borderedProminent)
+            .buttonStyle(MangaButtonStyle())
             .disabled(isDisabled)
             .accessibilityIdentifier(HabitoAccessibilityID.taskEditorSave)
         }

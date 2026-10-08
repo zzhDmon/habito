@@ -18,7 +18,7 @@ struct ParentTaskTemplateListContent: View {
                 Text("parentTemplates.emptyDescription")
             } actions: {
                 Button("parentTemplates.create", action: onCreate)
-                    .buttonStyle(.borderedProminent)
+                    .buttonStyle(MangaButtonStyle())
             }
         case let .loaded(items):
             List(items) { item in

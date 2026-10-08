@@ -8,8 +8,7 @@ struct ParentTaskTemplateRow: View {
     var body: some View {
         Button(action: action) {
             HStack(spacing: HabitoDesign.Spacing.medium) {
-                Image(systemName: item.iconName)
-                    .font(.title2)
+                TaskIcon(storedName: item.iconName)
                     .frame(
                         minWidth: HabitoDesign.Layout.minimumTapSize,
                         minHeight: HabitoDesign.Layout.minimumTapSize
@@ -31,7 +30,9 @@ struct ParentTaskTemplateRow: View {
 
                 Label(statusKey, systemImage: statusSymbol)
                     .font(.subheadline)
-                    .foregroundStyle(item.lifecycleState == .active ? .green : .secondary)
+                    .foregroundStyle(
+                        item.lifecycleState == .active ? HabitoDesign.Manga.successInk : HabitoDesign.Manga.secondaryInk
+                    )
             }
             .padding(.vertical, HabitoDesign.Spacing.small)
             .contentShape(Rectangle())
@@ -73,4 +74,13 @@ struct ParentTaskTemplateRow: View {
     private var statusSymbol: String {
         item.lifecycleState == .active ? "checkmark.circle.fill" : "pause.circle.fill"
     }
+}
+
+#Preview("模板行 · 启用大字") {
+    ParentTaskTemplateRow(
+        item: ParentTaskTemplateListItem(
+            id: UUID(), title: "阅读", iconName: "book.fill", targetDurationSeconds: 900, lifecycleState: .active,
+            nextScheduledAt: nil, updatedAt: Date(timeIntervalSince1970: 1_790_064_000)), action: {}
+    )
+    .padding().environment(\.dynamicTypeSize, .accessibility5)
 }

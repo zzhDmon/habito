@@ -5,6 +5,14 @@ struct TaskIcon: View {
     let storedName: String
     @ScaledMetric(relativeTo: .title2) private var size = HabitoDesign.Manga.iconSize
 
+    /// 选择器使用紧凑图标；缩放交给SwiftUI环境的ScaledMetric，不能按设备像素固定尺寸。
+    init(storedName: String, compact: Bool = false) {
+        self.storedName = storedName
+        _size = ScaledMetric(
+            wrappedValue: compact ? HabitoDesign.Manga.compactIconSize : HabitoDesign.Manga.iconSize,
+            relativeTo: .title2)
+    }
+
     var body: some View {
         Image(assetName)
             .resizable()

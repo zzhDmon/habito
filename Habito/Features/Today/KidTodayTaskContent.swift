@@ -21,7 +21,9 @@ struct KidTodayTaskContent: View {
         case let .loaded(content) where content.isEmpty:
             ContentUnavailableView(
                 "kidToday.emptyTitle", systemImage: "sun.max.fill",
-                description: Text("kidToday.emptyDescription"))
+                description: Text("kidToday.emptyDescription")
+            )
+            .modifier(MangaPanel())
         case let .loaded(content):
             // 任务区必须作为一个布局子元素；否则错误和结果会被外层横屏HStack拆成两栏。
             VStack(alignment: .leading, spacing: HabitoDesign.Spacing.large) {
@@ -52,7 +54,9 @@ struct KidTodayTaskContent: View {
             } actions: {
                 Button("kidToday.retry", systemImage: "arrow.clockwise", action: onRetry)
                     .frame(minHeight: HabitoDesign.Layout.minimumTapSize)
+                    .buttonStyle(MangaButtonStyle())
             }
+            .modifier(MangaPanel())
         }
     }
 }

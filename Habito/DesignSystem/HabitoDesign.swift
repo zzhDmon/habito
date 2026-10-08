@@ -21,6 +21,7 @@ enum HabitoDesign {
         static let corner: CGFloat = 10
         static let shadowOffset: CGFloat = 4
         static let iconSize: CGFloat = 40
+        static let compactIconSize: CGFloat = 24
         static let characterHeight: CGFloat = 180
     }
 

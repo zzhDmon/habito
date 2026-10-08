@@ -127,6 +127,7 @@ struct RootView: View {
                 }
             }
         }
+        .tint(HabitoDesign.Manga.successInk)
         .task(loadToday)
         .task(id: notificationRebuildTrigger.revision) {
             await rebuildNotifications()
