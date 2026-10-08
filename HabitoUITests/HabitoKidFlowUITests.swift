@@ -2235,9 +2235,13 @@ final class HabitoKidFlowUITests: XCTestCase {
                 XCTFail("表单应保留可操作区域")
                 return
             }
-            if element.exists, element.isHittable, visibleFrame.contains(element.frame) { return }
+            let elementFrame = element.exists ? element.frame : .null
+            // 懒加载的屏外 DatePicker 在 27 系查询 isHittable 可能因无有效命中点而报错。
+            // 先确认非空边框完整进入实际视口，再要求可点击；仍保留原有的严格可见验收。
+            if !elementFrame.isEmpty, visibleFrame.contains(elementFrame), element.isHittable { return }
             let distance =
-                element.exists ? (element.frame.midY - visibleFrame.midY) / visibleFrame.height : (towardTop ? -1 : 1)
+                elementFrame.isEmpty
+                ? (towardTop ? -1 : 1) : (elementFrame.midY - visibleFrame.midY) / visibleFrame.height
             // 归一化坐标属于完整 Form；把可视区内的位移换算后，拖动终点也不能落进导航栏/键盘。
             let displacement =
                 min(max(abs(distance), 0.12), 0.35) * visibleFrame.height / viewport.frame.height
