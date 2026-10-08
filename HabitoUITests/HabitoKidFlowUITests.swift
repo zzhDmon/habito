@@ -1968,6 +1968,51 @@ final class HabitoKidFlowUITests: XCTestCase {
         verifyFormalConfigurationLoop(zeroReward: true)
     }
 
+    func testLearningPresetAndRewardButtonsPersistAfterRelaunch() throws {
+        let app = launchEmptyParentEditor(title: "待替换草稿")
+        let preset = app.buttons["parent.templates.preset.reading"]
+        scrollFullyIntoEditorViewport(preset, in: app, towardTop: true)
+        XCTAssertGreaterThanOrEqual(preset.frame.height, 44)
+        preset.tap()
+        let title = app.textFields["parent.templates.editor.title"]
+        scrollFullyIntoEditorViewport(title, in: app)
+        XCTAssertEqual(title.value as? String, "课外阅读")
+        for name in ["weekend", "schoolDays"] {
+            let day = app.buttons["parent.templates.days." + name]
+            scrollFullyIntoEditorViewport(day, in: app, towardTop: name == "schoolDays")
+            day.tap()
+            XCTAssertTrue(day.isSelected)
+        }
+        for (field, amount) in [("xp", "15"), ("base-coins", "2"), ("autonomy-coins", "1")] {
+            let identifier = "parent.templates.editor." + field
+            let button = app.buttons[identifier + ".preset." + amount]
+            scrollFullyIntoEditorViewport(button, in: app)
+            XCTAssertGreaterThanOrEqual(button.frame.height, 44)
+            button.tap()
+            XCTAssertTrue(button.isSelected)
+            let input = app.textFields[identifier]
+            scrollFullyIntoEditorViewport(input, in: app, towardTop: true)
+            XCTAssertEqual(input.value as? String, amount)
+            assertEditorSaveBarBelowForm(in: app)
+        }
+        keepScreenshot(app, name: "常用奖励按钮与独立保存栏")
+        tapEditorSave(in: app)
+        XCTAssertTrue(parentTemplate(named: "课外阅读", in: app).waitForExistence(timeout: 5))
+        relaunchTodayKeepingData(app)
+        unlockExistingParent(in: app)
+        parentTemplate(named: "课外阅读", in: app).tap()
+        XCTAssertTrue(title.waitForExistence(timeout: 5))
+        XCTAssertFalse(app.buttons["parent.templates.preset.reading"].exists)
+        let schoolDays = app.buttons["parent.templates.days.schoolDays"]
+        scrollFullyIntoEditorViewport(schoolDays, in: app)
+        XCTAssertTrue(schoolDays.isSelected)
+        for (field, amount) in [("xp", "15"), ("base-coins", "2"), ("autonomy-coins", "1")] {
+            let input = app.textFields["parent.templates.editor." + field]
+            scrollFullyIntoEditorViewport(input, in: app)
+            XCTAssertEqual(input.value as? String, amount)
+        }
+    }
+
     func testRewardInputErrorsRemainVisibleAndCorrectableBeforeFormalSave() throws {
         let app = launchEmptyParentEditor(title: "输入可纠正")
         setRewardText("", identifier: "parent.templates.editor.xp", in: app)
@@ -2113,7 +2158,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         unlockParent(in: app)
         app.buttons["parent.templates.create"].tap()
         let input = app.textFields["parent.templates.editor.title"]
-        XCTAssertTrue(input.waitForExistence(timeout: 5))
+        scrollFullyIntoEditorViewport(input, in: app)
         input.tap()
         input.typeText(title)
         return app
@@ -2185,6 +2230,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         let input = app.textFields[identifier]
         // 错误提示位于奖励区域底部；纠正前方懒加载输入时需要向上寻找，不能继续向底部滚动。
         scrollFullyIntoEditorViewport(input, in: app, towardTop: towardTop)
+        assertEditorSaveBarBelowForm(in: app)
         XCTAssertGreaterThanOrEqual(input.frame.height, 44)
         let row = app.descendants(matching: .any)[identifier + ".row"]
         XCTAssertTrue(row.exists)
@@ -2206,10 +2252,22 @@ final class HabitoKidFlowUITests: XCTestCase {
             add(diagnostic)
         }
         XCTAssertEqual(focusResult, .completed, "边缘点击应让当前输入框获得焦点")
+        let focusedValue = input.value as? String ?? ""
+        XCTAssertEqual(focusedValue == input.placeholderValue ? "" : focusedValue, oldText, "获得焦点不应改动金额")
         input.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: oldText.count) + text)
+        assertEditorSaveBarBelowForm(in: app)
         let newValue = input.value as? String ?? ""
         // XCTest 将空 TextField 的 placeholder 作为 value；金额仍必须精确回读，空值再由保存错误验证。
         XCTAssertEqual(newValue == input.placeholderValue ? "" : newValue, text)
+    }
+
+    /// 保存栏必须在滚动表单之外；键盘显隐和滚动后也不能悬在奖励字段中间。
+    private func assertEditorSaveBarBelowForm(in app: XCUIApplication) {
+        let form = app.collectionViews["parent.templates.editor"]
+        let bar = app.otherElements["parent.templates.editor.save-bar"]
+        XCTAssertTrue(form.exists && bar.exists)
+        XCTAssertLessThanOrEqual(form.frame.maxY, bar.frame.minY + 1)
+        XCTAssertGreaterThanOrEqual(app.buttons["parent.templates.editor.save"].frame.height, 44)
     }
 
     /// 原生 Form 懒加载内容；小幅滚动到控件完整可见再操作，不把边缘命中当验收。

@@ -440,6 +440,171 @@
           }
         }
       }
+    },
+    "taskPreset.section": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "常用任务"
+          }
+        }
+      }
+    },
+    "taskPreset.hint": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "点选会替换当前新建草稿的名称、时长、分类、确认方式、奖励和重复星期；保存前均可修改。建议先选1～2个额外习惯，不必全部添加。"
+          }
+        }
+      }
+    },
+    "taskPreset.reading": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "课外阅读"
+          }
+        }
+      }
+    },
+    "taskPreset.handwriting": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "硬笔写字"
+          }
+        }
+      }
+    },
+    "taskPreset.chineseHomework": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "语文作业"
+          }
+        }
+      }
+    },
+    "taskPreset.mathHomework": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "数学作业"
+          }
+        }
+      }
+    },
+    "taskPreset.english": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "英语打卡"
+          }
+        }
+      }
+    },
+    "taskPreset.pinyin": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "拼音阅读"
+          }
+        }
+      }
+    },
+    "taskPreset.schoolbag": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "整理书包"
+          }
+        }
+      }
+    },
+    "taskPreset.exercise": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "户外运动"
+          }
+        }
+      }
+    },
+    "taskPreset.housework": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "小家务"
+          }
+        }
+      }
+    },
+    "taskPreset.days.schoolDays": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "上学日 · 周一至周五"
+          }
+        }
+      }
+    },
+    "taskPreset.days.everyDay": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "每天"
+          }
+        }
+      }
+    },
+    "taskPreset.days.weekend": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "周末"
+          }
+        }
+      }
+    },
+    "taskPreset.days.hint": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "按星期重复，可逐日调整。放假可在日期设置暂停；临时补课不会自动补排，请核对任务安排。"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

@@ -2,14 +2,14 @@ import Foundation
 import Testing
 
 struct LocalizationCatalogTests {
-    @Test("每个字符串目录键都有非空简体中文值")
-    func everyCatalogKeyHasSimplifiedChineseValue() throws {
+    @Test("每个字符串目录键都有非空简体中文值", arguments: ["Localizable", "UIR1"])
+    func everyCatalogKeyHasSimplifiedChineseValue(table: String) throws {
         let testFileURL = URL(fileURLWithPath: #filePath)
         let catalogURL =
             testFileURL
             .deletingLastPathComponent()
             .deletingLastPathComponent()
-            .appendingPathComponent("Habito/Resources/Localizable.xcstrings")
+            .appendingPathComponent("Habito/Resources/\(table).xcstrings")
         let data = try Data(contentsOf: catalogURL)
         let catalog = try JSONDecoder().decode(StringCatalog.self, from: data)
 

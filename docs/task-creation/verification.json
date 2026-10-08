@@ -1,0 +1,100 @@
+{
+  "task": "UX-001/002/003",
+  "completed": "2026-10-08T14:36:08",
+  "results": [
+    {
+      "package": "/tmp/habito-ux002d-17.xcresult",
+      "passed_definitions": 2,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0
+    },
+    {
+      "package": "/tmp/habito-ux002d-27.xcresult",
+      "passed_definitions": 2,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0
+    },
+    {
+      "package": "/tmp/habito-ux-final-unit17b.xcresult",
+      "passed_definitions": 689,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "suites": 87,
+      "executions": 1392,
+      "parameterized_definitions": 259,
+      "parameterized_executions": 962
+    },
+    {
+      "package": "/tmp/habito-ux-final-unit27.xcresult",
+      "passed_definitions": 689,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "suites": 87,
+      "executions": 1392,
+      "parameterized_definitions": 259,
+      "parameterized_executions": 962
+    }
+  ],
+  "related_unit_package": "/tmp/habito-ux002-unit17.xcresult",
+  "related_unit_definitions": 17,
+  "final_source_files_verified": 544,
+  "post_ui_delta": {
+    "files": [
+      "Habito/Features/Pet/PetGrowthSummaryView.swift",
+      "HabitoTests/LocalizationCatalogTests.swift"
+    ],
+    "reason": "完整单测发现宠物条件文案误提取到默认表；改静态UIR1分支并扩展两张目录单测，最终完整单测与构建复验。任务编辑器生产/测试源与d包一致。"
+  },
+  "earlier_failures_preserved": [
+    {
+      "package": "/tmp/habito-ux002-17.xcresult",
+      "failures": 2,
+      "reason": "重启PIN测试入口错误；金额输入误触"
+    },
+    {
+      "package": "/tmp/habito-ux002-27.xcresult",
+      "failures": 2,
+      "reason": "新模板区使名称框屏外，测试未滚动"
+    },
+    {
+      "package": "/tmp/habito-ux002b-17.xcresult",
+      "failures": 1,
+      "reason": "同一Form行输入点击触发快捷金额"
+    },
+    {
+      "package": "/tmp/habito-ux002c-17.xcresult",
+      "failures": 1,
+      "reason": "焦点获取从0变15，定位生产布局问题"
+    },
+    {
+      "package": "/tmp/habito-ux-final-unit17.xcresult",
+      "failures": 1,
+      "reason": "构建误提取pet.calm/pet.happy两空键，后修复"
+    }
+  ],
+  "quality": {
+    "release": "Passed",
+    "debug_analysis": "Passed",
+    "strict_format": "Passed",
+    "original_translations_preserved": 467,
+    "UIR1_translated_keys": 55,
+    "new_swift_or_concurrency_warnings": 0,
+    "known_messages": "R-009最低/横屏方向兼容提示及无AppIntents依赖的元数据跳过，未新增Swift编译告警"
+  },
+  "settings_restored": {
+    "17": "large/light",
+    "27": "large/light"
+  },
+  "screenshot": {
+    "path": "reward-buttons-max-ios27.png",
+    "source": "simctl direct screenshot during final d UI tests; no rotation or image editing",
+    "width": 2752,
+    "height": 2064,
+    "sha256": "c10e22b3e7edce335695d71b981939e1e96c44f431a537eb13981acf96ee511e"
+  },
+  "remaining": "原7组仍6/7；目标实机与至少14天家庭观察未完成；学期阶段为规划，不是已实现的自动里程碑。"
+}

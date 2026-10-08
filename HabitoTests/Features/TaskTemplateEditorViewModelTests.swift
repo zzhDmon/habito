@@ -323,6 +323,54 @@ struct TaskTemplateEditorViewModelTests {
             !fixture.context.hasChanges && fixture.rebuildTrigger.revision == 0 && fixture.provider.requestCount == 0)
     }
 
+    @Test("主动模板只填新建草稿，保留时间且无存储副作用", arguments: TaskLearningPreset.allCases)
+    func presetChangesOnlyUnsavedDraft(preset: TaskLearningPreset) throws {
+        let fixture = try makeFixture()
+        let model = fixture.model
+        model.applyLearningPreset(preset)
+        #expect(model.draft.title.isEmpty)
+        model.load()
+        model.isPlannedTimeEnabled = true
+        model.isDeadlineTimeEnabled = true
+        let reminder = model.scheduledTime
+        let planned = model.draft.plannedTimeOfDayMinutes
+        let deadline = model.draft.deadlineTimeOfDayMinutes
+        model.applyLearningPreset(preset)
+        #expect(model.draft.title == preset.title)
+        #expect(model.draft.weekdays == Weekday.schoolDays)
+        #expect(model.scheduledTime == reminder)
+        #expect(model.draft.plannedTimeOfDayMinutes == planned && model.draft.deadlineTimeOfDayMinutes == deadline)
+        #expect(try model.rewardInput.applying(to: model.draft) == model.draft)
+        #expect(!fixture.context.hasChanges)
+        #expect(try fixture.context.fetchCount(FetchDescriptor<TaskTemplate>()) == 0)
+        #expect(fixture.rebuildTrigger.revision == 0 && fixture.provider.requestCount == 0)
+        model.draft.title = "家长调整"
+        model.rewardInput.xp = "17"
+        model.load()
+        #expect(model.draft.title == "家长调整" && model.rewardInput.xp == "17")
+    }
+
+    @Test("预设可调整后保存回读，旧任务拒绝再次套用")
+    func presetPersistsCustomChoicesWithoutReplacingExistingTask() async throws {
+        let fixture = try makeFixture()
+        fixture.model.load()
+        fixture.model.applyLearningPreset(.reading)
+        fixture.model.rewardInput.xp = "15"
+        fixture.model.draft.weekdays = TaskWeekdayPreset.weekend.days
+        #expect(await fixture.model.save() == .saved)
+        let template = try #require(fixture.context.fetch(FetchDescriptor<TaskTemplate>()).first)
+        let editing = try makeFixture(context: fixture.context, templateID: template.id)
+        editing.model.load()
+        #expect(editing.model.draft.title == TaskLearningPreset.reading.title)
+        #expect(editing.model.draft.xpReward == 15 && editing.model.draft.coinReward == 2)
+        #expect(editing.model.draft.activeBonusCoin == 1)
+        #expect(editing.model.draft.weekdays == TaskWeekdayPreset.weekend.days)
+        let before = editing.model.draft
+        editing.model.applyLearningPreset(.mathHomework)
+        #expect(editing.model.draft == before)
+        #expect(!fixture.context.hasChanges)
+    }
+
     private func makeFixture(
         context suppliedContext: ModelContext? = nil, templateID: UUID? = nil, failsStorage: Bool = false
     ) throws -> Fixture {

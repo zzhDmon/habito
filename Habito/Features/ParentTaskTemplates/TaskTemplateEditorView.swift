@@ -17,45 +17,50 @@ struct TaskTemplateEditorView: View {
     var body: some View {
         @Bindable var model = model
 
-        Group {
-            if model.isLoading {
-                ProgressView("taskEditor.loading")
-            } else if model.hasLoadFailure {
-                ContentUnavailableView(
-                    "taskEditor.errorLoadTitle",
-                    systemImage: "exclamationmark.triangle.fill",
-                    description: Text("taskEditor.errorLoad")
-                )
-            } else {
-                TaskTemplateEditorForm(
-                    draft: $model.draft,
-                    rewardInput: $model.rewardInput,
-                    rewardFocus: $focusedReward,
-                    scheduledTime: $model.scheduledTime,
-                    isPlannedTimeEnabled: $model.isPlannedTimeEnabled,
-                    plannedTime: $model.plannedTime,
-                    isDeadlineTimeEnabled: $model.isDeadlineTimeEnabled,
-                    deadlineTime: $model.deadlineTime,
-                    feedback: model.feedback,
-                    onToggleWeekday: model.toggle,
-                    onDisable: { model.prepareLifecycleAction(.disable) },
-                    onEnable: { model.prepareLifecycleAction(.enable) },
-                    onArchive: { model.prepareLifecycleAction(.archive) }
-                )
-                .environment(\.calendar, model.timeInputCalendar)
-                .environment(\.timeZone, model.timeInputCalendar.timeZone)
-                .environment(\.locale, Locale(identifier: "zh_Hans_CN"))
-                .accessibilityElement(children: .contain)
-                .accessibilityIdentifier(HabitoAccessibilityID.taskEditorScreen)
+        // Form 与保存栏占据独立的布局空间。弹层收起键盘或改变高度时，
+        // 不依赖 Form 对 safeAreaInset 的缓存，避免按钮留在表单中部遮住奖励字段。
+        VStack(spacing: 0) {
+            Group {
+                if model.isLoading {
+                    ProgressView("taskEditor.loading")
+                } else if model.hasLoadFailure {
+                    ContentUnavailableView(
+                        "taskEditor.errorLoadTitle",
+                        systemImage: "exclamationmark.triangle.fill",
+                        description: Text("taskEditor.errorLoad")
+                    )
+                } else {
+                    TaskTemplateEditorForm(
+                        draft: $model.draft,
+                        rewardInput: $model.rewardInput,
+                        rewardFocus: $focusedReward,
+                        scheduledTime: $model.scheduledTime,
+                        isPlannedTimeEnabled: $model.isPlannedTimeEnabled,
+                        plannedTime: $model.plannedTime,
+                        isDeadlineTimeEnabled: $model.isDeadlineTimeEnabled,
+                        deadlineTime: $model.deadlineTime,
+                        feedback: model.feedback,
+                        onToggleWeekday: model.toggle,
+                        onDisable: { model.prepareLifecycleAction(.disable) },
+                        onEnable: { model.prepareLifecycleAction(.enable) },
+                        onArchive: { model.prepareLifecycleAction(.archive) },
+                        onApplyPreset: model.applyLearningPreset
+                    )
+                    .environment(\.calendar, model.timeInputCalendar)
+                    .environment(\.timeZone, model.timeInputCalendar.timeZone)
+                    .environment(\.locale, Locale(identifier: "zh_Hans_CN"))
+                    .accessibilityElement(children: .contain)
+                    .accessibilityIdentifier(HabitoAccessibilityID.taskEditorScreen)
+                }
             }
-        }
-        .navigationTitle(model.isCreating ? "taskEditor.createTitle" : "taskEditor.editTitle")
-        .safeAreaInset(edge: .bottom) {
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             TaskTemplateEditorSaveBar(
                 isDisabled: model.isLoading || model.isSaving || model.hasLoadFailure,
                 onSave: save
             )
+            .fixedSize(horizontal: false, vertical: true)
         }
+        .navigationTitle(model.isCreating ? "taskEditor.createTitle" : "taskEditor.editTitle")
         .task(model.load)
         .alert(
             lifecycleTitle,

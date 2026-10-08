@@ -15,9 +15,13 @@ struct TaskTemplateEditorForm: View {
     let onDisable: () -> Void
     let onEnable: () -> Void
     let onArchive: () -> Void
+    var onApplyPreset: (TaskLearningPreset) -> Void = { _ in }
 
     var body: some View {
         Form {
+            if draft.templateID == nil {
+                TaskPresetSection(onApply: onApplyPreset)
+            }
             Section {
                 TextField("taskEditor.title", text: $draft.title)
                     .textInputAutocapitalization(.sentences)
@@ -71,6 +75,7 @@ struct TaskTemplateEditorForm: View {
                 isDeadlineTimeEnabled: $isDeadlineTimeEnabled, deadlineTime: $deadlineTime)
 
             Section {
+                TaskWeekdayChoices(weekdays: $draft.weekdays)
                 ForEach(Weekday.allCases, id: \.self) { weekday in
                     Button {
                         onToggleWeekday(weekday)

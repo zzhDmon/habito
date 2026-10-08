@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DF11877BDB6E5A68A9F4A7B8 /* TaskWeekdayPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40E4CF702CB4D624059BFEC8 /* TaskWeekdayPreset.swift */; };
+		79AD855B5D28B4EC6F27B3BD /* TaskWeekdayChoices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44BFB87553962599A96C4587 /* TaskWeekdayChoices.swift */; };
+		94470E1A4930D21AA0529F5E /* TaskRewardPresets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512F8D408DB0E806EF0012FE /* TaskRewardPresets.swift */; };
+		D922C0C28EBF546026E34E82 /* TaskRewardChoices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72D3EDFAB80B0E654F2D7935 /* TaskRewardChoices.swift */; };
+		C9F438ED728219CFFAE59435 /* TaskPresetSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C6F3C3545249C4A8CB00D1 /* TaskPresetSection.swift */; };
+		401C011F656216BCA486C7AB /* TaskLearningPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A901CB1CD2EA0D6208F7C96 /* TaskLearningPreset.swift */; };
 		D12845AA4AA523520B56F77B /* PetGrowthFeedbackViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0738913549BB2BE691FDAD56 /* PetGrowthFeedbackViewModelTests.swift */; };
 		02AD13826909055AE7F0BA35 /* PetGrowthFeedbackServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00A61DC01A71464ABD2CF62 /* PetGrowthFeedbackServiceTests.swift */; };
 		EF4742F69C0E4B7397F3A0B2 /* PetLevelFeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D597FC1FC764D5EF642E4EB /* PetLevelFeedbackView.swift */; };
@@ -567,6 +573,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		40E4CF702CB4D624059BFEC8 /* TaskWeekdayPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskWeekdayPreset.swift; sourceTree = "<group>"; };
+		44BFB87553962599A96C4587 /* TaskWeekdayChoices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskWeekdayChoices.swift; sourceTree = "<group>"; };
+		512F8D408DB0E806EF0012FE /* TaskRewardPresets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskRewardPresets.swift; sourceTree = "<group>"; };
+		72D3EDFAB80B0E654F2D7935 /* TaskRewardChoices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskRewardChoices.swift; sourceTree = "<group>"; };
+		35C6F3C3545249C4A8CB00D1 /* TaskPresetSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskPresetSection.swift; sourceTree = "<group>"; };
+		7A901CB1CD2EA0D6208F7C96 /* TaskLearningPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskLearningPreset.swift; sourceTree = "<group>"; };
 		0738913549BB2BE691FDAD56 /* PetGrowthFeedbackViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetGrowthFeedbackViewModelTests.swift; sourceTree = "<group>"; };
 		A00A61DC01A71464ABD2CF62 /* PetGrowthFeedbackServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetGrowthFeedbackServiceTests.swift; sourceTree = "<group>"; };
 		7D597FC1FC764D5EF642E4EB /* PetLevelFeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetLevelFeedbackView.swift; sourceTree = "<group>"; };
@@ -1754,6 +1766,12 @@
 		R50000000000000000000001 /* ParentTaskTemplates */ = {
 			isa = PBXGroup;
 			children = (
+				40E4CF702CB4D624059BFEC8 /* TaskWeekdayPreset.swift */,
+				44BFB87553962599A96C4587 /* TaskWeekdayChoices.swift */,
+				512F8D408DB0E806EF0012FE /* TaskRewardPresets.swift */,
+				72D3EDFAB80B0E654F2D7935 /* TaskRewardChoices.swift */,
+				35C6F3C3545249C4A8CB00D1 /* TaskPresetSection.swift */,
+				7A901CB1CD2EA0D6208F7C96 /* TaskLearningPreset.swift */,
 				R20000000000000000000001 /* ParentTaskTemplateListItem.swift */,
 				R2000000000000000000000A /* ParentTaskTemplateListContent.swift */,
 				R20000000000000000000008 /* ParentTaskTemplateListView.swift */,
@@ -2274,6 +2292,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DF11877BDB6E5A68A9F4A7B8 /* TaskWeekdayPreset.swift in Sources */,
+				79AD855B5D28B4EC6F27B3BD /* TaskWeekdayChoices.swift in Sources */,
+				94470E1A4930D21AA0529F5E /* TaskRewardPresets.swift in Sources */,
+				D922C0C28EBF546026E34E82 /* TaskRewardChoices.swift in Sources */,
+				C9F438ED728219CFFAE59435 /* TaskPresetSection.swift in Sources */,
+				401C011F656216BCA486C7AB /* TaskLearningPreset.swift in Sources */,
 				EF4742F69C0E4B7397F3A0B2 /* PetLevelFeedbackView.swift in Sources */,
 				DED581C8C14317B5F9AE8AC0 /* PetGrowthFeedbackViewModel.swift in Sources */,
 				297BCF66198CE4BF5FAF6C14 /* PetGrowthFeedbackService.swift in Sources */,

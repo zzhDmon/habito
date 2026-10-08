@@ -119,6 +119,14 @@ final class TaskTemplateEditorViewModel {
         }
     }
 
+    /// 显式应用新建建议，只更新草稿；加载失败、保存中及旧任务禁止套用。
+    func applyLearningPreset(_ preset: TaskLearningPreset) {
+        guard isCreating, !isLoading, !isSaving, !hasLoadFailure else { return }
+        draft = preset.applying(to: draft)
+        rewardInput = TaskTemplateRewardInput(draft: draft)
+        feedback = nil
+    }
+
     /// 保存当前草稿；首次创建成功后才请求通知权限，权限问题不会回滚任务。
     func save() async -> TaskTemplateSaveOutcome {
         // 载入失败不是空白新任务；保留错误状态，不能让保存操作创建另一个模板。

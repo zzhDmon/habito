@@ -15,8 +15,15 @@ struct PetGrowthSummaryView: View {
             }.tint(HabitoDesign.Manga.successInk)
             Text(String.localizedStringWithFormat(String(localized: "pet.bondFormat", table: "UIR1"), snapshot.bond))
                 .accessibilityIdentifier(HabitoAccessibilityID.petBond)
-            Text(snapshot.mood == .happy ? "pet.happy" : "pet.calm", tableName: "UIR1")
-                .accessibilityIdentifier(HabitoAccessibilityID.petMood)
+            // 静态分支明确指定目录，避免编译器将条件字符串提取为默认表中的空键。
+            Group {
+                if snapshot.mood == .happy {
+                    Text("pet.happy", tableName: "UIR1")
+                } else {
+                    Text("pet.calm", tableName: "UIR1")
+                }
+            }
+            .accessibilityIdentifier(HabitoAccessibilityID.petMood)
             Text(String.localizedStringWithFormat(String(localized: "pet.coinsFormat", table: "UIR1"), snapshot.coins))
                 .accessibilityIdentifier(HabitoAccessibilityID.petCoins)
             Text("pet.noPenalty", tableName: "UIR1").font(.callout).foregroundStyle(HabitoDesign.Manga.secondaryInk)

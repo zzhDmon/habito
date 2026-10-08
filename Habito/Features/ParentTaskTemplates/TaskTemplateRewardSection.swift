@@ -11,17 +11,20 @@ struct TaskTemplateRewardSection: View {
             TaskTemplateRewardField(
                 title: "taskEditor.xp", value: $input.xp,
                 focus: focus,
-                identifier: HabitoAccessibilityID.taskEditorXP
+                identifier: HabitoAccessibilityID.taskEditorXP,
+                amounts: TaskRewardPresets.xp
             )
             TaskTemplateRewardField(
                 title: "taskEditor.baseCoins", value: $input.baseCoins,
                 focus: focus,
-                identifier: HabitoAccessibilityID.taskEditorBaseCoins
+                identifier: HabitoAccessibilityID.taskEditorBaseCoins,
+                amounts: TaskRewardPresets.coins
             )
             TaskTemplateRewardField(
                 title: "taskEditor.autonomyCoins", value: $input.autonomyCoins,
                 focus: focus,
-                identifier: HabitoAccessibilityID.taskEditorAutonomyCoins
+                identifier: HabitoAccessibilityID.taskEditorAutonomyCoins,
+                amounts: TaskRewardPresets.autonomyCoins
             )
         } header: {
             Text("taskEditor.rewardSection")
