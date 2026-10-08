@@ -71,7 +71,7 @@
                 scenario.hasSyntheticReward
                     == (scenario == .rewardSelfConfirm || scenario == .rewardAfterReminder
                         || scenario == .parentApproval
-                        || scenario == .returnedSubmission || scenario == .dailyIncome))
+                        || scenario == .returnedSubmission || scenario == .dailyIncome || scenario == .petCare))
             #expect(occurrence.xpRewardSnapshot == (scenario.hasSyntheticReward ? 11 : 0))
             #expect(occurrence.coinRewardSnapshot == (scenario.hasSyntheticReward ? 7 : 0))
             #expect(occurrence.activeBonusCoinSnapshot == (scenario.hasSyntheticReward ? 3 : 0))
@@ -84,9 +84,11 @@
             #expect(try fixture.context.fetchCount(FetchDescriptor<CompletionRecord>()) == 0)
             #expect(
                 try fixture.context.fetchCount(FetchDescriptor<XPTransaction>())
-                    == (scenario == .dailyIncome ? 2 : (scenario == .corruptRewardLedger ? 1 : 0)))
+                    == (scenario == .dailyIncome
+                        ? 2 : (scenario == .corruptRewardLedger || scenario == .petCare ? 1 : 0)))
             #expect(
-                try fixture.context.fetchCount(FetchDescriptor<CoinTransaction>()) == (scenario == .dailyIncome ? 3 : 0)
+                try fixture.context.fetchCount(FetchDescriptor<CoinTransaction>())
+                    == (scenario == .dailyIncome ? 3 : (scenario == .petCare ? 1 : 0))
             )
         }
 

@@ -13,6 +13,42 @@ final class HabitoKidFlowUITests: XCTestCase {
         continueAfterFailure = false
     }
 
+    func testPetLevelUpFromRealCompletionDoesNotReplayAfterRestartWithSystemTextSize() throws {
+        XCUIDevice.shared.orientation = .landscapeLeft
+        let app = makeApplication()
+        app.launchArguments = ["--habito-ui-testing", "--habito-ui-reset", "--habito-ui-task-scenario", "pet-care"]
+        app.launch()
+        let task = app.buttons[seededTaskIdentifier]
+        scrollFullyIntoTodayViewport(task, in: app)
+        XCTAssertFalse(app.staticTexts["kid.pet.level-up"].exists)
+        task.tap()
+        let complete = app.buttons["kid.session.complete"]
+        scrollFullyIntoSessionViewport(complete, in: app)
+        complete.tap()
+        let closeReward = app.buttons["kid.session.dismiss-completion-feedback"]
+        scrollFullyIntoSessionViewport(closeReward, in: app)
+        closeReward.tap()
+        returnToTodayFromTask(in: app)
+        let levelUp = app.staticTexts["kid.pet.level-up"]
+        XCTAssertTrue(levelUp.waitForExistence(timeout: 5))
+        XCTAssertEqual(levelUp.label, "一起成长到 2 级！")
+        let close = app.buttons["kid.pet.level-up-continue"]
+        scrollFullyIntoTodayViewport(close, in: app, towardTop: true)
+        XCTAssertGreaterThanOrEqual(close.frame.height, 44)
+        XCTAssertTrue(close.isHittable)
+        keepScreenshot(app, name: "真实完成跨100XP升级只领取一次")
+        close.tap()
+        XCTAssertFalse(levelUp.exists)
+        app.terminate()
+        app.launchArguments = ["--habito-ui-testing", "--habito-ui-task-scenario", "pet-care"]
+        app.launch()
+        XCTAssertTrue(app.buttons["kid.pet.entry"].waitForExistence(timeout: 5))
+        XCTAssertFalse(levelUp.exists)
+        openPet(in: app)
+        XCTAssertEqual(app.staticTexts["kid.pet.level"].label, "等级 2")
+        XCTAssertFalse(levelUp.exists)
+    }
+
     func testPetFeedingPersistsAndStopsAtInsufficientCoinsWithSystemTextSize() throws {
         XCUIDevice.shared.orientation = .landscapeLeft
         let app = makeApplication()

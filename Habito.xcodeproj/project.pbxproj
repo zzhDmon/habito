@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D12845AA4AA523520B56F77B /* PetGrowthFeedbackViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0738913549BB2BE691FDAD56 /* PetGrowthFeedbackViewModelTests.swift */; };
+		02AD13826909055AE7F0BA35 /* PetGrowthFeedbackServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00A61DC01A71464ABD2CF62 /* PetGrowthFeedbackServiceTests.swift */; };
+		EF4742F69C0E4B7397F3A0B2 /* PetLevelFeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D597FC1FC764D5EF642E4EB /* PetLevelFeedbackView.swift */; };
+		DED581C8C14317B5F9AE8AC0 /* PetGrowthFeedbackViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE38617B912820922B2FA15 /* PetGrowthFeedbackViewModel.swift */; };
+		297BCF66198CE4BF5FAF6C14 /* PetGrowthFeedbackService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7FF822AC6EEC2D7FB7A6CB2 /* PetGrowthFeedbackService.swift */; };
+		CEC87FDDE3398D7A247A8A07 /* PetGrowthObservation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E028A33DC9BA2D117498B1 /* PetGrowthObservation.swift */; };
 		A117198F5134436A667C810F /* PetFeedingControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 913E9178CEC8333B6AA994DC /* PetFeedingControls.swift */; };
 		F8D241D4C385D1B059480968 /* PetGrowthSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29D68A2D025DDC6045B0CE86 /* PetGrowthSummaryView.swift */; };
 		87A4EBE86C35A9A49075863F /* PetFeedingFailure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F2FE248A135F5475B42FF85 /* PetFeedingFailure.swift */; };
@@ -561,6 +567,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0738913549BB2BE691FDAD56 /* PetGrowthFeedbackViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetGrowthFeedbackViewModelTests.swift; sourceTree = "<group>"; };
+		A00A61DC01A71464ABD2CF62 /* PetGrowthFeedbackServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetGrowthFeedbackServiceTests.swift; sourceTree = "<group>"; };
+		7D597FC1FC764D5EF642E4EB /* PetLevelFeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetLevelFeedbackView.swift; sourceTree = "<group>"; };
+		7EE38617B912820922B2FA15 /* PetGrowthFeedbackViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetGrowthFeedbackViewModel.swift; sourceTree = "<group>"; };
+		D7FF822AC6EEC2D7FB7A6CB2 /* PetGrowthFeedbackService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetGrowthFeedbackService.swift; sourceTree = "<group>"; };
+		B1E028A33DC9BA2D117498B1 /* PetGrowthObservation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetGrowthObservation.swift; sourceTree = "<group>"; };
 		913E9178CEC8333B6AA994DC /* PetFeedingControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetFeedingControls.swift; sourceTree = "<group>"; };
 		29D68A2D025DDC6045B0CE86 /* PetGrowthSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetGrowthSummaryView.swift; sourceTree = "<group>"; };
 		8F2FE248A135F5475B42FF85 /* PetFeedingFailure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetFeedingFailure.swift; sourceTree = "<group>"; };
@@ -1128,6 +1140,7 @@
 		CD5000000000000000000003 /* Pet */ = {
 			isa = PBXGroup;
 			children = (
+				D7FF822AC6EEC2D7FB7A6CB2 /* PetGrowthFeedbackService.swift */,
 				22CEB08B80C5E4906EFCA78E /* PetCareService.swift */,
 			);
 			path = Pet;
@@ -1136,6 +1149,7 @@
 		CD5000000000000000000002 /* Pet */ = {
 			isa = PBXGroup;
 			children = (
+				B1E028A33DC9BA2D117498B1 /* PetGrowthObservation.swift */,
 				39ACBE46E96B344C808A6149 /* PetCareSnapshot.swift */,
 				DF3A38BD5BDD37041B823044 /* PetCareRules.swift */,
 				7BCBC9C25FDF6745E8A19E69 /* PetMood.swift */,
@@ -1168,6 +1182,8 @@
 		BC5000000000000000000001 /* Pet */ = {
 			isa = PBXGroup;
 			children = (
+				7D597FC1FC764D5EF642E4EB /* PetLevelFeedbackView.swift */,
+				7EE38617B912820922B2FA15 /* PetGrowthFeedbackViewModel.swift */,
 				913E9178CEC8333B6AA994DC /* PetFeedingControls.swift */,
 				29D68A2D025DDC6045B0CE86 /* PetGrowthSummaryView.swift */,
 				8F2FE248A135F5475B42FF85 /* PetFeedingFailure.swift */,
@@ -1850,6 +1866,7 @@
 		J50000000000000000000001 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				0738913549BB2BE691FDAD56 /* PetGrowthFeedbackViewModelTests.swift */,
 				99439C367E2F166DBD2DD55C /* PetProfileViewModelTests.swift */,
 				CFB664CB893B13A0BAF7AA59 /* TodayDailyRewardStateTests.swift */,
 				AB2000000000000000000263 /* TodayCompletionCelebrationEventTests.swift */,
@@ -2071,6 +2088,7 @@
 		D50000000000000000000002 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				A00A61DC01A71464ABD2CF62 /* PetGrowthFeedbackServiceTests.swift */,
 				AF9D6231766BCB4F758FAD8A /* PetCareServiceTests.swift */,
 				86946A1A01B2B42AC183FF98 /* PetFactMigrationTests.swift */,
 				5ADFCE6E611F978D81D11534 /* V7MigrationFixture.swift */,
@@ -2256,6 +2274,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EF4742F69C0E4B7397F3A0B2 /* PetLevelFeedbackView.swift in Sources */,
+				DED581C8C14317B5F9AE8AC0 /* PetGrowthFeedbackViewModel.swift in Sources */,
+				297BCF66198CE4BF5FAF6C14 /* PetGrowthFeedbackService.swift in Sources */,
+				CEC87FDDE3398D7A247A8A07 /* PetGrowthObservation.swift in Sources */,
 				A117198F5134436A667C810F /* PetFeedingControls.swift in Sources */,
 				F8D241D4C385D1B059480968 /* PetGrowthSummaryView.swift in Sources */,
 				87A4EBE86C35A9A49075863F /* PetFeedingFailure.swift in Sources */,
@@ -2693,6 +2715,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D12845AA4AA523520B56F77B /* PetGrowthFeedbackViewModelTests.swift in Sources */,
+				02AD13826909055AE7F0BA35 /* PetGrowthFeedbackServiceTests.swift in Sources */,
 				051F216FD1692DB9B57EA7D3 /* PetCareServiceTests.swift in Sources */,
 				D914FC091D71B263CA86AE71 /* PetFactMigrationTests.swift in Sources */,
 				9B2626BA6CFA6742DBEDF1D3 /* V7MigrationFixture.swift in Sources */,

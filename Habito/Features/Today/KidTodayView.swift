@@ -2,6 +2,7 @@ import SwiftUI
 
 /// 孩子打开 App 后看到的今日页基础结构。
 struct KidTodayView: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     let state: TodayViewState
     let rewardState: TodayRewardState
     let makeTimingPresentation: @MainActor (KidTaskNavigationItem) -> KidTaskTimingPresentation
@@ -21,12 +22,20 @@ struct KidTodayView: View {
     var onContinueCelebration: (UUID) -> Void = { _ in }
     var onRetryCelebration: () -> Void = {}
 
+    var petGrowthEvent: PetGrowthObservation?
+    var petGrowthFailed = false
+    var onDismissPetGrowth: () -> Void = {}
+    var onRetryPetGrowth: () -> Void = {}
+
     var body: some View {
         AdaptiveTwoColumnLayout {
             VStack(alignment: .leading, spacing: HabitoDesign.Spacing.large) {
                 ChildRewardFeedbackView(
                     state: feedbackState, acknowledgementFailed: acknowledgementFailed,
                     onContinue: onContinueReceipt, onRetry: onRetryReceipt)
+                PetLevelFeedbackView(
+                    reduceMotion: reduceMotion, event: petGrowthEvent, failed: petGrowthFailed,
+                    onContinue: onDismissPetGrowth, onRetry: onRetryPetGrowth)
                 KidTodayGreetingPanel(onOpenPet: onOpenPet)
                 KidTodayDailyRewardView(state: dailyRewardState, onRetry: onRetryDailyRewards)
                 KidTodayRewardOverview(state: rewardState, onRetry: onRetryRewards)

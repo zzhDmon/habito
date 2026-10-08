@@ -385,6 +385,61 @@
           }
         }
       }
+    },
+    "pet.levelUp": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "升级啦！"
+          }
+        }
+      }
+    },
+    "pet.levelUpFormat": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "一起成长到 %lld 级！"
+          }
+        }
+      }
+    },
+    "pet.levelUpDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "每一次完成，都在让我们成长。"
+          }
+        }
+      }
+    },
+    "pet.levelUpError": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "成长反馈暂时没记好，已到账的奖励不受影响。"
+          }
+        }
+      }
+    },
+    "pet.levelUpRetry": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "再检查一次"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

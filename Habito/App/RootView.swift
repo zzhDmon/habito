@@ -12,6 +12,7 @@ struct RootView: View {
     @State private var parentTodayModel: ParentTodayTaskViewModel
     @State private var statisticsModel: GrowthStatisticsViewModel
     @State private var petProfileModel: PetProfileViewModel
+    @State private var petGrowthFeedbackModel: PetGrowthFeedbackViewModel
     @State private var familyProfileModel: FamilyProfileEditorViewModel
     @State private var parentReviewModel: ParentReviewViewModel
     @State private var parentCalendarModel: ParentCalendarDayViewModel
@@ -36,6 +37,7 @@ struct RootView: View {
         statisticsModel: GrowthStatisticsViewModel,
         familyProfileModel: FamilyProfileEditorViewModel,
         petProfileModel: PetProfileViewModel,
+        petGrowthFeedbackModel: PetGrowthFeedbackViewModel,
         parentReviewModel: ParentReviewViewModel,
         parentCalendarModel: ParentCalendarDayViewModel,
         parentNotificationModel: ParentNotificationDiagnosticsViewModel,
@@ -55,6 +57,7 @@ struct RootView: View {
         _statisticsModel = State(initialValue: statisticsModel)
         _familyProfileModel = State(initialValue: familyProfileModel)
         _petProfileModel = State(initialValue: petProfileModel)
+        _petGrowthFeedbackModel = State(initialValue: petGrowthFeedbackModel)
         _parentReviewModel = State(initialValue: parentReviewModel)
         _parentCalendarModel = State(initialValue: parentCalendarModel)
         _parentNotificationModel = State(initialValue: parentNotificationModel)
@@ -86,7 +89,9 @@ struct RootView: View {
                 celebrationVerificationFailed: todayModel.celebrationVerificationFailed,
                 onClaimCelebration: todayModel.celebrationModel.claimAnimation,
                 onContinueCelebration: todayModel.celebrationModel.dismiss,
-                onRetryCelebration: todayModel.refreshCelebration
+                onRetryCelebration: todayModel.refreshCelebration,
+                petGrowthEvent: petGrowthFeedbackModel.event, petGrowthFailed: petGrowthFeedbackModel.failed,
+                onDismissPetGrowth: petGrowthFeedbackModel.dismiss, onRetryPetGrowth: petGrowthFeedbackModel.refresh
             )
             .toolbar {
                 #if DEBUG
@@ -118,7 +123,10 @@ struct RootView: View {
             .navigationDestination(for: KidRoute.self) { route in
                 switch route {
                 case .pet:
-                    PetHomeView(model: petProfileModel, onOpenParent: openParentGate)
+                    PetHomeView(
+                        model: petProfileModel, onOpenParent: openParentGate,
+                        levelUp: petGrowthFeedbackModel.event, growthCheckFailed: petGrowthFeedbackModel.failed,
+                        onDismissLevelUp: petGrowthFeedbackModel.dismiss, onRetryGrowth: petGrowthFeedbackModel.refresh)
                 case let .task(occurrenceID):
                     KidTaskSessionView(
                         model: taskSessionModelFactory.makeModel(for: occurrenceID),
@@ -172,6 +180,7 @@ struct RootView: View {
         if !isParentGatePresented, path.isEmpty { childRewardFeedbackModel.load() }
         // 宠物页只读；PIN表单关闭后再刷新，绝不读取家长未保存草稿。
         if !isParentGatePresented, path.last == .pet { petProfileModel.load() }
+        if !isParentGatePresented, path.isEmpty || path.last == .pet { petGrowthFeedbackModel.refresh() }
     }
 
     private func openParentGate() {

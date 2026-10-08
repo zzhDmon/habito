@@ -2,6 +2,7 @@ import SwiftUI
 
 /// 喂食必须明确展示价格及效果；已保存收据与失败分开，失败按钮继续使用原请求。
 struct PetFeedingControls: View {
+    let reduceMotion: Bool
     let model: PetProfileViewModel
     let canFeed: Bool
 
@@ -13,7 +14,7 @@ struct PetFeedingControls: View {
                     String(localized: "pet.foodDescriptionFormat", table: "UIR1"), PetCareRules.foodCost,
                     PetCareRules.feedingBondGain))
             if let receipt = model.feedingReceipt {
-                Text("pet.fed", tableName: "UIR1").font(.title3.bold())
+                MangaSpeechBubble { Text("pet.fed", tableName: "UIR1").font(.title3.bold()) }
                     .accessibilityIdentifier(HabitoAccessibilityID.petFed)
                 Text(
                     String.localizedStringWithFormat(
@@ -30,6 +31,7 @@ struct PetFeedingControls: View {
                     .accessibilityIdentifier(HabitoAccessibilityID.petFeed)
             }
         }.fixedSize(horizontal: false, vertical: true)
+            .animation(reduceMotion ? nil : HabitoDesign.Feedback.reveal, value: model.feedingReceipt?.id)
     }
 
     private func errorText(_ error: PetFeedingFailure) -> Text {
@@ -40,4 +42,9 @@ struct PetFeedingControls: View {
         case .unavailable: Text("pet.unavailable", tableName: "UIR1")
         }
     }
+}
+
+#Preview("喂食 · 大字") {
+    PetHomeView(model: PetPreviewData.model(kind: 1), onOpenParent: {})
+        .environment(\.dynamicTypeSize, .accessibility5)
 }

@@ -23,6 +23,7 @@ struct HabitoApp: App {
     @State private var parentTodayModel: ParentTodayTaskViewModel
     @State private var statisticsModel: GrowthStatisticsViewModel
     @State private var petProfileModel: PetProfileViewModel
+    @State private var petGrowthFeedbackModel: PetGrowthFeedbackViewModel
     @State private var familyProfileModel: FamilyProfileEditorViewModel
     @State private var parentReviewModel: ParentReviewViewModel
     @State private var parentCalendarModel: ParentCalendarDayViewModel
@@ -95,6 +96,9 @@ struct HabitoApp: App {
         _petProfileModel = State(
             initialValue: Self.makePetProfileModel(
                 context: container.mainContext, calendar: calendar, timeZone: timeZone, now: dateProvider.now))
+        _petGrowthFeedbackModel = State(
+            initialValue: PetGrowthFeedbackViewModel(
+                observe: PetGrowthFeedbackService(context: container.mainContext).observe))
         let overviewQuery = GrowthStatisticsQueryService(
             context: container.mainContext, calendar: calendar, timeZone: timeZone)
         let overviewModel = ParentTodayOverviewViewModel(service: overviewQuery, now: dateProvider.now)
@@ -229,6 +233,7 @@ struct HabitoApp: App {
                 statisticsModel: statisticsModel,
                 familyProfileModel: familyProfileModel,
                 petProfileModel: petProfileModel,
+                petGrowthFeedbackModel: petGrowthFeedbackModel,
                 parentReviewModel: parentReviewModel,
                 parentCalendarModel: parentCalendarModel,
                 parentNotificationModel: parentNotificationModel,

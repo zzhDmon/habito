@@ -2,13 +2,21 @@ import SwiftUI
 
 /// 小狗主页展示同一份已验证成长快照；喂食写入由注入服务负责，名字编辑仍走PIN。
 struct PetHomeView: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     let model: PetProfileViewModel
     let onOpenParent: () -> Void
+    var levelUp: PetGrowthObservation?
+    var growthCheckFailed = false
+    var onDismissLevelUp: () -> Void = {}
+    var onRetryGrowth: () -> Void = {}
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: HabitoDesign.Spacing.large) {
-                DogCharacter()
+                PetLevelFeedbackView(
+                    reduceMotion: reduceMotion, event: levelUp, failed: growthCheckFailed,
+                    onContinue: onDismissLevelUp, onRetry: onRetryGrowth)
+                DogCharacter(celebrating: model.feedingReceipt?.didInsert == true)
                 switch model.state {
                 case .loading:
                     ProgressView { Text("pet.loading", tableName: "UIR1") }
@@ -29,7 +37,7 @@ struct PetHomeView: View {
                         Text("pet.companion", tableName: "UIR1").font(.title2.bold())
                     }
                     PetGrowthSummaryView(snapshot: snapshot)
-                    PetFeedingControls(model: model, canFeed: snapshot.canFeed)
+                    PetFeedingControls(reduceMotion: reduceMotion, model: model, canFeed: snapshot.canFeed)
                     parentButton
                 case .failed:
                     if model.feedingReceipt != nil { Text("pet.fedRefreshFailed", tableName: "UIR1") }
