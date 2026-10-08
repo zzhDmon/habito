@@ -20,11 +20,12 @@ struct KidTodayProgressView: View {
             .bold()
 
             ProgressView(value: Double(completedCount), total: Double(max(totalCount, 1)))
-                .tint(HabitoDesign.Palette.success)
+                .tint(HabitoDesign.Manga.successInk)
                 .accessibilityLabel("kidToday.progressTitle")
                 .accessibilityValue("\(completedCount) / \(totalCount)")
         }
         .padding(HabitoDesign.Spacing.large)
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: HabitoDesign.CornerRadius.card))
+        .foregroundStyle(HabitoDesign.Manga.ink)
+        .modifier(MangaPanel(fill: HabitoDesign.Manga.successPaper))
     }
 }

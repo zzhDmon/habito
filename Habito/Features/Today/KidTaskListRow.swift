@@ -11,31 +11,29 @@ struct KidTaskListRow: View {
             // 三时间和状态各占一行，避免最大字号下横向争抢宽度、把等待状态挤出可操作区域。
             VStack(alignment: .leading, spacing: HabitoDesign.Spacing.small) {
                 HStack(alignment: .top, spacing: HabitoDesign.Spacing.medium) {
-                    Image(systemName: task.iconName)
-                        .font(.title2)
-                        .foregroundStyle(HabitoDesign.Palette.task)
+                    TaskIcon(storedName: task.iconName)
                         .frame(
                             minWidth: HabitoDesign.Layout.minimumTapSize,
                             minHeight: HabitoDesign.Layout.minimumTapSize
                         )
-                        .accessibilityHidden(true)
                     Text(task.title)
                         .font(.headline)
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(HabitoDesign.Manga.ink)
                 }
                 KidTaskTimingView(makePresentation: makeTimingPresentation)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 Text(verbatim: task.targetDurationText)
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(HabitoDesign.Manga.secondaryInk)
                 Label(task.statusText, systemImage: task.statusIconName)
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(HabitoDesign.Manga.secondaryInk)
             }
             .padding(HabitoDesign.Spacing.medium)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: HabitoDesign.CornerRadius.card))
-            .contentShape(RoundedRectangle(cornerRadius: HabitoDesign.CornerRadius.card))
+            .foregroundStyle(HabitoDesign.Manga.ink)
+            .modifier(MangaPanel())
+            .contentShape(RoundedRectangle(cornerRadius: HabitoDesign.Manga.corner))
         }
         .buttonStyle(.plain)
         .frame(minHeight: HabitoDesign.Layout.minimumTapSize)

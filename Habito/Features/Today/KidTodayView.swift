@@ -43,7 +43,9 @@ struct KidTodayView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .accessibilityIdentifier(HabitoAccessibilityID.todayScreen)
         .navigationTitle("kidToday.navigationTitle")
-        .background(.background)
+        .foregroundStyle(HabitoDesign.Manga.ink)
+        .tint(HabitoDesign.Manga.successInk)
+        .background(HabitoDesign.Manga.paper)
     }
 }
 

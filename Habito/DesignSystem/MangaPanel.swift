@@ -8,7 +8,14 @@ struct MangaPanel: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .background(fill, in: RoundedRectangle(cornerRadius: HabitoDesign.Manga.corner))
+            .background {
+                // 阴影只能施加到背景形状；加在整个内容上会传给文字/图标，产生可读性重影。
+                RoundedRectangle(cornerRadius: HabitoDesign.Manga.corner)
+                    .fill(fill)
+                    .shadow(
+                        color: emphasized && colorScheme == .light ? HabitoDesign.Manga.ink : .clear,
+                        radius: 0, x: HabitoDesign.Manga.shadowOffset, y: HabitoDesign.Manga.shadowOffset)
+            }
             .overlay {
                 RoundedRectangle(cornerRadius: HabitoDesign.Manga.corner)
                     .strokeBorder(
@@ -17,9 +24,6 @@ struct MangaPanel: ViewModifier {
                     )
                     .accessibilityHidden(true)
             }
-            .shadow(
-                color: emphasized && colorScheme == .light ? HabitoDesign.Manga.ink : .clear,
-                radius: 0, x: HabitoDesign.Manga.shadowOffset, y: HabitoDesign.Manga.shadowOffset)
     }
 }
 

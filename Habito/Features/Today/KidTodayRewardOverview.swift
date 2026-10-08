@@ -19,12 +19,12 @@ struct KidTodayRewardOverview: View {
                 KidRewardAmountView(
                     text: String.localizedStringWithFormat(
                         String(localized: "kidRewards.xpFormat"), balance.effectiveXP),
-                    symbol: "star.fill", tint: HabitoDesign.Feedback.xp,
+                    symbol: "star.fill", tint: HabitoDesign.Manga.ink,
                     identifier: HabitoAccessibilityID.todayXP
                 )
                 KidRewardAmountView(
                     text: String.localizedStringWithFormat(String(localized: "kidRewards.coinsFormat"), balance.coins),
-                    symbol: "circle.fill", tint: HabitoDesign.Feedback.coins,
+                    symbol: "circle.fill", tint: HabitoDesign.Manga.ink,
                     identifier: HabitoAccessibilityID.todayCoins
                 )
             case .failed:
@@ -45,11 +45,14 @@ struct KidTodayRewardOverview: View {
                             minHeight: HabitoDesign.Layout.minimumTapSize
                         )
                 }
-                .buttonStyle(.bordered)
+                .buttonStyle(MangaButtonStyle())
                 .accessibilityIdentifier(HabitoAccessibilityID.todayRewardsRetry)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+        .foregroundStyle(HabitoDesign.Manga.ink)
+        .padding(HabitoDesign.Spacing.large)
+        .modifier(MangaPanel())
         // 父分组不能把精确金额与重试按钮的稳定标识覆盖成同一个容器标识。
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier(HabitoAccessibilityID.todayRewardsOverview)

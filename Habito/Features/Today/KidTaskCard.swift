@@ -10,20 +10,17 @@ struct KidTaskCard: View {
         Button(action: action) {
             VStack(alignment: .leading, spacing: HabitoDesign.Spacing.medium) {
                 HStack(alignment: .top, spacing: HabitoDesign.Spacing.medium) {
-                    Image(systemName: task.iconName)
-                        .font(.largeTitle)
-                        .foregroundStyle(HabitoDesign.Palette.task)
-                        .accessibilityHidden(true)
+                    TaskIcon(storedName: task.iconName)
 
                     VStack(alignment: .leading, spacing: HabitoDesign.Spacing.small) {
                         Text(task.title)
                             .font(.title2)
                             .bold()
-                            .foregroundStyle(.primary)
+                            .foregroundStyle(HabitoDesign.Manga.ink)
 
                         Label(task.statusText, systemImage: task.statusIconName)
                             .font(.headline)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(HabitoDesign.Manga.secondaryInk)
                     }
 
                     Spacer(minLength: HabitoDesign.Spacing.small)
@@ -34,16 +31,15 @@ struct KidTaskCard: View {
 
                 Label("kidToday.openTask", systemImage: "arrow.right.circle.fill")
                     .font(.headline)
-                    .foregroundStyle(HabitoDesign.Palette.accent)
+                    .foregroundStyle(HabitoDesign.Manga.actionInk)
+                    .padding(HabitoDesign.Spacing.small)
+                    .modifier(MangaPanel(fill: HabitoDesign.Manga.action))
             }
             .padding(HabitoDesign.Spacing.large)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: HabitoDesign.CornerRadius.card))
-            .overlay {
-                RoundedRectangle(cornerRadius: HabitoDesign.CornerRadius.card)
-                    .stroke(HabitoDesign.Palette.task, lineWidth: 2)
-            }
-            .contentShape(RoundedRectangle(cornerRadius: HabitoDesign.CornerRadius.card))
+            .foregroundStyle(HabitoDesign.Manga.ink)
+            .modifier(MangaPanel(emphasized: true))
+            .contentShape(RoundedRectangle(cornerRadius: HabitoDesign.Manga.corner))
         }
         .buttonStyle(.plain)
         .frame(minHeight: HabitoDesign.Layout.minimumTapSize)

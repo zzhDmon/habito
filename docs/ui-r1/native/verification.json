@@ -1,0 +1,67 @@
+{
+  "task": "UI-R1-003B",
+  "runs": [
+    {
+      "run": "17",
+      "definedPassed": 28,
+      "executedPassed": 62,
+      "failed": 0,
+      "skipped": 0,
+      "warnings": []
+    },
+    {
+      "run": "fixed17",
+      "definedPassed": 27,
+      "executedPassed": 61,
+      "failed": 0,
+      "skipped": 0,
+      "warnings": []
+    },
+    {
+      "run": "final17",
+      "definedPassed": 5,
+      "executedPassed": 23,
+      "failed": 0,
+      "skipped": 0,
+      "warnings": []
+    },
+    {
+      "run": "final27",
+      "definedPassed": 27,
+      "executedPassed": 61,
+      "failed": 0,
+      "skipped": 0,
+      "warnings": [
+        {
+          "issueType": "Runtime Warning",
+          "message": "Update the Info.plist: 1) `UIRequiresFullScreen` will soon be ignored. 2) Support for all orientations will soon be required."
+        }
+      ]
+    },
+    {
+      "run": "27",
+      "definedPassed": 27,
+      "executedPassed": 61,
+      "failed": 0,
+      "skipped": 0,
+      "warnings": [
+        {
+          "issueType": "Runtime Warning",
+          "message": "Update the Info.plist: 1) `UIRequiresFullScreen` will soon be ignored. 2) Support for all orientations will soon be required."
+        }
+      ],
+      "note": "可选simctl诊断收集已中断，测试主进程exit0且报告封口"
+    }
+  ],
+  "sourceNotes": [
+    "17/27首批验证后修复MangaPanel阴影",
+    "fixed17为阴影修复后的26单测及1MAX UI",
+    "final17为时间字色修复后5定义/23执行渲染",
+    "final27为最终源26单测及1MAX UI"
+  ],
+  "screenshots": [
+    "home-light.png",
+    "home-dark.png",
+    "home-dark-max.png"
+  ]
+}

@@ -23,7 +23,8 @@ struct KidTaskTimingDetails: View {
             }
         }
         .font(.subheadline)
-        .foregroundStyle(.secondary)
+        // 漫画纸底使用已验收的不透明次要墨色；系统层级透明色叠加后可能过淡。
+        .foregroundStyle(HabitoDesign.Manga.secondaryInk)
     }
 }
 
