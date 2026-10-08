@@ -3,11 +3,11 @@ import Testing
 
 @Suite("SwiftData 容器")
 struct AppModelContainerTests {
-    @Test("内存容器包含十一业务模型和两份真实名字资料")
+    @Test("内存容器包含业务、名字及宠物事实十五模型")
     func createsInMemoryContainerWithCompleteSchema() throws {
         _ = try AppModelContainer.make(inMemory: true)
 
-        #expect(AppModelContainer.schema.entities.count == 13)
+        #expect(AppModelContainer.schema.entities.count == 15)
         #expect(HabitoSchemaV3.models.count == 10)
         #expect(HabitoSchemaV4.models.count == 11 && HabitoSchemaV5.models.count == 11)
         #expect(HabitoSchemaV6.models.count == 11)

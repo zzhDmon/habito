@@ -7,6 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D914FC091D71B263CA86AE71 /* PetFactMigrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86946A1A01B2B42AC183FF98 /* PetFactMigrationTests.swift */; };
+		9B2626BA6CFA6742DBEDF1D3 /* V7MigrationFixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADFCE6E611F978D81D11534 /* V7MigrationFixture.swift */; };
+		85C648E632D670B940CA9B45 /* PetGrowthCheckpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFB0E51B01ADEE7E2C3101F /* PetGrowthCheckpoint.swift */; };
+		D3D138A52E268A9E434B1F63 /* PetFeeding.swift in Sources */ = {isa = PBXBuildFile; fileRef = D94F55E2F745987A069DEAD3 /* PetFeeding.swift */; };
+		6621342431B1683CB6DDC3F5 /* HabitoSchemaV8.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE9E8D33466E60B137CA7476 /* HabitoSchemaV8.swift */; };
+		F0D1A79560A01592320C1DA5 /* HabitoSchemaV7+ChildProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2260F9C802772C48FA6DD059 /* HabitoSchemaV7+ChildProfile.swift */; };
+		65B028D71AD1724BD00CF4E7 /* HabitoSchemaV7+Pet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18740E291A5F8ED898DF796A /* HabitoSchemaV7+Pet.swift */; };
+		3E0397C0DBA1384F21031EE9 /* HabitoSchemaV7+CoinTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A209CC1A8BBC0894F957C1B8 /* HabitoSchemaV7+CoinTransaction.swift */; };
+		3B477116DCD3EE6891FACF56 /* HabitoSchemaV7+TaskOccurrence.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE7FB1689B3A40C2351B673E /* HabitoSchemaV7+TaskOccurrence.swift */; };
+		EE882F7C92B92BA630018916 /* HabitoSchemaV7+NotificationLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25A7FA347717A3B9FADE16A6 /* HabitoSchemaV7+NotificationLink.swift */; };
+		339D2C38C1F15B4E9EDDCFEF /* HabitoSchemaV7+AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B8B6F98BE37C8D720E4E205 /* HabitoSchemaV7+AppSettings.swift */; };
+		AFA1F48247B455721184DF94 /* HabitoSchemaV7+TimerSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE118FFC5F20F838F506A7E /* HabitoSchemaV7+TimerSession.swift */; };
+		C577EBAB0EF22A8F801C3113 /* HabitoSchemaV7+CompletionRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F93C9B9B0516313E4127F6 /* HabitoSchemaV7+CompletionRecord.swift */; };
+		A7D7AA725D90A256B933F5BE /* HabitoSchemaV7+XPTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = F87040331CC78EA89055A095 /* HabitoSchemaV7+XPTransaction.swift */; };
+		86A62911DEFE7E34EE97E6AF /* HabitoSchemaV7+TaskTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43E62E63A179CC8511B0905 /* HabitoSchemaV7+TaskTemplate.swift */; };
+		23BA474608ED80BE90DA1085 /* HabitoSchemaV7+TaskSubmission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C7675C433A32C262CDE253B /* HabitoSchemaV7+TaskSubmission.swift */; };
+		64B7D5A94ECDF8E725D4907C /* HabitoSchemaV7+DayOverride.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97D809AA1EA96994618CD68 /* HabitoSchemaV7+DayOverride.swift */; };
+		CA7B6A492FB4FE060F69082F /* HabitoSchemaV7+ReminderRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C640F23A9D62D07AD683A4A /* HabitoSchemaV7+ReminderRule.swift */; };
 		593CF163012F72BC59BD06FA /* PetProfileViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99439C367E2F166DBD2DD55C /* PetProfileViewModelTests.swift */; };
 		49BC72689FECCD59EBEBCA2E /* UITestPetProfileFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCD53C5D68FE5AE698CA71E /* UITestPetProfileFactory.swift */; };
 		116553CA427D548468224EB0 /* PetHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB73D9D7E8A2B80E365A05EE /* PetHomeView.swift */; };
@@ -532,6 +550,24 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		86946A1A01B2B42AC183FF98 /* PetFactMigrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetFactMigrationTests.swift; sourceTree = "<group>"; };
+		5ADFCE6E611F978D81D11534 /* V7MigrationFixture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = V7MigrationFixture.swift; sourceTree = "<group>"; };
+		8BFB0E51B01ADEE7E2C3101F /* PetGrowthCheckpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetGrowthCheckpoint.swift; sourceTree = "<group>"; };
+		D94F55E2F745987A069DEAD3 /* PetFeeding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetFeeding.swift; sourceTree = "<group>"; };
+		AE9E8D33466E60B137CA7476 /* HabitoSchemaV8.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitoSchemaV8.swift; sourceTree = "<group>"; };
+		2260F9C802772C48FA6DD059 /* HabitoSchemaV7+ChildProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV7+ChildProfile.swift"; sourceTree = "<group>"; };
+		18740E291A5F8ED898DF796A /* HabitoSchemaV7+Pet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV7+Pet.swift"; sourceTree = "<group>"; };
+		A209CC1A8BBC0894F957C1B8 /* HabitoSchemaV7+CoinTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV7+CoinTransaction.swift"; sourceTree = "<group>"; };
+		EE7FB1689B3A40C2351B673E /* HabitoSchemaV7+TaskOccurrence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV7+TaskOccurrence.swift"; sourceTree = "<group>"; };
+		25A7FA347717A3B9FADE16A6 /* HabitoSchemaV7+NotificationLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV7+NotificationLink.swift"; sourceTree = "<group>"; };
+		9B8B6F98BE37C8D720E4E205 /* HabitoSchemaV7+AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV7+AppSettings.swift"; sourceTree = "<group>"; };
+		ADE118FFC5F20F838F506A7E /* HabitoSchemaV7+TimerSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV7+TimerSession.swift"; sourceTree = "<group>"; };
+		E0F93C9B9B0516313E4127F6 /* HabitoSchemaV7+CompletionRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV7+CompletionRecord.swift"; sourceTree = "<group>"; };
+		F87040331CC78EA89055A095 /* HabitoSchemaV7+XPTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV7+XPTransaction.swift"; sourceTree = "<group>"; };
+		D43E62E63A179CC8511B0905 /* HabitoSchemaV7+TaskTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV7+TaskTemplate.swift"; sourceTree = "<group>"; };
+		9C7675C433A32C262CDE253B /* HabitoSchemaV7+TaskSubmission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV7+TaskSubmission.swift"; sourceTree = "<group>"; };
+		B97D809AA1EA96994618CD68 /* HabitoSchemaV7+DayOverride.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV7+DayOverride.swift"; sourceTree = "<group>"; };
+		0C640F23A9D62D07AD683A4A /* HabitoSchemaV7+ReminderRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitoSchemaV7+ReminderRule.swift"; sourceTree = "<group>"; };
 		99439C367E2F166DBD2DD55C /* PetProfileViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetProfileViewModelTests.swift; sourceTree = "<group>"; };
 		BFCD53C5D68FE5AE698CA71E /* UITestPetProfileFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestPetProfileFactory.swift; sourceTree = "<group>"; };
 		EB73D9D7E8A2B80E365A05EE /* PetHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetHomeView.swift; sourceTree = "<group>"; };
@@ -1067,6 +1103,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CD5000000000000000000001 /* SchemaV7 */ = {
+			isa = PBXGroup;
+			children = (
+				2260F9C802772C48FA6DD059 /* HabitoSchemaV7+ChildProfile.swift */,
+				18740E291A5F8ED898DF796A /* HabitoSchemaV7+Pet.swift */,
+				A209CC1A8BBC0894F957C1B8 /* HabitoSchemaV7+CoinTransaction.swift */,
+				EE7FB1689B3A40C2351B673E /* HabitoSchemaV7+TaskOccurrence.swift */,
+				25A7FA347717A3B9FADE16A6 /* HabitoSchemaV7+NotificationLink.swift */,
+				9B8B6F98BE37C8D720E4E205 /* HabitoSchemaV7+AppSettings.swift */,
+				ADE118FFC5F20F838F506A7E /* HabitoSchemaV7+TimerSession.swift */,
+				E0F93C9B9B0516313E4127F6 /* HabitoSchemaV7+CompletionRecord.swift */,
+				F87040331CC78EA89055A095 /* HabitoSchemaV7+XPTransaction.swift */,
+				D43E62E63A179CC8511B0905 /* HabitoSchemaV7+TaskTemplate.swift */,
+				9C7675C433A32C262CDE253B /* HabitoSchemaV7+TaskSubmission.swift */,
+				B97D809AA1EA96994618CD68 /* HabitoSchemaV7+DayOverride.swift */,
+				0C640F23A9D62D07AD683A4A /* HabitoSchemaV7+ReminderRule.swift */,
+			);
+			path = SchemaV7;
+			sourceTree = "<group>";
+		};
 		BC5000000000000000000001 /* Pet */ = {
 			isa = PBXGroup;
 			children = (
@@ -1382,6 +1438,8 @@
 		A50000000000000000000005 /* Persistence */ = {
 			isa = PBXGroup;
 			children = (
+				AE9E8D33466E60B137CA7476 /* HabitoSchemaV8.swift */,
+				CD5000000000000000000001 /* SchemaV7 */,
 				AB5000000000000000000233 /* SchemaV6 */,
 				AB2000000000000000000244 /* HabitoSchemaV7.swift */,
 				AB2000000000000000000169 /* HabitoSchemaV6.swift */,
@@ -1928,6 +1986,8 @@
 		D50000000000000000000001 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				8BFB0E51B01ADEE7E2C3101F /* PetGrowthCheckpoint.swift */,
+				D94F55E2F745987A069DEAD3 /* PetFeeding.swift */,
 				AB2000000000000000000245 /* ChildProfile.swift */,
 				AB2000000000000000000246 /* Pet.swift */,
 				D2000000000000000000000A /* AppSettings.swift */,
@@ -1963,6 +2023,8 @@
 		D50000000000000000000002 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				86946A1A01B2B42AC183FF98 /* PetFactMigrationTests.swift */,
+				5ADFCE6E611F978D81D11534 /* V7MigrationFixture.swift */,
 				835F3149531DB9CC72A1CAE1 /* DailyRewardQueryServiceTests.swift */,
 				AB2000000000000000000251 /* FamilyProfileServiceTests.swift */,
 				AB2000000000000000000247 /* V6MigrationFixture.swift */,
@@ -2145,6 +2207,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				85C648E632D670B940CA9B45 /* PetGrowthCheckpoint.swift in Sources */,
+				D3D138A52E268A9E434B1F63 /* PetFeeding.swift in Sources */,
+				6621342431B1683CB6DDC3F5 /* HabitoSchemaV8.swift in Sources */,
+				F0D1A79560A01592320C1DA5 /* HabitoSchemaV7+ChildProfile.swift in Sources */,
+				65B028D71AD1724BD00CF4E7 /* HabitoSchemaV7+Pet.swift in Sources */,
+				3E0397C0DBA1384F21031EE9 /* HabitoSchemaV7+CoinTransaction.swift in Sources */,
+				3B477116DCD3EE6891FACF56 /* HabitoSchemaV7+TaskOccurrence.swift in Sources */,
+				EE882F7C92B92BA630018916 /* HabitoSchemaV7+NotificationLink.swift in Sources */,
+				339D2C38C1F15B4E9EDDCFEF /* HabitoSchemaV7+AppSettings.swift in Sources */,
+				AFA1F48247B455721184DF94 /* HabitoSchemaV7+TimerSession.swift in Sources */,
+				C577EBAB0EF22A8F801C3113 /* HabitoSchemaV7+CompletionRecord.swift in Sources */,
+				A7D7AA725D90A256B933F5BE /* HabitoSchemaV7+XPTransaction.swift in Sources */,
+				86A62911DEFE7E34EE97E6AF /* HabitoSchemaV7+TaskTemplate.swift in Sources */,
+				23BA474608ED80BE90DA1085 /* HabitoSchemaV7+TaskSubmission.swift in Sources */,
+				64B7D5A94ECDF8E725D4907C /* HabitoSchemaV7+DayOverride.swift in Sources */,
+				CA7B6A492FB4FE060F69082F /* HabitoSchemaV7+ReminderRule.swift in Sources */,
 				49BC72689FECCD59EBEBCA2E /* UITestPetProfileFactory.swift in Sources */,
 				116553CA427D548468224EB0 /* PetHomeView.swift in Sources */,
 				54F5805604730BF5C8BC3D46 /* PetProfileViewModel.swift in Sources */,
@@ -2556,6 +2634,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D914FC091D71B263CA86AE71 /* PetFactMigrationTests.swift in Sources */,
+				9B2626BA6CFA6742DBEDF1D3 /* V7MigrationFixture.swift in Sources */,
 				593CF163012F72BC59BD06FA /* PetProfileViewModelTests.swift in Sources */,
 				41D05B76708F9606DDC369F0 /* TodayDailyRewardStateTests.swift in Sources */,
 				1EC85056C54470879A505EF2 /* DailyRewardQueryServiceTests.swift in Sources */,

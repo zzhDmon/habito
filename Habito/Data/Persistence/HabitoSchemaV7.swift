@@ -1,8 +1,6 @@
 import SwiftData
 
-/// 名字资料结构 8.0.0；只增加两个独立资料实体，不自动为旧家庭创建档案或小狗。
-///
-/// 活跃模型归属主 actor 的写上下文，等级、亲密度、情绪与消费结构尚未启用。
+/// 冻结的名字资料结构8.0.0；独立嵌套模型保持历史字段、名字和关系，不引用活跃模型。
 nonisolated enum HabitoSchemaV7: VersionedSchema {
     static let versionIdentifier = Schema.Version(8, 0, 0)
 

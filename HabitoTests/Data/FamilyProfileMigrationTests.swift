@@ -10,7 +10,7 @@ struct FamilyProfileMigrationTests {
     @Test("冻结七独立于活跃模型且八只新增两个名字实体")
     func versionEightAddsOnlyTwoNameEntities() throws {
         let old = Schema(versionedSchema: HabitoSchemaV6.self)
-        let current = AppModelContainer.schema
+        let current = Schema(versionedSchema: HabitoSchemaV7.self)
         #expect(HabitoSchemaV6.versionIdentifier == Schema.Version(7, 0, 0))
         #expect(HabitoSchemaV7.versionIdentifier == Schema.Version(8, 0, 0))
         #expect(old.entities.count == 11 && current.entities.count == 13)
@@ -26,8 +26,8 @@ struct FamilyProfileMigrationTests {
         let pet = try #require(current.entities.first { $0.name == "Pet" })
         #expect(Set(child.properties.map(\.name)) == ["singletonKey", "nickname"])
         #expect(Set(pet.properties.map(\.name)) == ["singletonKey", "name"])
-        #expect(HabitoSchemaMigrationPlan.schemas.count == 8)
-        #expect(HabitoSchemaMigrationPlan.stages.count == 7)
+        #expect(HabitoSchemaMigrationPlan.schemas.count == 9)
+        #expect(HabitoSchemaMigrationPlan.stages.count == 8)
     }
 
     @Test("旧七完整或空库迁移三次重开不补名字且保留已读语义", arguments: [false, true], [false, true])
