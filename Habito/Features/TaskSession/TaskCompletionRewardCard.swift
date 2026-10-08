@@ -19,10 +19,8 @@ struct TaskCompletionRewardCard: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(HabitoDesign.Spacing.medium)
-        .background(
-            tint.opacity(HabitoDesign.Feedback.cardTintOpacity),
-            in: .rect(cornerRadius: HabitoDesign.CornerRadius.badge)
-        )
+        .foregroundStyle(HabitoDesign.Manga.ink)
+        .modifier(MangaPanel(fill: HabitoDesign.Manga.successPaper))
         .accessibilityElement(children: .combine)
         .accessibilityIdentifier(identifier)
     }

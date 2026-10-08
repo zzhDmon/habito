@@ -19,7 +19,7 @@ struct TaskSessionTimerPanel: View {
         VStack(alignment: .leading, spacing: HabitoDesign.Spacing.medium) {
             Text("taskSession.elapsedTitle")
                 .font(.headline)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(HabitoDesign.Manga.secondaryInk)
 
             Text(TaskSessionDurationText.clock(elapsedSeconds))
                 .font(.system(.largeTitle, design: .rounded, weight: .bold))
@@ -30,7 +30,7 @@ struct TaskSessionTimerPanel: View {
                 .accessibilityIdentifier(HabitoAccessibilityID.elapsedTime)
 
             ProgressView(value: content.progress(at: now))
-                .tint(HabitoDesign.Palette.accent)
+                .tint(HabitoDesign.Manga.successInk)
                 .accessibilityLabel("taskSession.goalProgress")
                 .accessibilityValue(
                     Text(
@@ -64,10 +64,8 @@ struct TaskSessionTimerPanel: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(HabitoDesign.Spacing.large)
-        .background(
-            .regularMaterial,
-            in: RoundedRectangle(cornerRadius: HabitoDesign.CornerRadius.card)
-        )
+        .foregroundStyle(HabitoDesign.Manga.ink)
+        .modifier(MangaPanel(emphasized: true))
         .transaction { transaction in
             if reduceMotion { transaction.animation = nil }
         }

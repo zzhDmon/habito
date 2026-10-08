@@ -2656,8 +2656,9 @@ final class HabitoKidFlowUITests: XCTestCase {
         }
     }
 
-    private func keepScreenshot(_ app: XCUIApplication, name: String) {
-        let attachment = XCTAttachment(screenshot: app.screenshot())
+    private func keepScreenshot(_: XCUIApplication, name: String) {
+        // 17系横屏的App区域截图可能套用竖屏裁切坐标；整屏采集保留实际视口，不改交互断言。
+        let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
         attachment.name = name
         attachment.lifetime = .keepAlways
         add(attachment)

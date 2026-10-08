@@ -22,7 +22,7 @@ struct ChildRewardFeedbackView: View {
                     Label("childReceipt.retry", systemImage: "arrow.clockwise")
                         .frame(minHeight: HabitoDesign.Layout.minimumTapSize)
                 }
-                .buttonStyle(.bordered)
+                .buttonStyle(MangaButtonStyle())
                 .accessibilityIdentifier(HabitoAccessibilityID.childReceiptRetry)
             }
         case let .receipt(receipt):

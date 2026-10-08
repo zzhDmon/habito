@@ -21,7 +21,7 @@ struct TaskSessionControlsView: View {
                     identifier: HabitoAccessibilityID.startButton,
                     action: onStartOrResume
                 )
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(MangaButtonStyle())
             case .pause:
                 TaskSessionActionButton(
                     titleKey: "taskSession.pause",
@@ -29,7 +29,7 @@ struct TaskSessionControlsView: View {
                     identifier: HabitoAccessibilityID.pauseButton,
                     action: onPause
                 )
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(MangaButtonStyle())
             case .resume:
                 TaskSessionActionButton(
                     titleKey: "taskSession.resume",
@@ -37,7 +37,7 @@ struct TaskSessionControlsView: View {
                     identifier: HabitoAccessibilityID.resumeButton,
                     action: onStartOrResume
                 )
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(MangaButtonStyle())
             case .none:
                 EmptyView()
             }
@@ -66,7 +66,7 @@ struct TaskSessionControlsView: View {
                     .frame(maxWidth: .infinity, minHeight: HabitoDesign.Layout.minimumTapSize)
                 }
                 .buttonStyle(.bordered)
-                .tint(HabitoDesign.Palette.success)
+                .tint(HabitoDesign.Manga.successInk)
                 .controlSize(.large)
                 .accessibilityIdentifier(
                     verificationType == .parentApproval

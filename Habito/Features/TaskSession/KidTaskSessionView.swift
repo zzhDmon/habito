@@ -39,14 +39,16 @@ struct KidTaskSessionView: View {
                     Text("taskSession.errorDescription")
                 } actions: {
                     Button("taskSession.retry", action: model.load)
-                        .buttonStyle(.borderedProminent)
+                        .buttonStyle(MangaButtonStyle())
                         .controlSize(.large)
                 }
             }
         }
         .navigationTitle("kidTask.navigationTitle")
         .navigationBarTitleDisplayMode(.inline)
-        .background(.background)
+        .foregroundStyle(HabitoDesign.Manga.ink)
+        .tint(HabitoDesign.Manga.successInk)
+        .background(HabitoDesign.Manga.paper)
         .alert("taskSession.actionErrorTitle", isPresented: $model.isActionErrorPresented) {
         } message: {
             Text(LocalizedStringKey(model.actionFailure?.messageKey ?? "taskSession.actionSaveFailed"))

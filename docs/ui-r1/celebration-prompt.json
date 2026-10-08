@@ -1,0 +1,6 @@
+{
+  "mode": "built-in image_gen",
+  "reference": "assets/dog-default-v1.png",
+  "prompt": "Use case: identity-preserving character pose variant. Reference image is the exact Habito dog identity and style to preserve. Make ONE reusable full-body celebration pose of this SAME original cream dog: floppy caramel ears, cream body and pale muzzle/chest, dark brown eyes, amber yellow collar with plain round tag, curved fluffy tail, manga ink outline and restrained cel shading. The dog is making a small happy leap, forepaws raised naturally, joyful closed smiling eyes and open smile, both hind paws visible. Preserve body proportions, collar, ears and colors exactly; do not make a new breed or add clothes. Keep clean silhouette and simplify fine fur lines for a small SwiftUI illustration. Center the whole dog with padding, all paws/ears/tail fully inside image. True transparent background with alpha. No lettering, no text, no numbers, no watermark, no ground shadow, no confetti or other objects. This pose decorates confirmed real task completion only.",
+  "output": "assets/dog-celebrate-v1.png"
+}

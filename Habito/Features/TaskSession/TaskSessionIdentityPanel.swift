@@ -7,10 +7,7 @@ struct TaskSessionIdentityPanel: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: HabitoDesign.Spacing.large) {
-            Image(systemName: task.iconName)
-                .font(.system(.largeTitle, design: .rounded))
-                .foregroundStyle(HabitoDesign.Palette.task)
-                .accessibilityHidden(true)
+            TaskIcon(storedName: task.iconName)
 
             Text(task.title)
                 .font(.largeTitle)
@@ -18,12 +15,14 @@ struct TaskSessionIdentityPanel: View {
 
             Label(task.statusText, systemImage: task.statusIconName)
                 .font(.title3)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(HabitoDesign.Manga.secondaryInk)
 
             KidTaskTimingView(makePresentation: makeTimingPresentation)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(HabitoDesign.Spacing.large)
+        .foregroundStyle(HabitoDesign.Manga.ink)
+        .modifier(MangaPanel(fill: HabitoDesign.Manga.warmPaper))
     }
 }
 

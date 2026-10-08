@@ -6,9 +6,7 @@ struct TaskCompletionSnapshotView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: HabitoDesign.Spacing.small) {
-            Label("taskSession.completedTitle", systemImage: HabitoDesign.Symbol.completed)
-                .font(.headline)
-                .foregroundStyle(HabitoDesign.Palette.success)
+            MangaStamp(title: "taskSession.completedTitle", systemImage: HabitoDesign.Symbol.completed)
 
             LabeledContent("taskSession.completedAt") {
                 Text(completion.completedAt, style: .time)

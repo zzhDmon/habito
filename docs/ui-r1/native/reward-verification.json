@@ -1,0 +1,47 @@
+{
+  "task": "UI-R1-003C",
+  "runs": [
+    {
+      "run": "17",
+      "definedPassed": 43,
+      "executedPassed": 108,
+      "failed": 0,
+      "skipped": 0,
+      "warnings": []
+    },
+    {
+      "run": "27-max",
+      "definedPassed": 44,
+      "executedPassed": 109,
+      "failed": 0,
+      "skipped": 0,
+      "warnings": [
+        {
+          "issueType": "Runtime Warning",
+          "message": "Update the Info.plist: 1) `UIRequiresFullScreen` will soon be ignored. 2) Support for all orientations will soon be required."
+        },
+        {
+          "issueType": "Runtime Warning",
+          "message": "Update the Info.plist: 1) `UIRequiresFullScreen` will soon be ignored. 2) Support for all orientations will soon be required."
+        },
+        {
+          "issueType": "Runtime Warning",
+          "message": "Update the Info.plist: 1) `UIRequiresFullScreen` will soon be ignored. 2) Support for all orientations will soon be required."
+        },
+        {
+          "issueType": "Runtime Warning",
+          "message": "Update the Info.plist: 1) `UIRequiresFullScreen` will soon be ignored. 2) Support for all orientations will soon be required."
+        }
+      ]
+    }
+  ],
+  "captureRechecks": [
+    "/tmp/habito-ui-003c-capture17.xcresult",
+    "/tmp/habito-ui-003c-capture27.xcresult"
+  ],
+  "captureNotes": "整屏采集替代17系App区域异常裁切，两系同完成流程补验通过，未修改业务断言",
+  "screenshots": [
+    "reward-light.png",
+    "reward-dark-max.png"
+  ]
+}

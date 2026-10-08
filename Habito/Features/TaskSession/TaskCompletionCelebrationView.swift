@@ -4,17 +4,10 @@ import SwiftUI
 struct TaskCompletionCelebrationView: View {
     let isAutonomous: Bool
     let hasReward: Bool
-    // ScaledMetric 随当前页面系统字号更新；只缩放装饰符号，不限制正文行数或操作区高度。
-    @ScaledMetric(relativeTo: .largeTitle) private var symbolSize = HabitoDesign.Feedback.symbolSize
 
     var body: some View {
         VStack(alignment: .leading, spacing: HabitoDesign.Spacing.medium) {
-            Image(systemName: isAutonomous ? "checkmark.seal.fill" : "checkmark.circle.fill")
-                .font(.system(size: symbolSize))
-                .foregroundStyle(tint)
-                .padding(HabitoDesign.Feedback.symbolPadding)
-                .background(tint.opacity(HabitoDesign.Feedback.badgeTintOpacity), in: Circle())
-                .accessibilityHidden(true)
+            DogCharacter(celebrating: true)
             Text("taskSession.completedEncouragement")
                 .font(.largeTitle.bold())
                 .accessibilityAddTraits(.isHeader)
@@ -29,10 +22,8 @@ struct TaskCompletionCelebrationView: View {
                 }
                 .font(.title3.bold())
                 .padding(HabitoDesign.Spacing.small)
-                .background(
-                    tint.opacity(HabitoDesign.Feedback.badgeTintOpacity),
-                    in: .rect(cornerRadius: HabitoDesign.CornerRadius.badge)
-                )
+                .foregroundStyle(HabitoDesign.Manga.actionInk)
+                .modifier(MangaPanel(fill: HabitoDesign.Manga.action))
                 .accessibilityElement(children: .combine)
                 .accessibilityIdentifier(HabitoAccessibilityID.autonomyCelebration)
             }
@@ -45,9 +36,6 @@ struct TaskCompletionCelebrationView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 
-    private var tint: Color {
-        isAutonomous ? HabitoDesign.Feedback.autonomous : HabitoDesign.Feedback.completed
-    }
 }
 
 #Preview("自主完成") {

@@ -9,7 +9,7 @@ struct TaskSubmissionStatusView: View {
             if submission.state == .waiting {
                 Label("kidTask.statusAwaitingReview", systemImage: "hourglass.circle.fill")
                     .font(.title2.bold())
-                    .foregroundStyle(HabitoDesign.Palette.accent)
+                    .foregroundStyle(HabitoDesign.Manga.ink)
                 Text("taskSession.waitingDescription")
                     .font(.body)
             } else if submission.state == .returned {
@@ -21,7 +21,8 @@ struct TaskSubmissionStatusView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(HabitoDesign.Spacing.medium)
-        .background(.quaternary, in: RoundedRectangle(cornerRadius: HabitoDesign.CornerRadius.badge))
+        .foregroundStyle(HabitoDesign.Manga.ink)
+        .modifier(MangaPanel())
         .accessibilityElement(children: .combine)
         .accessibilityIdentifier(HabitoAccessibilityID.submissionStatus)
     }

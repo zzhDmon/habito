@@ -37,5 +37,12 @@
     "asset": "DogDefault",
     "source": "docs/ui-r1/assets/dog-default-v1.png",
     "change": "byte-identical"
+  },
+  "celebration": {
+    "asset": "DogCelebrate",
+    "source": "docs/ui-r1/assets/dog-celebrate-v1.png",
+    "prompt": "docs/ui-r1/celebration-prompt.json",
+    "mode": "built-in image_gen",
+    "sha256": "7f2b46b067d9eff2e930b3a9548ab0aeff88249cc1d735cd117ef4e6d2393e30"
   }
 }

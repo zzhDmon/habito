@@ -41,7 +41,7 @@ struct TaskSessionFeedbackCard: View {
                 if let xp = presentation.xp {
                     TaskCompletionRewardCard(
                         text: String.localizedStringWithFormat(String(localized: "taskSession.rewardXPFormat"), xp),
-                        symbol: "star.fill", tint: HabitoDesign.Feedback.xp,
+                        symbol: "star.fill", tint: HabitoDesign.Manga.ink,
                         identifier: HabitoAccessibilityID.rewardXP
                     )
                 }
@@ -49,7 +49,7 @@ struct TaskSessionFeedbackCard: View {
                     TaskCompletionRewardCard(
                         text: String.localizedStringWithFormat(
                             String(localized: "taskSession.rewardCoinFormat"), coins),
-                        symbol: "circle.fill", tint: HabitoDesign.Feedback.coins,
+                        symbol: "circle.fill", tint: HabitoDesign.Manga.ink,
                         identifier: HabitoAccessibilityID.rewardCoins
                     )
                 }
@@ -58,18 +58,13 @@ struct TaskSessionFeedbackCard: View {
                 Text("taskSession.feedbackDismiss")
                     .frame(maxWidth: .infinity, minHeight: HabitoDesign.Layout.minimumTapSize)
             }
-            .buttonStyle(.borderedProminent)
+            .buttonStyle(MangaButtonStyle())
             .accessibilityIdentifier(HabitoAccessibilityID.dismissCompletionFeedback)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(HabitoDesign.Spacing.large)
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: HabitoDesign.CornerRadius.card))
-        .overlay {
-            RoundedRectangle(cornerRadius: HabitoDesign.CornerRadius.card)
-                .strokeBorder(HabitoDesign.Feedback.autonomous.opacity(HabitoDesign.Feedback.badgeTintOpacity))
-                .accessibilityHidden(true)
-                .allowsHitTesting(false)
-        }
+        .foregroundStyle(HabitoDesign.Manga.ink)
+        .modifier(MangaPanel(emphasized: true))
         // 信息从第一帧就可读、按钮从不禁用；静音无需音效，Reduce Motion 直接显示完整静态结果。
         .scaleEffect(motion.scale)
         .opacity(motion.opacity)

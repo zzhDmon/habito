@@ -10,30 +10,30 @@ struct TaskSnoozeFeedbackView: View {
             EmptyView()
         case .scheduling:
             Label("taskSession.snoozeScheduling", systemImage: "clock")
-                .foregroundStyle(.secondary)
+                .foregroundStyle(HabitoDesign.Manga.secondaryInk)
         case .scheduled:
             Label("taskSession.snoozeScheduled", systemImage: "checkmark.circle.fill")
-                .foregroundStyle(HabitoDesign.Palette.success)
+                .foregroundStyle(HabitoDesign.Manga.successInk)
                 .accessibilityIdentifier(HabitoAccessibilityID.snoozeFeedback)
         case .crossesMidnight:
             Label("taskSession.snoozeMidnight", systemImage: "moon.stars.fill")
-                .foregroundStyle(.secondary)
+                .foregroundStyle(HabitoDesign.Manga.secondaryInk)
                 .accessibilityIdentifier(HabitoAccessibilityID.snoozeFeedback)
         case .budgetFull:
             Label("taskSession.snoozeBudgetFull", systemImage: "bell.slash.fill")
-                .foregroundStyle(.secondary)
+                .foregroundStyle(HabitoDesign.Manga.secondaryInk)
                 .accessibilityIdentifier(HabitoAccessibilityID.snoozeFeedback)
         case .unavailable:
             Label("taskSession.snoozeUnavailable", systemImage: "exclamationmark.circle.fill")
-                .foregroundStyle(.secondary)
+                .foregroundStyle(HabitoDesign.Manga.secondaryInk)
                 .accessibilityIdentifier(HabitoAccessibilityID.snoozeFeedback)
         case .failed:
             Label("taskSession.snoozeFailed", systemImage: "exclamationmark.triangle.fill")
-                .foregroundStyle(.secondary)
+                .foregroundStyle(HabitoDesign.Manga.secondaryInk)
                 .accessibilityIdentifier(HabitoAccessibilityID.snoozeFeedback)
         case .notificationsDisabled:
             Label("taskSession.snoozeNotificationsDisabled", systemImage: "bell.slash.fill")
-                .foregroundStyle(.secondary)
+                .foregroundStyle(HabitoDesign.Manga.secondaryInk)
                 .accessibilityIdentifier(HabitoAccessibilityID.snoozeFeedback)
         }
     }

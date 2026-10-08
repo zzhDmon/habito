@@ -9,22 +9,16 @@ struct TodayCompletionCelebrationView: View {
     let reduceMotion: Bool
     let onClaimAnimation: (UUID) -> Bool
     let onContinue: (UUID) -> Void
-    @ScaledMetric(relativeTo: .largeTitle) private var symbolSize = HabitoDesign.Feedback.symbolSize
     @State private var hasRevealed = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: HabitoDesign.Spacing.large) {
-            Image(systemName: "checkmark.seal.fill")
-                .font(.system(size: symbolSize))
-                .foregroundStyle(HabitoDesign.Feedback.completed)
-                .padding(HabitoDesign.Feedback.symbolPadding)
-                .background(
-                    HabitoDesign.Feedback.completed.opacity(HabitoDesign.Feedback.badgeTintOpacity), in: Circle()
-                )
+            DogCharacter(celebrating: true)
                 .scaleEffect(motion.emblemScale)
-                .accessibilityHidden(true)
             Text("kidToday.dailyCompletionStamp")
-                .font(.title2.bold())
+                .font(.title2.weight(.heavy))
+                .padding(HabitoDesign.Spacing.small)
+                .modifier(MangaPanel(fill: HabitoDesign.Manga.panel))
                 .accessibilityIdentifier(HabitoAccessibilityID.todayCompletionStamp)
             Text("kidToday.dailyCelebrationTitle")
                 .font(.largeTitle.bold())
@@ -36,23 +30,21 @@ struct TodayCompletionCelebrationView: View {
                 .accessibilityIdentifier(HabitoAccessibilityID.todayCompletionCount)
             Text("kidToday.dailyCompletionRest")
                 .font(.body)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(HabitoDesign.Manga.secondaryInk)
                 .accessibilityIdentifier(HabitoAccessibilityID.todayCompletionRest)
             Button(action: continueAfterCelebration) {
                 Label("kidToday.dailyCelebrationContinue", systemImage: "checkmark.circle")
                     .frame(minWidth: HabitoDesign.Layout.minimumTapSize, minHeight: HabitoDesign.Layout.minimumTapSize)
             }
-            .buttonStyle(.borderedProminent)
+            .buttonStyle(MangaButtonStyle())
             .controlSize(.large)
             .accessibilityIdentifier(HabitoAccessibilityID.todayCelebrationContinue)
             .accessibilityHint("kidToday.dailyCelebrationContinueHint")
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(HabitoDesign.Spacing.large)
-        .background(
-            HabitoDesign.Feedback.completed.opacity(HabitoDesign.Feedback.cardTintOpacity),
-            in: .rect(cornerRadius: HabitoDesign.CornerRadius.card)
-        )
+        .foregroundStyle(HabitoDesign.Manga.ink)
+        .modifier(MangaPanel(fill: HabitoDesign.Manga.successPaper, emphasized: true))
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier(HabitoAccessibilityID.todayCompletion)
         .task(id: event.id) { revealEmblem() }
