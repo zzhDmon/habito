@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A117198F5134436A667C810F /* PetFeedingControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 913E9178CEC8333B6AA994DC /* PetFeedingControls.swift */; };
+		F8D241D4C385D1B059480968 /* PetGrowthSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29D68A2D025DDC6045B0CE86 /* PetGrowthSummaryView.swift */; };
+		87A4EBE86C35A9A49075863F /* PetFeedingFailure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F2FE248A135F5475B42FF85 /* PetFeedingFailure.swift */; };
+		662F1A65E70A019C451E111C /* PetPreviewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18E2B4C1097390BE3E253A84 /* PetPreviewData.swift */; };
 		051F216FD1692DB9B57EA7D3 /* PetCareServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9D6231766BCB4F758FAD8A /* PetCareServiceTests.swift */; };
 		801F4C64AF36C2C91C199D48 /* PetCareService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CEB08B80C5E4906EFCA78E /* PetCareService.swift */; };
 		71B8DC1685AC8266EA77118C /* PetCareSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39ACBE46E96B344C808A6149 /* PetCareSnapshot.swift */; };
@@ -557,6 +561,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		913E9178CEC8333B6AA994DC /* PetFeedingControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetFeedingControls.swift; sourceTree = "<group>"; };
+		29D68A2D025DDC6045B0CE86 /* PetGrowthSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetGrowthSummaryView.swift; sourceTree = "<group>"; };
+		8F2FE248A135F5475B42FF85 /* PetFeedingFailure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetFeedingFailure.swift; sourceTree = "<group>"; };
+		18E2B4C1097390BE3E253A84 /* PetPreviewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetPreviewData.swift; sourceTree = "<group>"; };
 		AF9D6231766BCB4F758FAD8A /* PetCareServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetCareServiceTests.swift; sourceTree = "<group>"; };
 		22CEB08B80C5E4906EFCA78E /* PetCareService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetCareService.swift; sourceTree = "<group>"; };
 		39ACBE46E96B344C808A6149 /* PetCareSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetCareSnapshot.swift; sourceTree = "<group>"; };
@@ -1160,6 +1168,10 @@
 		BC5000000000000000000001 /* Pet */ = {
 			isa = PBXGroup;
 			children = (
+				913E9178CEC8333B6AA994DC /* PetFeedingControls.swift */,
+				29D68A2D025DDC6045B0CE86 /* PetGrowthSummaryView.swift */,
+				8F2FE248A135F5475B42FF85 /* PetFeedingFailure.swift */,
+				18E2B4C1097390BE3E253A84 /* PetPreviewData.swift */,
 				EB73D9D7E8A2B80E365A05EE /* PetHomeView.swift */,
 				2B581173BE8AFA097C83DD3B /* PetProfileViewModel.swift */,
 				AD84B1537FDAD5F3C5214448 /* PetProfileViewState.swift */,
@@ -2244,6 +2256,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A117198F5134436A667C810F /* PetFeedingControls.swift in Sources */,
+				F8D241D4C385D1B059480968 /* PetGrowthSummaryView.swift in Sources */,
+				87A4EBE86C35A9A49075863F /* PetFeedingFailure.swift in Sources */,
+				662F1A65E70A019C451E111C /* PetPreviewData.swift in Sources */,
 				801F4C64AF36C2C91C199D48 /* PetCareService.swift in Sources */,
 				71B8DC1685AC8266EA77118C /* PetCareSnapshot.swift in Sources */,
 				24BC1A99D1C9A3769D01396F /* PetCareRules.swift in Sources */,

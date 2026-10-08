@@ -187,6 +187,204 @@
           }
         }
       }
+    },
+    "pet.levelFormat": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "等级 %lld"
+          }
+        }
+      }
+    },
+    "pet.nextXPFormat": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "再得 %lld XP 升一级"
+          }
+        }
+      }
+    },
+    "pet.bondFormat": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "亲密度：%lld"
+          }
+        }
+      }
+    },
+    "pet.coinsFormat": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "可用金币：%lld"
+          }
+        }
+      }
+    },
+    "pet.happy": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "心情：开心"
+          }
+        }
+      }
+    },
+    "pet.calm": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "心情：平静"
+          }
+        }
+      }
+    },
+    "pet.noPenalty": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没喂也没关系，亲密度不会减少。"
+          }
+        }
+      }
+    },
+    "pet.foodTitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "小狗粮"
+          }
+        }
+      }
+    },
+    "pet.foodDescriptionFormat": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "每份 %lld 金币，亲密度 +%lld。"
+          }
+        }
+      }
+    },
+    "pet.feed": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "喂一份"
+          }
+        }
+      }
+    },
+    "pet.fed": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "小狗吃好啦！"
+          }
+        }
+      }
+    },
+    "pet.fedDetailFormat": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用了 %lld 金币，亲密度 +%lld"
+          }
+        }
+      }
+    },
+    "pet.continue": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "知道了"
+          }
+        }
+      }
+    },
+    "pet.notEnough": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "金币还不够，完成任务后再来吧。"
+          }
+        }
+      }
+    },
+    "pet.clockError": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "设备时间变早了，请让家长检查后重试。"
+          }
+        }
+      }
+    },
+    "pet.saveError": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "这次没保存好，金币没有扣除，再试一次吧。"
+          }
+        }
+      }
+    },
+    "pet.unavailable": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "暂时无法喂食，请刷新小狗资料后再试。"
+          }
+        }
+      }
+    },
+    "pet.fedRefreshFailed": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "喂食已保存，请刷新查看最新资料。"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

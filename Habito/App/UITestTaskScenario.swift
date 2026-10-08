@@ -9,6 +9,7 @@
         case zeroRewardSelfConfirm = "zero-reward-self-confirm"
         case corruptRewardLedger = "corrupt-reward-ledger"
         case dailyIncome = "daily-income"
+        case petCare = "pet-care"
         case parentApproval = "parent-approval"
         case zeroRewardParentApproval = "zero-reward-parent-approval"
         case returnedSubmission = "returned-submission"
@@ -27,7 +28,7 @@
         var verificationType: TaskVerificationType {
             switch self {
             case .legacy, .rewardSelfConfirm, .rewardAfterReminder, .zeroRewardSelfConfirm, .corruptRewardLedger,
-                .dailyIncome:
+                .dailyIncome, .petCare:
                 .selfConfirm
             case .parentApproval, .zeroRewardParentApproval, .returnedSubmission: .parentApproval
             }

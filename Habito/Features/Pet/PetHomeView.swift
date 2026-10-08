@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// 小狗主页复用现有名字事实；不展示尚未定义的等级、心情或喂食数值。
+/// 小狗主页展示同一份已验证成长快照；喂食写入由注入服务负责，名字编辑仍走PIN。
 struct PetHomeView: View {
     let model: PetProfileViewModel
     let onOpenParent: () -> Void
@@ -19,8 +19,8 @@ struct PetHomeView: View {
                     Text("pet.setupDescription", tableName: "UIR1")
                         .accessibilityIdentifier(HabitoAccessibilityID.petNotConfigured)
                     parentButton
-                case let .loaded(names):
-                    Text(names.petName)
+                case let .loaded(snapshot):
+                    Text(snapshot.names.petName)
                         .font(.largeTitle.bold())
                         .fixedSize(horizontal: false, vertical: true)
                         .accessibilityAddTraits(.isHeader)
@@ -28,8 +28,11 @@ struct PetHomeView: View {
                     MangaSpeechBubble {
                         Text("pet.companion", tableName: "UIR1").font(.title2.bold())
                     }
+                    PetGrowthSummaryView(snapshot: snapshot)
+                    PetFeedingControls(model: model, canFeed: snapshot.canFeed)
                     parentButton
                 case .failed:
+                    if model.feedingReceipt != nil { Text("pet.fedRefreshFailed", tableName: "UIR1") }
                     Text("pet.error", tableName: "UIR1")
                         .accessibilityIdentifier(HabitoAccessibilityID.petError)
                     Button(action: model.load) { Text("pet.retry", tableName: "UIR1") }
@@ -59,22 +62,16 @@ struct PetHomeView: View {
 }
 
 #Preview("小狗 · 未设置横屏") {
-    NavigationStack { PetHomeView(model: PetProfileViewModel(loadNames: { nil }), onOpenParent: {}) }
+    NavigationStack { PetHomeView(model: PetPreviewData.model(kind: 0), onOpenParent: {}) }
         .frame(width: 1194, height: 834)
 }
 
-#Preview("小狗 · 真实名字大字") {
-    NavigationStack {
-        PetHomeView(
-            model: PetProfileViewModel(loadNames: { try FamilyProfileNames(childNickname: "小禾", petName: "奶油小毛球") }),
-            onOpenParent: {})
-    }.environment(\.dynamicTypeSize, .accessibility5)
+#Preview("小狗 · 成长大字") {
+    NavigationStack { PetHomeView(model: PetPreviewData.model(kind: 1), onOpenParent: {}) }
+        .environment(\.dynamicTypeSize, .accessibility5)
 }
 
 #Preview("小狗 · 失败深色") {
-    NavigationStack {
-        PetHomeView(
-            model: PetProfileViewModel(loadNames: { throw FamilyProfileServiceError.pendingContextChanges }),
-            onOpenParent: {})
-    }.preferredColorScheme(.dark)
+    NavigationStack { PetHomeView(model: PetPreviewData.model(kind: 2), onOpenParent: {}) }
+        .preferredColorScheme(.dark)
 }

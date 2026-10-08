@@ -92,7 +92,9 @@ struct HabitoApp: App {
         let timeZone = TimeZone.autoupdatingCurrent
         let rebuildTrigger = NotificationRebuildTrigger()
         _familyProfileModel = State(initialValue: Self.makeFamilyProfileModel(context: container.mainContext))
-        _petProfileModel = State(initialValue: Self.makePetProfileModel(context: container.mainContext))
+        _petProfileModel = State(
+            initialValue: Self.makePetProfileModel(
+                context: container.mainContext, calendar: calendar, timeZone: timeZone, now: dateProvider.now))
         let overviewQuery = GrowthStatisticsQueryService(
             context: container.mainContext, calendar: calendar, timeZone: timeZone)
         let overviewModel = ParentTodayOverviewViewModel(service: overviewQuery, now: dateProvider.now)
@@ -247,11 +249,17 @@ struct HabitoApp: App {
     }
 
     /// 读取失败探针只在显式隔离Debug测试启用；Release没有失败工厂或合成库路径。
-    private static func makePetProfileModel(context: ModelContext) -> PetProfileViewModel {
+    private static func makePetProfileModel(
+        context: ModelContext, calendar: Calendar, timeZone: TimeZone,
+        now: @escaping () -> Date
+    ) -> PetProfileViewModel {
         #if DEBUG
-            UITestPetProfileFactory.make(context: context, arguments: ProcessInfo.processInfo.arguments)
+            UITestPetProfileFactory.make(
+                context: context, arguments: ProcessInfo.processInfo.arguments,
+                calendar: calendar, timeZone: timeZone, now: now)
         #else
-            PetProfileViewModel(loadNames: FamilyProfileService(context: context).load)
+            let service = PetCareService(context: context, calendar: calendar, timeZone: timeZone)
+            return PetProfileViewModel(loadSnapshot: service.load, feedPet: service.feed, now: now)
         #endif
     }
 

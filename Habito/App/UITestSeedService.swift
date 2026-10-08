@@ -96,6 +96,11 @@
                 occurrence.template = template
             }
             try context.save()
+            if scenario == .petCare {
+                try FamilyProfileService(context: context).save(
+                    FamilyProfileNames(childNickname: "合成孩子", petName: "合成毛球"))
+                _ = try RewardLedgerService(context: context).grantReward(sourceID: UUID(), xp: 95, coins: 12, at: now)
+            }
             if scenario == .dailyIncome {
                 // 独占测试库通过真实账本播种跨日收入和消费，验证首页不会拿余额冒充所得。
                 var localCalendar = calendar
@@ -127,6 +132,8 @@
         private static func removeAllData(from context: ModelContext) throws {
             // 先删除关系叶子，再删除实例和模板，避免让级联删除顺序影响测试重置的确定性。
             // 固定任务 ID 会复用，必须同步清理 V1 审计/账本，且只作用于显式隔离 UI 容器。
+            try context.fetch(FetchDescriptor<PetFeeding>()).forEach(context.delete)
+            try context.fetch(FetchDescriptor<PetGrowthCheckpoint>()).forEach(context.delete)
             try context.fetch(FetchDescriptor<TaskSubmission>()).forEach(context.delete)
             try context.fetch(FetchDescriptor<XPTransaction>()).forEach(context.delete)
             try context.fetch(FetchDescriptor<CoinTransaction>()).forEach(context.delete)

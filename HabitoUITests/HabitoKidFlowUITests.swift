@@ -13,6 +13,68 @@ final class HabitoKidFlowUITests: XCTestCase {
         continueAfterFailure = false
     }
 
+    func testPetFeedingPersistsAndStopsAtInsufficientCoinsWithSystemTextSize() throws {
+        XCUIDevice.shared.orientation = .landscapeLeft
+        let app = makeApplication()
+        app.launchArguments = ["--habito-ui-testing", "--habito-ui-reset", "--habito-ui-task-scenario", "pet-care"]
+        app.launch()
+        openPet(in: app)
+        XCTAssertEqual(app.staticTexts["kid.pet.level"].label, "等级 1")
+        XCTAssertEqual(app.staticTexts["kid.pet.bond"].label, "亲密度：0")
+        XCTAssertEqual(app.staticTexts["kid.pet.coins"].label, "可用金币：12")
+        tapPetControl("kid.pet.feed", in: app)
+        XCTAssertTrue(app.staticTexts["kid.pet.fed"].waitForExistence(timeout: 5))
+        XCTAssertEqual(app.staticTexts["kid.pet.coins"].label, "可用金币：7")
+        XCTAssertEqual(app.staticTexts["kid.pet.bond"].label, "亲密度：1")
+        XCTAssertEqual(app.staticTexts["kid.pet.mood"].label, "心情：开心")
+        tapPetControl("kid.pet.fed-continue", in: app)
+        tapPetControl("kid.pet.feed", in: app)
+        XCTAssertTrue(app.staticTexts["kid.pet.fed"].waitForExistence(timeout: 5))
+        tapPetControl("kid.pet.fed-continue", in: app)
+        XCTAssertEqual(app.staticTexts["kid.pet.coins"].label, "可用金币：2")
+        XCTAssertFalse(app.buttons["kid.pet.feed"].isEnabled)
+        keepScreenshot(app, name: "真实喂食两次不足余额不再购买")
+        app.terminate()
+        app.launchArguments = ["--habito-ui-testing", "--habito-ui-task-scenario", "pet-care"]
+        app.launch()
+        openPet(in: app)
+        XCTAssertEqual(app.staticTexts["kid.pet.bond"].label, "亲密度：2")
+        XCTAssertEqual(app.staticTexts["kid.pet.coins"].label, "可用金币：2")
+        XCTAssertFalse(app.staticTexts["kid.pet.fed"].exists)
+        XCTAssertFalse(app.buttons["kid.pet.feed"].isEnabled)
+    }
+
+    func testPetFeedingSaveFailureRetriesWithoutDuplicateChargeWithSystemTextSize() throws {
+        XCUIDevice.shared.orientation = .landscapeLeft
+        let app = makeApplication()
+        app.launchArguments = [
+            "--habito-ui-testing", "--habito-ui-reset", "--habito-ui-task-scenario", "pet-care",
+            "--habito-ui-pet-feed-fail-once",
+        ]
+        app.launch()
+        openPet(in: app)
+        tapPetControl("kid.pet.feed", in: app)
+        XCTAssertTrue(app.staticTexts["kid.pet.feed-error"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.staticTexts["kid.pet.fed"].exists)
+        XCTAssertEqual(app.staticTexts["kid.pet.coins"].label, "可用金币：12")
+        XCTAssertEqual(app.staticTexts["kid.pet.bond"].label, "亲密度：0")
+        tapPetControl("kid.pet.feed", in: app)
+        XCTAssertTrue(app.staticTexts["kid.pet.fed"].waitForExistence(timeout: 5))
+        XCTAssertEqual(app.staticTexts["kid.pet.coins"].label, "可用金币：7")
+        XCTAssertEqual(app.staticTexts["kid.pet.bond"].label, "亲密度：1")
+        keepScreenshot(app, name: "真实喂食保存失败重试只扣一次")
+    }
+
+    private func tapPetControl(_ identifier: String, in app: XCUIApplication) {
+        let button = app.buttons[identifier]
+        scrollFullyIntoFormViewport(button, viewport: app.scrollViews["kid.pet.screen"], in: app)
+        XCTAssertTrue(button.waitForExistence(timeout: 5))
+        XCTAssertGreaterThanOrEqual(button.frame.height, 44)
+        XCTAssertGreaterThanOrEqual(button.frame.width, 44)
+        XCTAssertTrue(button.isHittable)
+        button.tap()
+    }
+
     func testPetProfileSetupRefreshAndRestartWithSystemTextSize() throws {
         XCUIDevice.shared.orientation = .landscapeLeft
         let app = makeApplication()
