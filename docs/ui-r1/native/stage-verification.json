@@ -1,0 +1,52 @@
+{
+  "task": "UI-R1-007A",
+  "completed": "2026-10-08 10:01",
+  "source_commit": "39c8f1c51c0d6d1a0b9bbc7e20f93a5b50340dcd",
+  "source_file_count": 529,
+  "source_fingerprints_unchanged": true,
+  "original_localization_keys_unchanged": 467,
+  "ui_scope": "每系5条跨页专项，不是全部66UI；最终全功能回归保留第7组",
+  "results": [
+    {
+      "platform": "17",
+      "xcresult": "/tmp/habito-ui-007a-17.xcresult",
+      "result": "Passed",
+      "passed_definitions": 662,
+      "passed_executions": 1326,
+      "unit_definitions": 657,
+      "unit_executions": 1321,
+      "ui_tests": 5,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "runtime_warnings": []
+    },
+    {
+      "platform": "27-max",
+      "xcresult": "/tmp/habito-ui-007a-27-max.xcresult",
+      "result": "Passed",
+      "passed_definitions": 662,
+      "passed_executions": 1326,
+      "unit_definitions": 657,
+      "unit_executions": 1321,
+      "ui_tests": 5,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "runtime_warnings": [
+        "Update the Info.plist: 1) `UIRequiresFullScreen` will soon be ignored. 2) Support for all orientations will soon be required."
+      ]
+    }
+  ],
+  "restored_27": {
+    "content_size": "large",
+    "appearance": "light"
+  },
+  "release_build": "/tmp/habito-ui-r1-release-build.log",
+  "debug_analysis": "/tmp/habito-ui-r1-analysis.log",
+  "screenshots": {
+    "stage-home-light.png": "f30bf52b30a444ad7ea97afc31275d8ac6716bb33a9ef36ca3c4252cc42209e0",
+    "stage-home-max.png": "36289da7aca287da25d022bd26def0fbd7caf28e9adc23666eeb739f0742840f"
+  },
+  "remaining": "宠物经济参数待确认；目标实机unavailable；最终全功能回归与系统开关/VoiceOver/家庭观察未验。"
+}
