@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1EC85056C54470879A505EF2 /* DailyRewardQueryServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 835F3149531DB9CC72A1CAE1 /* DailyRewardQueryServiceTests.swift */; };
+		3A73074369FF9FDC3B3D9DC4 /* DailyRewardQueryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 551212BA6E3B0967BAB8139E /* DailyRewardQueryService.swift */; };
+		A546A2C3E40F03F212082A18 /* DailyRewardSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE995EE9CFC8893715050B03 /* DailyRewardSummary.swift */; };
 		EE0A8600B3EF018C1C251484 /* Tabler-LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 99A3F82DDA123D4EF7A62BD9 /* Tabler-LICENSE.txt */; };
 		23BFADE477462428F707C343 /* Manga.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D5A2990AA7E5BF45C5844C85 /* Manga.xcassets */; };
 		DF5584738E4BF484AE3B0E86 /* DogCharacter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CB2D0418276F00468894298 /* DogCharacter.swift */; };
@@ -520,6 +523,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		835F3149531DB9CC72A1CAE1 /* DailyRewardQueryServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyRewardQueryServiceTests.swift; sourceTree = "<group>"; };
+		551212BA6E3B0967BAB8139E /* DailyRewardQueryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyRewardQueryService.swift; sourceTree = "<group>"; };
+		BE995EE9CFC8893715050B03 /* DailyRewardSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyRewardSummary.swift; sourceTree = "<group>"; };
 		99A3F82DDA123D4EF7A62BD9 /* Tabler-LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Tabler-LICENSE.txt; sourceTree = "<group>"; };
 		D5A2990AA7E5BF45C5844C85 /* Manga.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Manga.xcassets; sourceTree = "<group>"; };
 		5CB2D0418276F00468894298 /* DogCharacter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DogCharacter.swift; sourceTree = "<group>"; };
@@ -1229,6 +1235,7 @@
 		AB5000000000000000000003 /* Rewards */ = {
 			isa = PBXGroup;
 			children = (
+				BE995EE9CFC8893715050B03 /* DailyRewardSummary.swift */,
 				AB2000000000000000000183 /* ChildRewardReceipt.swift */,
 				AB2000000000000000000184 /* ChildRewardReceiptError.swift */,
 				AB2000000000000000000034 /* RewardLedgerError.swift */,
@@ -1243,6 +1250,7 @@
 		AB5000000000000000000004 /* Rewards */ = {
 			isa = PBXGroup;
 			children = (
+				551212BA6E3B0967BAB8139E /* DailyRewardQueryService.swift */,
 				AB2000000000000000000185 /* ChildRewardReceiptService.swift */,
 				AB2000000000000000000038 /* RewardLedgerSnapshot.swift */,
 				AB2000000000000000000039 /* RewardLedgerService.swift */,
@@ -1920,6 +1928,7 @@
 		D50000000000000000000002 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				835F3149531DB9CC72A1CAE1 /* DailyRewardQueryServiceTests.swift */,
 				AB2000000000000000000251 /* FamilyProfileServiceTests.swift */,
 				AB2000000000000000000247 /* V6MigrationFixture.swift */,
 				AB2000000000000000000248 /* FamilyProfileMigrationTests.swift */,
@@ -2100,6 +2109,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A73074369FF9FDC3B3D9DC4 /* DailyRewardQueryService.swift in Sources */,
+				A546A2C3E40F03F212082A18 /* DailyRewardSummary.swift in Sources */,
 				DF5584738E4BF484AE3B0E86 /* DogCharacter.swift in Sources */,
 				BFE8C49B5601D7141BB93C48 /* TaskIcon.swift in Sources */,
 				FDFCBABB44015897917D176C /* MangaButtonStyle.swift in Sources */,
@@ -2503,6 +2514,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1EC85056C54470879A505EF2 /* DailyRewardQueryServiceTests.swift in Sources */,
 				AB1000000000000000000186 /* ChildRewardReceiptServiceTests.swift in Sources */,
 				AB1000000000000000000191 /* ChildRewardFeedbackViewModelTests.swift in Sources */,
 				AB1000000000000000000205 /* GrowthStatisticsQueryServiceTests.swift in Sources */,
