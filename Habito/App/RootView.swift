@@ -11,6 +11,7 @@ struct RootView: View {
     @State private var parentTaskTemplatesModel: ParentTaskTemplateListViewModel
     @State private var parentTodayModel: ParentTodayTaskViewModel
     @State private var statisticsModel: GrowthStatisticsViewModel
+    @State private var petProfileModel: PetProfileViewModel
     @State private var familyProfileModel: FamilyProfileEditorViewModel
     @State private var parentReviewModel: ParentReviewViewModel
     @State private var parentCalendarModel: ParentCalendarDayViewModel
@@ -34,6 +35,7 @@ struct RootView: View {
         parentTodayModel: ParentTodayTaskViewModel,
         statisticsModel: GrowthStatisticsViewModel,
         familyProfileModel: FamilyProfileEditorViewModel,
+        petProfileModel: PetProfileViewModel,
         parentReviewModel: ParentReviewViewModel,
         parentCalendarModel: ParentCalendarDayViewModel,
         parentNotificationModel: ParentNotificationDiagnosticsViewModel,
@@ -52,6 +54,7 @@ struct RootView: View {
         _parentTodayModel = State(initialValue: parentTodayModel)
         _statisticsModel = State(initialValue: statisticsModel)
         _familyProfileModel = State(initialValue: familyProfileModel)
+        _petProfileModel = State(initialValue: petProfileModel)
         _parentReviewModel = State(initialValue: parentReviewModel)
         _parentCalendarModel = State(initialValue: parentCalendarModel)
         _parentNotificationModel = State(initialValue: parentNotificationModel)
@@ -72,6 +75,7 @@ struct RootView: View {
                 onSelectTask: showTask,
                 onRetry: loadToday,
                 onRetryRewards: todayModel.loadRewards,
+                onOpenPet: showPet,
                 dailyRewardState: todayModel.dailyRewardState,
                 onRetryDailyRewards: todayModel.loadDailyRewards,
                 feedbackState: childRewardFeedbackModel.state,
@@ -113,6 +117,8 @@ struct RootView: View {
             }
             .navigationDestination(for: KidRoute.self) { route in
                 switch route {
+                case .pet:
+                    PetHomeView(model: petProfileModel, onOpenParent: openParentGate)
                 case let .task(occurrenceID):
                     KidTaskSessionView(
                         model: taskSessionModelFactory.makeModel(for: occurrenceID),
@@ -151,6 +157,10 @@ struct RootView: View {
         }
     }
 
+    private func showPet() {
+        path.append(.pet)
+    }
+
     private func showTask(_ task: KidTaskNavigationItem) {
         path.append(.task(task.id))
     }
@@ -159,6 +169,8 @@ struct RootView: View {
         todayModel.load()
         // 家长可能有未保存草稿，执行页也有自己的完成反馈；仅首页可见时读审核收据。
         if !isParentGatePresented, path.isEmpty { childRewardFeedbackModel.load() }
+        // 宠物页只读；PIN表单关闭后再刷新，绝不读取家长未保存草稿。
+        if !isParentGatePresented, path.last == .pet { petProfileModel.load() }
     }
 
     private func openParentGate() {

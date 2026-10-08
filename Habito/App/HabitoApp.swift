@@ -22,6 +22,7 @@ struct HabitoApp: App {
     @State private var parentTaskTemplatesModel: ParentTaskTemplateListViewModel
     @State private var parentTodayModel: ParentTodayTaskViewModel
     @State private var statisticsModel: GrowthStatisticsViewModel
+    @State private var petProfileModel: PetProfileViewModel
     @State private var familyProfileModel: FamilyProfileEditorViewModel
     @State private var parentReviewModel: ParentReviewViewModel
     @State private var parentCalendarModel: ParentCalendarDayViewModel
@@ -91,6 +92,7 @@ struct HabitoApp: App {
         let timeZone = TimeZone.autoupdatingCurrent
         let rebuildTrigger = NotificationRebuildTrigger()
         _familyProfileModel = State(initialValue: Self.makeFamilyProfileModel(context: container.mainContext))
+        _petProfileModel = State(initialValue: Self.makePetProfileModel(context: container.mainContext))
         let overviewQuery = GrowthStatisticsQueryService(
             context: container.mainContext, calendar: calendar, timeZone: timeZone)
         let overviewModel = ParentTodayOverviewViewModel(service: overviewQuery, now: dateProvider.now)
@@ -224,6 +226,7 @@ struct HabitoApp: App {
                 parentTodayModel: parentTodayModel,
                 statisticsModel: statisticsModel,
                 familyProfileModel: familyProfileModel,
+                petProfileModel: petProfileModel,
                 parentReviewModel: parentReviewModel,
                 parentCalendarModel: parentCalendarModel,
                 parentNotificationModel: parentNotificationModel,
@@ -244,6 +247,14 @@ struct HabitoApp: App {
     }
 
     /// 读取失败探针只在显式隔离Debug测试启用；Release没有失败工厂或合成库路径。
+    private static func makePetProfileModel(context: ModelContext) -> PetProfileViewModel {
+        #if DEBUG
+            UITestPetProfileFactory.make(context: context, arguments: ProcessInfo.processInfo.arguments)
+        #else
+            PetProfileViewModel(loadNames: FamilyProfileService(context: context).load)
+        #endif
+    }
+
     private static func makeFamilyProfileModel(context: ModelContext) -> FamilyProfileEditorViewModel {
         #if DEBUG
             UITestFamilyProfileEditorFactory.make(context: context, arguments: ProcessInfo.processInfo.arguments)

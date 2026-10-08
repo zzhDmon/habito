@@ -1,0 +1,29 @@
+{
+  "task": "UI-R1-005A",
+  "unit_tests_per_platform": {
+    "definitions": 27,
+    "executions": 55
+  },
+  "ui_per_platform": 2,
+  "new_tests": {
+    "definitions": 6,
+    "executions": 14
+  },
+  "results": [
+    "/tmp/habito-ui-005a-fixed-17.xcresult",
+    "/tmp/habito-ui-005a-fixed-27-max.xcresult"
+  ],
+  "initial_failures": [
+    "27 toolbar入口36pt，已改首页卡片Manga按钮，保留44pt断言",
+    "17滚动助手尚未识别宠物导航标题，已精确注册当前页标题，不放宽完整可见断言"
+  ],
+  "screenshots": [
+    "pet-light.png",
+    "pet-dark-max.png"
+  ],
+  "restored_27": {
+    "content_size": "large",
+    "appearance": "light"
+  },
+  "business_boundary": "只读现有名字，PIN后编辑；不实现等级/喂食/亲密度数值。"
+}

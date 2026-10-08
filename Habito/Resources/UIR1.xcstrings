@@ -88,6 +88,105 @@
           }
         }
       }
+    },
+    "pet.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "我的小狗"
+          }
+        }
+      }
+    },
+    "pet.entry": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "去看小狗"
+          }
+        }
+      }
+    },
+    "pet.loading": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在找小狗"
+          }
+        }
+      }
+    },
+    "pet.welcome": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "一起开始今天的冒险吧！"
+          }
+        }
+      }
+    },
+    "pet.setupDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请家长在“孩子和小狗”里，为你和小狗起个名字。"
+          }
+        }
+      }
+    },
+    "pet.companion": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "我陪你一起，一步一步来。"
+          }
+        }
+      }
+    },
+    "pet.parentAction": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请家长设置名字"
+          }
+        }
+      }
+    },
+    "pet.error": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "小狗的资料暂时没读到，请再试一次。"
+          }
+        }
+      }
+    },
+    "pet.retry": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "重试读取小狗"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

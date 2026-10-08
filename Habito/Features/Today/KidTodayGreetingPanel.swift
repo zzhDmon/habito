@@ -4,6 +4,8 @@ import SwiftUI
 struct KidTodayGreetingPanel: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
+    var onOpenPet: () -> Void = {}
+
     var body: some View {
         VStack(alignment: .leading, spacing: HabitoDesign.Spacing.medium) {
             MangaSpeechBubble {
@@ -21,12 +23,15 @@ struct KidTodayGreetingPanel: View {
                 DogCharacter()
             }
 
-            Label("kidToday.childMode", systemImage: "figure.child")
-                .font(.headline)
-                .padding(.horizontal, HabitoDesign.Spacing.medium)
-                .padding(.vertical, HabitoDesign.Spacing.small)
-                .modifier(MangaPanel(fill: HabitoDesign.Manga.action))
-                .foregroundStyle(HabitoDesign.Manga.actionInk)
+            Button(action: onOpenPet) {
+                Label {
+                    Text("pet.entry", tableName: "UIR1")
+                } icon: {
+                    Image(systemName: "pawprint.fill")
+                }
+            }
+            .buttonStyle(MangaButtonStyle())
+            .accessibilityIdentifier(HabitoAccessibilityID.petEntry)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(HabitoDesign.Spacing.large)

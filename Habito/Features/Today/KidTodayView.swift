@@ -8,6 +8,7 @@ struct KidTodayView: View {
     let onSelectTask: (KidTaskNavigationItem) -> Void
     let onRetry: () -> Void
     let onRetryRewards: () -> Void
+    var onOpenPet: () -> Void = {}
     var dailyRewardState: TodayDailyRewardState = .loading
     var onRetryDailyRewards: () -> Void = {}
     var feedbackState: ChildRewardFeedbackState = .idle
@@ -26,7 +27,7 @@ struct KidTodayView: View {
                 ChildRewardFeedbackView(
                     state: feedbackState, acknowledgementFailed: acknowledgementFailed,
                     onContinue: onContinueReceipt, onRetry: onRetryReceipt)
-                KidTodayGreetingPanel()
+                KidTodayGreetingPanel(onOpenPet: onOpenPet)
                 KidTodayDailyRewardView(state: dailyRewardState, onRetry: onRetryDailyRewards)
                 KidTodayRewardOverview(state: rewardState, onRetry: onRetryRewards)
                 if case let .loaded(content) = state, content.totalCount > 0 {

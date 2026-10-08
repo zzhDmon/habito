@@ -13,6 +13,67 @@ final class HabitoKidFlowUITests: XCTestCase {
         continueAfterFailure = false
     }
 
+    func testPetProfileSetupRefreshAndRestartWithSystemTextSize() throws {
+        XCUIDevice.shared.orientation = .landscapeLeft
+        let app = makeApplication()
+        app.launchArguments = ["--habito-ui-testing", "--habito-ui-reset", "--habito-ui-empty"]
+        app.launch()
+        openPet(in: app)
+        XCTAssertTrue(app.staticTexts["kid.pet.not-configured"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.textFields["parent.profile.pet"].exists)
+        let parent = app.buttons["kid.pet.open-parent"]
+        scrollFullyIntoFormViewport(parent, viewport: app.scrollViews["kid.pet.screen"], in: app)
+        XCTAssertGreaterThanOrEqual(parent.frame.height, 44)
+        parent.tap()
+        XCTAssertFalse(app.textFields["parent.profile.pet"].exists)
+        unlockParent(in: app, isGatePresented: true)
+        openFamilyProfile(in: app)
+        setProfileText("小禾", identifier: "parent.profile.child", in: app)
+        setProfileText("合成毛球", identifier: "parent.profile.pet", in: app)
+        tapProfileSave(in: app)
+        assertProfileFeedback("名字记好了", in: app)
+        app.buttons["parent.gate.close"].tap()
+        let name = app.staticTexts["kid.pet.name"]
+        XCTAssertTrue(name.waitForExistence(timeout: 5))
+        XCTAssertEqual(name.label, "合成毛球")
+        keepScreenshot(app, name: "小狗主页从家长设置返回刷新")
+        app.terminate()
+        app.launchArguments = ["--habito-ui-testing", "--habito-ui-empty"]
+        app.launch()
+        openPet(in: app)
+        XCTAssertEqual(name.label, "合成毛球")
+        XCTAssertFalse(app.textFields["parent.profile.pet"].exists)
+    }
+
+    func testPetProfileReadFailureRetryWithSystemTextSize() throws {
+        XCUIDevice.shared.orientation = .landscapeLeft
+        let app = makeApplication()
+        app.launchArguments = [
+            "--habito-ui-testing", "--habito-ui-reset", "--habito-ui-empty", "--habito-ui-pet-read-fail-once",
+        ]
+        app.launch()
+        openPet(in: app)
+        let retry = app.buttons["kid.pet.retry"]
+        XCTAssertTrue(retry.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["kid.pet.error"].exists)
+        XCTAssertFalse(app.staticTexts["kid.pet.not-configured"].exists)
+        scrollFullyIntoFormViewport(retry, viewport: app.scrollViews["kid.pet.screen"], in: app)
+        XCTAssertGreaterThanOrEqual(retry.frame.height, 44)
+        retry.tap()
+        XCTAssertTrue(app.staticTexts["kid.pet.not-configured"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.staticTexts["kid.pet.name"].exists)
+        keepScreenshot(app, name: "小狗未设置引导与重试恢复")
+    }
+
+    private func openPet(in app: XCUIApplication) {
+        let entry = app.buttons["kid.pet.entry"]
+        scrollFullyIntoTodayViewport(entry, in: app, towardTop: true)
+        XCTAssertTrue(entry.waitForExistence(timeout: 5))
+        XCTAssertGreaterThanOrEqual(entry.frame.height, 44)
+        entry.tap()
+        XCTAssertTrue(app.scrollViews["kid.pet.screen"].waitForExistence(timeout: 5))
+    }
+
     func testFamilyNamesSaveEditPINAndRestartWithSystemTextSize() throws {
         let app = launchEmptyFamilyProfile()
         XCTAssertEqual(profileValue("parent.profile.child", in: app), "")
@@ -2109,6 +2170,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         switch viewport.identifier {
         case "parent.gate.form": currentTitles = ["家长入口"]
         case "parent.profile.form": currentTitles = ["孩子和小狗"]
+        case "kid.pet.screen": currentTitles = ["我的小狗"]
         default: currentTitles = ["新建任务", "编辑任务"]
         }
         let navigationBars = app.navigationBars.matching(NSPredicate(format: "identifier IN %@", currentTitles))
@@ -2129,7 +2191,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         // 也不查当前页面不存在的另一功能保存栏，避免17自动化日志洪泛导致进程失联。
         let saveBar: XCUIElement?
         switch viewport.identifier {
-        case "parent.gate.form": saveBar = nil
+        case "parent.gate.form", "kid.pet.screen": saveBar = nil
         case "parent.profile.form": saveBar = app.otherElements["parent.profile.save-bar"]
         default: saveBar = app.otherElements["parent.templates.editor.save-bar"]
         }
@@ -2761,10 +2823,12 @@ final class HabitoKidFlowUITests: XCTestCase {
         app.launch()
     }
 
-    private func unlockParent(in app: XCUIApplication) {
-        let entry = app.buttons["parent.gate.entry"]
-        XCTAssertTrue(entry.waitForExistence(timeout: 5))
-        entry.tap()
+    private func unlockParent(in app: XCUIApplication, isGatePresented: Bool = false) {
+        if !isGatePresented {
+            let entry = app.buttons["parent.gate.entry"]
+            XCTAssertTrue(entry.waitForExistence(timeout: 5))
+            entry.tap()
+        }
         let pin = app.secureTextFields["parent.gate.pin"]
         let confirmation = app.secureTextFields["parent.gate.pin-confirmation"]
         XCTAssertTrue(pin.waitForExistence(timeout: 5))

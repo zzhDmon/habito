@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		593CF163012F72BC59BD06FA /* PetProfileViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99439C367E2F166DBD2DD55C /* PetProfileViewModelTests.swift */; };
+		49BC72689FECCD59EBEBCA2E /* UITestPetProfileFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCD53C5D68FE5AE698CA71E /* UITestPetProfileFactory.swift */; };
+		116553CA427D548468224EB0 /* PetHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB73D9D7E8A2B80E365A05EE /* PetHomeView.swift */; };
+		54F5805604730BF5C8BC3D46 /* PetProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B581173BE8AFA097C83DD3B /* PetProfileViewModel.swift */; };
+		E8C1598D7D09B2E544909D34 /* PetProfileViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD84B1537FDAD5F3C5214448 /* PetProfileViewState.swift */; };
 		41D05B76708F9606DDC369F0 /* TodayDailyRewardStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFB664CB893B13A0BAF7AA59 /* TodayDailyRewardStateTests.swift */; };
 		7642E7D1BDA9105F413151E1 /* UIR1.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 029C5B09D6946FDD8B7A6BF6 /* UIR1.xcstrings */; };
 		75248E0647FAC54AAEE9B39A /* KidTodayDailyRewardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D23DB83FE734A4525E10FBD4 /* KidTodayDailyRewardView.swift */; };
@@ -527,6 +532,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		99439C367E2F166DBD2DD55C /* PetProfileViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetProfileViewModelTests.swift; sourceTree = "<group>"; };
+		BFCD53C5D68FE5AE698CA71E /* UITestPetProfileFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestPetProfileFactory.swift; sourceTree = "<group>"; };
+		EB73D9D7E8A2B80E365A05EE /* PetHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetHomeView.swift; sourceTree = "<group>"; };
+		2B581173BE8AFA097C83DD3B /* PetProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetProfileViewModel.swift; sourceTree = "<group>"; };
+		AD84B1537FDAD5F3C5214448 /* PetProfileViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetProfileViewState.swift; sourceTree = "<group>"; };
 		CFB664CB893B13A0BAF7AA59 /* TodayDailyRewardStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayDailyRewardStateTests.swift; sourceTree = "<group>"; };
 		029C5B09D6946FDD8B7A6BF6 /* UIR1.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = UIR1.xcstrings; sourceTree = "<group>"; };
 		D23DB83FE734A4525E10FBD4 /* KidTodayDailyRewardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidTodayDailyRewardView.swift; sourceTree = "<group>"; };
@@ -1057,6 +1067,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BC5000000000000000000001 /* Pet */ = {
+			isa = PBXGroup;
+			children = (
+				EB73D9D7E8A2B80E365A05EE /* PetHomeView.swift */,
+				2B581173BE8AFA097C83DD3B /* PetProfileViewModel.swift */,
+				AD84B1537FDAD5F3C5214448 /* PetProfileViewState.swift */,
+			);
+			path = Pet;
+			sourceTree = "<group>";
+		};
 		AB5000000000000000000252 /* FamilyProfile */ = {
 			isa = PBXGroup;
 			children = (
@@ -1325,6 +1345,7 @@
 		A50000000000000000000003 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				BFCD53C5D68FE5AE698CA71E /* UITestPetProfileFactory.swift */,
 				AB2000000000000000000187 /* UITestRewardReceiptProbe.swift */,
 				AB2000000000000000000193 /* UITestChildReceiptServiceFactory.swift */,
 				AB2000000000000000000260 /* UITestFamilyProfileEditorFactory.swift */,
@@ -1458,6 +1479,7 @@
 		A5000000000000000000000B /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				BC5000000000000000000001 /* Pet */,
 				AB5000000000000000000252 /* FamilyProfile */,
 				A5000000000000000000000C /* NotificationProbe */,
 				AF5000000000000000000003 /* GrowthStatistics */,
@@ -1723,6 +1745,7 @@
 		J50000000000000000000001 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				99439C367E2F166DBD2DD55C /* PetProfileViewModelTests.swift */,
 				CFB664CB893B13A0BAF7AA59 /* TodayDailyRewardStateTests.swift */,
 				AB2000000000000000000263 /* TodayCompletionCelebrationEventTests.swift */,
 				AB2000000000000000000265 /* TodayCompletionCelebrationViewModelTests.swift */,
@@ -2122,6 +2145,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				49BC72689FECCD59EBEBCA2E /* UITestPetProfileFactory.swift in Sources */,
+				116553CA427D548468224EB0 /* PetHomeView.swift in Sources */,
+				54F5805604730BF5C8BC3D46 /* PetProfileViewModel.swift in Sources */,
+				E8C1598D7D09B2E544909D34 /* PetProfileViewState.swift in Sources */,
 				75248E0647FAC54AAEE9B39A /* KidTodayDailyRewardView.swift in Sources */,
 				8394697FDC65978522A34DCB /* TodayDailyRewardState.swift in Sources */,
 				3A73074369FF9FDC3B3D9DC4 /* DailyRewardQueryService.swift in Sources */,
@@ -2529,6 +2556,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				593CF163012F72BC59BD06FA /* PetProfileViewModelTests.swift in Sources */,
 				41D05B76708F9606DDC369F0 /* TodayDailyRewardStateTests.swift in Sources */,
 				1EC85056C54470879A505EF2 /* DailyRewardQueryServiceTests.swift in Sources */,
 				AB1000000000000000000186 /* ChildRewardReceiptServiceTests.swift in Sources */,
