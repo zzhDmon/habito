@@ -173,6 +173,24 @@ final class HabitoKidFlowUITests: XCTestCase {
         XCTAssertTrue(app.scrollViews["kid.pet.screen"].waitForExistence(timeout: 5))
     }
 
+    func testTodayColumnsScrollIndependentlyAndParentUsesFullPage() throws {
+        let app = launchScenario("reward-self-confirm")
+        let left = app.scrollViews["kid.today.leading-scroll"]
+        let right = app.scrollViews["kid.today.tasks-scroll"]
+        XCTAssertTrue(left.waitForExistence(timeout: 5))
+        XCTAssertTrue(right.exists)
+        let brand = left.staticTexts.element(boundBy: 0)
+        let originalY = brand.frame.minY
+        right.swipeUp()
+        XCTAssertEqual(brand.frame.minY, originalY, accuracy: 1)
+        unlockParent(in: app)
+        let bar = app.navigationBars.element(boundBy: 0)
+        XCTAssertGreaterThan(bar.frame.width, app.frame.width * 0.9)
+        keepScreenshot(app, name: "家长完整页面")
+        app.buttons["parent.gate.close"].tap()
+        XCTAssertTrue(right.waitForExistence(timeout: 5))
+    }
+
     func testFamilyNamesSaveEditPINAndRestartWithSystemTextSize() throws {
         let app = launchEmptyFamilyProfile()
         XCTAssertEqual(profileValue("parent.profile.child", in: app), "")
@@ -826,6 +844,16 @@ final class HabitoKidFlowUITests: XCTestCase {
                 NSPredicate(format: "identifier BEGINSWITH %@ AND label CONTAINS %@", "kid.today.task.", "分组推荐锚点")
             ).count, 1)
         let anchorID = anchor.identifier
+        let taskScroll = app.scrollViews["kid.today.tasks-scroll"]
+        if taskScroll.exists {
+            let left = app.scrollViews["kid.today.leading-scroll"]
+            let brand = left.staticTexts.element(boundBy: 0)
+            let before = brand.frame
+            let anchorBefore = anchor.frame
+            taskScroll.swipeUp()
+            XCTAssertEqual(brand.frame, before, "右侧长任务列表滚动不得移动左侧概览")
+            XCTAssertLessThan(anchor.frame.minY, anchorBefore.minY - 20, "长任务列表应实际发生滚动")
+        }
         var taskIDs: [String] = []
         for (title, suffix) in periods {
             let header = app.staticTexts["kid.today.group.\(suffix)"]
@@ -1207,7 +1235,13 @@ final class HabitoKidFlowUITests: XCTestCase {
 
     private func scrollFullyIntoTodayViewport(_ element: XCUIElement, in app: XCUIApplication, towardTop: Bool = false)
     {
-        let viewport = app.scrollViews.element(boundBy: 0)
+        // 宽屏有两个独立滚动区；根据目标所属树选取，MAX单列继续使用唯一容器。
+        let left = app.scrollViews["kid.today.leading-scroll"]
+        let right = app.scrollViews["kid.today.tasks-scroll"]
+        let viewport =
+            right.exists
+            ? (left.descendants(matching: .any)[element.identifier].exists ? left : right)
+            : app.scrollViews.element(boundBy: 0)
         XCTAssertTrue(viewport.waitForExistence(timeout: 5))
         let navigationBar = app.navigationBars["今日"]
         XCTAssertTrue(navigationBar.waitForExistence(timeout: 5))

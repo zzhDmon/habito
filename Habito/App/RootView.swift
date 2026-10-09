@@ -151,7 +151,7 @@ struct RootView: View {
         .onChange(of: path) { _, routes in
             if routes.isEmpty { loadToday() }
         }
-        .sheet(isPresented: $isParentGatePresented, onDismiss: loadToday) {
+        .fullScreenCover(isPresented: $isParentGatePresented, onDismiss: loadToday) {
             ParentGateView(
                 model: parentGateModel,
                 taskTemplatesModel: parentTaskTemplatesModel,

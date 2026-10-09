@@ -28,7 +28,7 @@ struct KidTodayView: View {
     var onRetryPetGrowth: () -> Void = {}
 
     var body: some View {
-        AdaptiveTwoColumnLayout {
+        AdaptiveTwoColumnLayout(scrollsColumnsIndependently: true) {
             VStack(alignment: .leading, spacing: HabitoDesign.Spacing.large) {
                 ChildRewardFeedbackView(
                     state: feedbackState, acknowledgementFailed: acknowledgementFailed,
@@ -54,6 +54,8 @@ struct KidTodayView: View {
                 onRetryCelebration: onRetryCelebration)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        // 根页标识留在容器，避免覆盖两个滚动区各自的无障碍身份。
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier(HabitoAccessibilityID.todayScreen)
         .navigationTitle("kidToday.navigationTitle")
         .foregroundStyle(HabitoDesign.Manga.ink)
