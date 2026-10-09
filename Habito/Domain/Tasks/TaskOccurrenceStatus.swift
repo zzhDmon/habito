@@ -9,6 +9,8 @@ nonisolated enum TaskOccurrenceStatus: String, CaseIterable, Sendable {
     case inProgress
     case completed
     case skipped
+    /// 保留唯一键的取消记录，阻止重复规则把已删除的本次任务重新生成。
+    case cancelled
 
     /// 应用一个业务动作并返回新状态，不直接修改持久化对象。
     ///

@@ -6,6 +6,23 @@ import Testing
 @Suite("通知业务重建")
 @MainActor
 struct NotificationRebuildServiceTests {
+    @Test("取消单次清理待发送、已送达及映射，未来重复仍排程")
+    func deletedOccurrenceCleansNotifications() async throws {
+        let (fixture, occurrence) = try await approvalSetup()
+        let id = NotificationRequestIdentifier(occurrenceID: occurrence.id, kind: .primary).rawValue
+        fixture.scheduler.delivered.insert(id)
+        let today = try LocalDate(date: fixture.now, calendar: fixture.calendar, timeZone: fixture.timeZone)
+        try TaskDeletionService(context: fixture.context).delete(
+            occurrenceID: occurrence.id, scope: .occurrence, today: today, now: fixture.now)
+        let result = try await fixture.service.rebuild(at: fixture.now)
+        #expect(result.reconciliation.isSuccessful)
+        #expect(fixture.scheduler.pending[id] == nil && !fixture.scheduler.delivered.contains(id))
+        #expect(try NotificationLinkStore(context: fixture.context).links(occurrenceID: occurrence.id).isEmpty)
+        #expect(!fixture.scheduler.pending.isEmpty)
+        #expect(occurrence.status == .cancelled)
+        #expect(NotificationNavigationService(context: fixture.context).destination(for: id) == .home)
+    }
+
     @Test("等待清理时读取/取消/已送达读删失败，映射保留可追溯，下次成功再清理", arguments: [0, 1, 2, 3])
     func waitingCleanupFailuresRemainTraceable(kind: Int) async throws {
         let (fixture, occurrence) = try await approvalSetup()

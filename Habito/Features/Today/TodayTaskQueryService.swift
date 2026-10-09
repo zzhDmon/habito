@@ -37,7 +37,7 @@ struct TodayTaskQueryService {
         let items = try context.fetch(descriptor).map { occurrence in
             try makeItem(from: occurrence, at: now)
         }
-        let sortedItems = items.sorted { lhs, rhs in
+        let sortedItems = items.filter { $0.status != .cancelled }.sorted { lhs, rhs in
             sortKey(for: lhs, at: now) < sortKey(for: rhs, at: now)
         }
         let carryOverItems = try carryOverItems(before: date, at: now)
@@ -144,6 +144,7 @@ struct TodayTaskQueryService {
         let sessionDuration = sessions.reduce(0) { $0 + $1.duration }
         let displayedDuration = completion?.activeDurationSeconds ?? sessionDuration
         let submission = try TaskSubmissionHistory(context: context).snapshot(for: occurrence)
+        let canDelete = try TaskDeletionService.canDelete(occurrence, context: context)
 
         return TodayTaskItem(
             id: occurrence.id,
@@ -161,6 +162,10 @@ struct TodayTaskQueryService {
             submission: submission,
             verificationType: verification,
             timePeriod: timePeriod,
+            canDelete: canDelete,
+            // 历史展示只依赖实例快照；当前模板规则损坏不能反向阻断已完成记录的读取。
+            // 真正执行周期删除时服务仍会完整校验规则与最新状态。
+            isRecurring: canDelete && occurrence.template?.reminderRule?.scheduleType == .weekly,
             timing: TaskTimingSnapshot(
                 plannedAt: occurrence.plannedAt, deadlineAt: occurrence.deadlineAt,
                 canShowDeadlineHint: (status == .pending || status == .inProgress) && submission?.state != .waiting)
@@ -276,7 +281,7 @@ struct TodayTaskQueryService {
             guard hasCompletion else {
                 throw TodayTaskQueryError.missingCompletionRecord(occurrenceID: occurrenceID)
             }
-        case .pending, .skipped:
+        case .pending, .skipped, .cancelled:
             guard activeSessionCount == 0 else {
                 throw TodayTaskQueryError.unexpectedActiveSession(occurrenceID: occurrenceID)
             }
@@ -302,7 +307,7 @@ struct TodayTaskQueryService {
             rank = 2
         case .completed:
             rank = 4
-        case .skipped:
+        case .skipped, .cancelled:
             rank = 5
         }
         return (rank, item.scheduledAt, item.id.uuidString)

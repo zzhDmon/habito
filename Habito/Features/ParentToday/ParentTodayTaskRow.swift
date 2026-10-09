@@ -8,6 +8,9 @@ struct ParentTodayTaskRow: View {
     let onRestore: () -> Void
     let onCorrectAsCompleted: () -> Void
 
+    var onDelete: (TaskDeletionScope) -> Void = { _ in }
+    @State private var showsDeletionConfirmation = false
+
     var body: some View {
         let presentation = ParentTodayTaskPresentation(item: item)
         VStack(alignment: .leading, spacing: HabitoDesign.Spacing.small) {
@@ -60,12 +63,34 @@ struct ParentTodayTaskRow: View {
                 .buttonStyle(.borderless)
                 .accessibilityIdentifier(HabitoAccessibilityID.parentTodayActions(item.id))
             }
+            if item.canDelete {
+                Button(role: .destructive, action: showDeletionConfirmation) {
+                    Label("parentToday.delete", systemImage: "trash")
+                        .frame(minHeight: HabitoDesign.Layout.minimumTapSize)
+                }
+                .buttonStyle(.borderless)
+                .accessibilityIdentifier("parent.today.delete." + item.id.uuidString.lowercased())
+                .alert("parentToday.deleteTitle", isPresented: $showsDeletionConfirmation) {
+                    Button("parentToday.deleteOnce", role: .destructive) { onDelete(.occurrence) }
+                    if item.isRecurring {
+                        Button("parentToday.deleteSeries", role: .destructive) { onDelete(.series) }
+                    }
+                    Button("parentToday.deleteCancel", role: .cancel) {}
+                } message: {
+                    if item.isRecurring {
+                        Text("parentToday.deleteMessage \(item.title) \(item.date.dateKey)")
+                    } else {
+                        Text("parentToday.deleteOnceMessage \(item.title) \(item.date.dateKey)")
+                    }
+                }
+            }
         }
         .padding(.vertical, HabitoDesign.Spacing.small)
         .fixedSize(horizontal: false, vertical: true)
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier(HabitoAccessibilityID.parentTodayTask(item.id))
     }
+    private func showDeletionConfirmation() { showsDeletionConfirmation = true }
 }
 
 #Preview("家长任务行 · 正常横屏", traits: .landscapeLeft) {

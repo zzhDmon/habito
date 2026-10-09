@@ -39,7 +39,7 @@ nonisolated struct GrowthStatisticsCalculator {
     ) throws -> GrowthStatisticsSnapshot {
         let dates = try dates(endingOn: end, period: period)
         guard let start = dates.first else { throw GrowthStatisticsError.invalidWindowEnd(end) }
-        let selected = facts.filter { (start...end).contains($0.date) }
+        let selected = facts.filter { (start...end).contains($0.date) && $0.status != .cancelled }
         try validate(selected)
         let groupedTasks = Dictionary(grouping: selected, by: \.templateID)
         let latestByTemplate = selected.reduce(into: [UUID: GrowthStatisticsFact]()) { latest, fact in
@@ -67,7 +67,7 @@ nonisolated struct GrowthStatisticsCalculator {
     /// - Returns: 指定日期的计数；无实例保持无分母。
     /// - Throws: 当日重复ID/模板日期或矛盾事实。
     func day(facts: [GrowthStatisticsFact], on date: LocalDate) throws -> GrowthStatisticsDay {
-        let selected = facts.filter { $0.date == date }
+        let selected = facts.filter { $0.date == date && $0.status != .cancelled }
         try validate(selected)
         return GrowthStatisticsDay(date: date, counts: GrowthStatisticsCounts(facts: selected))
     }

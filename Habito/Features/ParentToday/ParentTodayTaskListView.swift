@@ -21,6 +21,7 @@ struct ParentTodayTaskListView: View {
             onRestore: model.restore,
             onCorrectAsCompleted: model.correctAsCompleted,
             onRetry: model.load,
+            onDelete: model.delete,
             overviewState: model.overviewModel?.state ?? .idle,
             onRetryOverview: model.load,
             onShowStatistics: onShowStatistics

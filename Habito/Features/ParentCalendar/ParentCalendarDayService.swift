@@ -37,7 +37,7 @@ struct ParentCalendarDayService {
                 status: status,
                 isDetachedOverride: occurrence.isDetachedOverride
             )
-        }.sorted { $0.scheduledAt < $1.scheduledAt }
+        }.filter { $0.status != .cancelled }.sorted { $0.scheduledAt < $1.scheduledAt }
 
         return ParentCalendarDaySnapshot(
             date: date,
@@ -70,6 +70,8 @@ struct ParentCalendarDayService {
                             value: occurrence.statusRawValue
                         )
                     }
+                    // 取消标记只防重建，不是可见任务；确认文案不能把它计成保留的历史任务。
+                    if status == .cancelled { continue }
                     let preservesHistory = try TaskSubmissionHistory(context: context).preservesOccurrenceHistory(
                         occurrence)
                     if status == .pending, !occurrence.isDetachedOverride, !preservesHistory {
@@ -88,6 +90,7 @@ struct ParentCalendarDayService {
                             value: occurrence.statusRawValue
                         )
                     }
+                    if status == .cancelled { continue }
                     let isWaiting =
                         try TaskSubmissionHistory(context: context).latest(for: occurrence)?.reviewState == .waiting
                     if status != .pending || occurrence.isDetachedOverride || isWaiting {

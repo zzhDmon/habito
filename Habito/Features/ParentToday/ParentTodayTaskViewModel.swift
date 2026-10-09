@@ -12,6 +12,7 @@ final class ParentTodayTaskViewModel {
     /// 可选仅兼容旧测试/预览；正式组合根注入概况，随列表读取和写入后刷新。
     let overviewModel: ParentTodayOverviewViewModel?
 
+    private let deletionService: TaskDeletionService
     private let queryService: TodayTaskQueryService
     private let managementService: ParentTodayTaskManagementService
     private let dateProvider: any DateProviding
@@ -43,6 +44,7 @@ final class ParentTodayTaskViewModel {
             timeZone: timeZone,
             completionService: completionService
         )
+        deletionService = TaskDeletionService(context: context)
         self.dateProvider = dateProvider
         self.notificationRebuildTrigger = notificationRebuildTrigger
         self.calendar = configuredCalendar
@@ -92,6 +94,15 @@ final class ParentTodayTaskViewModel {
                 occurrenceID: occurrenceID,
                 at: dateProvider.now()
             )
+        }
+    }
+
+    /// 保存成功后复用统一刷新，避免残留通知或旧的通关分母。
+    func delete(occurrenceID: UUID, scope: TaskDeletionScope) {
+        perform {
+            let now = dateProvider.now()
+            let today = try LocalDate(date: now, calendar: calendar, timeZone: timeZone)
+            try deletionService.delete(occurrenceID: occurrenceID, scope: scope, today: today, now: now)
         }
     }
 

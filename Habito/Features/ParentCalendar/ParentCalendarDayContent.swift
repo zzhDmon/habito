@@ -94,6 +94,7 @@ struct ParentCalendarDayContent: View {
         case .inProgress: "parentToday.statusInProgress"
         case .completed: "parentToday.statusCompleted"
         case .skipped: "parentToday.statusSkipped"
+        case .cancelled: "parentToday.statusDeleted"
         }
     }
 }

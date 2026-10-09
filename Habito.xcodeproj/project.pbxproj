@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		8F135C821C5673699D524475 /* TaskEditorDisclosureButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B609935AC24EB1421EFB495E /* TaskEditorDisclosureButton.swift */; };
+		6C94D8242E6C153220C3608F /* TaskDeletionServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60624D5F65F4ACA0FC448D6 /* TaskDeletionServiceTests.swift */; };
+		059C4FA789A08232E9517E71 /* TaskDeletionError.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB232861194F75DE6EE62353 /* TaskDeletionError.swift */; };
+		2C17691D332430668AD1711E /* TaskDeletionScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F53D7759C58A13332620345 /* TaskDeletionScope.swift */; };
+		1704AE4F310DC46FA3C5D446 /* TaskDeletionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCA54321BA201A482F13983C /* TaskDeletionService.swift */; };
 		73AF7A2E78284B96BCB47F35 /* ParentManagementMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A614ECB31F3E83FA6910B5E /* ParentManagementMenu.swift */; };
 		1634E5E2C180302F2CBBD3AB /* CompletionConfettiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AD2AEC3C259EB296528842 /* CompletionConfettiView.swift */; };
 		DF11877BDB6E5A68A9F4A7B8 /* TaskWeekdayPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40E4CF702CB4D624059BFEC8 /* TaskWeekdayPreset.swift */; };
@@ -577,6 +581,10 @@
 
 /* Begin PBXFileReference section */
 		B609935AC24EB1421EFB495E /* TaskEditorDisclosureButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskEditorDisclosureButton.swift; sourceTree = "<group>"; };
+		B60624D5F65F4ACA0FC448D6 /* TaskDeletionServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDeletionServiceTests.swift; sourceTree = "<group>"; };
+		BB232861194F75DE6EE62353 /* TaskDeletionError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDeletionError.swift; sourceTree = "<group>"; };
+		6F53D7759C58A13332620345 /* TaskDeletionScope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDeletionScope.swift; sourceTree = "<group>"; };
+		CCA54321BA201A482F13983C /* TaskDeletionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDeletionService.swift; sourceTree = "<group>"; };
 		4A614ECB31F3E83FA6910B5E /* ParentManagementMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentManagementMenu.swift; sourceTree = "<group>"; };
 		01AD2AEC3C259EB296528842 /* CompletionConfettiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletionConfettiView.swift; sourceTree = "<group>"; };
 		40E4CF702CB4D624059BFEC8 /* TaskWeekdayPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskWeekdayPreset.swift; sourceTree = "<group>"; };
@@ -1735,6 +1743,9 @@
 		V50000000000000000000001 /* ParentToday */ = {
 			isa = PBXGroup;
 			children = (
+				BB232861194F75DE6EE62353 /* TaskDeletionError.swift */,
+				6F53D7759C58A13332620345 /* TaskDeletionScope.swift */,
+				CCA54321BA201A482F13983C /* TaskDeletionService.swift */,
 				V2000000000000000000000B /* ParentTodayTaskListBody.swift */,
 				AB2000000000000000000208 /* ParentTodayOverviewState.swift */,
 				AB2000000000000000000209 /* ParentTodayOverviewViewModel.swift */,
@@ -1893,6 +1904,7 @@
 		J50000000000000000000001 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				B60624D5F65F4ACA0FC448D6 /* TaskDeletionServiceTests.swift */,
 				0738913549BB2BE691FDAD56 /* PetGrowthFeedbackViewModelTests.swift */,
 				99439C367E2F166DBD2DD55C /* PetProfileViewModelTests.swift */,
 				CFB664CB893B13A0BAF7AA59 /* TodayDailyRewardStateTests.swift */,
@@ -2302,6 +2314,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				8F135C821C5673699D524475 /* TaskEditorDisclosureButton.swift in Sources */,
+				059C4FA789A08232E9517E71 /* TaskDeletionError.swift in Sources */,
+				2C17691D332430668AD1711E /* TaskDeletionScope.swift in Sources */,
+				1704AE4F310DC46FA3C5D446 /* TaskDeletionService.swift in Sources */,
 				73AF7A2E78284B96BCB47F35 /* ParentManagementMenu.swift in Sources */,
 				1634E5E2C180302F2CBBD3AB /* CompletionConfettiView.swift in Sources */,
 				DF11877BDB6E5A68A9F4A7B8 /* TaskWeekdayPreset.swift in Sources */,
@@ -2751,6 +2766,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6C94D8242E6C153220C3608F /* TaskDeletionServiceTests.swift in Sources */,
 				D12845AA4AA523520B56F77B /* PetGrowthFeedbackViewModelTests.swift in Sources */,
 				02AD13826909055AE7F0BA35 /* PetGrowthFeedbackServiceTests.swift in Sources */,
 				051F216FD1692DB9B57EA7D3 /* PetCareServiceTests.swift in Sources */,

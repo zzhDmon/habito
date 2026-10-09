@@ -12,7 +12,7 @@ struct TodayTasksSnapshot: Equatable, Sendable {
 
     /// 被家长跳过的实例不进入孩子的任务总数。
     var visibleTasks: [TodayTaskItem] {
-        carryOverTasks + tasks.filter { $0.status != .skipped }
+        carryOverTasks + tasks.filter { $0.status != .skipped && $0.status != .cancelled }
     }
 
     var isEmpty: Bool {

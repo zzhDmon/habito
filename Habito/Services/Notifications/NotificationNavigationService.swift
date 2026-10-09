@@ -32,7 +32,7 @@ struct NotificationNavigationService {
             switch status {
             case .pending, .inProgress:
                 return .task(occurrenceID)
-            case .completed, .skipped:
+            case .completed, .skipped, .cancelled:
                 return .home
             }
         } catch {

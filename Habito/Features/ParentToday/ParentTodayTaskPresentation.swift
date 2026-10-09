@@ -11,6 +11,7 @@ struct ParentTodayTaskPresentation {
         case .inProgress: "parentToday.statusInProgress"
         case .completed: "parentToday.statusCompleted"
         case .skipped: "parentToday.statusSkipped"
+        case .cancelled: "parentToday.statusDeleted"
         }
     }
 
@@ -21,6 +22,7 @@ struct ParentTodayTaskPresentation {
         case .inProgress: "timer"
         case .completed: "checkmark.circle.fill"
         case .skipped: "forward.end.fill"
+        case .cancelled: "xmark.circle"
         }
     }
 

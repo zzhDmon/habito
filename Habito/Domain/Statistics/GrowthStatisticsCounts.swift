@@ -12,7 +12,7 @@ nonisolated struct GrowthStatisticsCounts: Equatable, Sendable {
 
     /// 只接受计算器已校验的当前事实；来源仅作展示，不代替自主性判定。
     init(facts: [GrowthStatisticsFact]) {
-        eligible = facts.count { $0.status != .skipped }
+        eligible = facts.count { $0.status != .skipped && $0.status != .cancelled }
         completed = facts.count { $0.status == .completed }
         autonomous = facts.count { $0.status == .completed && $0.completionTiming == .beforeReminder }
         knownTiming = facts.count {

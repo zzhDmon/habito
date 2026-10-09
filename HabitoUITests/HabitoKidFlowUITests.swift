@@ -13,6 +13,42 @@ final class HabitoKidFlowUITests: XCTestCase {
         continueAfterFailure = false
     }
 
+    func testDeleteSingleOccurrenceSurvivesRestartAndPreservesTemplateWithSystemTextSize() {
+        verifyTaskDeletion(series: false)
+    }
+
+    func testDeleteRecurringTaskSurvivesRestartAndArchivesTemplateWithSystemTextSize() {
+        verifyTaskDeletion(series: true)
+    }
+
+    /// 用正式家长入口完成取消确认、删除及跨进程回读，不直接修改测试数据库。
+    private func verifyTaskDeletion(series: Bool) {
+        let app = launchScenario("reward-self-confirm")
+        unlockParent(in: app)
+        app.buttons["parent.today.open"].tap()
+        let delete = app.buttons["parent.today.delete.c5412144-2fb8-4e96-9f7a-6a42e0803d11"]
+        scrollFullyIntoStatisticsViewport(delete, in: app, screen: "parent.today.screen")
+        XCTAssertGreaterThanOrEqual(delete.frame.height, 44)
+        delete.tap()
+        XCTAssertTrue(app.buttons["删除本次"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["删除整个重复任务"].exists)
+        app.buttons["取消"].tap()
+        XCTAssertTrue(delete.exists)
+        delete.tap()
+        app.buttons[series ? "删除整个重复任务" : "删除本次"].tap()
+        let removed = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == false"), object: delete)
+        XCTAssertEqual(XCTWaiter.wait(for: [removed], timeout: 5), .completed)
+        navigateBack(in: app, from: "今日任务管理")
+        XCTAssertEqual(app.buttons[seededTemplateIdentifier].exists, !series)
+        app.buttons["parent.gate.close"].tap()
+        XCTAssertFalse(app.buttons[seededTaskIdentifier].exists)
+        relaunchTodayKeepingData(app)
+        XCTAssertFalse(app.buttons[seededTaskIdentifier].exists)
+        unlockExistingParent(in: app)
+        XCTAssertEqual(app.buttons[seededTemplateIdentifier].exists, !series)
+        keepScreenshot(app, name: series ? "周期删除后保留历史入口" : "单次删除后仍保留重复模板")
+    }
+
     func testPetLevelUpFromRealCompletionDoesNotReplayAfterRestartWithSystemTextSize() throws {
         XCUIDevice.shared.orientation = .landscapeLeft
         let app = makeApplication()

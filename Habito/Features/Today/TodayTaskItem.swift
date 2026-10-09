@@ -17,6 +17,8 @@ struct TodayTaskItem: Equatable, Identifiable, Sendable {
     let submission: TaskSubmissionSnapshot?
     let verificationType: TaskVerificationType
     let timePeriod: TaskTimePeriod
+    let canDelete: Bool
+    let isRecurring: Bool
     let timing: TaskTimingSnapshot
 
     /// 等待是提交事实的派生值，不能另存一个可能与审核历史漂移的状态。
@@ -29,6 +31,8 @@ struct TodayTaskItem: Equatable, Identifiable, Sendable {
         submission: TaskSubmissionSnapshot? = nil,
         verificationType: TaskVerificationType = .selfConfirm,
         timePeriod: TaskTimePeriod = .allDay,
+        canDelete: Bool = false,
+        isRecurring: Bool = false,
         timing: TaskTimingSnapshot = .unspecified
     ) {
         self.id = id
@@ -46,6 +50,8 @@ struct TodayTaskItem: Equatable, Identifiable, Sendable {
         self.submission = submission
         self.verificationType = verificationType
         self.timePeriod = timePeriod
+        self.canDelete = canDelete
+        self.isRecurring = isRecurring
         self.timing = timing
     }
 }

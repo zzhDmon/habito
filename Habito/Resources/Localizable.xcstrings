@@ -4303,6 +4303,94 @@
           }
         }
       }
+    },
+    "parentToday.statusDeleted": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已删除"
+          }
+        }
+      }
+    },
+    "parentToday.delete": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "删除任务"
+          }
+        }
+      }
+    },
+    "parentToday.deleteTitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "删除范围"
+          }
+        }
+      }
+    },
+    "parentToday.deleteOnce": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "删除本次"
+          }
+        }
+      }
+    },
+    "parentToday.deleteSeries": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "删除整个重复任务"
+          }
+        }
+      }
+    },
+    "parentToday.deleteCancel": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "取消"
+          }
+        }
+      }
+    },
+    "parentToday.deleteMessage %@ %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“%1$@” · %2$@。删除本次仅取消该日期；删除整个重复任务会停止重复，并取消今天及以后尚未开始的安排。已经开始的任务和历史记录保留。"
+          }
+        }
+      }
+    },
+    "parentToday.deleteOnceMessage %@ %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "删除“%1$@”在 %2$@ 的这次安排。删除后将不再显示，也不再提醒。"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

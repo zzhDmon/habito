@@ -44,7 +44,7 @@ nonisolated struct TodayCompletionCelebrationEvent: Equatable, Identifiable, Sen
 
     /// 防御矛盾的聚合值：必须核对实际有效行和稳定ID，不能只相信完成百分比。
     private init?(completionID: UUID, snapshot: TodayTasksSnapshot) {
-        let tasks = snapshot.tasks.filter { $0.status != .skipped }
+        let tasks = snapshot.tasks.filter { $0.status != .skipped && $0.status != .cancelled }
         let completionIDs = tasks.compactMap { $0.completion?.id }
         guard snapshot.isCurrentDate, snapshot.carryOverTasks.isEmpty,
             snapshot.totalCount > 0, snapshot.completedCount == snapshot.totalCount,

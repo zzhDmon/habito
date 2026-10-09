@@ -65,6 +65,9 @@ struct KidTaskNavigationItem: Hashable, Identifiable, Sendable {
             case .completed:
                 statusText = String(localized: "kidTask.statusCompleted")
                 statusIconName = HabitoDesign.Symbol.completed
+            case .cancelled:
+                statusText = String(localized: "parentToday.statusDeleted")
+                statusIconName = "xmark.circle"
             case .skipped:
                 statusText = String(localized: "kidTask.statusSkipped")
                 statusIconName = "forward.end.circle.fill"

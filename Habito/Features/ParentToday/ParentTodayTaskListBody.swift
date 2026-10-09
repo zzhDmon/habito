@@ -8,6 +8,7 @@ struct ParentTodayTaskListBody: View {
     let onRestore: (UUID) -> Void
     let onCorrectAsCompleted: (UUID) -> Void
     let onRetry: () -> Void
+    var onDelete: (UUID, TaskDeletionScope) -> Void = { _, _ in }
     var overviewState: ParentTodayOverviewState = .idle
     var onRetryOverview: () -> Void = {}
     var onShowStatistics: () -> Void = {}
@@ -34,7 +35,8 @@ struct ParentTodayTaskListBody: View {
                         ParentTodayTaskRow(
                             item: item, onReschedule: { onReschedule(item) },
                             onSkip: { onSkip(item.id) }, onRestore: { onRestore(item.id) },
-                            onCorrectAsCompleted: { onCorrectAsCompleted(item.id) })
+                            onCorrectAsCompleted: { onCorrectAsCompleted(item.id) },
+                            onDelete: { onDelete(item.id, $0) })
                     }
                 }
             }
