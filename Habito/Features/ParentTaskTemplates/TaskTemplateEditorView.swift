@@ -54,6 +54,20 @@ struct TaskTemplateEditorView: View {
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+            if focusedReward != nil {
+                // 与保存栏一起占据独立空间；避免新系统数字键盘打开时工具栏按钮的命中区域不稳定。
+                HStack {
+                    Spacer()
+                    Button(action: finishInput) {
+                        Text("taskEditor.finishInput")
+                            .frame(minHeight: HabitoDesign.Layout.minimumTapSize)
+                            .contentShape(.rect)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityIdentifier("parent.templates.editor.finish-input")
+                }
+                .padding(.horizontal, HabitoDesign.Spacing.large)
+            }
             TaskTemplateEditorSaveBar(
                 isDisabled: model.isLoading || model.isSaving || model.hasLoadFailure,
                 onSave: save
@@ -85,8 +99,11 @@ struct TaskTemplateEditorView: View {
         }
     }
 
+    /// 主actor内统一结束所有表单输入；iPad数字浮层也随FocusState清空而关闭。
+    private func finishInput() { focusedReward = nil }
+
     private func save() {
-        focusedReward = nil
+        finishInput()
         Task {
             switch await model.save() {
             case .failed:

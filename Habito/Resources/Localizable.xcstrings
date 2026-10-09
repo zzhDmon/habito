@@ -4226,6 +4226,83 @@
           }
         }
       }
+    },
+    "taskEditor.finishInput": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "完成输入"
+          }
+        }
+      }
+    },
+    "parentHub.more": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "更多管理"
+          }
+        }
+      }
+    },
+    "taskEditor.customWeekdays": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "自定义星期"
+          }
+        }
+      }
+    },
+    "taskEditor.appearance": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "图标与颜色"
+          }
+        }
+      }
+    },
+    "taskEditor.rewardSummary %@ %@ %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "经验 %@ · 金币 %@ · 自主额外 %@"
+          }
+        }
+      }
+    },
+    "taskEditor.expanded": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已展开"
+          }
+        }
+      }
+    },
+    "taskEditor.collapsed": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已收起"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

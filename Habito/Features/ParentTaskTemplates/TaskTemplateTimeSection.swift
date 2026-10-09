@@ -4,6 +4,7 @@ import SwiftUI
 ///
 /// 主 actor 页面模型拥有分钟映射；此组件不触碰持久化、通知或奖励。
 struct TaskTemplateTimeSection: View {
+    @State private var isExpanded = false
     @Binding var isPlannedTimeEnabled: Bool
     @Binding var plannedTime: Date
     @Binding var isDeadlineTimeEnabled: Bool
@@ -11,42 +12,62 @@ struct TaskTemplateTimeSection: View {
 
     var body: some View {
         Section {
-            // Switch 的 AX 整行与小滑钮不同；真实 Button 保留按钮角色，并让整行 44 pt 真正可点。
-            Button(action: togglePlannedTime) {
-                Label(
-                    "taskEditor.setPlannedTime", systemImage: isPlannedTimeEnabled ? "checkmark.circle.fill" : "circle"
-                )
-                .frame(maxWidth: .infinity, minHeight: HabitoDesign.Layout.minimumTapSize, alignment: .leading)
+            TaskEditorDisclosureButton(isExpanded: $isExpanded, identifier: "parent.templates.editor.optional-expand") {
+                VStack(alignment: .leading, spacing: HabitoDesign.Spacing.xSmall) {
+                    Text("taskEditor.optionalTimesSection")
+                    if isPlannedTimeEnabled {
+                        LabeledContent("taskEditor.plannedTime") {
+                            Text(plannedTime, format: .dateTime.hour().minute())
+                        }
+                    }
+                    if isDeadlineTimeEnabled {
+                        LabeledContent("taskEditor.deadlineTime") {
+                            Text(deadlineTime, format: .dateTime.hour().minute())
+                        }
+                    }
+                }
+                .frame(minHeight: HabitoDesign.Layout.minimumTapSize)
             }
-            .buttonStyle(.bordered)
-            .accessibilityLabel("taskEditor.setPlannedTime")
-            .accessibilityValue(isPlannedTimeEnabled ? "taskEditor.selected" : "taskEditor.notSelected")
-            .accessibilityIdentifier(HabitoAccessibilityID.taskEditorPlannedEnabled)
-            if isPlannedTimeEnabled {
-                DatePicker("taskEditor.plannedTime", selection: $plannedTime, displayedComponents: .hourAndMinute)
-                    .datePickerStyle(.wheel)
-                    .accessibilityLabel("taskEditor.plannedTime")
-                    .frame(minHeight: HabitoDesign.Layout.minimumTapSize)
-                    .accessibilityIdentifier(HabitoAccessibilityID.taskEditorPlannedTime)
+            if isExpanded {
+                // Switch 的 AX 整行与小滑钮不同；真实 Button 保留按钮角色，并让整行 44 pt 真正可点。
+                Button(action: togglePlannedTime) {
+                    Label(
+                        "taskEditor.setPlannedTime",
+                        systemImage: isPlannedTimeEnabled ? "checkmark.circle.fill" : "circle"
+                    )
+                    .frame(maxWidth: .infinity, minHeight: HabitoDesign.Layout.minimumTapSize, alignment: .leading)
+                }
+                .buttonStyle(.bordered)
+                .accessibilityLabel("taskEditor.setPlannedTime")
+                .accessibilityValue(isPlannedTimeEnabled ? "taskEditor.selected" : "taskEditor.notSelected")
+                .accessibilityIdentifier(HabitoAccessibilityID.taskEditorPlannedEnabled)
+                if isPlannedTimeEnabled {
+                    DatePicker("taskEditor.plannedTime", selection: $plannedTime, displayedComponents: .hourAndMinute)
+                        .datePickerStyle(.wheel)
+                        .accessibilityLabel("taskEditor.plannedTime")
+                        .frame(minHeight: HabitoDesign.Layout.minimumTapSize)
+                        .accessibilityIdentifier(HabitoAccessibilityID.taskEditorPlannedTime)
+                }
+                Button(action: toggleDeadlineTime) {
+                    Label(
+                        "taskEditor.setDeadlineTime",
+                        systemImage: isDeadlineTimeEnabled ? "checkmark.circle.fill" : "circle"
+                    )
+                    .frame(maxWidth: .infinity, minHeight: HabitoDesign.Layout.minimumTapSize, alignment: .leading)
+                }
+                .buttonStyle(.bordered)
+                .accessibilityLabel("taskEditor.setDeadlineTime")
+                .accessibilityValue(isDeadlineTimeEnabled ? "taskEditor.selected" : "taskEditor.notSelected")
+                .accessibilityIdentifier(HabitoAccessibilityID.taskEditorDeadlineEnabled)
+                if isDeadlineTimeEnabled {
+                    DatePicker("taskEditor.deadlineTime", selection: $deadlineTime, displayedComponents: .hourAndMinute)
+                        .datePickerStyle(.wheel)
+                        .accessibilityLabel("taskEditor.deadlineTime")
+                        .frame(minHeight: HabitoDesign.Layout.minimumTapSize)
+                        .accessibilityIdentifier(HabitoAccessibilityID.taskEditorDeadlineTime)
+                }
             }
-            Button(action: toggleDeadlineTime) {
-                Label(
-                    "taskEditor.setDeadlineTime",
-                    systemImage: isDeadlineTimeEnabled ? "checkmark.circle.fill" : "circle"
-                )
-                .frame(maxWidth: .infinity, minHeight: HabitoDesign.Layout.minimumTapSize, alignment: .leading)
-            }
-            .buttonStyle(.bordered)
-            .accessibilityLabel("taskEditor.setDeadlineTime")
-            .accessibilityValue(isDeadlineTimeEnabled ? "taskEditor.selected" : "taskEditor.notSelected")
-            .accessibilityIdentifier(HabitoAccessibilityID.taskEditorDeadlineEnabled)
-            if isDeadlineTimeEnabled {
-                DatePicker("taskEditor.deadlineTime", selection: $deadlineTime, displayedComponents: .hourAndMinute)
-                    .datePickerStyle(.wheel)
-                    .accessibilityLabel("taskEditor.deadlineTime")
-                    .frame(minHeight: HabitoDesign.Layout.minimumTapSize)
-                    .accessibilityIdentifier(HabitoAccessibilityID.taskEditorDeadlineTime)
-            }
+
         } header: {
             Text("taskEditor.optionalTimesSection")
         } footer: {

@@ -2,6 +2,9 @@ import SwiftUI
 
 /// 与持久化和导航解耦的任务表单，集中呈现字段和字段级校验反馈。
 struct TaskTemplateEditorForm: View {
+    @State private var showsAppearance = false
+    @State private var showsReminder = false
+    @State private var showsCustomWeekdays = false
     @Binding var draft: TaskTemplateDraft
     @Binding var rewardInput: TaskTemplateRewardInput
     let rewardFocus: FocusState<String?>.Binding
@@ -24,22 +27,10 @@ struct TaskTemplateEditorForm: View {
             }
             Section {
                 TextField("taskEditor.title", text: $draft.title)
+                    .focused(rewardFocus, equals: "task-title")
                     .textInputAutocapitalization(.sentences)
                     .accessibilityIdentifier(HabitoAccessibilityID.taskEditorTitle)
-                Picker("taskEditor.icon", selection: $draft.iconName) {
-                    ForEach(TaskTemplateDraft.allowedIconNames, id: \.self) { name in
-                        Label {
-                            Text(iconLabel(name))
-                        } icon: {
-                            TaskIcon(storedName: name, compact: true)
-                        }.tag(name)
-                    }
-                }
-                Picker("taskEditor.color", selection: $draft.colorToken) {
-                    ForEach(TaskTemplateDraft.allowedColorTokens, id: \.self) { token in
-                        Text(colorLabel(token)).tag(token)
-                    }
-                }
+
             } header: {
                 Text("taskEditor.basicSection")
             } footer: {
@@ -47,22 +38,30 @@ struct TaskTemplateEditorForm: View {
             }
 
             Section {
-                DatePicker(
-                    "taskEditor.time",
-                    selection: $scheduledTime,
-                    displayedComponents: .hourAndMinute
-                )
-                // compact 时间按钮在最低系统实际 AX 高度仅 36 pt；原生滚轮保证可操作面积和精确读屏。
-                .datePickerStyle(.wheel)
-                .accessibilityLabel("taskEditor.time")
-                .frame(minHeight: HabitoDesign.Layout.minimumTapSize)
-                .accessibilityIdentifier(HabitoAccessibilityID.taskEditorReminderTime)
+                TaskEditorDisclosureButton(
+                    isExpanded: $showsReminder, identifier: "parent.templates.editor.reminder-expand"
+                ) {
+                    LabeledContent("taskEditor.time") { Text(scheduledTime, format: .dateTime.hour().minute()) }
+                }
+                if showsReminder {
+                    DatePicker(
+                        "taskEditor.time",
+                        selection: $scheduledTime,
+                        displayedComponents: .hourAndMinute
+                    )
+                    // compact 时间按钮在最低系统实际 AX 高度仅 36 pt；原生滚轮保证可操作面积和精确读屏。
+                    .datePickerStyle(.wheel)
+                    .accessibilityLabel("taskEditor.time")
+                    .frame(minHeight: HabitoDesign.Layout.minimumTapSize)
+                    .accessibilityIdentifier(HabitoAccessibilityID.taskEditorReminderTime)
+                }
                 TextField(
                     "taskEditor.durationMinutes",
                     value: $draft.targetDurationMinutes,
                     format: .number
                 )
                 .keyboardType(.numberPad)
+                .focused(rewardFocus, equals: "task-duration")
                 .accessibilityIdentifier(HabitoAccessibilityID.taskEditorDuration)
             } header: {
                 Text("taskEditor.scheduleSection")
@@ -70,28 +69,32 @@ struct TaskTemplateEditorForm: View {
                 feedbackLabel(for: .schedule)
             }
 
-            TaskTemplateTimeSection(
-                isPlannedTimeEnabled: $isPlannedTimeEnabled, plannedTime: $plannedTime,
-                isDeadlineTimeEnabled: $isDeadlineTimeEnabled, deadlineTime: $deadlineTime)
-
             Section {
                 TaskWeekdayChoices(weekdays: $draft.weekdays)
-                ForEach(Weekday.allCases, id: \.self) { weekday in
-                    Button {
-                        onToggleWeekday(weekday)
-                    } label: {
-                        Label(
-                            weekdayLabel(weekday),
-                            systemImage: draft.weekdays.contains(weekday)
-                                ? "checkmark.circle.fill" : "circle"
+                TaskEditorDisclosureButton(
+                    isExpanded: $showsCustomWeekdays, identifier: "parent.templates.editor.days-expand"
+                ) {
+                    Text("taskEditor.customWeekdays")
+                }
+                if showsCustomWeekdays {
+                    ForEach(Weekday.allCases, id: \.self) { weekday in
+                        Button {
+                            onToggleWeekday(weekday)
+                        } label: {
+                            Label(
+                                weekdayLabel(weekday),
+                                systemImage: draft.weekdays.contains(weekday)
+                                    ? "checkmark.circle.fill" : "circle"
+                            )
+                        }
+                        .foregroundStyle(.primary)
+                        .accessibilityValue(
+                            draft.weekdays.contains(weekday)
+                                ? "taskEditor.selected" : "taskEditor.notSelected"
                         )
                     }
-                    .foregroundStyle(.primary)
-                    .accessibilityValue(
-                        draft.weekdays.contains(weekday)
-                            ? "taskEditor.selected" : "taskEditor.notSelected"
-                    )
                 }
+
             } header: {
                 Text("taskEditor.weekdaysSection")
             } footer: {
@@ -102,6 +105,40 @@ struct TaskTemplateEditorForm: View {
                 }
             }
 
+            TaskTemplateConfigurationSection(draft: $draft)
+            TaskTemplateRewardSection(
+                input: $rewardInput,
+                focus: rewardFocus,
+                errorText: feedbackLocation == .reward ? feedback.map(feedbackText) : nil
+            )
+
+            TaskTemplateTimeSection(
+                isPlannedTimeEnabled: $isPlannedTimeEnabled, plannedTime: $plannedTime,
+                isDeadlineTimeEnabled: $isDeadlineTimeEnabled, deadlineTime: $deadlineTime)
+
+            Section {
+                TaskEditorDisclosureButton(
+                    isExpanded: $showsAppearance, identifier: "parent.templates.editor.appearance-expand"
+                ) {
+                    Text("taskEditor.appearance")
+                }
+                if showsAppearance {
+                    Picker("taskEditor.icon", selection: $draft.iconName) {
+                        ForEach(TaskTemplateDraft.allowedIconNames, id: \.self) { name in
+                            Label {
+                                Text(iconLabel(name))
+                            } icon: {
+                                TaskIcon(storedName: name, compact: true)
+                            }.tag(name)
+                        }
+                    }
+                    Picker("taskEditor.color", selection: $draft.colorToken) {
+                        ForEach(TaskTemplateDraft.allowedColorTokens, id: \.self) { token in
+                            Text(colorLabel(token)).tag(token)
+                        }
+                    }
+                }
+            }
             if draft.templateID == nil {
                 Section {
                     Toggle("taskEditor.enabled", isOn: $draft.isEnabled)
@@ -120,13 +157,6 @@ struct TaskTemplateEditorForm: View {
                 }
             }
 
-            TaskTemplateConfigurationSection(draft: $draft)
-            TaskTemplateRewardSection(
-                input: $rewardInput,
-                focus: rewardFocus,
-                errorText: feedbackLocation == .reward ? feedback.map(feedbackText) : nil
-            )
-
             if feedbackLocation == .general {
                 Section {
                     feedbackLabel(for: .general)
@@ -134,6 +164,17 @@ struct TaskTemplateEditorForm: View {
             }
         }
         .scrollDismissesKeyboard(.immediately)
+        .onChange(of: feedback, initial: true) { _, _ in revealInvalidSection() }
+    }
+
+    /// 折叠只降低阅读负担，校验失败必须展开对应字段，不能把修正入口藏起来。
+    private func revealInvalidSection() {
+        switch feedback {
+        case .validation(.unsupportedIcon), .validation(.unsupportedColor): showsAppearance = true
+        case .validation(.invalidTime): showsReminder = true
+        case .validation(.noWeekdays): showsCustomWeekdays = true
+        default: break
+        }
     }
 
     @ViewBuilder

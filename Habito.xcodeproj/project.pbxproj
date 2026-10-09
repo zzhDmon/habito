@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8F135C821C5673699D524475 /* TaskEditorDisclosureButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B609935AC24EB1421EFB495E /* TaskEditorDisclosureButton.swift */; };
+		73AF7A2E78284B96BCB47F35 /* ParentManagementMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A614ECB31F3E83FA6910B5E /* ParentManagementMenu.swift */; };
 		1634E5E2C180302F2CBBD3AB /* CompletionConfettiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AD2AEC3C259EB296528842 /* CompletionConfettiView.swift */; };
 		DF11877BDB6E5A68A9F4A7B8 /* TaskWeekdayPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40E4CF702CB4D624059BFEC8 /* TaskWeekdayPreset.swift */; };
 		79AD855B5D28B4EC6F27B3BD /* TaskWeekdayChoices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44BFB87553962599A96C4587 /* TaskWeekdayChoices.swift */; };
@@ -574,6 +576,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B609935AC24EB1421EFB495E /* TaskEditorDisclosureButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskEditorDisclosureButton.swift; sourceTree = "<group>"; };
+		4A614ECB31F3E83FA6910B5E /* ParentManagementMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentManagementMenu.swift; sourceTree = "<group>"; };
 		01AD2AEC3C259EB296528842 /* CompletionConfettiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletionConfettiView.swift; sourceTree = "<group>"; };
 		40E4CF702CB4D624059BFEC8 /* TaskWeekdayPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskWeekdayPreset.swift; sourceTree = "<group>"; };
 		44BFB87553962599A96C4587 /* TaskWeekdayChoices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskWeekdayChoices.swift; sourceTree = "<group>"; };
@@ -1769,6 +1773,8 @@
 		R50000000000000000000001 /* ParentTaskTemplates */ = {
 			isa = PBXGroup;
 			children = (
+				B609935AC24EB1421EFB495E /* TaskEditorDisclosureButton.swift */,
+				4A614ECB31F3E83FA6910B5E /* ParentManagementMenu.swift */,
 				40E4CF702CB4D624059BFEC8 /* TaskWeekdayPreset.swift */,
 				44BFB87553962599A96C4587 /* TaskWeekdayChoices.swift */,
 				512F8D408DB0E806EF0012FE /* TaskRewardPresets.swift */,
@@ -2295,6 +2301,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8F135C821C5673699D524475 /* TaskEditorDisclosureButton.swift in Sources */,
+				73AF7A2E78284B96BCB47F35 /* ParentManagementMenu.swift in Sources */,
 				1634E5E2C180302F2CBBD3AB /* CompletionConfettiView.swift in Sources */,
 				DF11877BDB6E5A68A9F4A7B8 /* TaskWeekdayPreset.swift in Sources */,
 				79AD855B5D28B4EC6F27B3BD /* TaskWeekdayChoices.swift in Sources */,

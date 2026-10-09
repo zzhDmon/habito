@@ -202,6 +202,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         XCTAssertEqual(profileValue("parent.profile.child", in: app), "合成 小禾")
         XCTAssertEqual(profileValue("parent.profile.pet", in: app), "Pixel Pup")
         navigateBack(in: app, from: "孩子和小狗")
+        app.buttons["parent.hub.more"].tap()
         app.buttons["parent.profile.open"].tap()
         XCTAssertEqual(profileValue("parent.profile.child", in: app), "合成 小禾")
         XCTAssertFalse(app.staticTexts["parent.profile.feedback"].exists)
@@ -302,6 +303,7 @@ final class HabitoKidFlowUITests: XCTestCase {
     }
 
     private func openFamilyProfile(in app: XCUIApplication, expectsForm: Bool = true) {
+        app.buttons["parent.hub.more"].tap()
         let open = app.buttons["parent.profile.open"]
         XCTAssertTrue(open.waitForExistence(timeout: 5))
         XCTAssertTrue(open.isHittable && app.frame.contains(open.frame))
@@ -540,6 +542,7 @@ final class HabitoKidFlowUITests: XCTestCase {
     }
 
     private func openStatistics(in app: XCUIApplication) {
+        app.buttons["parent.hub.more"].tap()
         let open = app.buttons["parent.statistics.open"]
         XCTAssertTrue(open.waitForExistence(timeout: 5))
         XCTAssertTrue(open.isHittable)
@@ -1483,6 +1486,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         app.launchArguments = ["--habito-ui-testing", "--habito-ui-reset", "--habito-ui-notifications-fail"]
         app.launch()
         unlockParent(in: app)
+        app.buttons["parent.hub.more"].tap()
         app.buttons["parent.notifications.open"].tap()
         let failure = app.descendants(matching: .any)["parent.notifications.scheduling-error"]
         XCTAssertTrue(failure.waitForExistence(timeout: 5))
@@ -1610,6 +1614,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         app.launch()
 
         unlockParent(in: app)
+        app.buttons["parent.hub.more"].tap()
         let diagnostics = app.buttons["parent.notifications.open"]
         XCTAssertTrue(diagnostics.waitForExistence(timeout: 5))
         diagnostics.tap()
@@ -1644,6 +1649,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         confirmation.typeText("1357")
         app.buttons["parent.gate.create"].tap()
 
+        app.buttons["parent.hub.more"].tap()
         let calendar = app.buttons["parent.calendar.open"]
         XCTAssertTrue(calendar.waitForExistence(timeout: 5))
         calendar.tap()
@@ -1718,6 +1724,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         saveTime.tap()
 
         navigateBack(in: app, from: "今日任务管理")
+        app.buttons["parent.hub.more"].tap()
         app.buttons["parent.calendar.open"].tap()
         let holiday = app.buttons["parent.calendar.holiday"]
         if !holiday.exists { app.swipeUp() }
@@ -1938,6 +1945,7 @@ final class HabitoKidFlowUITests: XCTestCase {
     }
 
     private func assertTimeToggle(_ field: String, enabled: Bool, in app: XCUIApplication) {
+        expandEditorSection("optional", in: app)
         let toggle = app.buttons["parent.templates.editor.\(field)-enabled"]
         scrollFullyIntoEditorViewport(toggle, in: app)
         XCTAssertGreaterThanOrEqual(toggle.frame.height, 44)
@@ -1952,6 +1960,7 @@ final class HabitoKidFlowUITests: XCTestCase {
     private func changeTimeToggle(
         _ field: String, enabled: Bool, in app: XCUIApplication, towardTop: Bool = false
     ) {
+        expandEditorSection("optional", in: app)
         let toggle = app.buttons["parent.templates.editor.\(field)-enabled"]
         scrollFullyIntoEditorViewport(toggle, in: app, towardTop: towardTop)
         XCTAssertGreaterThanOrEqual(toggle.frame.height, 44)
@@ -1975,6 +1984,7 @@ final class HabitoKidFlowUITests: XCTestCase {
     private func setOptionalTime(
         _ field: String, hour: String, minute: String, in app: XCUIApplication, towardTop: Bool = false
     ) {
+        expandEditorSection("optional", in: app)
         let picker = app.datePickers["parent.templates.editor.\(field)-time"]
         scrollFullyIntoEditorViewport(picker, in: app, towardTop: towardTop)
         let wheels = picker.pickerWheels
@@ -1985,6 +1995,7 @@ final class HabitoKidFlowUITests: XCTestCase {
     }
 
     private func assertOptionalTime(_ field: String, hour: String, minute: String, in app: XCUIApplication) {
+        expandEditorSection("optional", in: app)
         let picker = app.datePickers["parent.templates.editor.\(field)-time"]
         scrollFullyIntoEditorViewport(picker, in: app)
         XCTAssertGreaterThanOrEqual(picker.frame.height, 44)
@@ -1997,6 +2008,7 @@ final class HabitoKidFlowUITests: XCTestCase {
     }
 
     private func editorReminderValue(in app: XCUIApplication) -> String {
+        expandEditorSection("reminder", in: app)
         let reminder = app.datePickers["parent.templates.editor.reminder-time"]
         scrollFullyIntoEditorViewport(reminder, in: app, towardTop: true)
         XCTAssertGreaterThanOrEqual(reminder.frame.height, 44)
@@ -2033,6 +2045,7 @@ final class HabitoKidFlowUITests: XCTestCase {
             day.tap()
             XCTAssertTrue(day.isSelected)
         }
+        expandEditorSection("reward", in: app)
         for (field, amount) in [("xp", "15"), ("base-coins", "2"), ("autonomy-coins", "1")] {
             let identifier = "parent.templates.editor." + field
             let button = app.buttons[identifier + ".preset." + amount]
@@ -2056,6 +2069,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         let schoolDays = app.buttons["parent.templates.days.schoolDays"]
         scrollFullyIntoEditorViewport(schoolDays, in: app)
         XCTAssertTrue(schoolDays.isSelected)
+        expandEditorSection("reward", in: app)
         for (field, amount) in [("xp", "15"), ("base-coins", "2"), ("autonomy-coins", "1")] {
             let input = app.textFields["parent.templates.editor." + field]
             scrollFullyIntoEditorViewport(input, in: app)
@@ -2094,6 +2108,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         assertPickerValue("待设置", identifier: "parent.templates.editor.category", in: app)
         assertPickerValue("全天", identifier: "parent.templates.editor.time-period", in: app)
         assertPickerValue("孩子自行确认", identifier: "parent.templates.editor.verification", in: app)
+        expandEditorSection("reward", in: app)
         for identifier in ["xp", "base-coins", "autonomy-coins"] {
             let input = app.textFields["parent.templates.editor.\(identifier)"]
             scrollFullyIntoEditorViewport(input, in: app)
@@ -2111,6 +2126,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         unlockExistingParent(in: app)
         app.buttons[seededTemplateIdentifier].tap()
         assertPickerValue("待设置", identifier: "parent.templates.editor.category", in: app)
+        expandEditorSection("reward", in: app)
         let xp = app.textFields["parent.templates.editor.xp"]
         scrollFullyIntoEditorViewport(xp, in: app)
         XCTAssertEqual(xp.value as? String, "0")
@@ -2223,25 +2239,14 @@ final class HabitoKidFlowUITests: XCTestCase {
 
     /// 先结束原生编辑再保存，避免键盘移动 iPad 弹层时点击落在旧位置。
     private func tapEditorSave(in app: XCUIApplication) {
-        let viewport = app.collectionViews["parent.templates.editor"]
-        let keyboard = app.keyboards.element
-        if keyboard.exists, keyboard.isHittable {
-            let visibleFrame = formVisibleFrame(viewport, in: app)
-            XCTAssertGreaterThan(visibleFrame.height, 0)
-            let centerY = (visibleFrame.midY - viewport.frame.minY) / viewport.frame.height
-            let offset = visibleFrame.height * 0.12 / viewport.frame.height
-            let start = viewport.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: centerY))
-            let end = viewport.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: centerY - offset))
-            start.press(forDuration: 0.1, thenDragTo: end)
-            let dismissed = XCTNSPredicateExpectation(
-                predicate: NSPredicate(format: "hittable == false"), object: keyboard)
-            XCTAssertEqual(XCTWaiter.wait(for: [dismissed], timeout: 5), .completed)
-        }
+        dismissEditorKeyboard(in: app)
         let save = app.buttons["parent.templates.editor.save"]
         XCTAssertTrue(save.waitForExistence(timeout: 5))
         // 保存位于表单安全区的固定操作栏，而非导航栏；仍要求完整可见和真实可点击。
         XCTAssertTrue(app.frame.contains(save.frame))
-        XCTAssertTrue(save.isHittable)
+        // 新系统数字键盘可带一个浮层，键盘父节点hittable为false仍会阻挡保存。
+        let ready = XCTNSPredicateExpectation(predicate: NSPredicate(format: "hittable == true"), object: save)
+        XCTAssertEqual(XCTWaiter.wait(for: [ready], timeout: 5), .completed)
         XCTAssertGreaterThanOrEqual(save.frame.width, 44)
         XCTAssertGreaterThanOrEqual(save.frame.height, 44)
         save.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
@@ -2275,34 +2280,50 @@ final class HabitoKidFlowUITests: XCTestCase {
         XCTAssertTrue(picker.label.contains(value) || (picker.value as? String)?.contains(value) == true)
     }
 
+    private func expandEditorSection(_ name: String, in app: XCUIApplication) {
+        let control = app.buttons["parent.templates.editor." + name + "-expand"]
+        if control.exists, (control.value as? String) == "已展开" { return }
+        if name == "optional",
+            ["planned", "deadline"].contains(where: {
+                app.buttons["parent.templates.editor." + $0 + "-enabled"].exists
+                    || app.datePickers["parent.templates.editor." + $0 + "-time"].exists
+            })
+        {
+            return
+        }
+        if name == "reminder", app.datePickers["parent.templates.editor.reminder-time"].exists { return }
+        // 错误态由产品强制展开；MAX懒加载会暂时不暴露头部和三个输入，不能据此向下找折叠按钮。
+        if name == "reward", app.descendants(matching: .any)["parent.templates.editor.reward-error"].exists { return }
+        if name == "reward",
+            ["xp", "base-coins", "autonomy-coins"].contains(where: {
+                app.textFields["parent.templates.editor." + $0].exists
+            })
+        {
+            return
+        }
+        let viewport = app.collectionViews["parent.templates.editor"]
+        scrollFullyIntoFormViewport(control, viewport: viewport, in: app)
+        if (control.value as? String) != "已展开" { control.tap() }
+    }
+
     private func setRewardText(
         _ text: String, identifier: String, in app: XCUIApplication, towardTop: Bool = false
     ) {
+        expandEditorSection("reward", in: app)
         let input = app.textFields[identifier]
         // 错误提示位于奖励区域底部；纠正前方懒加载输入时需要向上寻找，不能继续向底部滚动。
         scrollFullyIntoEditorViewport(input, in: app, towardTop: towardTop)
         assertEditorSaveBarBelowForm(in: app)
         XCTAssertGreaterThanOrEqual(input.frame.height, 44)
-        let row = app.descendants(matching: .any)[identifier + ".row"]
-        XCTAssertTrue(row.exists)
-        XCTAssertGreaterThanOrEqual(row.frame.height, 44)
+        // 折叠组内系统会合并装饰行的AX节点；直接验证实际输入框的44pt边界与输入结果。
         let oldValue = input.value as? String ?? ""
         let oldText = oldValue == input.placeholderValue ? "" : oldValue
         // 原生边框已暴露完整 44 pt；点击靠下边缘并实际输入，而不是仅验证外框。
         // 使用控件自身的归一化坐标，避免横屏下混用绝对偏移导致落到相邻行。
         let edge = input.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.85))
         edge.tap()
-        // 直接切换原生输入框，不为每个字段额外隐藏/重开键盘；需要滚动时 Form 自行收起键盘。
-        // UI 焦点仅作切换等待；typeText 和后面的精确回读才证明真实键盘输入，没有使用私有属性。
-        let focused = XCTNSPredicateExpectation(predicate: NSPredicate(format: "hasFocus == true"), object: input)
-        let focusResult = XCTWaiter.wait(for: [focused], timeout: 5)
-        if focusResult != .completed {
-            let diagnostic = XCTAttachment(string: "输入边缘：\(identifier)\n\(app.debugDescription)")
-            diagnostic.name = "奖励边缘焦点与键盘诊断"
-            diagnostic.lifetime = .keepAlways
-            add(diagnostic)
-        }
-        XCTAssertEqual(focusResult, .completed, "边缘点击应让当前输入框获得焦点")
+        // 外接键盘/模拟器硬件键盘模式下输入框仍可编辑，但不会出现软件键盘节点。
+        // 用实际typeText与精确回读验证焦点，软件键盘出现时由关闭辅助方法验证收起。
         let focusedValue = input.value as? String ?? ""
         XCTAssertEqual(focusedValue == input.placeholderValue ? "" : focusedValue, oldText, "获得焦点不应改动金额")
         input.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: oldText.count) + text)
@@ -2310,6 +2331,48 @@ final class HabitoKidFlowUITests: XCTestCase {
         let newValue = input.value as? String ?? ""
         // XCTest 将空 TextField 的 placeholder 作为 value；金额仍必须精确回读，空值再由保存错误验证。
         XCTAssertEqual(newValue == input.placeholderValue ? "" : newValue, text)
+    }
+
+    /// 27系数字键盘会额外出现左上浮动数字面板；先关闭浮层和键盘，避免滚动手势被当成数字输入。
+    private func dismissEditorKeyboard(in app: XCUIApplication) {
+        guard app.keyboards.firstMatch.exists else { return }
+        let overlay = app.otherElements["PopoverDismissRegion"]
+        if overlay.exists {
+            overlay.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.15)).tap()
+        }
+        let hide = app.buttons["隐藏键盘"]
+        // 17系手动隐藏系统键盘后，切换字段不会自动唤起；用页面入口清空焦点。
+        // 26及以后浮动数字键盘优先使用系统隐藏动作，避免AX自动命中点失效。
+        if #available(iOS 26, *), hide.exists, hide.isHittable {
+            hide.tap()
+        } else {
+            let finish = app.buttons["parent.templates.editor.finish-input"]
+            if finish.exists {
+                XCTAssertTrue(app.frame.contains(finish.frame))
+                XCTAssertGreaterThanOrEqual(finish.frame.height, 44)
+                if #available(iOS 26, *) {
+                    finish.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+                } else {
+                    finish.tap()
+                    let hidden = XCTNSPredicateExpectation(
+                        predicate: NSPredicate(format: "exists == false"), object: app.keyboards.firstMatch)
+                    XCTAssertEqual(XCTWaiter.wait(for: [hidden], timeout: 5), .completed)
+                    return
+                }
+            }
+        }
+        if !app.keyboards.firstMatch.exists { return }
+        let viewport = app.collectionViews["parent.templates.editor"]
+        let visible = formVisibleFrame(viewport, in: app)
+        guard visible.height > 0 else { return }
+        let centerY = (visible.midY - viewport.frame.minY) / viewport.frame.height
+        let offset = visible.height * 0.15 / viewport.frame.height
+        viewport.coordinate(withNormalizedOffset: CGVector(dx: 0.75, dy: centerY)).press(
+            forDuration: 0.1,
+            thenDragTo: viewport.coordinate(withNormalizedOffset: CGVector(dx: 0.75, dy: centerY - offset)))
+        let hidden = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "exists == false"), object: app.keyboards.firstMatch)
+        XCTAssertEqual(XCTWaiter.wait(for: [hidden], timeout: 5), .completed)
     }
 
     /// 保存栏必须在滚动表单之外；键盘显隐和滚动后也不能悬在奖励字段中间。
@@ -2338,6 +2401,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         _ element: XCUIElement, viewport: XCUIElement, in app: XCUIApplication, towardTop: Bool = false
     ) {
         XCTAssertTrue(viewport.waitForExistence(timeout: 5))
+        if viewport.identifier == "parent.templates.editor" { dismissEditorKeyboard(in: app) }
         for _ in 0..<25 {
             let visibleFrame = formVisibleFrame(viewport, in: app)
             guard visibleFrame.height > 0 else {

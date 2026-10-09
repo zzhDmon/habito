@@ -2,6 +2,7 @@ import SwiftUI
 
 /// 家长中心的任务模板列表、空态和错误态。
 struct ParentTaskTemplateListView: View {
+    @State private var showsManagement = false
     @State private var model: ParentTaskTemplateListViewModel
     let onShowReview: () -> Void
     let onShowStatistics: () -> Void
@@ -42,23 +43,15 @@ struct ParentTaskTemplateListView: View {
             onRetry: model.load
         )
         .safeAreaInset(edge: .top) {
-            VStack(spacing: HabitoDesign.Spacing.small) {
-                Button("parentReview.open", systemImage: "checkmark.seal", action: onShowReview)
-                    .buttonStyle(MangaButtonStyle())
-                    .frame(maxWidth: .infinity, minHeight: HabitoDesign.Layout.minimumTapSize)
-                    .accessibilityIdentifier(HabitoAccessibilityID.parentReviewOpen)
-                Button(action: onShowStatistics) {
-                    Label("statistics.open", systemImage: "chart.bar")
-                        .frame(maxWidth: .infinity, minHeight: HabitoDesign.Layout.minimumTapSize)
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: HabitoDesign.Spacing.medium) {
+                    todayButton
+                    reviewButton
                 }
-                .buttonStyle(.bordered)
-                .accessibilityIdentifier(HabitoAccessibilityID.statisticsOpen)
-                Button(action: onShowFamilyProfile) {
-                    Label("familyProfile.title", systemImage: "person.and.background.dotted")
-                        .frame(maxWidth: .infinity, minHeight: HabitoDesign.Layout.minimumTapSize)
+                VStack(spacing: HabitoDesign.Spacing.small) {
+                    todayButton
+                    reviewButton
                 }
-                .buttonStyle(.bordered)
-                .accessibilityIdentifier(HabitoAccessibilityID.familyProfileOpen)
             }
             .padding(.horizontal, HabitoDesign.Spacing.medium)
             .padding(.vertical, HabitoDesign.Spacing.small)
@@ -66,19 +59,19 @@ struct ParentTaskTemplateListView: View {
         }
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
-                Button("parentToday.open", systemImage: "list.bullet", action: onShowToday)
-                    .accessibilityIdentifier(HabitoAccessibilityID.parentTodayOpen)
-            }
-            ToolbarItem(placement: .topBarLeading) {
-                Button("parentCalendar.open", systemImage: "calendar", action: onShowCalendar)
-                    .accessibilityIdentifier(HabitoAccessibilityID.parentCalendarOpen)
-            }
-            ToolbarItem(placement: .topBarLeading) {
-                Button("notification.diagnosticsOpen", systemImage: "bell.badge", action: onShowNotifications)
-                    .accessibilityIdentifier(HabitoAccessibilityID.parentNotificationDiagnosticsOpen)
+                Button("parentHub.more", systemImage: "ellipsis.circle", action: openManagement)
+                    .frame(minHeight: HabitoDesign.Layout.minimumTapSize)
+                    .accessibilityIdentifier("parent.hub.more")
+                    .popover(isPresented: $showsManagement) {
+                        ParentManagementMenu(
+                            onStatistics: showStatistics, onCalendar: showCalendar,
+                            onProfile: showProfile, onNotifications: showNotifications)
+                    }
+
             }
             ToolbarItem(placement: .primaryAction) {
                 Button("parentTemplates.create", systemImage: "plus", action: onCreate)
+                    .labelStyle(.titleAndIcon)
                     .accessibilityIdentifier(HabitoAccessibilityID.parentTemplateCreate)
             }
         }
@@ -87,4 +80,25 @@ struct ParentTaskTemplateListView: View {
         .accessibilityIdentifier(HabitoAccessibilityID.parentUnlocked)
         .task(model.load)
     }
+    private func openManagement() { showsManagement = true }
+    private func showStatistics() { showsManagement = false; onShowStatistics() }
+    private func showCalendar() { showsManagement = false; onShowCalendar() }
+    private func showProfile() { showsManagement = false; onShowFamilyProfile() }
+    private func showNotifications() { showsManagement = false; onShowNotifications() }
+
+    // 两个同等常用入口共享紧凑结构；其余管理功能在菜单内，不占据任务列表高度。
+    private var todayButton: some View {
+        Button("parentToday.open", systemImage: "list.bullet", action: onShowToday)
+            .buttonStyle(.bordered)
+            .frame(minHeight: HabitoDesign.Layout.minimumTapSize)
+            .accessibilityIdentifier(HabitoAccessibilityID.parentTodayOpen)
+    }
+
+    private var reviewButton: some View {
+        Button("parentReview.open", systemImage: "checkmark.seal", action: onShowReview)
+            .buttonStyle(.borderedProminent)
+            .frame(minHeight: HabitoDesign.Layout.minimumTapSize)
+            .accessibilityIdentifier(HabitoAccessibilityID.parentReviewOpen)
+    }
+
 }
