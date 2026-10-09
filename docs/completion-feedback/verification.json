@@ -1,0 +1,70 @@
+{
+  "task": "FEEDBACK-001",
+  "status": "DONE",
+  "sourceSHA256": {
+    "Habito/DesignSystem/CompletionConfettiView.swift": "09ce4fc7afbb3ee82c6714643c8624a490858462308d97f14c99468509be1998",
+    "Habito/DesignSystem/HabitoDesign.swift": "8ab22542feaadef1f46f664410498db3348661ec056f64b49c02d87dc7b46b38",
+    "Habito/Features/TaskSession/TaskSessionControlsView.swift": "002e4c5adfe7e7ef974ba5cd0127dcdd320d677db02107f0cee6aa675c883332",
+    "Habito/Features/TaskSession/TaskSessionFeedbackCard.swift": "9f101e45b0a6e1e0926dd450597cb83e6c29dbf09581c0375abd963395badeac",
+    "Habito/Shared/Accessibility/HabitoAccessibilityID.swift": "5db3da6b59a0c4c5b2c1500d99c28a2ea5de7b1d89a29b37364eadfd2e952490",
+    "Habito/Resources/UIR1.xcstrings": "ff2205633ae41063b437083d9ffca1f70f8a3006db9de25c3448e200477dd397",
+    "HabitoUITests/HabitoKidFlowUITests.swift": "538e9960cc2eb35cd382fc7e8229876c82f08c6efcf14e8dfd6f5c39efa02b8b",
+    "Habito.xcodeproj/project.pbxproj": "c87e2f2c9344449ff4f9afac170b87e8c52abc31270b7a9fecf2b84323162f28"
+  },
+  "baseRuns": {
+    "17": {
+      "result": "Passed",
+      "passedTests": 693,
+      "failedTests": 0,
+      "statistics": [
+        {
+          "subtitle": "962 test runs",
+          "title": "259 tests ran with dynamic parameters"
+        }
+      ]
+    },
+    "27": {
+      "result": "Passed",
+      "passedTests": 693,
+      "failedTests": 0,
+      "statistics": [
+        {
+          "subtitle": "962 test runs",
+          "title": "259 tests ran with dynamic parameters"
+        }
+      ]
+    }
+  },
+  "polishRuns": {
+    "17": {
+      "result": "Passed",
+      "passedTests": 8,
+      "failedTests": 0,
+      "statistics": [
+        {
+          "subtitle": "25 test runs",
+          "title": "6 tests ran with dynamic parameters"
+        }
+      ]
+    },
+    "27": {
+      "result": "Passed",
+      "passedTests": 8,
+      "failedTests": 0,
+      "statistics": [
+        {
+          "subtitle": "25 test runs",
+          "title": "6 tests ran with dynamic parameters"
+        }
+      ]
+    }
+  },
+  "checks": {
+    "releaseBuild": "passed",
+    "debugAnalyze": "passed",
+    "swiftFormat": "passed",
+    "sourceUnchangedAfterFinalVerification": true,
+    "simulatorSettingsRestored": "large/light",
+    "originalCatalogTranslationsPreserved": 467
+  }
+}
