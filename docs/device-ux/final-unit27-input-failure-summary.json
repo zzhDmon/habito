@@ -1,0 +1,62 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "EC3409B7-4496-432A-BF1A-873724576E70",
+        "deviceName" : "Habito DEVICE-UX clean 27",
+        "modelName" : "iPad Pro 13-inch (M5)",
+        "osBuildNumber" : "24A434",
+        "osVersion" : "27.0",
+        "platform" : "iOS Simulator"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 1,
+      "passedTests" : 1414,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "Habito · Built with macOS 26.6.2",
+  "expectedFailures" : 0,
+  "failedTests" : 1,
+  "finishTime" : 1791509191.818,
+  "passedTests" : 705,
+  "result" : "Failed",
+  "runtimeWarnings" : [
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "Update the Info.plist: 1) `UIRequiresFullScreen` will soon be ignored. 2) Support for all orientations will soon be required."
+    }
+  ],
+  "skippedTests" : 0,
+  "startTime" : 1791509011.28,
+  "statistics" : [
+    {
+      "subtitle" : "972 test runs",
+      "title" : "263 tests ran with dynamic parameters"
+    }
+  ],
+  "testFailures" : [
+    {
+      "failureText" : "XCTAssertGreaterThanOrEqual failed: (\"36.0\") is less than (\"44.0\")",
+      "targetName" : "HabitoUITests",
+      "testIdentifier" : 706,
+      "testIdentifierString" : "HabitoKidFlowUITests/testRewardInputErrorsRemainVisibleAndCorrectableBeforeFormalSave()",
+      "testIdentifierURL" : "test://com.apple.xcode/Habito/HabitoUITests/HabitoKidFlowUITests/testRewardInputErrorsRemainVisibleAndCorrectableBeforeFormalSave",
+      "testName" : "testRewardInputErrorsRemainVisibleAndCorrectableBeforeFormalSave()"
+    }
+  ],
+  "title" : "Test - Habito",
+  "topInsights" : [
+    {
+      "category" : "Longest Test Runs",
+      "impact" : "14% of duration",
+      "text" : "8 longest test runs with outlier durations exceeding 0.09s (three standard deviations)"
+    }
+  ],
+  "totalTestCount" : 706
+}

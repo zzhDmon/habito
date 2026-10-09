@@ -1,0 +1,52 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "42C01704-E74C-45AD-B0F1-2B2CF8FF125D",
+        "deviceName" : "iPad Pro (12.9-inch) (6th generation)",
+        "modelName" : "iPad Pro (12.9-inch) (6th generation)",
+        "osBuildNumber" : "21C62",
+        "osVersion" : "17.2",
+        "platform" : "iOS Simulator"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 0,
+      "passedTests" : 1416,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "Habito · Built with macOS 26.6.2",
+  "expectedFailures" : 0,
+  "failedTests" : 0,
+  "finishTime" : 1791471764.747,
+  "passedTests" : 707,
+  "result" : "Passed",
+  "runtimeWarnings" : [
+
+  ],
+  "skippedTests" : 0,
+  "startTime" : 1791471352.413,
+  "statistics" : [
+    {
+      "subtitle" : "972 test runs",
+      "title" : "263 tests ran with dynamic parameters"
+    }
+  ],
+  "testFailures" : [
+
+  ],
+  "title" : "Test - Habito",
+  "topInsights" : [
+    {
+      "category" : "Longest Test Runs",
+      "impact" : "11% of duration",
+      "text" : "19 longest test runs with outlier durations exceeding 0.18s (three standard deviations)"
+    }
+  ],
+  "totalTestCount" : 707
+}
