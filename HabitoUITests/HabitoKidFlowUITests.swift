@@ -1069,6 +1069,45 @@ final class HabitoKidFlowUITests: XCTestCase {
         XCTAssertFalse(app.staticTexts["kid.session.reward-coins"].exists)
     }
 
+    func testAddingTaskAfterAllCompletedReopensTodayAndCelebratesAgainWithSystemTextSize() {
+        let app = launchScenario("reward-after-reminder")
+        openSeededTask(in: app)
+        let complete = app.buttons["kid.session.complete"]
+        scrollFullyIntoSessionViewport(complete, in: app)
+        complete.tap()
+        confirmTaskCompletion(in: app)
+        returnToTodayFromTask(in: app)
+        assertDailyCelebration(in: app)
+        assertTodayRewards(xp: 11, coins: 7, in: app)
+        unlockParent(in: app)
+        app.buttons["parent.templates.create"].tap()
+        let title = app.textFields["parent.templates.editor.title"]
+        scrollFullyIntoEditorViewport(title, in: app)
+        title.tap()
+        title.typeText("通关后新增")
+        tapEditorSave(in: app)
+        app.buttons["parent.gate.close"].tap()
+        XCTAssertFalse(app.staticTexts["kid.today.celebration.title"].exists)
+        XCTAssertFalse(app.staticTexts["kid.today.completion.stamp"].exists)
+        XCTAssertTrue(app.staticTexts["完成 1 / 2"].waitForExistence(timeout: 5))
+        let added = todayTask(named: "通关后新增", in: app)
+        scrollFullyIntoTodayViewport(added, in: app)
+        added.tap()
+        scrollFullyIntoSessionViewport(complete, in: app)
+        complete.tap()
+        confirmTaskCompletion(in: app)
+        returnToTodayFromTask(in: app)
+        assertDailyCelebration(count: 2, in: app)
+        assertDailyCompletion(count: 2, in: app)
+        // 空白新增仍沿用显式零奖励；再次庆祝不能重复结算此前的11/7。
+        assertTodayRewards(xp: 11, coins: 7, in: app)
+        keepScreenshot(app, name: "通关后新增再通关且奖励不重复")
+        relaunchTodayKeepingData(app)
+        assertDailyCompletion(count: 2, in: app)
+        assertTodayRewards(xp: 11, coins: 7, in: app)
+        XCTAssertFalse(app.staticTexts["kid.today.celebration.title"].exists)
+    }
+
     func testDailyCelebrationClosesWithoutLosingCompletionOrRewardsWithSystemTextSize() throws {
         verifyDailyCelebration(zero: false)
     }
@@ -1160,13 +1199,13 @@ final class HabitoKidFlowUITests: XCTestCase {
         assertTodayRewards(xp: 11, coins: 7, in: app)
     }
 
-    private func assertDailyCelebration(in app: XCUIApplication) {
+    private func assertDailyCelebration(count: Int = 1, in app: XCUIApplication) {
         let title = app.staticTexts["kid.today.celebration.title"]
         scrollFullyIntoTodayViewport(title, in: app)
         XCTAssertEqual(title.label, "今天全通关啦！")
         let description = app.staticTexts["一项一项，你都做到了！"]
         scrollFullyIntoTodayViewport(description, in: app)
-        assertDailyCompletion(count: 1, in: app)
+        assertDailyCompletion(count: count, in: app)
         keepScreenshot(app, name: "真实当天通关仪式")
     }
 

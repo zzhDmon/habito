@@ -7,6 +7,56 @@ import Testing
 @Suite("今日仪式真实事务接线")
 @MainActor
 struct TodayCompletionCelebrationIntegrationTests {
+    @Test("通关后新增今日任务撤下旧仪式，再确认仅结算新任务一次")
+    func addingTodayTaskAfterCompletionReopensAndCelebratesAgain() throws {
+        let fixture = try TodayQueryFixture()
+        let first = try pending(fixture)
+        let model = today(fixture)
+        let sessionFactory = factory(fixture, saved: { model.receive(completion: $0) })
+        let firstSession = sessionFactory.makeModel(for: first.id)
+        firstSession.load()
+        firstSession.completeTask()
+        let firstEvent = try #require(model.celebrationModel.event)
+        let originalBalance = try RewardLedgerService(context: fixture.context).balance()
+        let added = try pending(fixture)
+        model.load()
+        #expect(model.celebrationModel.event == nil)
+        let reopened = try fixture.snapshot()
+        #expect(!reopened.isAllCompleted && reopened.totalCount == 2 && reopened.completedCount == 1)
+        #expect(try RewardLedgerService(context: fixture.context).balance() == originalBalance)
+        let addedSession = sessionFactory.makeModel(for: added.id)
+        addedSession.load()
+        addedSession.completeTask()
+        let secondEvent = try #require(model.celebrationModel.event)
+        #expect(secondEvent.id != firstEvent.id && secondEvent.completedCount == 2)
+        #expect(try fixture.snapshot().isAllCompleted)
+        addedSession.completeTask()
+        model.load()
+        #expect(model.celebrationModel.event == secondEvent)
+        #expect(
+            try RewardLedgerService(context: fixture.context).balance() == RewardBalance(effectiveXP: 22, coins: 20))
+        try expectTransactions(fixture.context, count: 2)
+    }
+
+    @Test("通关后只新增未来任务不改变今日资格或奖励")
+    func addingFutureTaskPreservesTodayCompletion() throws {
+        let fixture = try TodayQueryFixture()
+        let first = try pending(fixture)
+        let model = today(fixture)
+        let session = factory(fixture, saved: { model.receive(completion: $0) }).makeModel(for: first.id)
+        session.load()
+        session.completeTask()
+        let event = try #require(model.celebrationModel.event)
+        _ = fixture.makeOccurrence(
+            title: "明天的新增任务", scheduledAt: fixture.now.addingTimeInterval(86400), status: .pending,
+            date: try LocalDate(dateKey: "2026-09-24"))
+        try fixture.context.save()
+        model.load()
+        #expect(model.celebrationModel.event == event)
+        #expect(try fixture.snapshot().isAllCompleted)
+        try expectTransactions(fixture.context, count: 1)
+    }
+
     @Test("构造和无事件历史加载不读取附加资格，也不补播历史")
     func historicalLoadDoesNotReadOrCreateNewEvent() throws {
         let fixture = try TodayQueryFixture()
