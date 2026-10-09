@@ -1,0 +1,66 @@
+{
+  "task": "PERSONAL-001",
+  "completed": "2026-10-08T15:55:23",
+  "selected_art": "用户明确选择第一版彩色漫画头像",
+  "results": [
+    {
+      "package": "/tmp/habito-personal-17.xcresult",
+      "passed_definitions": 2,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0
+    },
+    {
+      "package": "/tmp/habito-personal-27.xcresult",
+      "passed_definitions": 2,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0
+    },
+    {
+      "package": "/tmp/habito-personal-unit17.xcresult",
+      "passed_definitions": 689,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "executions": 1392,
+      "suites": 87
+    },
+    {
+      "package": "/tmp/habito-personal-unit27.xcresult",
+      "passed_definitions": 689,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "executions": 1392,
+      "suites": 87
+    }
+  ],
+  "post_test_changes": [
+    "Habito/Resources/Manga.xcassets/AppIcon.appiconset/yihe-icon.png",
+    "Habito/Resources/Manga.xcassets/YihePortrait.imageset/yihe-portrait.png"
+  ],
+  "post_test_validation": "仅两张图片等尺寸替换；最终Debug/Release构建、1024方形无alpha、实际安装及首页截图通过；生产Swift和测试源码未变化。",
+  "display_name": "一禾成长记",
+  "app_icon": "AppIcon",
+  "unchanged_bundle_id": "com.zhangzehua.Habito",
+  "assets": {
+    "Habito/Resources/Manga.xcassets/AppIcon.appiconset/yihe-icon.png": "0e64ee4488aa117ad052dece42b3bbfe41ff04c459bc153d82d4a014e986f8c0",
+    "Habito/Resources/Manga.xcassets/YihePortrait.imageset/yihe-portrait.png": "d8600da029165aa427028c624d5e722606366e69bcdfc18346b1c790d0092a38"
+  },
+  "quality": {
+    "debug_and_release": "Passed",
+    "analysis": "Passed",
+    "strict_format": "Passed",
+    "original_translations_preserved": 467,
+    "new_swift_warnings": 0
+  },
+  "settings_restored": "17/27均large/light",
+  "diagnostic_note": "27 UI已全部通过后仅中断600秒可选simctl诊断，主进程退出0。首次启动脚本遇模拟器Shutdown未执行测试，正常boot后通过。",
+  "screenshots": {
+    "home-final-ios17.png": "最终选定头像，simctl原生横屏，无图像编辑",
+    "profile-ios17.png": "替换前简化线稿版本，仅保留布局/输入验收证据"
+  },
+  "local_only": true,
+  "remaining": "原7组保持6/7，目标实机与家庭观察仍未完成。"
+}

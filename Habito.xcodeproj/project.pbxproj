@@ -14,6 +14,7 @@
 		1704AE4F310DC46FA3C5D446 /* TaskDeletionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCA54321BA201A482F13983C /* TaskDeletionService.swift */; };
 		73AF7A2E78284B96BCB47F35 /* ParentManagementMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A614ECB31F3E83FA6910B5E /* ParentManagementMenu.swift */; };
 		1634E5E2C180302F2CBBD3AB /* CompletionConfettiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AD2AEC3C259EB296528842 /* CompletionConfettiView.swift */; };
+		308EECF47971971089B1C085 /* ChildIdentityBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = F79024168BC3349D91987FF6 /* ChildIdentityBadge.swift */; };
 		DF11877BDB6E5A68A9F4A7B8 /* TaskWeekdayPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40E4CF702CB4D624059BFEC8 /* TaskWeekdayPreset.swift */; };
 		79AD855B5D28B4EC6F27B3BD /* TaskWeekdayChoices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44BFB87553962599A96C4587 /* TaskWeekdayChoices.swift */; };
 		94470E1A4930D21AA0529F5E /* TaskRewardPresets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512F8D408DB0E806EF0012FE /* TaskRewardPresets.swift */; };
@@ -587,6 +588,7 @@
 		CCA54321BA201A482F13983C /* TaskDeletionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDeletionService.swift; sourceTree = "<group>"; };
 		4A614ECB31F3E83FA6910B5E /* ParentManagementMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentManagementMenu.swift; sourceTree = "<group>"; };
 		01AD2AEC3C259EB296528842 /* CompletionConfettiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletionConfettiView.swift; sourceTree = "<group>"; };
+		F79024168BC3349D91987FF6 /* ChildIdentityBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildIdentityBadge.swift; sourceTree = "<group>"; };
 		40E4CF702CB4D624059BFEC8 /* TaskWeekdayPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskWeekdayPreset.swift; sourceTree = "<group>"; };
 		44BFB87553962599A96C4587 /* TaskWeekdayChoices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskWeekdayChoices.swift; sourceTree = "<group>"; };
 		512F8D408DB0E806EF0012FE /* TaskRewardPresets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskRewardPresets.swift; sourceTree = "<group>"; };
@@ -1656,6 +1658,7 @@
 			isa = PBXGroup;
 			children = (
 				01AD2AEC3C259EB296528842 /* CompletionConfettiView.swift */,
+				F79024168BC3349D91987FF6 /* ChildIdentityBadge.swift */,
 				308245936A1F409D4650D8CB /* MangaPanel.swift */,
 				40132E42E6658BEF5C53CB22 /* MangaStamp.swift */,
 				57EC126398512771DBC8B316 /* MangaSpeechBubble.swift */,
@@ -2319,6 +2322,7 @@
 				1704AE4F310DC46FA3C5D446 /* TaskDeletionService.swift in Sources */,
 				73AF7A2E78284B96BCB47F35 /* ParentManagementMenu.swift in Sources */,
 				1634E5E2C180302F2CBBD3AB /* CompletionConfettiView.swift in Sources */,
+				308EECF47971971089B1C085 /* ChildIdentityBadge.swift in Sources */,
 				DF11877BDB6E5A68A9F4A7B8 /* TaskWeekdayPreset.swift in Sources */,
 				79AD855B5D28B4EC6F27B3BD /* TaskWeekdayChoices.swift in Sources */,
 				94470E1A4930D21AA0529F5E /* TaskRewardPresets.swift in Sources */,
@@ -2934,7 +2938,8 @@
 				DEVELOPMENT_TEAM = 9GBZS6R42H;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = Habito;
+				INFOPLIST_KEY_CFBundleDisplayName = "一禾成长记";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -2969,7 +2974,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 9GBZS6R42H;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = Habito;
+				INFOPLIST_KEY_CFBundleDisplayName = "一禾成长记";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

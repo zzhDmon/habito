@@ -227,6 +227,31 @@ final class HabitoKidFlowUITests: XCTestCase {
         XCTAssertTrue(right.waitForExistence(timeout: 5))
     }
 
+    func testPersonalizedIdentityKeepsTodayAndProfileUsable() throws {
+        XCUIDevice.shared.orientation = .landscapeLeft
+        let app = makeApplication()
+        app.launchArguments = ["--habito-ui-testing", "--habito-ui-reset", "--habito-ui-empty"]
+        app.launch()
+        let brand = app.staticTexts["brand.identity.title"]
+        XCTAssertTrue(brand.waitForExistence(timeout: 5))
+        XCTAssertEqual(brand.label, "一禾成长记")
+        XCTAssertTrue(app.staticTexts["一禾，今天也一起加油！"].exists)
+        keepScreenshot(app, name: "个性化首页")
+        unlockParent(in: app)
+        openFamilyProfile(in: app)
+        let form = app.collectionViews["parent.profile.form"]
+        XCTAssertTrue(form.staticTexts["brand.identity.title"].exists)
+        // 品牌个性化只改展示，不把新身份文字写入正式昵称记录。
+        XCTAssertEqual(profileValue("parent.profile.child", in: app), "")
+        XCTAssertEqual(profileValue("parent.profile.pet", in: app), "")
+        setProfileText("合成测试昵称", identifier: "parent.profile.child", in: app)
+        setProfileText("合成小狗", identifier: "parent.profile.pet", in: app)
+        tapProfileSave(in: app)
+        assertProfileFeedback("名字记好了", in: app)
+        app.buttons["parent.gate.close"].tap()
+        XCTAssertTrue(brand.waitForExistence(timeout: 5))
+    }
+
     func testFamilyNamesSaveEditPINAndRestartWithSystemTextSize() throws {
         let app = launchEmptyFamilyProfile()
         XCTAssertEqual(profileValue("parent.profile.child", in: app), "")

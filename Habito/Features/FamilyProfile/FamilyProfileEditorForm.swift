@@ -10,6 +10,9 @@ struct FamilyProfileEditorForm: View {
     var body: some View {
         Form {
             Section {
+                ChildIdentityBadge()
+            }
+            Section {
                 TextField("familyProfile.childNickname", text: $childNickname)
                     .focused(focus, equals: HabitoAccessibilityID.familyProfileChild)
                     .textInputAutocapitalization(.never)

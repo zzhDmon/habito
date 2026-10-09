@@ -8,9 +8,10 @@ struct KidTodayGreetingPanel: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: HabitoDesign.Spacing.medium) {
+            ChildIdentityBadge()
             MangaSpeechBubble {
                 VStack(alignment: .leading, spacing: HabitoDesign.Spacing.small) {
-                    Text("kidToday.greeting")
+                    Text("brand.greeting", tableName: "UIR1")
                         .font(.largeTitle.weight(.heavy))
                     Text("kidToday.subtitle")
                         .font(.title3)

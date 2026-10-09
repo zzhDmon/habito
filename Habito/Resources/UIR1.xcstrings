@@ -606,6 +606,39 @@
         }
       }
     },
+    "brand.name": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "一禾成长记"
+          }
+        }
+      }
+    },
+    "brand.tagline": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "和小狗一起，每天进步一点点"
+          }
+        }
+      }
+    },
+    "brand.greeting": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "一禾，今天也一起加油！"
+          }
+        }
+      }
+    },
     "completion.confirm.title": {
       "extractionState": "manual",
       "localizations": {
