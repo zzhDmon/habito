@@ -605,6 +605,72 @@
           }
         }
       }
+    },
+    "completion.confirm.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "真的已经完成了吗？"
+          }
+        }
+      }
+    },
+    "completion.confirm.cancel": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "还没完成"
+          }
+        }
+      }
+    },
+    "completion.confirm.submit": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "完成了，交给家长"
+          }
+        }
+      }
+    },
+    "completion.confirm.save": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "确认完成"
+          }
+        }
+      }
+    },
+    "completion.confirm.reviewMessage": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "检查一下，确认后交给家长验收，通过后再领取奖励。"
+          }
+        }
+      }
+    },
+    "completion.confirm.message": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "检查一下，做好了就给自己点个赞！"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

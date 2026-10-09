@@ -2,6 +2,8 @@ import SwiftUI
 
 /// 只按页面快照展示允许的操作，等待实例由外层状态面板代替，不留可绕过的按钮。
 struct TaskSessionControlsView: View {
+    @State private var isCompletionConfirmationPresented = false
+
     let primaryAction: TaskSessionScreenContent.PrimaryAction
     let canComplete: Bool
     let verificationType: TaskVerificationType
@@ -55,7 +57,7 @@ struct TaskSessionControlsView: View {
 
                 TaskSnoozeFeedbackView(state: snoozeState)
 
-                Button(action: onComplete) {
+                Button(action: requestCompletion) {
                     Label(
                         LocalizedStringKey(
                             verificationType == .parentApproval ? "taskSession.submitForReview" : "taskSession.complete"
@@ -74,6 +76,36 @@ struct TaskSessionControlsView: View {
             }
         }
         .padding(.top, HabitoDesign.Spacing.small)
+        .alert(
+            Text("completion.confirm.title", tableName: "UIR1"),
+            isPresented: $isCompletionConfirmationPresented
+        ) {
+            Button(role: .cancel) {
+                isCompletionConfirmationPresented = false
+            } label: {
+                Text("completion.confirm.cancel", tableName: "UIR1")
+            }
+            .accessibilityIdentifier(HabitoAccessibilityID.cancelCompletionButton)
+            Button(action: onComplete) {
+                if verificationType == .parentApproval {
+                    Text("completion.confirm.submit", tableName: "UIR1")
+                } else {
+                    Text("completion.confirm.save", tableName: "UIR1")
+                }
+            }
+            .accessibilityIdentifier(HabitoAccessibilityID.confirmCompletionButton)
+        } message: {
+            if verificationType == .parentApproval {
+                Text("completion.confirm.reviewMessage", tableName: "UIR1")
+            } else {
+                Text("completion.confirm.message", tableName: "UIR1")
+            }
+        }
+    }
+
+    /// 第一次点击只打开确认；最终确认才调用原用例，因此取消不写库，完成时间也不会提前冻结。
+    private func requestCompletion() {
+        isCompletionConfirmationPresented = true
     }
 
     private func scheduleSnooze() {

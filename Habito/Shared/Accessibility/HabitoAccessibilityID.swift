@@ -67,6 +67,8 @@ nonisolated enum HabitoAccessibilityID {
     static let resumeButton = "kid.session.resume"
     static let snoozeButton = "kid.session.snooze"
     static let snoozeFeedback = "kid.session.snooze-feedback"
+    static let confirmCompletionButton = "kid.session.confirm-completion"
+    static let cancelCompletionButton = "kid.session.cancel-completion"
     static let completeButton = "kid.session.complete"
     static let submitButton = "kid.session.submit"
     static let submissionStatus = "kid.session.submission-status"

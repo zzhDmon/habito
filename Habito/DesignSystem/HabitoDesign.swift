@@ -59,6 +59,9 @@ enum HabitoDesign {
 
     /// 完成仪式的视觉节奏，不参与奖励计算或撤销计时；减少动态效果时不使用位移动画。
     enum Feedback {
+        static let confettiDuration = 1.4
+        static let confettiHeight: CGFloat = 180
+        nonisolated static let confettiCount = 20
         static let symbolSize: CGFloat = 64
         static let symbolPadding: CGFloat = 20
         // 纯数值不可变且 Sendable，供无 actor 状态的展示策略测试读取；颜色/动画仍留在 UI 层。

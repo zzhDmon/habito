@@ -65,6 +65,12 @@ struct TaskSessionFeedbackCard: View {
         .padding(HabitoDesign.Spacing.large)
         .foregroundStyle(HabitoDesign.Manga.ink)
         .modifier(MangaPanel(emphasized: true))
+        .overlay(alignment: .top) {
+            if presentation.tone != .submitted {
+                CompletionConfettiView(hasRevealed: hasRevealed, reduceMotion: reduceMotion)
+                    .frame(height: HabitoDesign.Feedback.confettiHeight)
+            }
+        }
         // 信息从第一帧就可读、按钮从不禁用；静音无需音效，Reduce Motion 直接显示完整静态结果。
         .scaleEffect(motion.scale)
         .opacity(motion.opacity)

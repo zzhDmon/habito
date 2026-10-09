@@ -25,6 +25,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         let complete = app.buttons["kid.session.complete"]
         scrollFullyIntoSessionViewport(complete, in: app)
         complete.tap()
+        confirmTaskCompletion(in: app)
         let closeReward = app.buttons["kid.session.dismiss-completion-feedback"]
         scrollFullyIntoSessionViewport(closeReward, in: app)
         closeReward.tap()
@@ -354,6 +355,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         let complete = app.buttons["kid.session.complete"]
         scrollFullyIntoSessionViewport(complete, in: app)
         complete.tap()
+        confirmTaskCompletion(in: app)
         let continueButton = app.buttons["kid.session.dismiss-completion-feedback"]
         scrollFullyIntoSessionViewport(continueButton, in: app)
         continueButton.tap()
@@ -365,6 +367,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         let submit = app.buttons["kid.session.submit"]
         scrollFullyIntoSessionViewport(submit, in: app)
         submit.tap()
+        confirmTaskCompletion(in: app)
         assertWaitingWithoutOldActions(in: app)
         returnToTodayFromTask(in: app)
         unlockExistingParent(in: app)
@@ -490,6 +493,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         let complete = app.buttons["kid.session.complete"]
         scrollFullyIntoSessionViewport(complete, in: app)
         complete.tap()
+        confirmTaskCompletion(in: app)
         let continueButton = app.buttons["kid.session.dismiss-completion-feedback"]
         scrollFullyIntoSessionViewport(continueButton, in: app)
         continueButton.tap()
@@ -745,6 +749,7 @@ final class HabitoKidFlowUITests: XCTestCase {
             let submit = app.buttons["kid.session.submit"]
             scrollFullyIntoSessionViewport(submit, in: app)
             submit.tap()
+            confirmTaskCompletion(in: app)
             assertWaitingWithoutOldActions(in: app)
             returnToTodayFromTask(in: app)
         }
@@ -842,6 +847,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         let complete = app.buttons["kid.session.complete"]
         scrollFullyIntoSessionViewport(complete, in: app)
         complete.tap()
+        confirmTaskCompletion(in: app)
         XCTAssertTrue(app.staticTexts["你做到了！"].waitForExistence(timeout: 5))
         returnToTodayFromTask(in: app)
         let afterSchool = todayTask(named: "分组放学后", in: app)
@@ -850,6 +856,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         let submit = app.buttons["kid.session.submit"]
         scrollFullyIntoSessionViewport(submit, in: app)
         submit.tap()
+        confirmTaskCompletion(in: app)
         assertWaitingWithoutOldActions(in: app)
         returnToTodayFromTask(in: app)
         relaunchTodayKeepingData(app)
@@ -951,6 +958,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         let complete = app.buttons["kid.session.complete"]
         scrollFullyIntoSessionViewport(complete, in: app)
         complete.tap()
+        confirmTaskCompletion(in: app)
         XCTAssertTrue(app.staticTexts["你做到了！"].waitForExistence(timeout: 5))
         returnToTodayFromTask(in: app)
         assertTodayRewards(xp: 11, coins: 7, in: app)
@@ -981,6 +989,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         let complete = app.buttons["kid.session.complete"]
         scrollFullyIntoSessionViewport(complete, in: app)
         complete.tap()
+        confirmTaskCompletion(in: app)
         XCTAssertTrue(app.staticTexts["这份努力已经记下啦。"].waitForExistence(timeout: 5))
         returnToTodayFromTask(in: app)
         assertTodayRewards(xp: 0, coins: 0, in: app)
@@ -1007,6 +1016,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         let complete = app.buttons["kid.session.complete"]
         scrollFullyIntoSessionViewport(complete, in: app)
         complete.tap()
+        confirmTaskCompletion(in: app)
         XCTAssertTrue(app.staticTexts["kid.session.celebration-title"].waitForExistence(timeout: 5))
         returnToTodayFromTask(in: app)
         assertDailyCelebration(in: app)
@@ -1058,6 +1068,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         let complete = app.buttons["kid.session.complete"]
         scrollFullyIntoSessionViewport(complete, in: app)
         complete.tap()
+        confirmTaskCompletion(in: app)
         XCTAssertTrue(app.staticTexts["kid.session.celebration-title"].waitForExistence(timeout: 5))
         returnToTodayFromTask(in: app)
         let error = app.staticTexts["庆祝暂时没准备好"]
@@ -1121,6 +1132,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         let complete = app.buttons["kid.session.complete"]
         scrollFullyIntoSessionViewport(complete, in: app)
         complete.tap()
+        confirmTaskCompletion(in: app)
         let undo = app.buttons["kid.session.undo"]
         XCTAssertTrue(undo.waitForExistence(timeout: 2))
         // 固定安全区不属于ScrollView；无需滚动，直接检查完整窗口与44pt后在原五秒内点击。
@@ -1312,6 +1324,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         let complete = app.buttons["kid.session.complete"]
         XCTAssertTrue(complete.waitForExistence(timeout: 5))
         complete.tap()
+        confirmTaskCompletion(in: app)
         XCTAssertTrue(app.buttons["kid.session.undo"].waitForExistence(timeout: 2))
 
         // 不传 reset：旧通知路由必须读取刚才已保存的完成事实，而不是测试进程内快照。
@@ -1384,6 +1397,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         let complete = app.buttons["kid.session.complete"]
         XCTAssertTrue(complete.waitForExistence(timeout: 5))
         complete.tap()
+        confirmTaskCompletion(in: app)
 
         let undo = app.buttons["kid.session.undo"]
         XCTAssertTrue(undo.waitForExistence(timeout: 2))
@@ -1425,6 +1439,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         XCTAssertTrue(feedback.waitForExistence(timeout: 5))
         XCTAssertEqual(feedback.label, "提醒还没打开，请找家长打开。")
         app.buttons["kid.session.complete"].tap()
+        confirmTaskCompletion(in: app)
         XCTAssertTrue(app.buttons["kid.session.undo"].waitForExistence(timeout: 5))
     }
 
@@ -1759,6 +1774,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         scrollFullyIntoSessionViewport(complete, in: app)
         XCTAssertGreaterThanOrEqual(complete.frame.height, 44)
         complete.tap()
+        confirmTaskCompletion(in: app)
         if approval {
             assertWaitingWithoutOldActions(in: app)
             XCTAssertFalse(app.descendants(matching: .any)["kid.timing.hint." + id].exists)
@@ -2098,6 +2114,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         let submit = app.buttons["kid.session.submit"]
         scrollFullyIntoSessionViewport(submit, in: app)
         submit.tap()
+        confirmTaskCompletion(in: app)
         assertWaitingWithoutOldActions(in: app)
         returnToTodayFromTask(in: app)
         unlockExistingParent(in: app)
@@ -2376,6 +2393,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         XCTAssertEqual(submit.label, "提交给家长")
         scrollFullyIntoSessionViewport(submit, in: app)
         submit.tap()
+        confirmTaskCompletion(in: app)
         assertWaitingWithoutOldActions(in: app)
         XCTAssertTrue(app.staticTexts["已提交！"].exists)
         let dismiss = app.buttons["kid.session.dismiss-completion-feedback"]
@@ -2410,7 +2428,53 @@ final class HabitoKidFlowUITests: XCTestCase {
         app.buttons["kid.session.start"].tap()
         XCTAssertTrue(app.buttons["kid.session.pause"].waitForExistence(timeout: 5))
         app.buttons["kid.session.submit"].tap()
+        confirmTaskCompletion(in: app)
         assertWaitingWithoutOldActions(in: app)
+    }
+
+    /// 取消确认不触发完成事务；重开后仍能操作，下一次确认才保存真实奖励。
+    func testCompletionConfirmationCanCancelWithoutSavingWithSystemTextSize() throws {
+        verifyCompletionCancellation(scenario: "reward-self-confirm", requiresReview: false)
+    }
+
+    func testSubmissionConfirmationCanCancelWithoutSavingWithSystemTextSize() throws {
+        verifyCompletionCancellation(scenario: "parent-approval", requiresReview: true)
+    }
+
+    private func verifyCompletionCancellation(scenario: String, requiresReview: Bool) {
+        let app = launchScenario(scenario)
+        openSeededTask(in: app)
+        let action = app.buttons[requiresReview ? "kid.session.submit" : "kid.session.complete"]
+        scrollFullyIntoSessionViewport(action, in: app)
+        action.tap()
+        XCTAssertTrue(app.alerts.staticTexts["真的已经完成了吗？"].waitForExistence(timeout: 3))
+        XCTAssertFalse(app.descendants(matching: .any)["kid.session.completion-feedback"].exists)
+        keepScreenshot(app, name: requiresReview ? "提交前确认" : "完成前确认")
+        app.alerts.buttons["kid.session.cancel-completion"].firstMatch.tap()
+        XCTAssertTrue(action.isHittable)
+        XCTAssertFalse(app.buttons["kid.session.undo"].exists)
+        XCTAssertFalse(app.descendants(matching: .any)["kid.session.reward-xp"].exists)
+        relaunchWithOldSeededNotification(app)
+        XCTAssertTrue(action.waitForExistence(timeout: 5), "取消后重开不能变成完成或等待")
+        scrollFullyIntoSessionViewport(action, in: app)
+        action.tap()
+        confirmTaskCompletion(in: app)
+        if requiresReview {
+            XCTAssertTrue(
+                app.descendants(matching: .any)["kid.session.submission-feedback-badge"].waitForExistence(timeout: 5))
+            XCTAssertFalse(app.staticTexts["kid.session.celebration-title"].exists)
+            XCTAssertFalse(app.descendants(matching: .any)["kid.session.reward-xp"].exists)
+        } else {
+            XCTAssertTrue(app.staticTexts["kid.session.celebration-title"].waitForExistence(timeout: 5))
+            XCTAssertEqual(app.descendants(matching: .any)["kid.session.reward-xp"].label, "+11 XP 已到账")
+        }
+    }
+
+    private func confirmTaskCompletion(in app: XCUIApplication) {
+        // 27 的原生 Alert 会把同一按钮暴露为父子两个 AX 节点；限定弹窗内首个同标识节点。
+        let confirm = app.alerts.buttons["kid.session.confirm-completion"].firstMatch
+        XCTAssertTrue(confirm.waitForExistence(timeout: 3))
+        confirm.tap()
     }
 
     func testSelfConfirmShowsActualRewardsOnceAndUndoRemainsReachable() throws {
@@ -2420,6 +2484,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         let complete = app.buttons["kid.session.complete"]
         scrollFullyIntoSessionViewport(complete, in: app)
         complete.tap()
+        confirmTaskCompletion(in: app)
         let undo = app.buttons["kid.session.undo"]
         XCTAssertTrue(undo.waitForExistence(timeout: 2))
         XCTAssertTrue(undo.isHittable)
@@ -2457,6 +2522,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         let app = launchScenario("legacy")
         openSeededTask(in: app)
         app.buttons["kid.session.complete"].tap()
+        confirmTaskCompletion(in: app)
         XCTAssertTrue(app.staticTexts["你做到了！"].waitForExistence(timeout: 5))
         XCTAssertFalse(app.descendants(matching: .any)["kid.session.reward-xp"].exists)
         XCTAssertFalse(app.descendants(matching: .any)["kid.session.reward-coins"].exists)
@@ -2482,6 +2548,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         let complete = app.buttons["kid.session.complete"]
         scrollFullyIntoSessionViewport(complete, in: app)
         complete.tap()
+        confirmTaskCompletion(in: app)
         let title = app.staticTexts["kid.session.celebration-title"]
         scrollFullyIntoSessionViewport(title, in: app)
         XCTAssertEqual(title.label, "你做到了！")
@@ -2532,6 +2599,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         XCTAssertTrue(submit.isHittable)
         XCTAssertGreaterThanOrEqual(submit.frame.height, 44)
         submit.tap()
+        confirmTaskCompletion(in: app)
         let status = app.descendants(matching: .any)["kid.session.submission-status"]
         XCTAssertTrue(status.waitForExistence(timeout: 5))
         scrollFullyIntoSessionViewport(status, in: app)
@@ -2681,6 +2749,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         let submit = app.buttons["kid.session.submit"]
         scrollFullyIntoSessionViewport(submit, in: app)
         submit.tap()
+        confirmTaskCompletion(in: app)
         assertWaitingWithoutOldActions(in: app)
         returnToTodayFromTask(in: app)
         assertTodayRewards(xp: 0, coins: 0, in: app)
@@ -2713,6 +2782,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         pause.tap()
         scrollFullyIntoSessionViewport(submit, in: app)
         submit.tap()
+        confirmTaskCompletion(in: app)
         assertWaitingWithoutOldActions(in: app)
         returnToTodayFromTask(in: app)
         assertTodayRewards(xp: 0, coins: 0, in: app)
@@ -2795,6 +2865,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         let submit = app.buttons["kid.session.submit"]
         scrollFullyIntoSessionViewport(submit, in: app)
         submit.tap()
+        confirmTaskCompletion(in: app)
         assertWaitingWithoutOldActions(in: app)
         let back = app.navigationBars["任务"].buttons["今日"]
         XCTAssertTrue(back.waitForExistence(timeout: 5))
