@@ -47,7 +47,8 @@ struct TaskSessionLoadedView: View {
                         task: content.task, makeTimingPresentation: { makeTimingPresentation(content.task) })
                     if let cameraModel, content.completion == nil, !content.isAwaitingReview {
                         TaskCameraPanel(
-                            state: cameraModel.state, source: cameraModel.previewSource, onRetry: cameraModel.retry)
+                            state: cameraModel.state, source: cameraModel.previewSource,
+                            isPaused: content.activeSessionState == .paused, onRetry: cameraModel.retry)
                     }
                     if let completionFeedback {
                         TaskSessionResultFeedbackView(

@@ -107,21 +107,22 @@ final class HabitoKidFlowUITests: XCTestCase {
         snapshot.lifetime = .keepAlways
         add(snapshot)
         keepScreenshot(app, name: "镜头页面初始布局")
-        let window = app.descendants(matching: .any)["kid.session.camera-window"]
-        scrollFullyIntoCameraViewport(window, in: app)
-        XCTAssertLessThanOrEqual(window.frame.width, 320)
-        XCTAssertTrue(app.staticTexts["计时运行时，打开前置镜头"].exists)
+        let panel = app.otherElements["kid.session.camera-panel"]
+        scrollFullyIntoCameraViewport(panel, in: app)
+        XCTAssertLessThanOrEqual(app.otherElements["kid.session.camera-window"].frame.height, 1)
+        XCTAssertTrue(app.staticTexts["开始计时后打开镜头"].exists)
         let start = app.buttons["kid.session.start"]
         scrollFullyIntoSessionViewport(start, in: app)
         start.tap()
-        let unavailable = app.staticTexts["这台设备暂时没有可用的前置镜头。"]
+        let unavailable = app.staticTexts["镜头不可用，仍可计时"]
         scrollFullyIntoSessionViewport(unavailable, in: app)
         keepScreenshot(app, name: "前置镜头小窗_不可用时仍可计时")
         let pause = app.buttons["kid.session.pause"]
         scrollFullyIntoSessionViewport(pause, in: app)
         pause.tap()
-        scrollFullyIntoCameraViewport(window, in: app)
-        XCTAssertTrue(app.staticTexts["计时运行时，打开前置镜头"].exists)
+        scrollFullyIntoCameraViewport(panel, in: app)
+        XCTAssertLessThanOrEqual(app.otherElements["kid.session.camera-window"].frame.height, 1)
+        XCTAssertTrue(app.staticTexts["镜头已关闭"].exists)
         let resume = app.buttons["kid.session.resume"]
         scrollFullyIntoSessionViewport(resume, in: app)
         resume.tap()

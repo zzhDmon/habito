@@ -1,6 +1,18 @@
 {
   "sourceLanguage" : "zh-Hans",
   "strings" : {
+  "taskCamera.paused": {
+  "extractionState": "manual",
+  "localizations": {
+    "zh-Hans": {
+      "stringUnit": {
+        "state": "translated",
+        "value": "镜头已关闭"
+      }
+    }
+  }
+},
+
   "taskSession.lessThanMinute": {
   "extractionState": "manual",
   "localizations": {
@@ -119,7 +131,7 @@
       "zh-Hans": {
         "stringUnit": {
           "state": "translated",
-          "value": "计时运行时，打开前置镜头"
+          "value": "开始计时后打开镜头"
         }
       }
     }
@@ -130,7 +142,7 @@
       "zh-Hans": {
         "stringUnit": {
           "state": "translated",
-          "value": "正在开启镜头…"
+          "value": "正在打开镜头"
         }
       }
     }
@@ -152,7 +164,7 @@
       "zh-Hans": {
         "stringUnit": {
           "state": "translated",
-          "value": "镜头未获允许。可在设置中开启，计时照常继续。"
+          "value": "请在设置中允许镜头"
         }
       }
     }
@@ -163,7 +175,7 @@
       "zh-Hans": {
         "stringUnit": {
           "state": "translated",
-          "value": "镜头受系统限制，计时照常继续。"
+          "value": "镜头受限制，仍可计时"
         }
       }
     }
@@ -174,7 +186,7 @@
       "zh-Hans": {
         "stringUnit": {
           "state": "translated",
-          "value": "这台设备暂时没有可用的前置镜头。"
+          "value": "镜头不可用，仍可计时"
         }
       }
     }
@@ -185,7 +197,7 @@
       "zh-Hans": {
         "stringUnit": {
           "state": "translated",
-          "value": "镜头未能开启，计时照常继续。"
+          "value": "镜头未打开，可以重试"
         }
       }
     }
@@ -196,7 +208,7 @@
       "zh-Hans": {
         "stringUnit": {
           "state": "translated",
-          "value": "镜头暂时中断，计时照常继续。"
+          "value": "镜头暂时中断，可以重试"
         }
       }
     }

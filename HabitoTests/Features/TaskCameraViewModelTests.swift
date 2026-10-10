@@ -110,7 +110,12 @@ struct TaskCameraViewModelTests {
                 .frame(width: 320))
         let image = try #require(renderer.cgImage)
         #expect(image.width == 320)
-        #expect(image.height > 180)
+        #expect(image.height > 0)
+        let normalRenderer = ImageRenderer(content: TaskCameraPanel(state: state, source: nil).frame(width: 320))
+        let normalImage = try #require(normalRenderer.cgImage)
+        // 空态不再留视频占位；辅助字号的文字仍应自然增长，不能靠固定总高裁切。
+        #expect(normalImage.height < 180)
+        if maximumTextSize { #expect(image.height > normalImage.height) }
     }
 
     @Test("只有运行中前台页面需要镜头，暂停完成待审核和加载错误均关闭")

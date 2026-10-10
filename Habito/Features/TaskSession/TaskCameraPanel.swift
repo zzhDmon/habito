@@ -5,6 +5,7 @@ import SwiftUI
 struct TaskCameraPanel: View {
     let state: FrontCameraState
     let source: FrontCameraPreviewSource?
+    var isPaused = false
     var onRetry: () -> Void = {}
     @Environment(\.openURL) private var openURL
 
@@ -22,22 +23,18 @@ struct TaskCameraPanel: View {
                         .accessibilityHidden(state != .running)
                         .accessibilityIdentifier("kid.session.camera-preview")
                 }
-                if state != .running {
-                    Image(systemName: state == .idle ? "video.slash" : "person.crop.rectangle")
-                        .font(.largeTitle)
-                        .foregroundStyle(.white)
-                        .accessibilityHidden(true)
-                }
             }
             .frame(maxWidth: .infinity)
-            .frame(height: HabitoDesign.Camera.previewHeight)
+            // 零高时仍保留系统宿主连接，运行后只恢复画面空间；不能按状态拆掉预览图层。
+            .frame(height: state == .running ? HabitoDesign.Camera.previewHeight : 0)
             .clipShape(.rect(cornerRadius: HabitoDesign.Manga.corner))
             // 黑底占位图是装饰内容；给整个窗口明确语义，VoiceOver和UI测试才能发现它。
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(Text(state == .running ? "taskCamera.previewLabel" : "taskCamera.title"))
             .accessibilityIdentifier("kid.session.camera-window")
+            .accessibilityHidden(state != .running)
             // 状态文字在固定视频区域之外；辅助大字可以自然换行，不被180pt画面裁切。
-            Label(LocalizedStringKey(state.messageKey), systemImage: state == .running ? "viewfinder" : "info.circle")
+            Label(LocalizedStringKey(messageKey), systemImage: state == .running ? "viewfinder" : "info.circle")
                 .font(.callout)
                 .fixedSize(horizontal: false, vertical: true)
                 .accessibilityIdentifier("kid.session.camera-status")
@@ -61,6 +58,10 @@ struct TaskCameraPanel: View {
         guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
         openURL(url)
     }
+
+    private var messageKey: String {
+        state == .idle && isPaused ? "taskCamera.paused" : state.messageKey
+    }
 }
 
 #Preview("镜头 · 未开始 · 横屏") {
@@ -68,6 +69,9 @@ struct TaskCameraPanel: View {
 }
 #Preview("镜头 · 拒绝授权 · 辅助大字") {
     TaskCameraPanel(state: .denied, source: nil).environment(\.dynamicTypeSize, .accessibility3)
+}
+#Preview("镜头 · 暂停 · 最大字号") {
+    TaskCameraPanel(state: .idle, source: nil, isPaused: true).environment(\.dynamicTypeSize, .accessibility5)
 }
 #Preview("镜头 · 无设备 · 深色") {
     TaskCameraPanel(state: .unavailable, source: nil).preferredColorScheme(.dark)
