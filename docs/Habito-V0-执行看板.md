@@ -5,8 +5,8 @@
 ## 1. 当前状态
 
 - 当前阶段：体验优化软件联合验收完成，镜头实机与原家庭观察继续保留
-- 当前任务：`UX-QA` 体验优化阶段联合回归。
-- 当前任务状态：`DONE`（2026-10-10，Asia/Shanghai；无IN_PROGRESS，总体仍6/7）
+- 当前任务：`GIT-REMOTE-001` 关联GitHub远程并推送。
+- 当前任务状态：`IN_PROGRESS`（2026-10-10，Asia/Shanghai；总体仍6/7）
 - 下一建议任务：目标iPad复测前置镜头实时画面、镜像/横屏方向和启停指示；通知/VoiceOver现场验收与至少14天家庭观察仍保留；五项体验优化软件验收已完成。
 - 最近更新时间：2026-10-10
 - 代码状态：V0 自动化基线为 `1b5591b`；1～13 项 V1 推荐已由用户明确确认，空白任务默认奖励、设备用途和分发仍未确认；显式常用任务预设已按DEC-034落地；宠物数值已按DEC-033确认；尚未迁移正式家庭数据库
@@ -259,6 +259,17 @@ V0 总计：35/44 个任务完成。V1 单独统计，不回写 V0 完成数；�
 | R-011 | 新 PRD 大幅扩展状态机、账本和 SwiftData schema，若直接并入当前任务会污染 V0 历史或重复发奖 | 高/高 | 保持 V0 收口边界；V1 先过决策门，再用真实旧库夹具验证 schema 迁移、奖励幂等和历史保护 | `OPEN` |
 
 ## 8. 最近一次交接
+
+### 2026-10-10 — GIT-REMOTE-001 认证待完成
+- 当前任务IN_PROGRESS。已设置origin=https://github.com/zzhDmon/habito.git，保留master；远程所有引用读取成功且为空。用户授权的推送尚未成功，未设置上游，不标DONE。
+- git push -u origin master退出128：GitHub返回Invalid username or token；本机无gh，默认SSH与已有GitHub专用密钥的BatchMode验证均Permission denied (publickey)。未读取/输出凭据、未强推或改写源码历史。
+- 修改本执行看板与V1任务卡，记录本地交接提交；产品代码未变，git diff --check通过，无需重跑产品测试。
+- 下一条明确操作：用户在本机配置有效GitHub认证（HTTPS凭据或授权SSH密钥）后，再执行普通推送并核对origin/master与HEAD、上游和干净工作区。总体仍6/7，现场镜头/通知/VoiceOver及家庭观察保留。
+
+### 2026-10-10 — GIT-REMOTE-001 开始
+- 用户明确授权关联https://github.com/zzhDmon/habito.git并推送，覆盖历史任务的“不推送”限制，仅适用于本次Git同步。唯一IN_PROGRESS为本卡。
+- 开始时master、工作区干净、无现有remote；远程HEAD/main/master读取成功且无记录。计划设置origin，常规推送master并跟踪上游，核对远端提交；不强推或改写既有提交。
+- 计划修改本看板与V1任务卡，并记录实际推送证据；产品源码不变，无需重复产品测试。
 
 ### 2026-10-10 16:02 — UX-QA 完成
 - DONE，无IN_PROGRESS。体验优化8张实现卡＋1张联合回归卡均完成；总体仍6/7。冻结实现a252f9f，570源文件SHA256=463c0719bf678f169582d08a545ea345879d8618c1497b24fe98028283dd8a39，阶段只补同源UI与文档，未改产品/测试代码。
