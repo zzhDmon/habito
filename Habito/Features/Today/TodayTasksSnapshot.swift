@@ -9,6 +9,7 @@ struct TodayTasksSnapshot: Equatable, Sendable {
     let recommendedTaskID: UUID?
     let completedCount: Int
     let totalCount: Int
+    var emptyReason: TodayEmptyReason = .restDay
 
     /// 被家长跳过的实例不进入孩子的任务总数。
     var visibleTasks: [TodayTaskItem] {

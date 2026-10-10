@@ -169,7 +169,8 @@ final class TodayViewModel {
             remainingTasks: remainingTasks,
             completedCount: snapshot.completedCount,
             totalCount: snapshot.totalCount,
-            isAllCompleted: snapshot.isAllCompleted
+            isAllCompleted: snapshot.isAllCompleted,
+            emptyReason: snapshot.emptyReason
         )
     }
 }

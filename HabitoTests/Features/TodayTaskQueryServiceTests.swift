@@ -18,6 +18,55 @@ struct TodayTaskQueryServiceTests {
         #expect(snapshot.isEmpty)
         #expect(!snapshot.isAllCompleted)
         #expect(snapshot.isCurrentDate)
+        #expect(snapshot.emptyReason == .firstSetup)
+    }
+
+    @Test("启用停用或归档旧配置都不重复首次引导", arguments: [0, 1, 2])
+    func configuredEmptyDayDoesNotRepeatSetup(lifecycle: Int) throws {
+        let fixture = try TodayQueryFixture()
+        fixture.context.insert(
+            TaskTemplate(
+                title: "阅读", iconName: "book.fill", colorToken: "reading",
+                targetDurationSeconds: 900, isEnabled: lifecycle == 0, createdAt: fixture.now, updatedAt: fixture.now,
+                archivedAt: lifecycle == 2 ? fixture.now : nil))
+        #expect(try fixture.snapshot().emptyReason == .restDay)
+    }
+
+    @Test("模板物理删除后保留的历史实例仍是已配置家庭")
+    func historicalOccurrencePreventsRepeatedSetup() throws {
+        let fixture = try TodayQueryFixture()
+        _ = fixture.makeOccurrence(
+            title: "旧任务", scheduledAt: fixture.now.addingTimeInterval(-86400),
+            status: .cancelled, date: try LocalDate(dateKey: "2026-09-22"))
+        let snapshot = try fixture.snapshot()
+        #expect(snapshot.isEmpty)
+        #expect(snapshot.emptyReason == .restDay)
+    }
+
+    @Test("明确放假只在无任务时展示放假，有任务仍可执行", arguments: [DayType.holiday, .schoolDay])
+    func dayOverrideExplainsConfiguredEmptyDay(dayType: DayType) throws {
+        let fixture = try TodayQueryFixture()
+        _ = fixture.makeOccurrence(title: "今天跳过", scheduledAt: fixture.now, status: .skipped)
+        fixture.context.insert(DayOverride(date: fixture.date, dayType: dayType, updatedAt: fixture.now))
+        let snapshot = try fixture.snapshot()
+        #expect(snapshot.isEmpty)
+        #expect(snapshot.emptyReason == (dayType == .holiday ? .holiday : .restDay))
+        _ = fixture.makeOccurrence(title: "可做的任务", scheduledAt: fixture.now, status: .pending)
+        #expect(!(try fixture.snapshot()).isEmpty)
+    }
+
+    @Test("坏日期覆盖不能伪装成休息日")
+    func invalidOverrideFailsEmptyQuery() throws {
+        let fixture = try TodayQueryFixture()
+        _ = fixture.makeOccurrence(title: "今天跳过", scheduledAt: fixture.now, status: .skipped)
+        let override = DayOverride(date: fixture.date, dayType: .holiday, updatedAt: fixture.now)
+        override.dayTypeRawValue = "invalid"
+        fixture.context.insert(override)
+        try fixture.context.save()
+        #expect(throws: ParentCalendarDayError.invalidOverrideType(id: override.id, value: "invalid")) {
+            try TodayTaskQueryService(context: fixture.context, calendar: fixture.calendar, timeZone: fixture.timeZone)
+                .snapshot(for: fixture.date, at: fixture.now)
+        }
     }
 
     @Test("全部完成时没有推荐并返回完整进度")

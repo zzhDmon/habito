@@ -488,6 +488,7 @@
 		J10000000000000000000001 /* TodayTaskCompletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = J20000000000000000000001 /* TodayTaskCompletion.swift */; };
 		J10000000000000000000002 /* TodayTaskItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = J20000000000000000000002 /* TodayTaskItem.swift */; };
 		J10000000000000000000003 /* TodayTasksSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = J20000000000000000000003 /* TodayTasksSnapshot.swift */; };
+		EC5100000000000000000001 /* TodayEmptyReason.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC5200000000000000000001 /* TodayEmptyReason.swift */; };
 		J10000000000000000000004 /* TodayTaskQueryError.swift in Sources */ = {isa = PBXBuildFile; fileRef = J20000000000000000000004 /* TodayTaskQueryError.swift */; };
 		J10000000000000000000005 /* TodayTaskQueryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = J20000000000000000000005 /* TodayTaskQueryService.swift */; };
 		J10000000000000000000006 /* TodayQueryFixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = J20000000000000000000006 /* TodayQueryFixture.swift */; };
@@ -1075,6 +1076,7 @@
 		J20000000000000000000001 /* TodayTaskCompletion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayTaskCompletion.swift; sourceTree = "<group>"; };
 		J20000000000000000000002 /* TodayTaskItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayTaskItem.swift; sourceTree = "<group>"; };
 		J20000000000000000000003 /* TodayTasksSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayTasksSnapshot.swift; sourceTree = "<group>"; };
+		EC5200000000000000000001 /* TodayEmptyReason.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayEmptyReason.swift; sourceTree = "<group>"; };
 		J20000000000000000000004 /* TodayTaskQueryError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayTaskQueryError.swift; sourceTree = "<group>"; };
 		J20000000000000000000005 /* TodayTaskQueryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayTaskQueryService.swift; sourceTree = "<group>"; };
 		J20000000000000000000006 /* TodayQueryFixture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayQueryFixture.swift; sourceTree = "<group>"; };
@@ -1935,6 +1937,7 @@
 				J20000000000000000000004 /* TodayTaskQueryError.swift */,
 				J20000000000000000000005 /* TodayTaskQueryService.swift */,
 				J20000000000000000000003 /* TodayTasksSnapshot.swift */,
+				EC5200000000000000000001 /* TodayEmptyReason.swift */,
 				K20000000000000000000004 /* TodayViewState.swift */,
 				AB2000000000000000000152 /* TodayRewardState.swift */,
 				K20000000000000000000005 /* TodayViewModel.swift */,
@@ -2719,6 +2722,7 @@
 				J10000000000000000000004 /* TodayTaskQueryError.swift in Sources */,
 				J10000000000000000000005 /* TodayTaskQueryService.swift in Sources */,
 				J10000000000000000000003 /* TodayTasksSnapshot.swift in Sources */,
+				EC5100000000000000000001 /* TodayEmptyReason.swift in Sources */,
 				K10000000000000000000004 /* TodayViewState.swift in Sources */,
 				AB1000000000000000000152 /* TodayRewardState.swift in Sources */,
 				K10000000000000000000005 /* TodayViewModel.swift in Sources */,

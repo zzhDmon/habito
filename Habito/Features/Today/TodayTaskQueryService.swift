@@ -54,8 +54,27 @@ struct TodayTaskQueryService {
             carryOverTasks: carryOverItems,
             recommendedTaskID: actionable?.id,
             completedCount: visibleItems.count { $0.status == .completed },
-            totalCount: visibleItems.count
+            totalCount: visibleItems.count,
+            emptyReason: try emptyReason(on: date, hasVisibleTasks: !visibleItems.isEmpty || !carryOverItems.isEmpty)
         )
+    }
+
+    /// 归档/停用模板和历史实例都证明家庭曾配置过，不能仅凭今天空白重复引导。
+    /// - Note: 只在空页读取配置事实；坏日期覆盖显式抛错，不能伪装成休息日。
+    private func emptyReason(on date: LocalDate, hasVisibleTasks: Bool) throws -> TodayEmptyReason {
+        guard !hasVisibleTasks else { return .restDay }
+        guard
+            try context.fetchCount(FetchDescriptor<TaskTemplate>()) > 0
+                || context.fetchCount(FetchDescriptor<TaskOccurrence>()) > 0
+        else { return .firstSetup }
+        let key = date.dateKey
+        let overrides = try context.fetch(FetchDescriptor<DayOverride>(predicate: #Predicate { $0.dateKey == key }))
+        guard overrides.count <= 1 else { throw ParentCalendarDayError.duplicateOverride(date) }
+        guard let override = overrides.first else { return .restDay }
+        guard let dayType = override.dayType else {
+            throw ParentCalendarDayError.invalidOverrideType(id: override.id, value: override.dayTypeRawValue)
+        }
+        return dayType == .holiday ? .holiday : .restDay
     }
 
     /// 找出目标日期之前仍有活动会话的实例，避免跨午夜后从孩子界面消失。

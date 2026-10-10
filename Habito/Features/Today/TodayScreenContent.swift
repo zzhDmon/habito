@@ -9,11 +9,12 @@ struct TodayScreenContent: Equatable, Sendable {
     let totalCount: Int
     let isAllCompleted: Bool
     let dailyCompletion: TodayCompletionSummary?
+    let emptyReason: TodayEmptyReason
 
     /// 在页面状态创建时投影一次，避免 View.body 内重复编排任务或维护另一份可变分组。
     init(
         recommendedTask: KidTaskNavigationItem?, remainingTasks: [KidTaskNavigationItem],
-        completedCount: Int, totalCount: Int, isAllCompleted: Bool
+        completedCount: Int, totalCount: Int, isAllCompleted: Bool, emptyReason: TodayEmptyReason = .restDay
     ) {
         self.recommendedTask = recommendedTask
         self.remainingTasks = remainingTasks
@@ -21,6 +22,7 @@ struct TodayScreenContent: Equatable, Sendable {
         self.completedCount = completedCount
         self.totalCount = totalCount
         self.isAllCompleted = isAllCompleted
+        self.emptyReason = emptyReason
         dailyCompletion = TodayCompletionSummary(
             completedCount: completedCount, totalCount: totalCount, isAllCompleted: isAllCompleted)
     }
