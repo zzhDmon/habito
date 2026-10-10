@@ -8,9 +8,13 @@ import SwiftData
 @MainActor
 struct TaskProgressService {
     private let context: ModelContext
+    private let saveTimingChanges: (ModelContext) throws -> Void
 
-    init(context: ModelContext) {
+    /// 单项操作默认立即保存；跨任务用例注入暂存边界后负责一次保存与失败回滚。
+    /// - Important: 暂存闭包只能用于拥有完整事务边界的用例，不能从View直接注入。
+    init(context: ModelContext, saveTimingChanges: @escaping (ModelContext) throws -> Void = { try $0.save() }) {
         self.context = context
+        self.saveTimingChanges = saveTimingChanges
     }
 
     /// 开始一个可计时任务；已有活动会话时直接返回，由暂停/继续方法改变其状态。
@@ -42,11 +46,11 @@ struct TaskProgressService {
             startedAt: now,
             lastResumedAt: now
         )
-        session.occurrence = occurrence
         context.insert(session)
+        session.occurrence = occurrence
         occurrence.statusRawValue = nextStatus.rawValue
         occurrence.updatedAt = now
-        try context.save()
+        try saveTimingChanges(context)
         return session
     }
 
@@ -60,7 +64,7 @@ struct TaskProgressService {
         active.session.accumulatedActiveSeconds += elapsed
         active.session.stateRawValue = TimerSessionState.paused.rawValue
         occurrence.updatedAt = now
-        try context.save()
+        try saveTimingChanges(context)
         return active.session
     }
 
@@ -79,7 +83,7 @@ struct TaskProgressService {
         active.session.lastResumedAt = now
         active.session.stateRawValue = TimerSessionState.running.rawValue
         occurrence.updatedAt = now
-        try context.save()
+        try saveTimingChanges(context)
         return active.session
     }
 
