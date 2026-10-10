@@ -5,6 +5,21 @@ import Testing
 @MainActor
 @Suite("今日任务查询与推荐排序")
 struct TodayTaskQueryServiceTests {
+    @Test("当前运行任务优先于较早暂停任务，跨日暂停也不抢推荐", arguments: [false, true])
+    func runningTaskWinsOverPausedTask(carryOver: Bool) throws {
+        let f = try TodayQueryFixture()
+        let earlier = f.now.addingTimeInterval(-86400)
+        let paused = f.makeOccurrence(
+            title: "暂停的阅读", scheduledAt: earlier, status: .inProgress,
+            date: carryOver ? try LocalDate(dateKey: "2026-09-22") : f.date)
+        f.addSession(to: paused, state: .paused, startedAt: earlier, lastResumedAt: earlier, accumulatedSeconds: 60)
+        let running = f.makeOccurrence(title: "正在口算", scheduledAt: f.now, status: .inProgress)
+        f.addSession(to: running, state: .running, startedAt: f.now, lastResumedAt: f.now, accumulatedSeconds: 0)
+        let snapshot = try f.snapshot()
+        #expect(snapshot.recommendedTaskID == running.id)
+        #expect(snapshot.visibleTasks.contains { $0.id == paused.id })
+    }
+
     @Test("无任务时返回空进度且没有推荐")
     func noTasksProducesEmptySnapshot() throws {
         let fixture = try TodayQueryFixture()

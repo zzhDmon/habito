@@ -5,6 +5,22 @@ import Testing
 @MainActor
 @Suite("孩子今日页状态")
 struct TodayViewModelTests {
+    @Test("首页同日和跨日区分正在计时与已暂停", arguments: [TimerSessionState.running, .paused], [false, true])
+    func taskStateUsesActiveTimerState(timer: TimerSessionState, carryOver: Bool) throws {
+        let f = try TodayQueryFixture()
+        let earlier = f.now.addingTimeInterval(-86400)
+        let task = f.makeOccurrence(
+            title: "阅读", scheduledAt: carryOver ? earlier : f.now, status: .inProgress,
+            date: carryOver ? try LocalDate(dateKey: "2026-09-22") : f.date)
+        f.addSession(to: task, state: timer, startedAt: earlier, lastResumedAt: earlier, accumulatedSeconds: 0)
+        try f.context.save()
+        let item = try TodayTaskQueryService(context: f.context, calendar: f.calendar, timeZone: f.timeZone).item(
+            id: task.id, at: f.now)
+        let navigation = KidTaskNavigationItem(item: item, calendar: f.calendar, referenceDate: f.date)
+        let expected = timer == .running ? "正在计时" : "已暂停"
+        #expect(navigation.statusText == (carryOver ? "之前的任务：" + expected : expected))
+    }
+
     @Test("加载后推荐项保留查询排序和正确任务标识")
     func loadBuildsPresentationAndRecommendedRoute() throws {
         let fixture = try TodayQueryFixture()
@@ -89,7 +105,7 @@ struct TodayViewModelTests {
         let content = try loadedContent(from: model.state)
         #expect(!content.isEmpty)
         #expect(content.recommendedTask?.id == occurrence.id)
-        #expect(content.recommendedTask?.statusText == "之前的任务还在做")
+        #expect(content.recommendedTask?.statusText == "之前的任务：已暂停")
         #expect(content.completedCount == 0)
         #expect(content.totalCount == 0)
         #expect(!content.isAllCompleted)

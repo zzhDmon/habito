@@ -17,6 +17,70 @@ final class HabitoKidFlowUITests: XCTestCase {
         verifyGoalReachedActionOrder(requiresReview: false)
     }
 
+    func testTaskSwitchConfirmsOrReturnsCurrentAndKeepsTimingInBackgroundWithSystemTextSize() {
+        let app = launchScenario("task-switch")
+        let current = app.buttons["kid.today.task.c5412144-2fb8-4e96-9f7a-6a42e0803d12"]
+        scrollFullyIntoTodayViewport(current, in: app)
+        XCTAssertTrue(current.label.contains("正在计时"))
+        openSeededTask(in: app)
+        scrollFullyIntoSessionViewport(app.buttons["kid.session.start"], in: app)
+        app.buttons["kid.session.start"].tap()
+        let alert = app.alerts["切换正在做的任务？"]
+        XCTAssertTrue(alert.waitForExistence(timeout: 5))
+        keepScreenshot(app, name: "跨任务开始前的明确确认")
+        alert.buttons["kid.session.continue-current"].firstMatch.tap()
+        XCTAssertTrue(app.buttons["kid.session.pause"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["练字"].exists)
+        returnToTodayFromTask(in: app)
+        XCUIDevice.shared.press(.home)
+        app.activate()
+        scrollFullyIntoTodayViewport(current, in: app)
+        XCTAssertTrue(current.label.contains("正在计时"))
+        openSeededTask(in: app)
+        scrollFullyIntoSessionViewport(app.buttons["kid.session.start"], in: app)
+        app.buttons["kid.session.start"].tap()
+        XCTAssertTrue(alert.waitForExistence(timeout: 5))
+        alert.buttons["kid.session.confirm-switch"].firstMatch.tap()
+        XCTAssertTrue(app.buttons["kid.session.pause"].waitForExistence(timeout: 5))
+        returnToTodayFromTask(in: app)
+        scrollFullyIntoTodayViewport(current, in: app)
+        XCTAssertTrue(current.label.contains("已暂停"))
+        XCTAssertTrue(app.buttons[seededTaskIdentifier].label.contains("正在计时"))
+        keepScreenshot(app, name: "首页运行与暂停同时可辨认")
+        current.tap()
+        let resume = app.buttons["kid.session.resume"]
+        scrollFullyIntoSessionViewport(resume, in: app)
+        resume.tap()
+        XCTAssertTrue(alert.waitForExistence(timeout: 5))
+        alert.buttons["kid.session.confirm-switch"].firstMatch.tap()
+        XCTAssertTrue(app.buttons["kid.session.pause"].waitForExistence(timeout: 5))
+        returnToTodayFromTask(in: app)
+        XCTAssertTrue(app.buttons[seededTaskIdentifier].label.contains("已暂停"))
+    }
+
+    func testNotificationTaskEntryStillRequiresSwitchConfirmationWithSystemTextSize() {
+        XCUIDevice.shared.orientation = .landscapeLeft
+        let app = makeApplication()
+        app.launchArguments = [
+            "--habito-ui-testing", "--habito-ui-reset", "--habito-ui-task-scenario", "task-switch",
+            "--habito-ui-notification-request", "habito.occurrence.c5412144-2fb8-4e96-9f7a-6a42e0803d11.primary",
+        ]
+        app.launch()
+        let start = app.buttons["kid.session.start"]
+        scrollFullyIntoSessionViewport(start, in: app)
+        XCTAssertFalse(app.buttons["kid.session.pause"].exists)
+        start.tap()
+        let alert = app.alerts["切换正在做的任务？"]
+        XCTAssertTrue(alert.waitForExistence(timeout: 5))
+        alert.buttons["kid.session.confirm-switch"].firstMatch.tap()
+        XCTAssertTrue(app.buttons["kid.session.pause"].waitForExistence(timeout: 5))
+        returnToTodayFromTask(in: app)
+        let current = app.buttons["kid.today.task.c5412144-2fb8-4e96-9f7a-6a42e0803d12"]
+        scrollFullyIntoTodayViewport(current, in: app)
+        XCTAssertTrue(current.label.contains("已暂停"))
+        XCTAssertTrue(app.buttons[seededTaskIdentifier].label.contains("正在计时"))
+    }
+
     func testGoalReachedMakesReviewFirstWithoutAutomaticallySubmittingWithSystemTextSize() {
         verifyGoalReachedActionOrder(requiresReview: true)
     }
@@ -1165,7 +1229,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         app.launch()
         let carryOver = app.buttons[seededTaskIdentifier]
         scrollFullyIntoTodayViewport(carryOver, in: app)
-        XCTAssertTrue(carryOver.label.contains("之前的任务还在做"))
+        XCTAssertTrue(carryOver.label.contains("之前的任务：已暂停"))
         XCTAssertEqual(app.buttons.matching(identifier: seededTaskIdentifier).count, 1)
         let allDay = app.staticTexts["kid.today.group.allDay"]
         scrollFullyIntoTodayViewport(allDay, in: app)
@@ -1175,17 +1239,17 @@ final class HabitoKidFlowUITests: XCTestCase {
                 format: "identifier BEGINSWITH %@ AND identifier != %@", "kid.today.task.", seededTaskIdentifier)
         ).element
         scrollFullyIntoTodayViewport(today, in: app)
-        XCTAssertFalse(today.label.contains("之前的任务还在做"))
+        XCTAssertFalse(today.label.contains("之前的任务：已暂停"))
         let todayID = today.identifier
         keepScreenshot(app, name: "跨日推荐与今日全天分组分开")
         scrollFullyIntoTodayViewport(carryOver, in: app, towardTop: true)
         carryOver.tap()
         XCTAssertTrue(app.buttons["kid.session.resume"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.staticTexts["之前的任务还在做"].exists)
+        XCTAssertTrue(app.staticTexts["之前的任务：已暂停"].exists)
         returnToTodayFromTask(in: app)
         relaunchTodayKeepingData(app)
         scrollFullyIntoTodayViewport(app.buttons[seededTaskIdentifier], in: app)
-        XCTAssertTrue(app.buttons[seededTaskIdentifier].label.contains("之前的任务还在做"))
+        XCTAssertTrue(app.buttons[seededTaskIdentifier].label.contains("之前的任务：已暂停"))
         scrollFullyIntoTodayViewport(app.buttons[todayID], in: app)
         assertTodayRewards(xp: 0, coins: 0, in: app)
     }

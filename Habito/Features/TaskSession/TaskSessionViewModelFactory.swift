@@ -60,6 +60,7 @@ struct TaskSessionViewModelFactory {
             completionService: completionService,
             undoService: undoService,
             submissionService: submissionService,
+            timingSwitchService: TaskTimingSwitchService(context: context, calendar: calendar, timeZone: timeZone),
             onCompletionSaved: onCompletionSaved,
             onCompletionChanged: onCompletionChanged
         )

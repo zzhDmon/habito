@@ -7,11 +7,16 @@ struct KidTaskSessionView: View {
     @State private var cameraModel: TaskCameraViewModel
     @State private var model: TaskSessionViewModel
     private let onExit: () -> Void
+    private let onContinueTask: (UUID) -> Void
 
-    init(model: TaskSessionViewModel, cameraModel: TaskCameraViewModel, onExit: @escaping () -> Void) {
+    init(
+        model: TaskSessionViewModel, cameraModel: TaskCameraViewModel, onExit: @escaping () -> Void,
+        onContinueTask: @escaping (UUID) -> Void = { _ in }
+    ) {
         _cameraModel = State(initialValue: cameraModel)
         _model = State(initialValue: model)
         self.onExit = onExit
+        self.onContinueTask = onContinueTask
     }
 
     var body: some View {
@@ -57,6 +62,14 @@ struct KidTaskSessionView: View {
         } message: {
             Text(LocalizedStringKey(model.actionFailure?.messageKey ?? "taskSession.actionSaveFailed"))
         }
+        .alert("taskSession.switchTitle", isPresented: $model.isTimingSwitchPresented) {
+            Button("taskSession.switchConfirm", action: model.confirmTimingSwitch)
+                .accessibilityIdentifier("kid.session.confirm-switch")
+            Button("taskSession.continueCurrent", role: .cancel, action: continueCurrentTask)
+                .accessibilityIdentifier("kid.session.continue-current")
+        } message: {
+            Text(model.timingSwitchMessage)
+        }
         .task(model.load)
         .onChange(of: scenePhase) { _, newPhase in
             if newPhase == .active {
@@ -88,5 +101,9 @@ struct KidTaskSessionView: View {
     private func exit() {
         cameraModel.setEnabled(false)
         onExit()
+    }
+
+    private func continueCurrentTask() {
+        if let id = model.continueCurrentTask() { onContinueTask(id) }
     }
 }

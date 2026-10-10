@@ -1,6 +1,116 @@
 {
   "sourceLanguage" : "zh-Hans",
   "strings" : {
+  "taskSession.switchTitle": {
+    "extractionState": "manual",
+    "localizations": {
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "切换正在做的任务？"
+        }
+      }
+    }
+  },
+  "taskSession.switchMessage": {
+    "extractionState": "manual",
+    "localizations": {
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "%@还在计时，要暂停%@并开始%@吗？"
+        }
+      }
+    }
+  },
+  "taskSession.switchMultipleMessage": {
+    "extractionState": "manual",
+    "localizations": {
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "%@还在计时，要暂停这些任务并开始%@吗？"
+        }
+      }
+    }
+  },
+  "taskSession.switchConfirm": {
+    "extractionState": "manual",
+    "localizations": {
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "切换任务"
+        }
+      }
+    }
+  },
+  "taskSession.continueCurrent": {
+    "extractionState": "manual",
+    "localizations": {
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "继续当前任务"
+        }
+      }
+    }
+  },
+  "taskSession.timingChanged": {
+    "extractionState": "manual",
+    "localizations": {
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "计时状态有变化，请重新选择开始或继续。"
+        }
+      }
+    }
+  },
+  "kidTask.statusRunning": {
+    "extractionState": "manual",
+    "localizations": {
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "正在计时"
+        }
+      }
+    }
+  },
+  "kidTask.statusPaused": {
+    "extractionState": "manual",
+    "localizations": {
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "已暂停"
+        }
+      }
+    }
+  },
+  "kidTask.statusCarryOverRunning": {
+    "extractionState": "manual",
+    "localizations": {
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "之前的任务：正在计时"
+        }
+      }
+    }
+  },
+  "kidTask.statusCarryOverPaused": {
+    "extractionState": "manual",
+    "localizations": {
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "之前的任务：已暂停"
+        }
+      }
+    }
+  },
   "kidToday.firstSetupTitle": {
     "extractionState": "manual",
     "localizations": {

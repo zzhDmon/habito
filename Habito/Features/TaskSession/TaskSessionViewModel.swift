@@ -12,11 +12,14 @@ final class TaskSessionViewModel {
     private(set) var actionFailure: TaskSessionActionFailure?
     private(set) var completionFeedback: TaskSessionCompletionFeedback?
     var isActionErrorPresented = false
+    var isTimingSwitchPresented = false
+    private(set) var pendingTimingSwitch: TaskTimingSwitchPlan?
 
     private let occurrenceID: UUID
     private let context: ModelContext
     private let queryService: TodayTaskQueryService
     private let progressService: TaskProgressService
+    private let timingSwitchService: TaskTimingSwitchService
     private let completionService: TaskCompletionService
     private let submissionService: TaskSubmissionService
     private let undoService: TaskCompletionUndoService
@@ -39,6 +42,7 @@ final class TaskSessionViewModel {
         completionService: TaskCompletionService? = nil,
         undoService: TaskCompletionUndoService? = nil,
         submissionService: TaskSubmissionService? = nil,
+        timingSwitchService: TaskTimingSwitchService? = nil,
         onCompletionSaved: (@MainActor (TaskCompletionResult) -> Void)? = nil,
         onCompletionChanged: (@MainActor () -> Void)? = nil
     ) {
@@ -50,6 +54,8 @@ final class TaskSessionViewModel {
             timeZone: timeZone
         )
         progressService = TaskProgressService(context: context)
+        self.timingSwitchService =
+            timingSwitchService ?? TaskTimingSwitchService(context: context, calendar: calendar, timeZone: timeZone)
         self.completionService = completionService ?? TaskCompletionService(context: context)
         self.submissionService = submissionService ?? TaskSubmissionService(context: context)
         self.undoService = undoService ?? TaskCompletionUndoService(context: context)
@@ -120,24 +126,74 @@ final class TaskSessionViewModel {
 
     /// 根据当前页面状态执行开始或继续；运行中重复触发不会创建第二个会话。
     func startOrResume() {
-        guard case let .loaded(content) = state else { return }
-
+        guard case let .loaded(content) = state, content.primaryAction == .start || content.primaryAction == .resume
+        else { return }
         do {
-            let occurrence = try fetchOccurrence()
-            let now = dateProvider.now()
-            switch content.primaryAction {
-            case .start:
-                _ = try progressService.startTiming(for: occurrence, at: now)
-                // 主提醒只属于待处理实例；开始成功后立即核对，避免尚未到点的旧主提醒继续出现。
-                notificationRebuildTrigger.requestRebuild()
-            case .resume:
-                _ = try progressService.resumeTiming(for: occurrence, at: now)
-            case .pause, .none:
+            let plan = try timingSwitchService.plan(for: occurrenceID, at: dateProvider.now())
+            if !plan.runningTasks.isEmpty {
+                pendingTimingSwitch = plan
+                isTimingSwitchPresented = true
                 return
             }
-            reload(showLoading: false)
+            performTimingStart(confirmedRunningIDs: [])
         } catch {
-            handle(error)
+            // 删除后旧页面已没有有效任务事实，必须进入错误态；普通事务失败才保留页面。
+            if case TodayTaskQueryError.occurrenceNotFound = error { handle(error) } else { handleActionFailure(error) }
+        }
+    }
+
+    /// 弹窗文案来自预检快照；实际写入仍必须重新核对运行集合。
+    var timingSwitchMessage: String {
+        guard let plan = pendingTimingSwitch else { return "" }
+        let names = plan.runningTasks.map(\.title).joined(separator: "、")
+        if plan.runningTasks.count == 1 {
+            return String.localizedStringWithFormat(
+                String(localized: "taskSession.switchMessage"), names, names, plan.target.title)
+        }
+        return String.localizedStringWithFormat(
+            String(localized: "taskSession.switchMultipleMessage"), names, plan.target.title)
+    }
+
+    /// 明确确认才暂停其他任务；失败保留执行页并反馈，不出现半完成切换。
+    func confirmTimingSwitch() {
+        guard let plan = pendingTimingSwitch else { return }
+        clearTimingSwitch()
+        performTimingStart(confirmedRunningIDs: plan.runningIDs)
+    }
+
+    /// 取消不写计时；从最新事实选择仍在运行的任务，防止跳到已经完成的旧快照。
+    func continueCurrentTask() -> UUID? {
+        clearTimingSwitch()
+        do {
+            return try timingSwitchService.plan(for: occurrenceID, at: dateProvider.now()).runningTasks.first?.id
+        } catch {
+            refresh()
+            handleActionFailure(error)
+            return nil
+        }
+    }
+
+    private func clearTimingSwitch() {
+        isTimingSwitchPresented = false
+        pendingTimingSwitch = nil
+    }
+
+    private func performTimingStart(confirmedRunningIDs: Set<UUID>) {
+        let wasPending = if case let .loaded(content) = state { content.primaryAction == .start } else { false }
+        do {
+            _ = try timingSwitchService.start(
+                for: occurrenceID, at: dateProvider.now(), confirmedRunningIDs: confirmedRunningIDs)
+            if wasPending { notificationRebuildTrigger.requestRebuild() }
+            clearActionFailure()
+            refresh()
+        } catch {
+            if error as? TaskTimingSwitchError == .runningTasksChanged {
+                refresh()
+                actionFailure = .timingChanged
+                isActionErrorPresented = true
+            } else {
+                handleActionFailure(error)
+            }
         }
     }
 
@@ -241,7 +297,7 @@ final class TaskSessionViewModel {
             actionFailure = .insufficientCoins
         } else if error is TaskCompletionServiceError || error is TaskCompletionUndoError
             || error is TaskProgressServiceError || error is TaskSessionViewModelError || error is RewardLedgerError
-            || error is TaskSubmissionError
+            || error is TaskSubmissionError || error is TaskTimingSwitchError || error is TodayTaskQueryError
         {
             actionFailure = .unavailable
         } else {

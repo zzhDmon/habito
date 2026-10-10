@@ -52,7 +52,9 @@ struct KidTaskNavigationItem: Hashable, Identifiable, Sendable {
             statusText = String(localized: "kidTask.statusReturned")
             statusIconName = "arrow.uturn.backward.circle.fill"
         } else if isCarryOver {
-            statusText = String(localized: "kidTask.statusCarryOver")
+            statusText = String(
+                localized: item.activeSessionState == .paused
+                    ? "kidTask.statusCarryOverPaused" : "kidTask.statusCarryOverRunning")
             statusIconName = "clock.arrow.circlepath"
         } else {
             switch item.status {
@@ -60,8 +62,9 @@ struct KidTaskNavigationItem: Hashable, Identifiable, Sendable {
                 statusText = String(localized: "kidTask.statusPending")
                 statusIconName = HabitoDesign.Symbol.pending
             case .inProgress:
-                statusText = String(localized: "kidTask.statusInProgress")
-                statusIconName = "play.circle.fill"
+                statusText = String(
+                    localized: item.activeSessionState == .paused ? "kidTask.statusPaused" : "kidTask.statusRunning")
+                statusIconName = item.activeSessionState == .paused ? "pause.circle.fill" : "play.circle.fill"
             case .completed:
                 statusText = String(localized: "kidTask.statusCompleted")
                 statusIconName = HabitoDesign.Symbol.completed

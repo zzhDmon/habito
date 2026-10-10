@@ -6,6 +6,63 @@ import Testing
 @MainActor
 @Suite("任务执行页计时恢复")
 struct TaskSessionViewModelTests {
+    @Test("有其他运行时先确认，确认切换或取消返回原任务", arguments: [false, true])
+    func startWithOtherRunningTaskRequiresUserDecision(confirm: Bool) throws {
+        let f = try TodayQueryFixture()
+        let a = f.makeOccurrence(title: "阅读", scheduledAt: f.now.addingTimeInterval(-60), status: .pending)
+        let b = f.makeOccurrence(title: "口算", scheduledAt: f.now, status: .pending)
+        try f.context.save()
+        let active = try TaskProgressService(context: f.context).startTiming(for: a, at: f.now.addingTimeInterval(-60))
+        let model = TaskSessionViewModel(
+            occurrenceID: b.id, context: f.context, calendar: f.calendar,
+            timeZone: f.timeZone, dateProvider: FixedDateProvider(value: f.now))
+        model.load()
+        model.startOrResume()
+        #expect(model.isTimingSwitchPresented && model.pendingTimingSwitch?.runningIDs == [a.id])
+        #expect(model.timingSwitchMessage.contains("阅读") && model.timingSwitchMessage.contains("口算"))
+        #expect(active.state == .running && b.status == .pending)
+        if confirm {
+            model.confirmTimingSwitch()
+            #expect(active.state == .paused && b.status == .inProgress)
+            #expect(try loadedContent(from: model.state).primaryAction == .pause)
+        } else {
+            #expect(model.continueCurrentTask() == a.id)
+            #expect(active.state == .running && b.status == .pending)
+        }
+        #expect(!model.isTimingSwitchPresented && model.pendingTimingSwitch == nil)
+    }
+
+    @Test("切换保存失败保留页面和原计时，运行集合变更须重新确认", arguments: [false, true])
+    func switchFailureKeepsLoadedFacts(changedRunningSet: Bool) throws {
+        let f = try TodayQueryFixture()
+        let a = f.makeOccurrence(title: "阅读", scheduledAt: f.now, status: .pending)
+        let b = f.makeOccurrence(title: "口算", scheduledAt: f.now, status: .pending)
+        let c = f.makeOccurrence(title: "练字", scheduledAt: f.now, status: .pending)
+        try f.context.save()
+        let legacy = TaskProgressService(context: f.context)
+        let active = try legacy.startTiming(for: a, at: f.now)
+        let failing = TaskTimingSwitchService(
+            context: f.context, calendar: f.calendar, timeZone: f.timeZone,
+            saveChanges: { _ in throw CocoaError(.fileWriteUnknown) })
+        let model = TaskSessionViewModel(
+            occurrenceID: b.id, context: f.context, calendar: f.calendar,
+            timeZone: f.timeZone, dateProvider: FixedDateProvider(value: f.now),
+            timingSwitchService: changedRunningSet ? nil : failing)
+        model.load()
+        model.startOrResume()
+        if changedRunningSet { _ = try legacy.startTiming(for: c, at: f.now) }
+        model.confirmTimingSwitch()
+        #expect(active.state == .running && b.status == .pending)
+        #expect(model.isActionErrorPresented)
+        #expect(model.actionFailure == (changedRunningSet ? .timingChanged : .saveFailed))
+        #expect(try loadedContent(from: model.state).primaryAction == .start)
+        #expect(!f.context.hasChanges)
+        if changedRunningSet {
+            model.startOrResume()
+            #expect(model.pendingTimingSwitch?.runningIDs == [a.id, c.id])
+        }
+    }
+
     @Test("孩子提交后等待或退回真实磁盘重开，页面派生正确且不重播收据", arguments: [false, true])
     func diskReentryDoesNotReplaySubmissionFeedback(returned: Bool) throws {
         let url = try V0MigrationFixture.temporaryStoreURL()

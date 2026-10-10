@@ -65,7 +65,8 @@
         func explicitScenarioHasExpectedConfiguration(scenario: UITestTaskScenario) throws {
             let fixture = try Fixture()
             try fixture.prepare(scenario: scenario)
-            let occurrence = try #require(fixture.context.fetch(FetchDescriptor<TaskOccurrence>()).first)
+            let occurrence = try #require(
+                fixture.context.fetch(FetchDescriptor<TaskOccurrence>()).first { $0.id == UITestSeedService.taskID })
             #expect(occurrence.verificationTypeSnapshot == scenario.verificationType)
             #expect(
                 scenario.hasSyntheticReward
@@ -83,6 +84,18 @@
                 #expect(submissions.first?.reviewState == .returned)
             }
             #expect(try fixture.context.fetchCount(FetchDescriptor<CompletionRecord>()) == 0)
+            if scenario == .taskSwitch {
+                let second = try #require(
+                    fixture.context.fetch(FetchDescriptor<TaskOccurrence>()).first {
+                        $0.id == UITestSeedService.secondaryTaskID
+                    })
+                #expect(second.status == .inProgress)
+                let session = try #require(
+                    fixture.context.fetch(FetchDescriptor<TimerSession>()).first { $0.occurrenceID == second.id })
+                #expect(session.state == .running && session.startedAt == fixture.now.addingTimeInterval(-120))
+                #expect(occurrence.status == .pending)
+            }
+
             if scenario == .targetReachedSelfConfirm || scenario == .targetReachedParentApproval {
                 let session = try #require(fixture.context.fetch(FetchDescriptor<TimerSession>()).first)
                 #expect(session.state == .running)

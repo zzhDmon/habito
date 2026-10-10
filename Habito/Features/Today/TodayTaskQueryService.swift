@@ -41,9 +41,11 @@ struct TodayTaskQueryService {
             sortKey(for: lhs, at: now) < sortKey(for: rhs, at: now)
         }
         let carryOverItems = try carryOverItems(before: date, at: now)
-        let actionable = (carryOverItems + sortedItems).first { item in
-            !item.isAwaitingReview && (item.status == .inProgress || item.status == .pending)
-        }
+        let candidates = carryOverItems + sortedItems
+        // 切换后“现在做这个”必须跟随实际运行项；旧暂停任务仍保留，不能抢走专注入口。
+        let actionable =
+            candidates.first { !$0.isAwaitingReview && $0.activeSessionState == .running }
+            ?? candidates.first { !$0.isAwaitingReview && ($0.status == .inProgress || $0.status == .pending) }
         let visibleItems = sortedItems.filter { $0.status != .skipped }
         let currentDate = try LocalDate(date: now, calendar: calendar, timeZone: timeZone)
 

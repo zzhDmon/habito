@@ -15,6 +15,7 @@
         case returnedSubmission = "returned-submission"
         case targetReachedSelfConfirm = "target-reached-self-confirm"
         case targetReachedParentApproval = "target-reached-parent-approval"
+        case taskSwitch = "task-switch"
 
         static let argument = "--habito-ui-task-scenario"
 
@@ -30,7 +31,7 @@
         var verificationType: TaskVerificationType {
             switch self {
             case .legacy, .rewardSelfConfirm, .rewardAfterReminder, .zeroRewardSelfConfirm, .corruptRewardLedger,
-                .dailyIncome, .petCare, .targetReachedSelfConfirm:
+                .dailyIncome, .petCare, .targetReachedSelfConfirm, .taskSwitch:
                 .selfConfirm
             case .parentApproval, .zeroRewardParentApproval, .returnedSubmission, .targetReachedParentApproval:
                 .parentApproval
@@ -40,7 +41,7 @@
         /// 零奖励审核同样完整跑业务闭环，不靠旧任务自行确认替代家长审核验收。
         var hasSyntheticReward: Bool {
             self != .legacy && self != .zeroRewardParentApproval && self != .zeroRewardSelfConfirm
-                && self != .corruptRewardLedger
+                && self != .corruptRewardLedger && self != .taskSwitch
         }
 
         /// 合成场景用固定相对时刻区分普通与自主反馈，不靠等待计时或修改系统时间。

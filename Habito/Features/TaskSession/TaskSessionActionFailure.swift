@@ -5,12 +5,14 @@ enum TaskSessionActionFailure: Equatable, Sendable {
     case insufficientCoins
     case saveFailed
     case unavailable
+    case timingChanged
 
     var messageKey: String {
         switch self {
         case .insufficientCoins: "taskSession.undoInsufficientCoins"
         case .saveFailed: "taskSession.actionSaveFailed"
         case .unavailable: "taskSession.actionUnavailable"
+        case .timingChanged: "taskSession.timingChanged"
         }
     }
 }

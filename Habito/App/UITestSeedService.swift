@@ -11,6 +11,8 @@
         static let taskID = UUID(
             uuid: (0xc5, 0x41, 0x21, 0x44, 0x2f, 0xb8, 0x4e, 0x96, 0x9f, 0x7a, 0x6a, 0x42, 0xe0, 0x80, 0x3d, 0x11)
         )
+        static let secondaryTaskID = UUID(
+            uuid: (0xc5, 0x41, 0x21, 0x44, 0x2f, 0xb8, 0x4e, 0x96, 0x9f, 0x7a, 0x6a, 0x42, 0xe0, 0x80, 0x3d, 0x12))
         private static let templateID = UUID(
             uuid: (0x67, 0x43, 0xa0, 0x0b, 0x87, 0x8f, 0x4b, 0xb0, 0xa8, 0x61, 0x64, 0x05, 0x6e, 0xc1, 0x9f, 0xe5)
         )
@@ -96,6 +98,23 @@
                 occurrence.template = template
             }
             try context.save()
+            if !shouldSeedTemplateOnly && scenario == .taskSwitch {
+                // 用正式计时服务播种A正在运行、B待开始，不伪造暂停/完成事实或奖励。
+                let otherTemplate = TaskTemplate(
+                    title: "练字", iconName: "pencil.line", colorToken: "task",
+                    targetDurationSeconds: 900, createdAt: now, updatedAt: now)
+                let other = TaskOccurrence(
+                    id: secondaryTaskID, templateID: otherTemplate.id, date: localDate,
+                    scheduledAt: now.addingTimeInterval(-120), titleSnapshot: otherTemplate.title,
+                    iconSnapshot: otherTemplate.iconName, colorSnapshot: otherTemplate.colorToken,
+                    targetDurationSnapshot: 900, sourceRevision: 1, isDetachedOverride: true,
+                    createdAt: now, updatedAt: now)
+                context.insert(otherTemplate)
+                context.insert(other)
+                other.template = otherTemplate
+                try context.save()
+                _ = try TaskProgressService(context: context).startTiming(for: other, at: now.addingTimeInterval(-120))
+            }
             if !shouldSeedTemplateOnly
                 && (scenario == .targetReachedSelfConfirm || scenario == .targetReachedParentApproval)
             {

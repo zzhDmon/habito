@@ -133,8 +133,11 @@ struct RootView: View {
                     KidTaskSessionView(
                         model: taskSessionModelFactory.makeModel(for: occurrenceID),
                         cameraModel: taskSessionModelFactory.makeCameraModel(),
-                        onExit: loadToday
+                        onExit: loadToday,
+                        onContinueTask: continueRunningTask
                     )
+                    // 同类路由替换UUID时必须重建State模型，否则继续当前会显示上一任务的计时。
+                    .id(occurrenceID)
                 }
             }
         }
@@ -177,6 +180,9 @@ struct RootView: View {
     private func showTask(_ task: KidTaskNavigationItem) {
         path.append(.task(task.id))
     }
+
+    /// 用当前运行任务替换孩子栈，避免取消切换后在A/B之间反复堆叠返回路径。
+    private func continueRunningTask(_ id: UUID) { path = [.task(id)] }
 
     private func loadToday() {
         todayModel.load()

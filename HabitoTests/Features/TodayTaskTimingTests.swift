@@ -55,7 +55,7 @@ struct TodayTaskTimingTests {
         model.load()
         guard case let .loaded(content) = model.state else { Issue.record("跨日页应成功加载"); return }
         #expect(content.task.id == row.id && content.task.isCarryOver)
-        #expect(content.task.statusText == "之前的任务还在做" && content.activeDurationAtSnapshot == 300)
+        #expect(content.task.statusText == "之前的任务：已暂停" && content.activeDurationAtSnapshot == 300)
         #expect(content.primaryAction == .resume && content.canComplete && !fixture.context.hasChanges)
         try expectNoRewards(fixture.context)
     }
