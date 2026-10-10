@@ -1,6 +1,62 @@
 {
   "sourceLanguage" : "zh-Hans",
   "strings" : {
+  "taskEditor.back": {
+  "extractionState": "manual",
+  "localizations": {
+    "zh-Hans": {
+      "stringUnit": {
+        "state": "translated",
+        "value": "返回"
+      }
+    }
+  }
+},
+  "taskEditor.unsavedTitle": {
+  "extractionState": "manual",
+  "localizations": {
+    "zh-Hans": {
+      "stringUnit": {
+        "state": "translated",
+        "value": "修改还没保存"
+      }
+    }
+  }
+},
+  "taskEditor.unsavedMessage": {
+  "extractionState": "manual",
+  "localizations": {
+    "zh-Hans": {
+      "stringUnit": {
+        "state": "translated",
+        "value": "离开会丢弃这次修改。"
+      }
+    }
+  }
+},
+  "taskEditor.keepEditing": {
+  "extractionState": "manual",
+  "localizations": {
+    "zh-Hans": {
+      "stringUnit": {
+        "state": "translated",
+        "value": "继续编辑"
+      }
+    }
+  }
+},
+  "taskEditor.discardChanges": {
+  "extractionState": "manual",
+  "localizations": {
+    "zh-Hans": {
+      "stringUnit": {
+        "state": "translated",
+        "value": "放弃修改"
+      }
+    }
+  }
+},
+
   "taskCamera.title": {
     "extractionState": "manual",
     "localizations": {

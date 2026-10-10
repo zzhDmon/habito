@@ -13,6 +13,59 @@ final class HabitoKidFlowUITests: XCTestCase {
         continueAfterFailure = false
     }
 
+    /// 使用系统当前字号，覆盖返回与关闭两种离开方向，放弃不创建任务。
+    func testUnsavedTemplateConfirmsBackAndParentCloseWithSystemTextSize() {
+        let app = launchEmptyParentEditor(title: "未保存草稿")
+        dismissEditorKeyboard(in: app)
+        let back = app.buttons["parent.templates.editor.back"]
+        XCTAssertTrue(back.waitForExistence(timeout: 5))
+        XCTAssertGreaterThanOrEqual(back.frame.height, 44)
+        back.tap()
+        let alert = app.alerts["修改还没保存"]
+        XCTAssertTrue(alert.waitForExistence(timeout: 5))
+        keepScreenshot(app, name: "任务编辑未保存确认")
+        // 新系统原生alert会暴露嵌套的同标识按钮；使用首个系统按钮，业务断言保持不变。
+        alert.buttons["parent.templates.editor.keep-editing"].firstMatch.tap()
+        XCTAssertEqual(app.textFields["parent.templates.editor.title"].value as? String, "未保存草稿")
+        app.buttons["parent.gate.close"].tap()
+        XCTAssertTrue(alert.waitForExistence(timeout: 5))
+        alert.buttons["parent.templates.editor.keep-editing"].firstMatch.tap()
+        back.tap()
+        XCTAssertTrue(alert.waitForExistence(timeout: 5))
+        alert.buttons["parent.templates.editor.discard"].firstMatch.tap()
+        XCTAssertTrue(app.buttons["parent.templates.create"].waitForExistence(timeout: 5))
+        XCTAssertFalse(parentTemplate(named: "未保存草稿", in: app).exists)
+        // 空白新页面不弹确认；保存过的编辑页也应直接返回。
+        app.buttons["parent.templates.create"].tap()
+        app.buttons["parent.templates.editor.back"].tap()
+        XCTAssertTrue(app.buttons["parent.templates.create"].waitForExistence(timeout: 5))
+        XCTAssertFalse(alert.exists)
+        app.buttons["parent.templates.create"].tap()
+        let title = app.textFields["parent.templates.editor.title"]
+        scrollFullyIntoEditorViewport(title, in: app)
+        title.tap()
+        title.typeText("保存后返回")
+        tapEditorSave(in: app)
+        let template = parentTemplate(named: "保存后返回", in: app)
+        XCTAssertTrue(template.waitForExistence(timeout: 5))
+        template.tap()
+        app.buttons["parent.templates.editor.back"].tap()
+        XCTAssertTrue(template.waitForExistence(timeout: 5))
+        XCTAssertFalse(alert.exists)
+        app.buttons["parent.templates.create"].tap()
+        let secondTitle = app.textFields["parent.templates.editor.title"]
+        scrollFullyIntoEditorViewport(secondTitle, in: app)
+        secondTitle.tap()
+        secondTitle.typeText("关闭时丢弃")
+        dismissEditorKeyboard(in: app)
+        app.buttons["parent.gate.close"].tap()
+        XCTAssertTrue(alert.waitForExistence(timeout: 5))
+        alert.buttons["parent.templates.editor.discard"].firstMatch.tap()
+        XCTAssertTrue(app.buttons["parent.gate.entry"].waitForExistence(timeout: 5))
+        unlockExistingParent(in: app)
+        XCTAssertFalse(parentTemplate(named: "关闭时丢弃", in: app).exists)
+    }
+
     /// 模拟器没有真实镜头：正式路径应解释不可用，并保留开始、暂停、继续和完成闭环。
     func testCameraWindowFollowsTimerAndUnavailableCameraDoesNotBlockCompletion() {
         let app = launchScenario("reward-self-confirm")

@@ -18,6 +18,7 @@ struct ParentGateView: View {
     /// 页面拥有的主 actor 焦点；安全输入框移除前结束编辑，不把焦点带入已解锁界面。
     @FocusState private var focusedPINField: String?
     private let taskTemplateEditorModelFactory: TaskTemplateEditorViewModelFactory
+    private let onEditorExitProtectionChanged: (Bool) -> Void
 
     init(
         model: ParentGateViewModel,
@@ -28,7 +29,8 @@ struct ParentGateView: View {
         parentReviewModel: ParentReviewViewModel,
         parentCalendarModel: ParentCalendarDayViewModel,
         parentNotificationModel: ParentNotificationDiagnosticsViewModel,
-        taskTemplateEditorModelFactory: TaskTemplateEditorViewModelFactory
+        taskTemplateEditorModelFactory: TaskTemplateEditorViewModelFactory,
+        onEditorExitProtectionChanged: @escaping (Bool) -> Void = { _ in }
     ) {
         _model = State(initialValue: model)
         _taskTemplatesModel = State(initialValue: taskTemplatesModel)
@@ -39,6 +41,7 @@ struct ParentGateView: View {
         _parentCalendarModel = State(initialValue: parentCalendarModel)
         _parentNotificationModel = State(initialValue: parentNotificationModel)
         self.taskTemplateEditorModelFactory = taskTemplateEditorModelFactory
+        self.onEditorExitProtectionChanged = onEditorExitProtectionChanged
     }
 
     var body: some View {
@@ -118,7 +121,9 @@ struct ParentGateView: View {
                 case let .template(templateRoute):
                     TaskTemplateEditorView(
                         model: taskTemplateEditorModelFactory.makeModel(for: templateRoute),
-                        onSaved: taskTemplatesModel.load
+                        onSaved: taskTemplatesModel.load,
+                        onClose: dismiss.callAsFunction,
+                        onExitProtectionChanged: onEditorExitProtectionChanged
                     )
                 }
             }

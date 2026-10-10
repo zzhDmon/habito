@@ -20,6 +20,7 @@ struct RootView: View {
     @State private var notificationRebuildTrigger: NotificationRebuildTrigger
     @State private var notificationResponseRouter: NotificationResponseRouter
     @State private var isParentGatePresented = false
+    @State private var isParentEditorProtected = false
     private let taskSessionModelFactory: TaskSessionViewModelFactory
     private let taskTemplateEditorModelFactory: TaskTemplateEditorViewModelFactory
     private let notificationRebuildService: NotificationRebuildService
@@ -162,7 +163,8 @@ struct RootView: View {
                 parentReviewModel: parentReviewModel,
                 parentCalendarModel: parentCalendarModel,
                 parentNotificationModel: parentNotificationModel,
-                taskTemplateEditorModelFactory: taskTemplateEditorModelFactory
+                taskTemplateEditorModelFactory: taskTemplateEditorModelFactory,
+                onEditorExitProtectionChanged: updateEditorExitProtection
             )
         }
     }
@@ -210,7 +212,12 @@ struct RootView: View {
     }
 
     private func routePendingNotificationResponse() {
-        guard let identifier = notificationResponseRouter.consumePendingRequestIdentifier() else {
+        // 不消费仍受保护的通知：显式保存或放弃后再导航，避免通知强制撤下编辑器丢失输入。
+        guard
+            let identifier = notificationResponseRouter.consumePendingRequestIdentifier(
+                isNavigationProtected: isParentEditorProtected
+            )
+        else {
             return
         }
         switch notificationNavigationService.destination(for: identifier) {
@@ -224,5 +231,10 @@ struct RootView: View {
         case .ignored:
             break
         }
+    }
+
+    private func updateEditorExitProtection(_ protected: Bool) {
+        isParentEditorProtected = protected
+        if !protected { routePendingNotificationResponse() }
     }
 }

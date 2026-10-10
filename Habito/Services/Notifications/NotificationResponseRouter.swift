@@ -28,7 +28,9 @@ final class NotificationResponseRouter {
         revision &+= 1
     }
 
-    func consumePendingRequestIdentifier() -> String? {
+    /// 页面有未保存输入或正在提交时保留点击意图；解除保护后仍只消费一次。
+    func consumePendingRequestIdentifier(isNavigationProtected: Bool = false) -> String? {
+        guard !isNavigationProtected else { return nil }
         defer { pendingRequestIdentifier = nil }
         return pendingRequestIdentifier
     }

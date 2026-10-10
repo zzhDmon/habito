@@ -68,6 +68,17 @@ struct NotificationNavigationServiceTests {
         #expect(router.consumePendingRequestIdentifier() == "request-id")
         #expect(router.consumePendingRequestIdentifier() == nil)
     }
+
+    @Test("未保存或提交保护期间不消费通知，解除后只导航一次")
+    func protectedEditorDefersNotificationWithoutLosingIntent() {
+        let router = NotificationResponseRouter()
+        router.receive(requestIdentifier: "first-task")
+        #expect(router.consumePendingRequestIdentifier(isNavigationProtected: true) == nil)
+        router.receive(requestIdentifier: "latest-task")
+        #expect(router.consumePendingRequestIdentifier(isNavigationProtected: true) == nil)
+        #expect(router.consumePendingRequestIdentifier(isNavigationProtected: false) == "latest-task")
+        #expect(router.consumePendingRequestIdentifier() == nil)
+    }
 }
 
 @MainActor

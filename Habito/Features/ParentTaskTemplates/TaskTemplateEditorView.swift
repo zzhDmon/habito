@@ -5,13 +5,22 @@ struct TaskTemplateEditorView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var model: TaskTemplateEditorViewModel
     @State private var isNotificationWarningPresented = false
+    @State private var isExitConfirmationPresented = false
+    @State private var isClosingParent = false
     // FocusState 随当前页面生灭并由 UI 主 actor 管理；保存前结束编辑，让错误提示不被键盘遮挡。
     @FocusState private var focusedReward: String?
     let onSaved: () -> Void
+    let onClose: (() -> Void)?
+    let onExitProtectionChanged: (Bool) -> Void
 
-    init(model: TaskTemplateEditorViewModel, onSaved: @escaping () -> Void) {
+    init(
+        model: TaskTemplateEditorViewModel, onSaved: @escaping () -> Void,
+        onClose: (() -> Void)? = nil, onExitProtectionChanged: @escaping (Bool) -> Void = { _ in }
+    ) {
         _model = State(initialValue: model)
         self.onSaved = onSaved
+        self.onClose = onClose
+        self.onExitProtectionChanged = onExitProtectionChanged
     }
 
     var body: some View {
@@ -46,6 +55,7 @@ struct TaskTemplateEditorView: View {
                         onArchive: { model.prepareLifecycleAction(.archive) },
                         onApplyPreset: model.applyLearningPreset
                     )
+                    .disabled(model.isSaving)
                     .environment(\.calendar, model.timeInputCalendar)
                     .environment(\.timeZone, model.timeInputCalendar.timeZone)
                     .environment(\.locale, Locale(identifier: "zh_Hans_CN"))
@@ -75,7 +85,51 @@ struct TaskTemplateEditorView: View {
             .fixedSize(horizontal: false, vertical: true)
         }
         .navigationTitle(model.isCreating ? "taskEditor.createTitle" : "taskEditor.editTitle")
+        // 隐藏原生返回入口，使导航返回与关闭家长模式使用同一保护逻辑；全屏页没有下拉退出。
+        .navigationBarBackButtonHidden()
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button(action: requestBack) {
+                    Label("taskEditor.back", systemImage: "chevron.backward")
+                        .frame(
+                            minWidth: HabitoDesign.Layout.minimumTapSize, minHeight: HabitoDesign.Layout.minimumTapSize
+                        )
+                        .contentShape(.rect)
+                }
+                .buttonStyle(.plain)
+                .disabled(model.isSaving)
+                .accessibilityIdentifier("parent.templates.editor.back")
+            }
+            if onClose != nil {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(action: requestParentClose) {
+                        Text("parentGate.close")
+                            .frame(
+                                minWidth: HabitoDesign.Layout.minimumTapSize,
+                                minHeight: HabitoDesign.Layout.minimumTapSize
+                            )
+                            .contentShape(.rect)
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(model.isSaving)
+                    .accessibilityIdentifier(HabitoAccessibilityID.parentClose)
+                }
+            }
+        }
+        .interactiveDismissDisabled(!model.canLeaveWithoutConfirmation)
         .task(model.load)
+        .onChange(of: model.hasUnsavedChanges || model.isSaving, initial: true) { _, protected in
+            onExitProtectionChanged(protected)
+        }
+        .onDisappear { onExitProtectionChanged(false) }
+        .alert("taskEditor.unsavedTitle", isPresented: $isExitConfirmationPresented) {
+            Button("taskEditor.keepEditing", role: .cancel) {}
+                .accessibilityIdentifier("parent.templates.editor.keep-editing")
+            Button("taskEditor.discardChanges", role: .destructive, action: leave)
+                .accessibilityIdentifier("parent.templates.editor.discard")
+        } message: {
+            Text("taskEditor.unsavedMessage")
+        }
         .alert(
             lifecycleTitle,
             isPresented: lifecycleConfirmationBinding,
@@ -101,6 +155,21 @@ struct TaskTemplateEditorView: View {
 
     /// 主actor内统一结束所有表单输入；iPad数字浮层也随FocusState清空而关闭。
     private func finishInput() { focusedReward = nil }
+
+    private func requestBack() { requestExit(closeParent: false) }
+    private func requestParentClose() { requestExit(closeParent: true) }
+
+    /// 离开仅表达意图；放弃不保存，也不让系统通知越过未保存确认。
+    private func requestExit(closeParent: Bool) {
+        guard !model.isSaving else { return }
+        finishInput()
+        isClosingParent = closeParent
+        if model.canLeaveWithoutConfirmation { leave() } else { isExitConfirmationPresented = true }
+    }
+
+    private func leave() {
+        if isClosingParent, let onClose { onClose() } else { dismiss() }
+    }
 
     private func save() {
         finishInput()
