@@ -6,27 +6,43 @@ struct ParentTaskTemplateListContent: View {
     let onCreate: () -> Void
     let onSelect: (UUID) -> Void
     let onRetry: () -> Void
+    var showsSetupGuide = false
+    var setupHasTask = false
+    var onCheckReminders: () -> Void = {}
 
     var body: some View {
         switch state {
         case .loading:
             ProgressView("parentTemplates.loading")
         case let .loaded(items) where items.isEmpty:
-            ContentUnavailableView {
-                Label("parentTemplates.emptyTitle", systemImage: "checklist")
-            } description: {
-                Text("parentTemplates.emptyDescription")
-            } actions: {
-                Button("parentTemplates.create", action: onCreate)
-                    .buttonStyle(MangaButtonStyle())
+            if showsSetupGuide {
+                ScrollView {
+                    ParentSetupGuide(hasTask: setupHasTask, onCreate: onCreate, onCheckReminders: onCheckReminders)
+                }
+                .accessibilityIdentifier("parent.setup.scroll")
+            } else {
+                ContentUnavailableView {
+                    Label("parentTemplates.emptyTitle", systemImage: "checklist")
+                } description: {
+                    Text("parentTemplates.emptyDescription")
+                } actions: {
+                    Button("parentTemplates.create", action: onCreate)
+                        .buttonStyle(MangaButtonStyle())
+                }
             }
         case let .loaded(items):
-            List(items) { item in
-                ParentTaskTemplateRow(item: item) {
-                    onSelect(item.id)
+            List {
+                if showsSetupGuide {
+                    ParentSetupGuide(hasTask: setupHasTask, onCreate: onCreate, onCheckReminders: onCheckReminders)
+                }
+                ForEach(items) { item in
+                    ParentTaskTemplateRow(item: item) {
+                        onSelect(item.id)
+                    }
                 }
             }
             .listStyle(.insetGrouped)
+            .accessibilityIdentifier("parent.templates.list")
         case .failed:
             ContentUnavailableView {
                 Label("parentTemplates.errorTitle", systemImage: "exclamationmark.triangle.fill")

@@ -80,6 +80,7 @@ struct RootView: View {
                 onRetry: loadToday,
                 onRetryRewards: todayModel.loadRewards,
                 onOpenPet: showPet,
+                onOpenParent: openParentGate,
                 dailyRewardState: todayModel.dailyRewardState,
                 onRetryDailyRewards: todayModel.loadDailyRewards,
                 feedbackState: childRewardFeedbackModel.state,

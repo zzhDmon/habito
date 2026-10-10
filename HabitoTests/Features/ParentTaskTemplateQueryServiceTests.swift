@@ -6,6 +6,43 @@ import Testing
 @Suite("家长模板列表查询")
 @MainActor
 struct ParentTaskTemplateQueryServiceTests {
+    @Test("首次设置保存后跳过添加，打开提醒后结束引导")
+    func setupGuideAdvancesUsingSavedFacts() throws {
+        let fixture = try Fixture()
+        let model = ParentTaskTemplateListViewModel(
+            context: fixture.context, calendar: fixture.calendar,
+            timeZone: fixture.timeZone, dateProvider: FixedDateProvider(value: fixture.now))
+        model.load()
+        #expect(model.showsSetupGuide)
+        #expect(!model.setupHasTask)
+        _ = fixture.addTemplate(title: "阅读")
+        try fixture.context.save()
+        model.load()
+        #expect(model.showsSetupGuide)
+        #expect(model.setupHasTask)
+        model.finishSetupGuide()
+        model.load()
+        #expect(!model.showsSetupGuide)
+        let restarted = ParentTaskTemplateListViewModel(
+            context: fixture.context, calendar: fixture.calendar,
+            timeZone: fixture.timeZone, dateProvider: FixedDateProvider(value: fixture.now))
+        restarted.load()
+        #expect(!restarted.showsSetupGuide)
+    }
+
+    @Test("归档家庭的空列表不展示首次步骤")
+    func archivedConfigurationDoesNotShowSetup() throws {
+        let fixture = try Fixture()
+        _ = fixture.addTemplate(title: "旧任务", archivedAt: fixture.now)
+        try fixture.context.save()
+        let model = ParentTaskTemplateListViewModel(
+            context: fixture.context, calendar: fixture.calendar,
+            timeZone: fixture.timeZone, dateProvider: FixedDateProvider(value: fixture.now))
+        model.load()
+        #expect(!model.showsSetupGuide)
+        #expect(model.setupHasTask)
+    }
+
     @Test("空存储返回空列表")
     func emptyStore() throws {
         let fixture = try Fixture()

@@ -13,16 +13,26 @@ struct KidTodayTaskContent: View {
     var onClaimCelebration: (UUID) -> Bool = { _ in false }
     var onContinueCelebration: (UUID) -> Void = { _ in }
     var onRetryCelebration: () -> Void = {}
+    var onOpenParent: () -> Void = {}
 
     var body: some View {
         switch state {
         case .loading:
             ProgressView("kidToday.loading").controlSize(.large)
         case let .loaded(content) where content.isEmpty:
-            ContentUnavailableView(
-                "kidToday.emptyTitle", systemImage: "sun.max.fill",
-                description: Text("kidToday.emptyDescription")
-            )
+            ContentUnavailableView {
+                Label(LocalizedStringKey(emptyTitle(for: content.emptyReason)), systemImage: "sun.max.fill")
+            } description: {
+                Text(
+                    content.emptyReason == .firstSetup ? "kidToday.firstSetupDescription" : "kidToday.emptyDescription")
+            } actions: {
+                if content.emptyReason == .firstSetup {
+                    Button("kidToday.arrangeTasks", systemImage: "person.crop.circle", action: onOpenParent)
+                        .frame(minHeight: HabitoDesign.Layout.minimumTapSize)
+                        .buttonStyle(MangaButtonStyle())
+                        .accessibilityIdentifier("kid.today.first-setup")
+                }
+            }
             .modifier(MangaPanel())
         case let .loaded(content):
             // 任务区必须作为一个布局子元素；否则错误和结果会被外层横屏HStack拆成两栏。
@@ -59,6 +69,14 @@ struct KidTodayTaskContent: View {
             .modifier(MangaPanel())
         }
     }
+
+    private func emptyTitle(for reason: TodayEmptyReason) -> String {
+        switch reason {
+        case .firstSetup: "kidToday.firstSetupTitle"
+        case .restDay: "kidToday.restDayTitle"
+        case .holiday: "kidToday.holidayTitle"
+        }
+    }
 }
 
 #Preview("任务区 · 正常") {
@@ -90,6 +108,26 @@ struct KidTodayTaskContent: View {
                 recommendedTask: nil, remainingTasks: [], completedCount: 0, totalCount: 0, isAllCompleted: false)),
         makeTimingPresentation: KidTaskTimingPresentation.preview, onSelectTask: { _ in }, onRetry: {}
     ).padding()
+}
+
+#Preview("任务区 · 首次设置 · MAX") {
+    KidTodayTaskContent(
+        state: .loaded(
+            TodayScreenContent(
+                recommendedTask: nil, remainingTasks: [], completedCount: 0,
+                totalCount: 0, isAllCompleted: false, emptyReason: .firstSetup)),
+        makeTimingPresentation: KidTaskTimingPresentation.preview, onSelectTask: { _ in }, onRetry: {}
+    ).padding().environment(\.dynamicTypeSize, .accessibility5)
+}
+
+#Preview("任务区 · 放假 · 横屏") {
+    KidTodayTaskContent(
+        state: .loaded(
+            TodayScreenContent(
+                recommendedTask: nil, remainingTasks: [], completedCount: 0,
+                totalCount: 0, isAllCompleted: false, emptyReason: .holiday)),
+        makeTimingPresentation: KidTaskTimingPresentation.preview, onSelectTask: { _ in }, onRetry: {}
+    ).padding().frame(width: 900)
 }
 
 #Preview("任务区 · 新通关横屏") {

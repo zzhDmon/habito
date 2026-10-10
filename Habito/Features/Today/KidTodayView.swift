@@ -10,6 +10,7 @@ struct KidTodayView: View {
     let onRetry: () -> Void
     let onRetryRewards: () -> Void
     var onOpenPet: () -> Void = {}
+    var onOpenParent: () -> Void = {}
     var dailyRewardState: TodayDailyRewardState = .loading
     var onRetryDailyRewards: () -> Void = {}
     var feedbackState: ChildRewardFeedbackState = .idle
@@ -51,7 +52,7 @@ struct KidTodayView: View {
                 celebrationEvent: celebrationEvent,
                 celebrationVerificationFailed: celebrationVerificationFailed,
                 onClaimCelebration: onClaimCelebration, onContinueCelebration: onContinueCelebration,
-                onRetryCelebration: onRetryCelebration)
+                onRetryCelebration: onRetryCelebration, onOpenParent: onOpenParent)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         // 根页标识留在容器，避免覆盖两个滚动区各自的无障碍身份。

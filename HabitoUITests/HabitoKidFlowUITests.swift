@@ -98,7 +98,47 @@ final class HabitoKidFlowUITests: XCTestCase {
         XCTAssertFalse(parentTemplate(named: "关闭时丢弃", in: app).exists)
     }
 
-    /// 模拟器没有真实镜头：正式路径应解释不可用，并保留开始、暂停、继续和完成闭环。
+    /// 首用只通过正式PIN、预设保存和提醒页；拒绝通知不阻止任务保存。
+    func testFirstSetupUsesPINGatePresetAndReminderCheckWithNotificationsDeniedAndSystemTextSize() {
+        XCUIDevice.shared.orientation = .landscapeLeft
+        let app = makeApplication()
+        app.launchArguments = [
+            "--habito-ui-testing", "--habito-ui-reset", "--habito-ui-empty", "--habito-ui-notifications-denied",
+        ]
+        app.launch()
+        let arrange = app.buttons["kid.today.first-setup"]
+        scrollFullyIntoTodayViewport(arrange, in: app)
+        keepScreenshot(app, name: "首次任务入口")
+        arrange.tap()
+        XCTAssertFalse(app.buttons["parent.setup.add-task"].exists)
+        unlockParent(in: app, isGatePresented: true)
+        let addTask = app.buttons["parent.setup.add-task"]
+        scrollFullyIntoFormViewport(addTask, viewport: app.scrollViews["parent.setup.scroll"], in: app)
+        XCTAssertGreaterThanOrEqual(addTask.frame.height, 44)
+        keepScreenshot(app, name: "PIN完成后的添加任务步骤")
+        addTask.tap()
+        let preset = app.buttons["parent.templates.preset.reading"]
+        scrollFullyIntoEditorViewport(preset, in: app, towardTop: true)
+        preset.tap()
+        tapEditorSave(in: app)
+        let reminders = app.buttons["parent.setup.reminders"]
+        scrollFullyIntoFormViewport(reminders, viewport: app.collectionViews["parent.templates.list"], in: app)
+        keepScreenshot(app, name: "任务已保存后的提醒检查步骤")
+        XCTAssertGreaterThanOrEqual(reminders.frame.height, 44)
+        reminders.tap()
+        XCTAssertTrue(app.descendants(matching: .any)["parent.notifications.screen"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["已拒绝"].exists)
+        navigateBack(in: app, from: "通知诊断")
+        app.buttons["parent.gate.close"].tap()
+        XCTAssertTrue(app.buttons["parent.gate.entry"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.buttons["kid.today.first-setup"].exists)
+        unlockExistingParent(in: app)
+        XCTAssertFalse(app.buttons["parent.setup.add-task"].exists)
+        XCTAssertFalse(app.buttons["parent.setup.reminders"].exists)
+        XCTAssertTrue(parentTemplate(named: "课外阅读", in: app).exists)
+    }
+
+    /// 模拟器没有真实镜头，不可用时仍可计时并完成。
     func testCameraWindowFollowsTimerAndUnavailableCameraDoesNotBlockCompletion() {
         let app = launchScenario("reward-self-confirm")
         openSeededTask(in: app)
@@ -166,6 +206,11 @@ final class HabitoKidFlowUITests: XCTestCase {
         XCTAssertFalse(app.buttons[seededTaskIdentifier].exists)
         relaunchTodayKeepingData(app)
         XCTAssertFalse(app.buttons[seededTaskIdentifier].exists)
+        if series {
+            XCTAssertTrue(app.staticTexts["今天可以休息"].exists)
+            XCTAssertFalse(app.buttons["kid.today.first-setup"].exists)
+            keepScreenshot(app, name: "归档旧家庭的休息日")
+        }
         unlockExistingParent(in: app)
         XCTAssertEqual(app.buttons[seededTemplateIdentifier].exists, !series)
         keepScreenshot(app, name: series ? "周期删除后保留历史入口" : "单次删除后仍保留重复模板")
@@ -2668,6 +2713,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         case "parent.gate.form": currentTitles = ["家长入口"]
         case "parent.profile.form": currentTitles = ["孩子和小狗"]
         case "kid.pet.screen": currentTitles = ["我的小狗"]
+        case "parent.setup.scroll", "parent.templates.list": currentTitles = ["家长任务"]
         default: currentTitles = ["新建任务", "编辑任务"]
         }
         let navigationBars = app.navigationBars.matching(NSPredicate(format: "identifier IN %@", currentTitles))
@@ -2688,7 +2734,7 @@ final class HabitoKidFlowUITests: XCTestCase {
         // 也不查当前页面不存在的另一功能保存栏，避免17自动化日志洪泛导致进程失联。
         let saveBar: XCUIElement?
         switch viewport.identifier {
-        case "parent.gate.form", "kid.pet.screen": saveBar = nil
+        case "parent.gate.form", "kid.pet.screen", "parent.setup.scroll", "parent.templates.list": saveBar = nil
         case "parent.profile.form": saveBar = app.otherElements["parent.profile.save-bar"]
         default: saveBar = app.otherElements["parent.templates.editor.save-bar"]
         }

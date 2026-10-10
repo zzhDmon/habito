@@ -1,6 +1,127 @@
 {
   "sourceLanguage" : "zh-Hans",
   "strings" : {
+  "kidToday.firstSetupTitle": {
+    "extractionState": "manual",
+    "localizations": {
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "一起安排今天的任务"
+        }
+      }
+    }
+  },
+  "kidToday.firstSetupDescription": {
+    "extractionState": "manual",
+    "localizations": {
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "请家长添加任务，再开始专注。"
+        }
+      }
+    }
+  },
+  "kidToday.arrangeTasks": {
+    "extractionState": "manual",
+    "localizations": {
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "请家长安排任务"
+        }
+      }
+    }
+  },
+  "kidToday.restDayTitle": {
+    "extractionState": "manual",
+    "localizations": {
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "今天可以休息"
+        }
+      }
+    }
+  },
+  "kidToday.holidayTitle": {
+    "extractionState": "manual",
+    "localizations": {
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "今天放假啦"
+        }
+      }
+    }
+  },
+  "parentSetup.taskTitle": {
+    "extractionState": "manual",
+    "localizations": {
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "添加第一项任务"
+        }
+      }
+    }
+  },
+  "parentSetup.taskDescription": {
+    "extractionState": "manual",
+    "localizations": {
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "PIN已设置。选择常用预设，保存后再检查提醒。"
+        }
+      }
+    }
+  },
+  "parentSetup.addTask": {
+    "extractionState": "manual",
+    "localizations": {
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "添加任务"
+        }
+      }
+    }
+  },
+  "parentSetup.reminderTitle": {
+    "extractionState": "manual",
+    "localizations": {
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "任务已添加，检查提醒"
+        }
+      }
+    }
+  },
+  "parentSetup.reminderDescription": {
+    "extractionState": "manual",
+    "localizations": {
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "确认系统允许通知。暂不开启也可以计时和打卡。"
+        }
+      }
+    }
+  },
+  "parentSetup.checkReminders": {
+    "extractionState": "manual",
+    "localizations": {
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "检查提醒"
+        }
+      }
+    }
+  },
   "taskCamera.paused": {
   "extractionState": "manual",
   "localizations": {

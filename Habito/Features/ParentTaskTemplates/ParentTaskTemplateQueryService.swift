@@ -50,6 +50,12 @@ struct ParentTaskTemplateQueryService {
         return items.sorted(by: precedes)
     }
 
+    /// 包含归档配置和历史实例；普通列表为空不意味着家庭从未使用。
+    func hasTaskConfiguration() throws -> Bool {
+        try context.fetchCount(FetchDescriptor<TaskTemplate>()) > 0
+            || context.fetchCount(FetchDescriptor<TaskOccurrence>()) > 0
+    }
+
     private func nextScheduledAt(
         for template: TaskTemplate,
         today: LocalDate,

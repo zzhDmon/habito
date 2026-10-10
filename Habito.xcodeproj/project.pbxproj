@@ -535,6 +535,7 @@
 		R10000000000000000000007 /* ParentTaskTemplateRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = R20000000000000000000007 /* ParentTaskTemplateRow.swift */; };
 		R10000000000000000000008 /* ParentTaskTemplateListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = R20000000000000000000008 /* ParentTaskTemplateListView.swift */; };
 		R1000000000000000000000A /* ParentTaskTemplateListContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = R2000000000000000000000A /* ParentTaskTemplateListContent.swift */; };
+		EC5100000000000000000002 /* ParentSetupGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC5200000000000000000002 /* ParentSetupGuide.swift */; };
 		S10000000000000000000001 /* ParentTaskTemplateQueryServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = S20000000000000000000001 /* ParentTaskTemplateQueryServiceTests.swift */; };
 		T10000000000000000000001 /* TaskTemplateDraft.swift in Sources */ = {isa = PBXBuildFile; fileRef = T20000000000000000000001 /* TaskTemplateDraft.swift */; };
 		T10000000000000000000002 /* TaskTemplateEditorError.swift in Sources */ = {isa = PBXBuildFile; fileRef = T20000000000000000000002 /* TaskTemplateEditorError.swift */; };
@@ -1124,6 +1125,7 @@
 		R20000000000000000000007 /* ParentTaskTemplateRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentTaskTemplateRow.swift; sourceTree = "<group>"; };
 		R20000000000000000000008 /* ParentTaskTemplateListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentTaskTemplateListView.swift; sourceTree = "<group>"; };
 		R2000000000000000000000A /* ParentTaskTemplateListContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentTaskTemplateListContent.swift; sourceTree = "<group>"; };
+		EC5200000000000000000002 /* ParentSetupGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentSetupGuide.swift; sourceTree = "<group>"; };
 		S20000000000000000000001 /* ParentTaskTemplateQueryServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentTaskTemplateQueryServiceTests.swift; sourceTree = "<group>"; };
 		T20000000000000000000001 /* TaskTemplateDraft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskTemplateDraft.swift; sourceTree = "<group>"; };
 		T20000000000000000000002 /* TaskTemplateEditorError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskTemplateEditorError.swift; sourceTree = "<group>"; };
@@ -1833,6 +1835,7 @@
 				7A901CB1CD2EA0D6208F7C96 /* TaskLearningPreset.swift */,
 				R20000000000000000000001 /* ParentTaskTemplateListItem.swift */,
 				R2000000000000000000000A /* ParentTaskTemplateListContent.swift */,
+				EC5200000000000000000002 /* ParentSetupGuide.swift */,
 				R20000000000000000000008 /* ParentTaskTemplateListView.swift */,
 				R20000000000000000000005 /* ParentTaskTemplateListViewModel.swift */,
 				R20000000000000000000002 /* ParentTaskTemplateListState.swift */,
@@ -2632,6 +2635,7 @@
 				Y10000000000000000000009 /* ParentNotificationDiagnosticsView.swift in Sources */,
 				Y1000000000000000000000C /* ParentNotificationDiagnosticsPreview.swift in Sources */,
 				R1000000000000000000000A /* ParentTaskTemplateListContent.swift in Sources */,
+				EC5100000000000000000002 /* ParentSetupGuide.swift in Sources */,
 				T10000000000000000000001 /* TaskTemplateDraft.swift in Sources */,
 				T10000000000000000000002 /* TaskTemplateEditorError.swift in Sources */,
 				T10000000000000000000003 /* TaskTemplateEditingService.swift in Sources */,

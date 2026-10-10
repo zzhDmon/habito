@@ -40,7 +40,10 @@ struct ParentTaskTemplateListView: View {
             state: model.state,
             onCreate: onCreate,
             onSelect: onSelect,
-            onRetry: model.load
+            onRetry: model.load,
+            showsSetupGuide: model.showsSetupGuide,
+            setupHasTask: model.setupHasTask,
+            onCheckReminders: checkSetupReminders
         )
         .safeAreaInset(edge: .top) {
             ViewThatFits(in: .horizontal) {
@@ -81,6 +84,7 @@ struct ParentTaskTemplateListView: View {
         .task(model.load)
     }
     private func openManagement() { showsManagement = true }
+    private func checkSetupReminders() { model.finishSetupGuide(); onShowNotifications() }
     private func showStatistics() { showsManagement = false; onShowStatistics() }
     private func showCalendar() { showsManagement = false; onShowCalendar() }
     private func showProfile() { showsManagement = false; onShowFamilyProfile() }
