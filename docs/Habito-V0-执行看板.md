@@ -6,7 +6,7 @@
 
 - 当前阶段：体验优化软件联合验收完成，镜头实机与原家庭观察继续保留
 - 当前任务：`GIT-REMOTE-001` 关联GitHub远程并推送。
-- 当前任务状态：`IN_PROGRESS`（2026-10-10，Asia/Shanghai；总体仍6/7）
+- 当前任务状态：`DONE`（2026-10-10，Asia/Shanghai；无IN_PROGRESS，总体仍6/7）
 - 下一建议任务：目标iPad复测前置镜头实时画面、镜像/横屏方向和启停指示；通知/VoiceOver现场验收与至少14天家庭观察仍保留；五项体验优化软件验收已完成。
 - 最近更新时间：2026-10-10
 - 代码状态：V0 自动化基线为 `1b5591b`；1～13 项 V1 推荐已由用户明确确认，空白任务默认奖励、设备用途和分发仍未确认；显式常用任务预设已按DEC-034落地；宠物数值已按DEC-033确认；尚未迁移正式家庭数据库
@@ -259,6 +259,13 @@ V0 总计：35/44 个任务完成。V1 单独统计，不回写 V0 完成数；�
 | R-011 | 新 PRD 大幅扩展状态机、账本和 SwiftData schema，若直接并入当前任务会污染 V0 历史或重复发奖 | 高/高 | 保持 V0 收口边界；V1 先过决策门，再用真实旧库夹具验证 schema 迁移、奖励幂等和历史保护 | `OPEN` |
 
 ## 8. 最近一次交接
+
+### 2026-10-10 — GIT-REMOTE-001 推送完成
+- DONE，无IN_PROGRESS。origin为git@github.com:zzhDmon/habito.git；Habito仓库级SSH命令仅选择个人密钥，未修改公司仓库、全局Git或原SSH配置。用户解锁后远程读取与普通git push -u origin master成功（exit0），master已跟踪origin/master。
+- 实际远端refs/heads/master与本地HEAD均为d0f0685bc40dd2a247987a2b1c36e7f69504703b；同步差异0/0。首次代码历史已上传，随后本完成交接记录独立提交并普通推送，最终HEAD一致核对为收尾门，不强推/改写历史。
+- 修改文件：本看板与V1任务卡；git diff --check通过。产品源码没有变化，不重复已完成的软件测试；前次HTTPS/SSH失败保留为历史，认证待办已解除。
+- 下一操作：目标iPad镜头、通知/VoiceOver现场验收及至少14天家庭观察；总体6/7不变。当前无需额外Git操作，无新增待确认的软件规则。
+- ✅ GitHub关联与推送｜总进度【6/7】｜下一步：目标iPad现场验收。
 
 ### 2026-10-10 — GIT-REMOTE-001 个人SSH已配置，待解锁
 - 当前IN_PROGRESS。用户已将origin改为git@github.com:zzhDmon/habito.git；本仓库core.sshCommand显式选择个人ed25519密钥并忽略原SSH配置，工作区开始时干净，master保持。

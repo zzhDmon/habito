@@ -675,10 +675,12 @@
 
 ## GIT-REMOTE-001 关联GitHub远程并推送
 
-- 状态：IN_PROGRESS，2026-10-10（Asia/Shanghai）；用户明确授权本次关联与推送，先前“不推送”边界对本次不适用。
-- 范围：将https://github.com/zzhDmon/habito.git设为origin，推送当前master与本次交接记录、设置上游；不强推或改写历史。
+- 状态：DONE，2026-10-10（Asia/Shanghai）；用户明确授权本次关联与推送，先前“不推送”边界对本次不适用。
+- 范围：将用户指定仓库以git@github.com:zzhDmon/habito.git设为origin，推送当前master与本次交接记录、设置上游；不强推或改写历史。
 - 验收：远程URL正确、常规推送成功、master跟踪origin/master、远端提交与本地HEAD一致、工作区干净；产品代码不变。
 
 - 实际进展：origin已关联，读取远端全部refs成功且为空；首次推送因HTTPS认证无效失败（exit128），默认/专用SSH密钥均未授权，本机无gh。保持IN_PROGRESS；待用户本机认证后重试推送、设置跟踪并核对远端HEAD。不把关联成功写成推送成功。
 
 - 认证更新：用户已设置SSH origin及仓库级个人密钥选择；GitHub接受个人公钥，但有密码私钥尚未加载agent，非交互认证无法签名。仍IN_PROGRESS，待本机ssh-add解锁后继续推送；保留此前失败作为历史，不误认为公钥仍未授权。
+
+- 完成证据：用户解锁个人密钥后，git ls-remote与git push -u origin master成功exit0；远端master与本地d0f0685完全一致、上游origin/master、差异0/0；本完成记录独立提交并普通推送，收尾核对最终HEAD与远端一致、工作区干净。公司与全局配置未改，产品代码未变。
