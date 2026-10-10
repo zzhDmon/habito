@@ -96,6 +96,13 @@
                 occurrence.template = template
             }
             try context.save()
+            if !shouldSeedTemplateOnly
+                && (scenario == .targetReachedSelfConfirm || scenario == .targetReachedParentApproval)
+            {
+                // 用真实计时服务构造已达标运行段；不等待15分钟，也不预先完成或发奖。
+                _ = try TaskProgressService(context: context).startTiming(
+                    for: occurrence, at: now.addingTimeInterval(-occurrence.targetDurationSnapshot))
+            }
             if scenario == .petCare {
                 try FamilyProfileService(context: context).save(
                     FamilyProfileNames(childNickname: "合成孩子", petName: "合成毛球"))

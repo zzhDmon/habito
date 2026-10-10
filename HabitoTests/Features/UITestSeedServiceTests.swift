@@ -71,7 +71,8 @@
                 scenario.hasSyntheticReward
                     == (scenario == .rewardSelfConfirm || scenario == .rewardAfterReminder
                         || scenario == .parentApproval
-                        || scenario == .returnedSubmission || scenario == .dailyIncome || scenario == .petCare))
+                        || scenario == .returnedSubmission || scenario == .dailyIncome || scenario == .petCare
+                        || scenario == .targetReachedSelfConfirm || scenario == .targetReachedParentApproval))
             #expect(occurrence.xpRewardSnapshot == (scenario.hasSyntheticReward ? 11 : 0))
             #expect(occurrence.coinRewardSnapshot == (scenario.hasSyntheticReward ? 7 : 0))
             #expect(occurrence.activeBonusCoinSnapshot == (scenario.hasSyntheticReward ? 3 : 0))
@@ -82,6 +83,11 @@
                 #expect(submissions.first?.reviewState == .returned)
             }
             #expect(try fixture.context.fetchCount(FetchDescriptor<CompletionRecord>()) == 0)
+            if scenario == .targetReachedSelfConfirm || scenario == .targetReachedParentApproval {
+                let session = try #require(fixture.context.fetch(FetchDescriptor<TimerSession>()).first)
+                #expect(session.state == .running)
+                #expect(session.startedAt == fixture.now.addingTimeInterval(-occurrence.targetDurationSnapshot))
+            }
             #expect(
                 try fixture.context.fetchCount(FetchDescriptor<XPTransaction>())
                     == (scenario == .dailyIncome

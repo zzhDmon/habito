@@ -7,6 +7,7 @@ struct TaskSessionControlsView: View {
     let primaryAction: TaskSessionScreenContent.PrimaryAction
     let canComplete: Bool
     let verificationType: TaskVerificationType
+    var hasReachedGoal = false
     let snoozeState: TaskSnoozeState
     let onStartOrResume: () -> Void
     let onPause: () -> Void
@@ -14,7 +15,18 @@ struct TaskSessionControlsView: View {
     let onComplete: () -> Void
 
     var body: some View {
+        let completionButton = TaskSessionActionButton(
+            titleKey: LocalizedStringKey(
+                verificationType == .parentApproval ? "taskSession.submitForReview" : "taskSession.complete"),
+            systemImage: verificationType == .parentApproval ? "paperplane.fill" : "checkmark.circle.fill",
+            identifier: verificationType == .parentApproval
+                ? HabitoAccessibilityID.submitButton : HabitoAccessibilityID.completeButton,
+            action: requestCompletion
+        ).buttonStyle(MangaButtonStyle(isPrimary: hasReachedGoal))
+
         VStack(spacing: HabitoDesign.Spacing.small) {
+            // 达标只调整操作层级：用户仍需显式确认，暂停入口继续保留。
+            if canComplete && hasReachedGoal { completionButton }
             switch primaryAction {
             case .start:
                 TaskSessionActionButton(
@@ -23,7 +35,7 @@ struct TaskSessionControlsView: View {
                     identifier: HabitoAccessibilityID.startButton,
                     action: onStartOrResume
                 )
-                .buttonStyle(MangaButtonStyle())
+                .buttonStyle(MangaButtonStyle(isPrimary: !hasReachedGoal))
             case .pause:
                 TaskSessionActionButton(
                     titleKey: "taskSession.pause",
@@ -31,7 +43,7 @@ struct TaskSessionControlsView: View {
                     identifier: HabitoAccessibilityID.pauseButton,
                     action: onPause
                 )
-                .buttonStyle(MangaButtonStyle())
+                .buttonStyle(MangaButtonStyle(isPrimary: !hasReachedGoal))
             case .resume:
                 TaskSessionActionButton(
                     titleKey: "taskSession.resume",
@@ -39,12 +51,13 @@ struct TaskSessionControlsView: View {
                     identifier: HabitoAccessibilityID.resumeButton,
                     action: onStartOrResume
                 )
-                .buttonStyle(MangaButtonStyle())
+                .buttonStyle(MangaButtonStyle(isPrimary: !hasReachedGoal))
             case .none:
                 EmptyView()
             }
 
             if canComplete {
+                if !hasReachedGoal { completionButton }
                 Button(action: scheduleSnooze) {
                     Label("taskSession.snooze", systemImage: "bell.badge.fill")
                         .font(.headline)
@@ -57,22 +70,6 @@ struct TaskSessionControlsView: View {
 
                 TaskSnoozeFeedbackView(state: snoozeState)
 
-                Button(action: requestCompletion) {
-                    Label(
-                        LocalizedStringKey(
-                            verificationType == .parentApproval ? "taskSession.submitForReview" : "taskSession.complete"
-                        ),
-                        systemImage: verificationType == .parentApproval ? "paperplane.fill" : "checkmark.circle.fill"
-                    )
-                    .font(.headline)
-                    .frame(maxWidth: .infinity, minHeight: HabitoDesign.Layout.minimumTapSize)
-                }
-                .buttonStyle(.bordered)
-                .tint(HabitoDesign.Manga.successInk)
-                .controlSize(.large)
-                .accessibilityIdentifier(
-                    verificationType == .parentApproval
-                        ? HabitoAccessibilityID.submitButton : HabitoAccessibilityID.completeButton)
             }
         }
         .padding(.top, HabitoDesign.Spacing.small)

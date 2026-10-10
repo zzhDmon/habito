@@ -13,6 +13,38 @@ final class HabitoKidFlowUITests: XCTestCase {
         continueAfterFailure = false
     }
 
+    func testGoalReachedMakesCompletionFirstWithoutAutomaticallySavingWithSystemTextSize() {
+        verifyGoalReachedActionOrder(requiresReview: false)
+    }
+
+    func testGoalReachedMakesReviewFirstWithoutAutomaticallySubmittingWithSystemTextSize() {
+        verifyGoalReachedActionOrder(requiresReview: true)
+    }
+
+    private func verifyGoalReachedActionOrder(requiresReview: Bool) {
+        let app = launchScenario(requiresReview ? "target-reached-parent-approval" : "target-reached-self-confirm")
+        openSeededTask(in: app, expectedActionIdentifier: "kid.session.pause")
+        let hint = app.staticTexts["kid.session.goal-hint"]
+        scrollFullyIntoSessionViewport(hint, in: app)
+        XCTAssertEqual(hint.label, requiresReview ? "目标完成，可以提交检查" : "目标完成，可以打卡")
+        let completion = app.buttons[requiresReview ? "kid.session.submit" : "kid.session.complete"]
+        scrollFullyIntoSessionViewport(completion, in: app)
+        XCTAssertLessThan(completion.frame.minY, app.buttons["kid.session.pause"].frame.minY)
+        XCTAssertLessThan(completion.frame.minY, app.buttons["kid.session.snooze"].frame.minY)
+        XCTAssertFalse(app.buttons["kid.session.undo"].exists)
+        keepScreenshot(app, name: requiresReview ? "目标达成_提交优先" : "目标达成_完成优先")
+        completion.tap()
+        app.alerts.buttons["kid.session.cancel-completion"].firstMatch.tap()
+        XCTAssertTrue(completion.exists)
+        completion.tap()
+        confirmTaskCompletion(in: app)
+        if requiresReview {
+            assertWaitingWithoutOldActions(in: app)
+        } else {
+            XCTAssertTrue(app.buttons["kid.session.dismiss-completion-feedback"].waitForExistence(timeout: 5))
+        }
+    }
+
     /// 使用系统当前字号，覆盖返回与关闭两种离开方向，放弃不创建任务。
     func testUnsavedTemplateConfirmsBackAndParentCloseWithSystemTextSize() {
         let app = launchEmptyParentEditor(title: "未保存草稿")
@@ -3244,12 +3276,12 @@ final class HabitoKidFlowUITests: XCTestCase {
         return app
     }
 
-    private func openSeededTask(in app: XCUIApplication) {
+    private func openSeededTask(in app: XCUIApplication, expectedActionIdentifier: String = "kid.session.start") {
         let task = app.buttons[seededTaskIdentifier]
         XCTAssertTrue(task.waitForExistence(timeout: 5))
         scrollFullyIntoTodayViewport(task, in: app)
         task.tap()
-        XCTAssertTrue(app.buttons["kid.session.start"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons[expectedActionIdentifier].waitForExistence(timeout: 5))
     }
 
     private func assertWaitingWithoutOldActions(in app: XCUIApplication) {

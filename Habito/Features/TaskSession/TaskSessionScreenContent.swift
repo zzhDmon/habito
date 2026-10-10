@@ -79,6 +79,15 @@ struct TaskSessionScreenContent: Equatable, Sendable {
         min(1, displayedActiveDuration(at: now) / targetDurationSeconds)
     }
 
+    /// 只提供显示建议，目标达成不触发完成、奖励或审核；暂停时剩余量保持不变。
+    func remainingTargetDuration(at now: Date) -> TimeInterval {
+        max(0, targetDurationSeconds - displayedActiveDuration(at: now))
+    }
+
+    func hasReachedGoal(at now: Date) -> Bool {
+        remainingTargetDuration(at: now) == 0
+    }
+
     /// 返回指定时刻应显示的活动秒数。
     ///
     /// - Note: 设备墙上时钟若被向后调整，当前运行段暂时冻结为快照值，避免界面显示负数；

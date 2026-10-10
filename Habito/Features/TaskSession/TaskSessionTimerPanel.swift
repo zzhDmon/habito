@@ -41,6 +41,19 @@ struct TaskSessionTimerPanel: View {
 
             LabeledContent("kidTask.goalTitle", value: content.task.targetDurationText)
 
+            if content.canComplete {
+                Text(
+                    content.hasReachedGoal(at: now)
+                        ? String(
+                            localized: content.verificationType == .parentApproval
+                                ? "taskSession.goalReadyForReview" : "taskSession.goalReadyToComplete")
+                        : TaskSessionDurationText.remainingGoal(content.remainingTargetDuration(at: now))
+                )
+                .font(.headline)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityIdentifier("kid.session.goal-hint")
+            }
+
             if let submission = content.submission, submission.state == .waiting || submission.state == .returned {
                 TaskSubmissionStatusView(submission: submission)
             }
@@ -54,6 +67,7 @@ struct TaskSessionTimerPanel: View {
                     primaryAction: content.primaryAction,
                     canComplete: content.canComplete,
                     verificationType: content.verificationType,
+                    hasReachedGoal: content.hasReachedGoal(at: now),
                     snoozeState: snoozeState,
                     onStartOrResume: onStartOrResume,
                     onPause: onPause,

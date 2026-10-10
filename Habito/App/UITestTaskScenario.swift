@@ -13,6 +13,8 @@
         case parentApproval = "parent-approval"
         case zeroRewardParentApproval = "zero-reward-parent-approval"
         case returnedSubmission = "returned-submission"
+        case targetReachedSelfConfirm = "target-reached-self-confirm"
+        case targetReachedParentApproval = "target-reached-parent-approval"
 
         static let argument = "--habito-ui-task-scenario"
 
@@ -28,9 +30,10 @@
         var verificationType: TaskVerificationType {
             switch self {
             case .legacy, .rewardSelfConfirm, .rewardAfterReminder, .zeroRewardSelfConfirm, .corruptRewardLedger,
-                .dailyIncome, .petCare:
+                .dailyIncome, .petCare, .targetReachedSelfConfirm:
                 .selfConfirm
-            case .parentApproval, .zeroRewardParentApproval, .returnedSubmission: .parentApproval
+            case .parentApproval, .zeroRewardParentApproval, .returnedSubmission, .targetReachedParentApproval:
+                .parentApproval
             }
         }
 

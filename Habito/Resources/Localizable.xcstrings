@@ -1,6 +1,51 @@
 {
   "sourceLanguage" : "zh-Hans",
   "strings" : {
+  "taskSession.lessThanMinute": {
+  "extractionState": "manual",
+  "localizations": {
+    "zh-Hans": {
+      "stringUnit": {
+        "state": "translated",
+        "value": "还差不到1分钟"
+      }
+    }
+  }
+},
+  "taskSession.remainingMinutesFormat": {
+  "extractionState": "manual",
+  "localizations": {
+    "zh-Hans": {
+      "stringUnit": {
+        "state": "translated",
+        "value": "还差%lld分钟"
+      }
+    }
+  }
+},
+  "taskSession.goalReadyToComplete": {
+  "extractionState": "manual",
+  "localizations": {
+    "zh-Hans": {
+      "stringUnit": {
+        "state": "translated",
+        "value": "目标完成，可以打卡"
+      }
+    }
+  }
+},
+  "taskSession.goalReadyForReview": {
+  "extractionState": "manual",
+  "localizations": {
+    "zh-Hans": {
+      "stringUnit": {
+        "state": "translated",
+        "value": "目标完成，可以提交检查"
+      }
+    }
+  }
+},
+
   "taskEditor.back": {
   "extractionState": "manual",
   "localizations": {

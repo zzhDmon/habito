@@ -616,6 +616,34 @@ struct TaskSessionViewModelTests {
         #expect(trigger.revision == 0 && !model.isActionErrorPresented)
     }
 
+    @Test("目标提示在目标前/正好/超时正确，暂停不继续减少", arguments: [0.0, 1, 59, 60, 61, 899, 900, 901], [false, true])
+    func goalProgressDoesNotChangeCompletionRules(elapsed: Double, paused: Bool) throws {
+        let fixture = try TodayQueryFixture()
+        let occurrence = fixture.makeOccurrence(title: "目标提示", scheduledAt: fixture.now, status: .pending)
+        try fixture.context.save()
+        let model = makeModel(for: occurrence.id, fixture: fixture, now: fixture.now)
+        model.load()
+        let loaded = try loadedContent(from: model.state)
+        let content = TaskSessionScreenContent(
+            task: loaded.task, targetDurationSeconds: 900,
+            activeSessionState: paused ? .paused : .running, activeDurationAtSnapshot: elapsed,
+            snapshotAt: fixture.now, completion: nil)
+        #expect(content.remainingTargetDuration(at: fixture.now) == max(0, 900 - elapsed))
+        #expect(content.hasReachedGoal(at: fixture.now) == (elapsed >= 900))
+        #expect(content.canComplete)
+        #expect(
+            content.remainingTargetDuration(at: fixture.now.addingTimeInterval(60))
+                == max(0, 900 - elapsed - (paused ? 0 : 60)))
+        #expect(content.remainingTargetDuration(at: fixture.now.addingTimeInterval(-60)) == max(0, 900 - elapsed))
+        #expect(try completionRecords(in: fixture.context, occurrenceID: occurrence.id).isEmpty)
+    }
+
+    @Test("不足一分钟用短句，整分钟向上取整", arguments: [1.0, 59, 60, 61, 900])
+    func remainingGoalUsesChildFriendlyText(seconds: Double) {
+        let expected = seconds < 60 ? "还差不到1分钟" : "还差\(Int(ceil(seconds / 60)))分钟"
+        #expect(TaskSessionDurationText.remainingGoal(seconds) == expected)
+    }
+
     /// 固定合成磁盘库与时刻，不使用真实家庭容器或历史记录构造虚假 UI 成功事件。
     private func seedSubmissionPage(at url: URL, returned: Bool) throws -> UUID {
         let context = ModelContext(try AppModelContainer.make(storeURL: url))
