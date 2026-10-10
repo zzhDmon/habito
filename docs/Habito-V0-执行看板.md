@@ -260,6 +260,12 @@ V0 总计：35/44 个任务完成。V1 单独统计，不回写 V0 完成数；�
 
 ## 8. 最近一次交接
 
+### 2026-10-10 — GIT-REMOTE-001 个人SSH已配置，待解锁
+- 当前IN_PROGRESS。用户已将origin改为git@github.com:zzhDmon/habito.git；本仓库core.sshCommand显式选择个人ed25519密钥并忽略原SSH配置，工作区开始时干净，master保持。
+- 个人私钥/公钥文件存在，私钥权限0600；ls-remote仍认证失败。无敏感内容的BatchMode诊断确认GitHub已接受所提供个人公钥；空密码解锁探针确认私钥有密码，SSH agent尚未加载该个人密钥。不是远程地址或公钥未注册问题。未读取/输出私钥或密码，未改公司配置。
+- 修改看板与V1任务卡，git diff --check通过，独立本地记录提交；代码未改，不重跑产品测试。推送仍未完成，不标DONE。
+- 下一条明确操作：用户在本机终端执行ssh-add --apple-use-keychain ~/.ssh/id_ed25519_github_personal并输入该密钥密码，加载后重试git push -u origin master、核对远端HEAD与上游。总体6/7和现场保留项不变。
+
 ### 2026-10-10 — GIT-REMOTE-001 认证待完成
 - 当前任务IN_PROGRESS。已设置origin=https://github.com/zzhDmon/habito.git，保留master；远程所有引用读取成功且为空。用户授权的推送尚未成功，未设置上游，不标DONE。
 - git push -u origin master退出128：GitHub返回Invalid username or token；本机无gh，默认SSH与已有GitHub专用密钥的BatchMode验证均Permission denied (publickey)。未读取/输出凭据、未强推或改写源码历史。
