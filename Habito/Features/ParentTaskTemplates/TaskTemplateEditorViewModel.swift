@@ -66,6 +66,23 @@ final class TaskTemplateEditorViewModel {
     private var calendar: Calendar
     private let logger = Logger(subsystem: "com.zhangzehua.Habito", category: "TemplateEditor")
     private var didLoad = false
+    private var savedDraft: TaskTemplateDraft?
+    private var savedRewardInput: TaskTemplateRewardInput?
+
+    /// 与最后一次成功加载/保存的输入比较；提醒只比较实际落库的分钟，忽略日期锚点和秒数。
+    ///
+    /// 奖励原文单独比较，因此粘贴的无效数字也会触发保护，而不会被旧金额掩盖。
+    var hasUnsavedChanges: Bool {
+        guard let savedDraft, let savedRewardInput else { return false }
+        var current = draft
+        current.timeOfDayMinutes = timeMinutes(from: scheduledTime)
+        return current != savedDraft || rewardInput != savedRewardInput
+    }
+
+    /// 保存可能正在等待系统权限返回；此时不能关闭或丢弃正在提交的输入。
+    var canLeaveWithoutConfirmation: Bool {
+        !isSaving && !hasUnsavedChanges
+    }
 
     var hasLoadFailure: Bool {
         feedback == .loadFailure
@@ -111,6 +128,7 @@ final class TaskTemplateEditorViewModel {
                 throw TaskTemplateEditorError.invalidTime
             }
             scheduledTime = time
+            acceptSavedInput(draft)
             isLoading = false
         } catch {
             logger.error("任务编辑器加载失败：\(String(describing: type(of: error)), privacy: .public)")
@@ -143,6 +161,8 @@ final class TaskTemplateEditorViewModel {
             _ = try service.save(value, at: dateProvider.now())
             draft = value
             rewardInput = TaskTemplateRewardInput(draft: value)
+            // 在权限await之前固定已提交基线；期间再修改的输入仍应被识别为未保存。
+            acceptSavedInput(value)
             notificationRebuildTrigger.requestRebuild()
             guard isCreating else { return .saved }
             // 首轮重建可能在权限弹窗等待期间已结束；授权返回后必须显式按最新系统状态再核对。
@@ -204,6 +224,11 @@ final class TaskTemplateEditorViewModel {
             if impact.action != .archive {
                 draft = try service.load(templateID: impact.templateID)
                 rewardInput = TaskTemplateRewardInput(draft: draft)
+                // 生命周期操作刷新整个草稿，时间控件也必须同步，避免旧输入被误当作已保存。
+                if let time = Self.makeTimeDate(minutes: draft.timeOfDayMinutes, calendar: calendar) {
+                    scheduledTime = time
+                }
+                acceptSavedInput(draft)
             }
             return impact.action
         } catch {
@@ -220,6 +245,11 @@ final class TaskTemplateEditorViewModel {
 
     private func currentLocalDate() throws -> LocalDate {
         try LocalDate(date: dateProvider.now(), calendar: calendar, timeZone: calendar.timeZone)
+    }
+
+    private func acceptSavedInput(_ value: TaskTemplateDraft) {
+        savedDraft = value
+        savedRewardInput = TaskTemplateRewardInput(draft: value)
     }
 
     /// 非有限控件值用非法分钟传入既有校验路径，明确失败而不是静默保存为午夜。

@@ -19,6 +19,7 @@ struct TaskTemplateEditorViewModelTests {
             #expect(fixture.provider.currentAuthorizationState == .notDetermined)
             // 授权等待会让主 actor 接受新意图；重复保存不能把仍打开的新建草稿再写一份。
             #expect(fixture.model.isSaving)
+            #expect(!fixture.model.canLeaveWithoutConfirmation && !fixture.model.hasUnsavedChanges)
             #expect(await fixture.model.save() == .failed)
             #expect(try fixture.context.fetchCount(FetchDescriptor<TaskTemplate>()) == 1)
             #expect(fixture.rebuildTrigger.revision == 1 && fixture.model.feedback == nil)
@@ -316,6 +317,7 @@ struct TaskTemplateEditorViewModelTests {
         model.deadlineTime = model.scheduledTime.addingTimeInterval(3600)
         #expect(await model.save() == .failed)
         #expect(model.feedback == .storageFailure)
+        #expect(model.hasUnsavedChanges && !model.canLeaveWithoutConfirmation)
         #expect(model.draft.plannedTimeOfDayMinutes == 1110 && model.draft.deadlineTimeOfDayMinutes == 1230)
         #expect(model.isPlannedTimeEnabled && model.isDeadlineTimeEnabled)
         #expect(try fixture.context.fetchCount(FetchDescriptor<TaskTemplate>()) == 0)
@@ -369,6 +371,93 @@ struct TaskTemplateEditorViewModelTests {
         editing.model.applyLearningPreset(.mathHomework)
         #expect(editing.model.draft == before)
         #expect(!fixture.context.hasChanges)
+    }
+
+    @Test(
+        "所有任务字段修改都保护，改回加载值后可以直接离开",
+        arguments: [
+            "title", "icon", "color", "duration", "weekdays", "enabled", "category", "period", "verification",
+            "xp", "coins", "bonus", "planned", "deadline", "reminder", "rawReward",
+        ])
+    func changedInputRequiresConfirmation(field: String) throws {
+        let fixture = try makeFixture()
+        let model = fixture.model
+        #expect(model.canLeaveWithoutConfirmation)
+        model.load()
+        #expect(!model.hasUnsavedChanges && model.canLeaveWithoutConfirmation)
+        let originalDraft = model.draft
+        let originalReward = model.rewardInput
+        let originalTime = model.scheduledTime
+        switch field {
+        case "title": model.draft.title = "新标题"
+        case "icon": model.draft.iconName = "music.note"
+        case "color": model.draft.colorToken = "reading"
+        case "duration": model.draft.targetDurationMinutes = 30
+        case "weekdays": model.draft.weekdays = Weekday.schoolDays
+        case "enabled": model.draft.isEnabled = false
+        case "category": model.draft.category = .challenge
+        case "period": model.draft.timePeriod = .afterSchool
+        case "verification": model.draft.verificationType = .parentApproval
+        case "xp": model.draft.xpReward = 11
+        case "coins": model.draft.coinReward = 7
+        case "bonus": model.draft.activeBonusCoin = 3
+        case "planned": model.isPlannedTimeEnabled = true
+        case "deadline": model.isDeadlineTimeEnabled = true
+        case "reminder": model.scheduledTime = originalTime.addingTimeInterval(60)
+        default: model.rewardInput.xp = "无效数字"
+        }
+        #expect(model.hasUnsavedChanges && !model.canLeaveWithoutConfirmation)
+        model.load()
+        #expect(model.hasUnsavedChanges)
+        model.draft = originalDraft
+        model.rewardInput = originalReward
+        model.scheduledTime = originalTime
+        #expect(!model.hasUnsavedChanges && model.canLeaveWithoutConfirmation)
+        #expect(!fixture.context.hasChanges)
+    }
+
+    @Test("保存成功与编辑回读建立新基线，秒数变化不代表修改")
+    func successfulSaveAcceptsBaseline() async throws {
+        let fixture = try makeFixture()
+        fixture.model.load()
+        fixture.model.draft.title = "保存基线"
+        fixture.model.rewardInput.xp = " 0011 "
+        fixture.model.scheduledTime = fixture.model.scheduledTime.addingTimeInterval(120)
+        #expect(await fixture.model.save() == .saved)
+        #expect(fixture.model.canLeaveWithoutConfirmation)
+        let template = try #require(fixture.context.fetch(FetchDescriptor<TaskTemplate>()).first)
+        let editing = try makeFixture(context: fixture.context, templateID: template.id)
+        editing.model.load()
+        #expect(editing.model.canLeaveWithoutConfirmation)
+        editing.model.scheduledTime = editing.model.scheduledTime.addingTimeInterval(20)
+        #expect(!editing.model.hasUnsavedChanges)
+        editing.model.rewardInput.baseCoins = ""
+        #expect(await editing.model.save() == .failed)
+        #expect(editing.model.hasUnsavedChanges)
+        #expect(editing.model.rewardInput.baseCoins.isEmpty)
+    }
+
+    @Test("权限等待期间修改不能成为已保存基线")
+    func authorizationEditsRemainUnsaved() async throws {
+        let fixture = try makeFixture()
+        fixture.model.load()
+        fixture.model.draft.title = "已提交标题"
+        fixture.provider.onRequestAuthorization = {
+            fixture.model.draft.title = "等待中修改"
+            #expect(fixture.model.hasUnsavedChanges && !fixture.model.canLeaveWithoutConfirmation)
+        }
+        #expect(await fixture.model.save() == .saved)
+        #expect(fixture.model.hasUnsavedChanges)
+        let template = try #require(fixture.context.fetch(FetchDescriptor<TaskTemplate>()).first)
+        #expect(template.title == "已提交标题")
+    }
+
+    @Test("加载失败不把占位数据识别为用户草稿")
+    func missingTemplateHasNoDirtyPlaceholder() throws {
+        let fixture = try makeFixture(templateID: UUID())
+        fixture.model.load()
+        #expect(fixture.model.hasLoadFailure && !fixture.model.hasUnsavedChanges)
+        #expect(fixture.model.canLeaveWithoutConfirmation)
     }
 
     private func makeFixture(
