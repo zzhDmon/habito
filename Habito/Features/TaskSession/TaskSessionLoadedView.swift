@@ -2,6 +2,7 @@ import SwiftUI
 
 /// 任务执行页的已加载内容；只渲染页面值并转发操作意图。
 struct TaskSessionLoadedView: View {
+    var cameraModel: TaskCameraViewModel? = nil
     let content: TaskSessionScreenContent
     let snoozeState: TaskSnoozeState
     let onStartOrResume: () -> Void
@@ -15,12 +16,14 @@ struct TaskSessionLoadedView: View {
     let onDismissCompletionFeedback: () -> Void
 
     init(
+        cameraModel: TaskCameraViewModel? = nil,
         content: TaskSessionScreenContent, snoozeState: TaskSnoozeState, onStartOrResume: @escaping () -> Void,
         onPause: @escaping () -> Void, onSnooze: @escaping () async -> Void, onComplete: @escaping () -> Void,
         onUndoCompletion: @escaping () -> Void, currentDate: @escaping () -> Date,
         makeTimingPresentation: @escaping @MainActor (KidTaskNavigationItem) -> KidTaskTimingPresentation,
         completionFeedback: TaskSessionCompletionFeedback? = nil, onDismissCompletionFeedback: @escaping () -> Void = {}
     ) {
+        self.cameraModel = cameraModel
         self.content = content
         self.snoozeState = snoozeState
         self.onStartOrResume = onStartOrResume
@@ -42,6 +45,10 @@ struct TaskSessionLoadedView: View {
                 VStack(alignment: .leading, spacing: HabitoDesign.Spacing.large) {
                     TaskSessionIdentityPanel(
                         task: content.task, makeTimingPresentation: { makeTimingPresentation(content.task) })
+                    if let cameraModel, content.completion == nil, !content.isAwaitingReview {
+                        TaskCameraPanel(
+                            state: cameraModel.state, source: cameraModel.previewSource, onRetry: cameraModel.retry)
+                    }
                     if let completionFeedback {
                         TaskSessionResultFeedbackView(
                             feedback: completionFeedback, onDismiss: onDismissCompletionFeedback

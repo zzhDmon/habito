@@ -1,6 +1,138 @@
 {
   "sourceLanguage" : "zh-Hans",
   "strings" : {
+  "taskCamera.title": {
+    "extractionState": "manual",
+    "localizations": {
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "专注小窗"
+        }
+      }
+    }
+  },
+  "taskCamera.idle": {
+    "extractionState": "manual",
+    "localizations": {
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "计时运行时，打开前置镜头"
+        }
+      }
+    }
+  },
+  "taskCamera.requesting": {
+    "extractionState": "manual",
+    "localizations": {
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "正在开启镜头…"
+        }
+      }
+    }
+  },
+  "taskCamera.live": {
+    "extractionState": "manual",
+    "localizations": {
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "实时画面"
+        }
+      }
+    }
+  },
+  "taskCamera.denied": {
+    "extractionState": "manual",
+    "localizations": {
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "镜头未获允许。可在设置中开启，计时照常继续。"
+        }
+      }
+    }
+  },
+  "taskCamera.restricted": {
+    "extractionState": "manual",
+    "localizations": {
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "镜头受系统限制，计时照常继续。"
+        }
+      }
+    }
+  },
+  "taskCamera.unavailable": {
+    "extractionState": "manual",
+    "localizations": {
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "这台设备暂时没有可用的前置镜头。"
+        }
+      }
+    }
+  },
+  "taskCamera.failed": {
+    "extractionState": "manual",
+    "localizations": {
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "镜头未能开启，计时照常继续。"
+        }
+      }
+    }
+  },
+  "taskCamera.interrupted": {
+    "extractionState": "manual",
+    "localizations": {
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "镜头暂时中断，计时照常继续。"
+        }
+      }
+    }
+  },
+  "taskCamera.settings": {
+    "extractionState": "manual",
+    "localizations": {
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "打开设置"
+        }
+      }
+    }
+  },
+  "taskCamera.retry": {
+    "extractionState": "manual",
+    "localizations": {
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "重试镜头"
+        }
+      }
+    }
+  },
+  "taskCamera.previewLabel": {
+    "extractionState": "manual",
+    "localizations": {
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "前置摄像头实时镜像画面"
+        }
+      }
+    }
+  },
     "familyProfile.childNickname" : {
       "extractionState": "manual",
       "localizations": {

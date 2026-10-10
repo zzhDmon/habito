@@ -130,6 +130,7 @@ struct RootView: View {
                 case let .task(occurrenceID):
                     KidTaskSessionView(
                         model: taskSessionModelFactory.makeModel(for: occurrenceID),
+                        cameraModel: taskSessionModelFactory.makeCameraModel(),
                         onExit: loadToday
                     )
                 }

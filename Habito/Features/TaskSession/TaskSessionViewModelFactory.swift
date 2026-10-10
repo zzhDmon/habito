@@ -42,6 +42,12 @@ struct TaskSessionViewModelFactory {
         self.onCompletionChanged = onCompletionChanged
     }
 
+    /// 每个导航页面拥有独立采集会话；由组合根注入，View 不创建或配置系统摄像头。
+    func makeCameraModel() -> TaskCameraViewModel {
+        let service = FrontCameraService()
+        return TaskCameraViewModel(service: service, previewSource: service.previewSource)
+    }
+
     func makeModel(for occurrenceID: UUID) -> TaskSessionViewModel {
         TaskSessionViewModel(
             occurrenceID: occurrenceID,

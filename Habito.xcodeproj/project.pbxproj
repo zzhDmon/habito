@@ -7,6 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B2E283E853546CD9767CF691 /* TaskCameraViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 694E6ABB641768B11367BFC6 /* TaskCameraViewModelTests.swift */; };
+		5104B15D0619EA46DDA67E57 /* CameraCaptureProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BD97BBB7CDD48BC076D21FF /* CameraCaptureProbe.swift */; };
+		372BB7BF082E67EDB01DD4BA /* CameraPermissionGate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77F481FBCA1D30FF673FB3D /* CameraPermissionGate.swift */; };
+		C6316DA1E0007900A764D9FF /* TaskCameraPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2529CC1BA6863E41621234E1 /* TaskCameraPanel.swift */; };
+		07707C6FE6CA07F79B1F7DD7 /* TaskCameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51723AE81B8B47D99C4C760F /* TaskCameraPreview.swift */; };
+		309244736450D57B3EAAF694 /* TaskCameraPreviewUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50DFDF8AE870ABD4296F0636 /* TaskCameraPreviewUIView.swift */; };
+		37FA9AC5FB690200EF02A1F5 /* TaskCameraViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C3FAA052D79BEA333D1DE36 /* TaskCameraViewModel.swift */; };
+		F76CCEFB3AB9B9FABD121168 /* FrontCameraService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C202C65046EDAE9D99F5C53 /* FrontCameraService.swift */; };
+		7FADB463FD99442DCFE58CE0 /* FrontCameraPreviewSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3848F1B55274438E63F75E1 /* FrontCameraPreviewSource.swift */; };
+		4B16D848E54DC73EC779A010 /* FrontCameraCapturing.swift in Sources */ = {isa = PBXBuildFile; fileRef = F125B42D575EA2C5A4FF4425 /* FrontCameraCapturing.swift */; };
+		C7D3AEB4017655492214CD99 /* FrontCameraState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D18A5A11EB11009F0DE1672 /* FrontCameraState.swift */; };
 		8F135C821C5673699D524475 /* TaskEditorDisclosureButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B609935AC24EB1421EFB495E /* TaskEditorDisclosureButton.swift */; };
 		6C94D8242E6C153220C3608F /* TaskDeletionServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60624D5F65F4ACA0FC448D6 /* TaskDeletionServiceTests.swift */; };
 		059C4FA789A08232E9517E71 /* TaskDeletionError.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB232861194F75DE6EE62353 /* TaskDeletionError.swift */; };
@@ -581,6 +592,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		694E6ABB641768B11367BFC6 /* TaskCameraViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCameraViewModelTests.swift; sourceTree = "<group>"; };
+		6BD97BBB7CDD48BC076D21FF /* CameraCaptureProbe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraCaptureProbe.swift; sourceTree = "<group>"; };
+		F77F481FBCA1D30FF673FB3D /* CameraPermissionGate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPermissionGate.swift; sourceTree = "<group>"; };
+		2529CC1BA6863E41621234E1 /* TaskCameraPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCameraPanel.swift; sourceTree = "<group>"; };
+		51723AE81B8B47D99C4C760F /* TaskCameraPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCameraPreview.swift; sourceTree = "<group>"; };
+		50DFDF8AE870ABD4296F0636 /* TaskCameraPreviewUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCameraPreviewUIView.swift; sourceTree = "<group>"; };
+		7C3FAA052D79BEA333D1DE36 /* TaskCameraViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCameraViewModel.swift; sourceTree = "<group>"; };
+		9C202C65046EDAE9D99F5C53 /* FrontCameraService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrontCameraService.swift; sourceTree = "<group>"; };
+		A3848F1B55274438E63F75E1 /* FrontCameraPreviewSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrontCameraPreviewSource.swift; sourceTree = "<group>"; };
+		F125B42D575EA2C5A4FF4425 /* FrontCameraCapturing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrontCameraCapturing.swift; sourceTree = "<group>"; };
+		7D18A5A11EB11009F0DE1672 /* FrontCameraState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrontCameraState.swift; sourceTree = "<group>"; };
 		B609935AC24EB1421EFB495E /* TaskEditorDisclosureButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskEditorDisclosureButton.swift; sourceTree = "<group>"; };
 		B60624D5F65F4ACA0FC448D6 /* TaskDeletionServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDeletionServiceTests.swift; sourceTree = "<group>"; };
 		BB232861194F75DE6EE62353 /* TaskDeletionError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDeletionError.swift; sourceTree = "<group>"; };
@@ -1165,6 +1187,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CA5000000000000000000001 /* Camera */ = {
+			isa = PBXGroup;
+			children = (
+				9C202C65046EDAE9D99F5C53 /* FrontCameraService.swift */,
+				A3848F1B55274438E63F75E1 /* FrontCameraPreviewSource.swift */,
+				F125B42D575EA2C5A4FF4425 /* FrontCameraCapturing.swift */,
+				7D18A5A11EB11009F0DE1672 /* FrontCameraState.swift */,
+			);
+			path = Camera;
+			sourceTree = "<group>";
+		};
 		CD5000000000000000000003 /* Pet */ = {
 			isa = PBXGroup;
 			children = (
@@ -1590,6 +1623,7 @@
 		A50000000000000000000009 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				CA5000000000000000000001 /* Camera */,
 				A5000000000000000000000A /* Notifications */,
 				P50000000000000000000002 /* Security */,
 				K50000000000000000000001 /* Time */,
@@ -1831,6 +1865,10 @@
 		I50000000000000000000004 /* TaskSession */ = {
 			isa = PBXGroup;
 			children = (
+				2529CC1BA6863E41621234E1 /* TaskCameraPanel.swift */,
+				51723AE81B8B47D99C4C760F /* TaskCameraPreview.swift */,
+				50DFDF8AE870ABD4296F0636 /* TaskCameraPreviewUIView.swift */,
+				7C3FAA052D79BEA333D1DE36 /* TaskCameraViewModel.swift */,
 				I20000000000000000000008 /* KidTaskSessionView.swift */,
 				M20000000000000000000006 /* TaskSessionLoadedView.swift */,
 				AB2000000000000000000228 /* TaskCompletionUndoView.swift */,
@@ -1907,6 +1945,9 @@
 		J50000000000000000000001 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				694E6ABB641768B11367BFC6 /* TaskCameraViewModelTests.swift */,
+				6BD97BBB7CDD48BC076D21FF /* CameraCaptureProbe.swift */,
+				F77F481FBCA1D30FF673FB3D /* CameraPermissionGate.swift */,
 				B60624D5F65F4ACA0FC448D6 /* TaskDeletionServiceTests.swift */,
 				0738913549BB2BE691FDAD56 /* PetGrowthFeedbackViewModelTests.swift */,
 				99439C367E2F166DBD2DD55C /* PetProfileViewModelTests.swift */,
@@ -2316,6 +2357,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C6316DA1E0007900A764D9FF /* TaskCameraPanel.swift in Sources */,
+				07707C6FE6CA07F79B1F7DD7 /* TaskCameraPreview.swift in Sources */,
+				309244736450D57B3EAAF694 /* TaskCameraPreviewUIView.swift in Sources */,
+				37FA9AC5FB690200EF02A1F5 /* TaskCameraViewModel.swift in Sources */,
+				F76CCEFB3AB9B9FABD121168 /* FrontCameraService.swift in Sources */,
+				7FADB463FD99442DCFE58CE0 /* FrontCameraPreviewSource.swift in Sources */,
+				4B16D848E54DC73EC779A010 /* FrontCameraCapturing.swift in Sources */,
+				C7D3AEB4017655492214CD99 /* FrontCameraState.swift in Sources */,
 				8F135C821C5673699D524475 /* TaskEditorDisclosureButton.swift in Sources */,
 				059C4FA789A08232E9517E71 /* TaskDeletionError.swift in Sources */,
 				2C17691D332430668AD1711E /* TaskDeletionScope.swift in Sources */,
@@ -2770,6 +2819,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B2E283E853546CD9767CF691 /* TaskCameraViewModelTests.swift in Sources */,
+				5104B15D0619EA46DDA67E57 /* CameraCaptureProbe.swift in Sources */,
+				372BB7BF082E67EDB01DD4BA /* CameraPermissionGate.swift in Sources */,
 				6C94D8242E6C153220C3608F /* TaskDeletionServiceTests.swift in Sources */,
 				D12845AA4AA523520B56F77B /* PetGrowthFeedbackViewModelTests.swift in Sources */,
 				02AD13826909055AE7F0BA35 /* PetGrowthFeedbackServiceTests.swift in Sources */,
@@ -2940,6 +2992,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "一禾成长记";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_KEY_NSCameraUsageDescription = "计时进行时，在专注小窗显示你的前置镜头画面。仅本机预览，不录制、不上传。";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -2976,6 +3029,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "一禾成长记";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_KEY_NSCameraUsageDescription = "计时进行时，在专注小窗显示你的前置镜头画面。仅本机预览，不录制、不上传。";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

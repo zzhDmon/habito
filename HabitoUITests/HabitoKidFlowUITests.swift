@@ -13,6 +13,42 @@ final class HabitoKidFlowUITests: XCTestCase {
         continueAfterFailure = false
     }
 
+    /// 模拟器没有真实镜头：正式路径应解释不可用，并保留开始、暂停、继续和完成闭环。
+    func testCameraWindowFollowsTimerAndUnavailableCameraDoesNotBlockCompletion() {
+        let app = launchScenario("reward-self-confirm")
+        openSeededTask(in: app)
+        let snapshot = XCTAttachment(string: app.debugDescription)
+        snapshot.name = "镜头页面无障碍层级"
+        snapshot.lifetime = .keepAlways
+        add(snapshot)
+        keepScreenshot(app, name: "镜头页面初始布局")
+        let window = app.descendants(matching: .any)["kid.session.camera-window"]
+        scrollFullyIntoCameraViewport(window, in: app)
+        XCTAssertLessThanOrEqual(window.frame.width, 320)
+        XCTAssertTrue(app.staticTexts["计时运行时，打开前置镜头"].exists)
+        let start = app.buttons["kid.session.start"]
+        scrollFullyIntoSessionViewport(start, in: app)
+        start.tap()
+        let unavailable = app.staticTexts["这台设备暂时没有可用的前置镜头。"]
+        scrollFullyIntoSessionViewport(unavailable, in: app)
+        keepScreenshot(app, name: "前置镜头小窗_不可用时仍可计时")
+        let pause = app.buttons["kid.session.pause"]
+        scrollFullyIntoSessionViewport(pause, in: app)
+        pause.tap()
+        scrollFullyIntoCameraViewport(window, in: app)
+        XCTAssertTrue(app.staticTexts["计时运行时，打开前置镜头"].exists)
+        let resume = app.buttons["kid.session.resume"]
+        scrollFullyIntoSessionViewport(resume, in: app)
+        resume.tap()
+        scrollFullyIntoSessionViewport(unavailable, in: app)
+        let complete = app.buttons["kid.session.complete"]
+        scrollFullyIntoSessionViewport(complete, in: app)
+        complete.tap()
+        confirmTaskCompletion(in: app)
+        XCTAssertTrue(app.buttons["kid.session.dismiss-completion-feedback"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.descendants(matching: .any)["kid.session.camera-panel"].exists)
+    }
+
     func testDeleteSingleOccurrenceSurvivesRestartAndPreservesTemplateWithSystemTextSize() {
         verifyTaskDeletion(series: false)
     }
@@ -3182,6 +3218,19 @@ final class HabitoKidFlowUITests: XCTestCase {
         attachment.name = name
         attachment.lifetime = .keepAlways
         add(attachment)
+    }
+
+    /// 视频窗口没有点击动作；MAX时系统可能没有有效激活点，不能用按钮的isHittable检查。
+    /// 只核对完整画面落在滚动视口内；实际操作按钮仍通过原有可点击与可见范围双重检查。
+    private func scrollFullyIntoCameraViewport(_ window: XCUIElement, in app: XCUIApplication) {
+        XCTAssertTrue(window.waitForExistence(timeout: 5))
+        let viewport = app.scrollViews["kid.session.screen"]
+        for _ in 0..<5 {
+            let visible = sessionVisibleFrame(viewport, in: app)
+            if visible.contains(window.frame) { return }
+            if window.frame.minY < visible.minY { viewport.swipeDown() } else { viewport.swipeUp() }
+        }
+        XCTAssertTrue(sessionVisibleFrame(viewport, in: app).contains(window.frame))
     }
 
     /// 17 在按钮仅露出边缘时也可能报告 isHittable；按真实滚动窗口核对，不能把无效点击算验收。

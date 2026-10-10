@@ -38,6 +38,12 @@ enum HabitoDesign {
         static let card: CGFloat = 24
     }
 
+    /// 实时预览使用紧凑尺寸，文字状态仍允许随动态字体增长。
+    enum Camera {
+        static let previewHeight: CGFloat = 180
+        static let maximumWidth: CGFloat = 320
+    }
+
     enum Layout {
         static let minimumTapSize: CGFloat = 44
         static let maximumContentWidth: CGFloat = 1_200
